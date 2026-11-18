@@ -30,6 +30,10 @@ Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono und
 Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono (siehe `index.html`).
 
+Zu Stuffcloud gehört Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen,
+Saison-Deko) unter `kern-ui/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
+Die Komponenten laden sie nie; sie sind für eigene Seiten gedacht.
+
 Ein neues Theme ist eine CSS-Datei, die die Variablen aus `src/lib/themes/base.css`
 für `[data-theme^='name']` überschreibt, plus ein `@import` in `themes/index.css`.
 

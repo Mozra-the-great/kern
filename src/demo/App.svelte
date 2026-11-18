@@ -10,6 +10,7 @@
 	import Widgets from './sections/Widgets.svelte';
 	import FormsMore from './sections/FormsMore.svelte';
 	import Effects from './sections/Effects.svelte';
+	import Assets from './sections/Assets.svelte';
 	import Data from './sections/Data.svelte';
 
 	let theme = $state(readTheme());
@@ -235,6 +236,7 @@
 	<FormsMore />
 	<Data />
 	<Effects />
+	<Assets />
 </main>
 
 <Modal bind:open={modalOpen} title="Ordner löschen?" description="„Urlaub 2026“ und 214 Dateien werden in den Papierkorb gelegt.">

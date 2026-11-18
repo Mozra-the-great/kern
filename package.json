@@ -13,11 +13,13 @@
 		},
 		"./themes.css": "./dist/themes/index.css",
 		"./themes/*": "./dist/themes/*",
-		"./elements": "./dist-elements/kern-elements.js"
+		"./elements": "./dist-elements/kern-elements.js",
+		"./assets/*": "./assets/*"
 	},
 	"files": [
 		"dist",
-		"dist-elements"
+		"dist-elements",
+		"assets"
 	],
 	"sideEffects": [
 		"**/*.css",
