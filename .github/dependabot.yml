@@ -33,5 +33,15 @@ updates:
     commit-message:
       prefix: "chore(deps)"
     groups:
+      # vite and the Svelte plugin pin each other's majors (plugin 7 needs vite 8
+      # and vice versa), so separate PRs could never install. Listed first: a
+      # dependency joins the first group that matches.
+      vite:
+        patterns: ["vite", "@sveltejs/vite-plugin-svelte"]
       dev-minor-patch:
         update-types: ["minor", "patch"]
+    ignore:
+      # svelte-check 4.x accepts typescript ^5 || ^6 only; TypeScript 7 (native
+      # compiler) cannot install until svelte-check supports it. Drop this entry then.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
