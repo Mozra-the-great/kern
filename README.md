@@ -69,9 +69,10 @@ npm i kern-ui
 ```
 
 Listen (`options`, `items`, `tabs`, `columns`, `rows`, `commands`, `nodes`, `expanded`, `steps`,
-`suggestions`, `swatches`, `lines`, `format`, bei TagInput `value`, bei Typewriter `text`) werden als
+`suggestions`, `swatches`, `lines`, `format`, `values`, `data`, `status-labels`, bei TagInput `value`, bei Typewriter `text`) werden als
 JSON-Attribut übergeben. Attribute mit Vorgabe `true` (`pausable`, `pause-on-hover`, `once`, `in-view`,
-`caret`, `blink` …) schaltet `="false"` ab.
+`caret`, `blink` …) schaltet `="false"` ab; bei den Daten-Elementen heißen sie umgekehrt (`no-search`,
+`no-stack`, `no-legend`, `no-last-dot`, `rising-is-bad`). `<k-stat>` nimmt eine `<k-sparkline>` im Slot `spark`.
 
 Ereignisse:
 
@@ -81,7 +82,9 @@ Ereignisse:
   CountUp, Terminal
 - `step`: Stepper mit `clickable`, Klick auf einen erledigten Schritt (`detail` = Index)
 - `input`: Slider, während des Ziehens
-- `select`: DropdownMenu, ContextMenu, CommandPalette, TreeView (`detail` = id)
+- `select`: DropdownMenu, ContextMenu, CommandPalette, TreeView (`detail` = id), DataTable (`detail` =
+  gewählte Schlüssel nach `row-key`), Heatmap (`detail` = `{date, value}`)
+- `sort`: DataTable (`detail` = `{key, dir}`)
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
 - `files`: FileDrop (`detail` = `File[]`, auch als `el.files`)
 - `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
@@ -103,6 +106,7 @@ Aktionen: Button, IconButton, Link, DropdownMenu, ContextMenu, CommandPalette ·
 Status: Badge, Tag, Avatar, Spinner, Progress, Skeleton, Alert, Toaster/`toast()` ·
 Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
 Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel ·
+Daten: DataTable (Filter, Sortierung, Seiten, Zeilenauswahl), Stat, Sparkline, Heatmap, HistoryBar, Timeline ·
 Overlays: Modal, Drawer, Tooltip, Popover ·
 Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, Accordion/AccordionItem, TreeView ·
 Effekte: Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal, Highlight, GridBackground, Terminal

@@ -10,6 +10,7 @@
 	import Widgets from './sections/Widgets.svelte';
 	import FormsMore from './sections/FormsMore.svelte';
 	import Effects from './sections/Effects.svelte';
+	import Data from './sections/Data.svelte';
 
 	let theme = $state(readTheme());
 	function readTheme() {
@@ -232,6 +233,7 @@
 	<Extras />
 	<Widgets />
 	<FormsMore />
+	<Data />
 	<Effects />
 </main>
 
