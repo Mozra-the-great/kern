@@ -24,10 +24,11 @@ Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 | --- | --- |
 | `stuffcloud` (= `stuffcloud-dark`), `stuffcloud-light`, `stuffcloud-paper`, `stuffcloud-contrast` | Stuffcloud-Designsystem |
 | `flower` (= `flower-creme`), `flower-wald` | Flower-Designs |
-| `pop`, Kagi-basiert | geplant, Entwürfe in Arbeit |
+| `pop` (= `pop-light`), `pop-dark` | Pop-Designsystem (Look von stuffcloud) |
+| Kagi-basiert | geplant |
 
 Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono und
-Silkscreen, Flower braucht Figtree (siehe `index.html`).
+Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono (siehe `index.html`).
 
 Ein neues Theme ist eine CSS-Datei, die die Variablen aus `src/lib/themes/base.css`
 für `[data-theme^='name']` überschreibt, plus ein `@import` in `themes/index.css`.

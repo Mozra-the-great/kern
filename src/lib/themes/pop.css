@@ -1,0 +1,108 @@
+/* Pop — from the Pop-Designsystem (the look of stuffcloud). Friendly and round:
+ * pill controls, big card radii, one soft shadow, chunky Figtree, green stage.
+ * Fonts: Figtree 400–900 and JetBrains Mono 400/500 (load them yourself).
+ *
+ * Mapping notes (where kern's roles need more than Pop names):
+ * - primary = Pop's ink button (`solid` / `on-solid`); accent = `green`.
+ *   Text on the green accent is the fixed `outline` ink (5.8:1), not Pop's white
+ *   (3.1:1, which Pop allows only at 19px bold; kern labels are smaller).
+ * - border = `mut`: Pop's `line` (~1.3:1) is too faint for control edges that
+ *   must reach 3:1; `line` stays for dividers and card edges.
+ * - danger = `pink-lo` (error text and delete fill), as Pop uses it for errors.
+ *   pink-lo on pink-tint in light is 4.46:1, Pop's own noted exception.
+ * - bg-sunken = `line` (hover and track fill); info-soft = `sky` in light. */
+[data-theme^='pop'] {
+	--k-border-w: 1.5px;
+	--k-radius-control: 999px;
+	--k-radius-field: 24px;
+	--k-radius-card: 32px;
+	--k-radius-overlay: 32px;
+	--k-radius-badge: 999px;
+	--k-radius-avatar: 999px;
+	--k-font-sans: 'Figtree', ui-rounded, system-ui, sans-serif;
+	--k-font-display: var(--k-font-sans);
+	--k-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+	--k-weight-display: 900;
+	--k-weight-heading: 800;
+	--k-weight-label: 700;
+	--k-label-font: var(--k-font-sans);
+	--k-label-size: 15px;
+	--k-label-transform: none;
+	--k-label-tracking: 0;
+	--k-text-lg: 21px;
+	--k-text-xl: 26px;
+	--k-text-2xl: 60px;
+	--k-control-h: 56px;
+	--k-control-h-sm: 44px;
+	--k-control-h-lg: 64px;
+	--k-focus-w: 3px;
+	--k-focus-offset: 3px;
+	--k-dur: 150ms;
+}
+[data-theme='pop'],
+[data-theme='pop-light'] {
+	color-scheme: light;
+	--k-bg: #f3f4f1;
+	--k-bg-raised: #ffffff;
+	--k-bg-sunken: #e2e5df;
+	--k-fg: #151714;
+	--k-fg-muted: #62675f;
+	--k-line: #e2e5df;
+	--k-border: #62675f;
+	--k-primary: #151714;
+	--k-on-primary: #ffffff;
+	--k-primary-hover: #000000;
+	--k-on-primary-hover: #ffffff;
+	--k-accent: #10a916;
+	--k-on-accent: #151714;
+	--k-accent-soft: #e1f6dc;
+	--k-accent-text: #0b7a12;
+	--k-link: #0b7a12;
+	--k-danger: #c42d66;
+	--k-on-danger: #ffffff;
+	--k-danger-soft: #ffe3ee;
+	--k-ok: #0b7a12;
+	--k-ok-soft: #e1f6dc;
+	--k-warn: #6e5100;
+	--k-warn-soft: #fff2c2;
+	--k-info: #151714;
+	--k-info-soft: #cfe8ff;
+	--k-focus: #151714;
+	--k-backdrop: rgba(21, 23, 20, 0.45);
+	--k-selected: #e1f6dc;
+	--k-shadow-raised: 0 1px 0 rgba(21, 23, 20, 0.04), 0 14px 30px -18px rgba(21, 23, 20, 0.35);
+	--k-shadow-overlay: 0 1px 0 rgba(21, 23, 20, 0.04), 0 14px 30px -18px rgba(21, 23, 20, 0.35);
+}
+[data-theme='pop-dark'] {
+	color-scheme: dark;
+	--k-bg: #0e100d;
+	--k-bg-raised: #1a1d18;
+	--k-bg-sunken: #2e332b;
+	--k-fg: #f2f4ef;
+	--k-fg-muted: #9da498;
+	--k-line: #2e332b;
+	--k-border: #9da498;
+	--k-primary: #f2f4ef;
+	--k-on-primary: #0e100d;
+	--k-primary-hover: #ffffff;
+	--k-on-primary-hover: #0e100d;
+	--k-accent: #10a916;
+	--k-on-accent: #151714;
+	--k-accent-soft: #18331a;
+	--k-accent-text: #62db58;
+	--k-link: #62db58;
+	--k-danger: #ff86b3;
+	--k-on-danger: #0e100d;
+	--k-danger-soft: #3a1626;
+	--k-ok: #62db58;
+	--k-ok-soft: #18331a;
+	--k-warn: #ffd966;
+	--k-warn-soft: #3a3110;
+	--k-info: #f2f4ef;
+	--k-info-soft: #1a1d18;
+	--k-focus: #f2f4ef;
+	--k-backdrop: rgba(0, 0, 0, 0.6);
+	--k-selected: #18331a;
+	--k-shadow-raised: 0 1px 0 rgba(0, 0, 0, 0.5), 0 16px 34px -18px rgba(0, 0, 0, 0.9);
+	--k-shadow-overlay: 0 1px 0 rgba(0, 0, 0, 0.5), 0 16px 34px -18px rgba(0, 0, 0, 0.9);
+}

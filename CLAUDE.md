@@ -35,8 +35,8 @@ npm run build   # dist/ (package), dist-elements/kern-elements.js, demo-dist/
   Stuffcloud (square, hard offset shadows, mono uppercase labels, `steps()` easing)
   and Flower (soft, pills); check both themes, light and dark, desktop and 320 px.
 - A new theme = one CSS file overriding the tokens of `base.css` for
-  `[data-theme^='name']` plus an `@import` in `themes/index.css`. Planned: `pop`
-  and a Kagi-based theme.
+  `[data-theme^='name']` plus an `@import` in `themes/index.css`. Themes: stuffcloud,
+  flower, pop (each from its design-system artifact); planned: a Kagi-based theme.
 - `src/elements/` is not in `tsconfig.include`, so `npm run check` does not see
   the wrappers; `npm run build` compiles them. In a wrapper, a `<slot>` inside a
   `{#snippet}` needs the snippet to read a variable (`{#if footer}`), otherwise
