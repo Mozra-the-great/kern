@@ -44,6 +44,7 @@
 <header class="top">
 	<div class="frame bar">
 		<span class="mark">kern</span>
+		<a class="switch" href="./elements.html">Custom Elements</a>
 		<label class="theme">
 			<span>Theme</span>
 			<select bind:value={theme}>
@@ -256,6 +257,8 @@
 	.top { border-bottom: var(--k-border-w) solid var(--k-line); }
 	.bar { display: flex; align-items: center; justify-content: space-between; gap: var(--k-space-4); min-height: 64px; }
 	.mark { font-family: var(--k-font-display); font-weight: var(--k-weight-display); font-size: 20px; }
+	.switch { margin-right: auto; color: var(--k-link); font-family: var(--k-label-font); font-size: var(--k-label-size); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
+	.switch:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
 	.theme { display: flex; align-items: center; gap: var(--k-space-2); font-family: var(--k-label-font); font-size: var(--k-label-size); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
 	.theme select { min-height: 40px; padding: 0 var(--k-space-3); border: var(--k-border-w) solid var(--k-border); border-radius: var(--k-radius-field); background: var(--k-bg-raised); color: var(--k-fg); font: inherit; text-transform: none; }
 	.theme select:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
