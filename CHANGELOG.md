@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Repository scaffold from `repo-template-public`: CI (`build`, `workflow-lint`,
   `gitleaks`), Dependabot for GitHub Actions and npm, issue/PR templates.
 
+- 10 effects (Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal,
+  Highlight, GridBackground, Terminal), reduced motion shows the final state.
+- 8 form controls: Label, NumberInput, PinInput, Rating, SegmentedControl,
+  Stepper, TagInput, ColorPicker.
 - Pop theme (`pop` / `pop-light`, `pop-dark`) from the Pop design system:
   pill controls, 32px cards, one soft shadow, Figtree 900 display, green accent.
 
