@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Repository scaffold from `repo-template-public`: CI (`build`, `workflow-lint`,
   `gitleaks`), Dependabot for GitHub Actions and npm, issue/PR templates.
 
+- Brand assets: 77 stuffcloud pixel-art SVGs from the moodboards (logo, mascots,
+  tool stickers, marks, seasonal decoration) under `kern-ui/assets/stuffcloud/`,
+  shown in a demo gallery.
 - 6 data components: DataTable (filter, sort, pages, row selection), Stat,
   Sparkline, Heatmap, HistoryBar, Timeline.
 - 10 effects (Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal,

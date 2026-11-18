@@ -19,6 +19,7 @@ src/lib/themes/       base.css (all --k-* tokens) + one CSS file per brand, inde
 src/lib/index.ts      public exports (components + types)
 src/elements/         custom-element wrappers K<Name>.svelte, form.ts helpers, index.ts
 src/demo/             demo app (App.svelte + sections/), themes.ts
+assets/<brand>/       optional brand artwork (stuffcloud pixel art), exported as kern-ui/assets/*
 index.html            Svelte demo · elements.html: custom-elements demo
 ```
 
