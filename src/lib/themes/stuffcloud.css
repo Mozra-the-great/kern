@@ -1,0 +1,152 @@
+/* Stuffcloud — from the Stuffcloud design system. Grid look: square corners,
+ * hard offset shadows, ink-filled buttons that turn accent on hover.
+ * Fonts: Inter, JetBrains Mono, Silkscreen (load them yourself). */
+[data-theme^='stuffcloud'] {
+	--k-border-w: 1px;
+	--k-radius-control: 0;
+	--k-radius-field: 0;
+	--k-radius-card: 0;
+	--k-radius-overlay: 0;
+	--k-radius-badge: 0;
+	--k-radius-avatar: 999px;
+	--k-shadow-raised: none;
+	--k-shadow-overlay: 8px 8px 0 rgba(16, 16, 18, 0.6);
+	--k-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	--k-font-display: 'Silkscreen', 'Press Start 2P', ui-monospace, monospace;
+	--k-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--k-weight-display: 700;
+	--k-weight-heading: 500;
+	--k-weight-label: 400;
+	--k-label-font: var(--k-font-mono);
+	--k-label-size: 12px;
+	--k-label-transform: uppercase;
+	--k-label-tracking: 1px;
+	--k-text-2xl: 48px;
+	--k-dur: 120ms;
+	--k-ease: steps(2, end);
+}
+[data-theme='stuffcloud'],
+[data-theme='stuffcloud-dark'] {
+	color-scheme: dark;
+	--k-bg: #101012;
+	--k-bg-raised: #17171a;
+	--k-bg-sunken: #0c0c0e;
+	--k-fg: #f4f4f0;
+	--k-fg-muted: #a2a2ab;
+	--k-line: #26262b;
+	--k-border: #6e6e78;
+	--k-primary: #f4f4f0;
+	--k-on-primary: #101012;
+	--k-primary-hover: #ff79b0;
+	--k-on-primary-hover: #101012;
+	--k-accent: #ff79b0;
+	--k-on-accent: #101012;
+	--k-accent-soft: #17171a;
+	--k-accent-text: #ff79b0;
+	--k-link: #c78bff;
+	--k-danger: #ff4f8b;
+	--k-on-danger: #101012;
+	--k-danger-soft: #17171a;
+	--k-ok: #3ddc84;
+	--k-ok-soft: #17171a;
+	--k-warn: #ffb000;
+	--k-warn-soft: #17171a;
+	--k-info: #c78bff;
+	--k-info-soft: #17171a;
+	--k-focus: #f4f4f0;
+	--k-backdrop: rgba(0, 0, 0, 0.6);
+	--k-selected: #17171a;
+}
+[data-theme='stuffcloud-light'] {
+	color-scheme: light;
+	--k-bg: #fbfaf8;
+	--k-bg-raised: #ffffff;
+	--k-bg-sunken: #f1f0ee;
+	--k-fg: #16141a;
+	--k-fg-muted: #5a5862;
+	--k-line: #dcdae0;
+	--k-border: #767480;
+	--k-primary: #16141a;
+	--k-on-primary: #fbfaf8;
+	--k-primary-hover: #c2185b;
+	--k-on-primary-hover: #ffffff;
+	--k-accent: #c2185b;
+	--k-on-accent: #ffffff;
+	--k-accent-soft: #ffffff;
+	--k-accent-text: #c2185b;
+	--k-link: #5b2fc9;
+	--k-danger: #b00040;
+	--k-on-danger: #ffffff;
+	--k-danger-soft: #ffffff;
+	--k-ok: #0b6b34;
+	--k-ok-soft: #ffffff;
+	--k-warn: #7a4f00;
+	--k-warn-soft: #ffffff;
+	--k-info: #5b2fc9;
+	--k-info-soft: #ffffff;
+	--k-focus: #16141a;
+	--k-backdrop: rgba(16, 16, 18, 0.4);
+	--k-selected: #ffffff;
+}
+[data-theme='stuffcloud-paper'] {
+	color-scheme: light;
+	--k-bg: #ffffff;
+	--k-bg-raised: #f4f3f1;
+	--k-bg-sunken: #f4f3f1;
+	--k-fg: #111111;
+	--k-fg-muted: #555555;
+	--k-line: #d0d0d0;
+	--k-border: #767676;
+	--k-primary: #111111;
+	--k-on-primary: #ffffff;
+	--k-primary-hover: #b3004f;
+	--k-on-primary-hover: #ffffff;
+	--k-accent: #b3004f;
+	--k-on-accent: #ffffff;
+	--k-accent-soft: #f4f3f1;
+	--k-accent-text: #b3004f;
+	--k-link: #4a22a8;
+	--k-danger: #a00038;
+	--k-on-danger: #ffffff;
+	--k-danger-soft: #f4f3f1;
+	--k-ok: #0b6b34;
+	--k-ok-soft: #f4f3f1;
+	--k-warn: #6e4700;
+	--k-warn-soft: #f4f3f1;
+	--k-info: #4a22a8;
+	--k-info-soft: #f4f3f1;
+	--k-focus: #111111;
+	--k-backdrop: rgba(0, 0, 0, 0.35);
+	--k-selected: #f4f3f1;
+}
+[data-theme='stuffcloud-contrast'] {
+	color-scheme: dark;
+	--k-bg: #000000;
+	--k-bg-raised: #0a0a0a;
+	--k-bg-sunken: #000000;
+	--k-fg: #ffffff;
+	--k-fg-muted: #d0d0d8;
+	--k-line: #8a8a94;
+	--k-border: #9a9aa4;
+	--k-primary: #ffffff;
+	--k-on-primary: #000000;
+	--k-primary-hover: #ff9cc6;
+	--k-on-primary-hover: #000000;
+	--k-accent: #ff9cc6;
+	--k-on-accent: #000000;
+	--k-accent-soft: #0a0a0a;
+	--k-accent-text: #ff9cc6;
+	--k-link: #d9b8ff;
+	--k-danger: #ff8fb5;
+	--k-on-danger: #000000;
+	--k-danger-soft: #0a0a0a;
+	--k-ok: #3dff9a;
+	--k-ok-soft: #0a0a0a;
+	--k-warn: #ffd000;
+	--k-warn-soft: #0a0a0a;
+	--k-info: #d9b8ff;
+	--k-info-soft: #0a0a0a;
+	--k-focus: #ffffff;
+	--k-backdrop: rgba(0, 0, 0, 0.75);
+	--k-selected: #0a0a0a;
+}

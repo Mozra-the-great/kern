@@ -1,0 +1,6 @@
+node_modules
+dist
+dist-elements
+demo-dist
+.DS_Store
+.svelte-kit

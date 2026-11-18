@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de" data-theme="flower">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern — Custom Elements</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" href="./src/lib/themes/index.css" />
+		<style>
+			body { margin: 0; background: var(--k-bg); color: var(--k-fg); font-family: var(--k-font-sans); }
+			main { max-width: 880px; margin: 0 auto; padding: 40px 16px; display: grid; gap: 24px; }
+			.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+			h1 { margin: 0; font-weight: var(--k-weight-display); }
+			form { display: grid; gap: 16px; }
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Custom Elements</h1>
+			<label class="row">Theme
+				<select id="theme">
+					<option value="flower">Flower · Creme</option>
+					<option value="flower-wald">Flower · Wald</option>
+					<option value="stuffcloud">Stuffcloud · Dark</option>
+					<option value="stuffcloud-light">Stuffcloud · Light</option>
+				</select>
+			</label>
+			<div class="row">
+				<k-button id="hello">Toast zeigen</k-button>
+				<k-button variant="secondary" id="open">Dialog öffnen</k-button>
+				<k-button variant="accent">Akzent</k-button>
+				<k-badge tone="ok">Verfügbar</k-badge>
+				<k-tag removable>Pastell</k-tag>
+				<k-avatar name="Mara Lind"></k-avatar>
+				<k-tooltip text="Mehr Aktionen">
+					<k-dropdown-menu label="Mehr" items='[{"id":"rename","label":"Umbenennen"},{"type":"separator"},{"id":"delete","label":"Löschen","danger":true}]'></k-dropdown-menu>
+				</k-tooltip>
+			</div>
+			<k-alert tone="warn" title="Speicher fast voll" dismissible>Noch 1,2 GB frei.</k-alert>
+			<form id="form">
+				<k-input name="name" label="Name" placeholder="Mara Lind" required></k-input>
+				<k-select name="size" label="Größe" value="m" options='[{"value":"s","label":"Klein"},{"value":"m","label":"Mittel"},{"value":"l","label":"Groß"}]'></k-select>
+				<k-radio-group name="ship" label="Versand" value="standard" inline options='[{"value":"standard","label":"Standard"},{"value":"express","label":"Express"}]'></k-radio-group>
+				<k-checkbox name="terms" label="Bedingungen gelesen"></k-checkbox>
+				<k-switch name="news" label="Neuigkeiten" checked></k-switch>
+				<div class="row"><k-button type="submit">Absenden</k-button> <output id="out"></output></div>
+			</form>
+			<k-tabs label="Bereiche" tabs='[{"id":"a","label":"Dateien"},{"id":"b","label":"Geteilt"}]'>
+				<div data-tab="a">Dateien-Inhalt</div>
+				<div data-tab="b">Geteilt-Inhalt</div>
+			</k-tabs>
+			<k-accordion>
+				<k-accordion-item title="Wie lange bleiben Links gültig?" open>Sieben Tage.</k-accordion-item>
+				<k-accordion-item title="Kann ich ein Passwort setzen?">Ja.</k-accordion-item>
+			</k-accordion>
+			<k-table caption="Dateien" columns='[{"key":"name","label":"Name","sortable":true},{"key":"size","label":"MB","align":"end","mono":true,"sortable":true}]' rows='[{"name":"a.zip","size":12},{"name":"b.pdf","size":0.3}]'></k-table>
+			<k-progress label="Speicher" value="64" show-value></k-progress>
+		</main>
+		<k-modal id="modal" title="Ordner löschen?" description="214 Dateien kommen in den Papierkorb.">
+			<p>Das lässt sich 30 Tage lang rückgängig machen.</p>
+			<div slot="footer" class="row"><k-button variant="secondary" id="cancel">Abbrechen</k-button><k-button variant="danger" id="confirm">Löschen</k-button></div>
+		</k-modal>
+		<k-toaster></k-toaster>
+		<script type="module">
+			import './dist-elements/kern-elements.js';
+			const $ = (s) => document.querySelector(s);
+			$('#theme').addEventListener('change', (e) => (document.documentElement.dataset.theme = e.target.value));
+			$('#hello').addEventListener('click', () => window.kern.toast.ok('Hallo aus <k-toaster>'));
+			$('#open').addEventListener('click', () => ($('#modal').open = true));
+			$('#cancel').addEventListener('click', () => ($('#modal').open = false));
+			$('#confirm').addEventListener('click', () => { $('#modal').open = false; window.kern.toast('Gelöscht'); });
+			$('k-dropdown-menu').addEventListener('select', (e) => window.kern.toast('Gewählt: ' + e.detail));
+			$('#form').addEventListener('submit', (e) => { e.preventDefault(); $('#out').textContent = JSON.stringify(Object.fromEntries(new FormData(e.target))); });
+		</script>
+	</body>
+</html>

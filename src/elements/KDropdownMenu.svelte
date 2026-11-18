@@ -1,0 +1,10 @@
+<svelte:options customElement={{ tag: 'k-dropdown-menu', props: { label: { type: "String" }, items: { type: "Array" }, align: { type: "String" }, triggerVariant: { type: 'String', attribute: 'trigger-variant' } } }} />
+<script lang="ts">
+	import DropdownMenu from '../lib/components/DropdownMenu.svelte';
+	import { emit } from './form.js';
+	/* items: JSON list like the Svelte prop; choosing an item fires "select" with its id. */
+	let { label = '', items = [], align, triggerVariant } = $props();
+	const host = $host();
+	const wired = $derived(items.map((i: any) => (i.type === 'separator' || i.type === 'label' ? i : { ...i, onselect: () => emit(host, 'select', i.id) })));
+</script>
+<DropdownMenu {label} items={wired} {align} {triggerVariant} />
