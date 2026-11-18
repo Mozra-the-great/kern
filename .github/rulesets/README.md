@@ -27,7 +27,7 @@ gh api --method POST repos/<owner>/<repo>/rulesets --input .github/rulesets/defa
 | Rule | Effect |
 |---|---|
 | `pull_request` | No direct push to the default branch, everything through PRs; **every review thread must be resolved** |
-| `required_status_checks` | `build`, `workflow-lint` and `gitleaks` must pass, each bound to `integration_id: 15368` (GitHub Actions) so no other app can report a same-named check |
+| `required_status_checks` | `build`, `workflow-lint` and `gitleaks` must pass, each bound to `integration_id: 15368` (GitHub Actions) so no other app can report a same-named check; in kern also `CodeQL`, bound to `integration_id: 57789` (GitHub Advanced Security, CodeQL default setup) |
 | `non_fast_forward` | No force-push |
 | `deletion` | The default branch cannot be deleted |
 
@@ -52,6 +52,7 @@ The check context is the **job id** of the workflow (none of these jobs sets a
 | `build` | `ci.yml` | stack lint/test; runs on every PR (no `paths:` filter, convention C1) |
 | `workflow-lint` | `workflow-lint.yml` | actionlint + zizmor |
 | `gitleaks` | `secret-scan.yml` | PR-range secret scan |
+| `CodeQL` | CodeQL default setup (repo setting, no workflow file) | code-scanning result check, reported by GitHub Advanced Security, not by Actions |
 | `claude-review` | `claude-code-review.yml` | **optional**, not in `default.json`, see below |
 
 Confirm the names against a real run before applying (`gh pr checks <n>` on a
