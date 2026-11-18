@@ -6,6 +6,10 @@ Ein Theme setzt über `--k-*`-CSS-Variablen nicht nur Farben, sondern auch Form
 Komponenten sehen deshalb in Stuffcloud eckig mit Pixel-Schatten aus und in
 Flower-Designs weich mit Pillen.
 
+**Vorschau:** [alle Komponenten](https://mozra-the-great.github.io/kern/) ·
+[als Custom Elements](https://mozra-the-great.github.io/kern/elements.html), mit Theme-Umschalter.
+Die Seite wird bei jedem Push auf `main` neu gebaut.
+
 Es gibt zwei Builds:
 
 - **Svelte 5** (`dist/`): Komponenten mit Runes, Snippets und `bind:`.
