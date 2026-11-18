@@ -1,0 +1,102 @@
+/*
+ * kern — base tokens. Every theme overrides the --k-* variables below.
+ * Components read only these variables, so a theme changes colour, shape,
+ * depth and type at once. Values here are a neutral fallback used when no theme is set.
+ */
+:root {
+	/* colour */
+	--k-bg: #fbfbfd;
+	--k-bg-raised: #ffffff;
+	--k-bg-sunken: #f2f2f6;
+	--k-fg: #1d1b26;
+	--k-fg-muted: #5c5a6b;
+	--k-line: #e4e3ea;
+	--k-border: #8c8a99;
+	--k-primary: #3f2a8c;
+	--k-primary-hover: #2f1f6e;
+	--k-on-primary: #ffffff;
+	--k-on-primary-hover: #ffffff;
+	--k-accent: #f5c518;
+	--k-on-accent: #1d1b26;
+	--k-accent-soft: #fbf1c7;
+	--k-accent-text: #5b3fc4;
+	--k-link: #4b2fbf;
+	--k-danger: #b3261e;
+	--k-on-danger: #ffffff;
+	--k-danger-soft: #fbe9e7;
+	--k-ok: #1f7a3d;
+	--k-ok-soft: #e3f4e8;
+	--k-warn: #8a5800;
+	--k-warn-soft: #fbf0d9;
+	--k-info: #3f2a8c;
+	--k-info-soft: #ece8fa;
+	--k-focus: #3f2a8c;
+	--k-backdrop: rgba(16, 14, 24, 0.45);
+	--k-selected: #ece8fa;
+
+	/* shape */
+	--k-border-w: 1px;
+	--k-radius-control: 8px;
+	--k-radius-field: 8px;
+	--k-radius-card: 12px;
+	--k-radius-overlay: 14px;
+	--k-radius-badge: 6px;
+	--k-radius-avatar: 999px;
+
+	/* depth */
+	--k-shadow-raised: 0 1px 2px rgba(29, 27, 38, 0.06);
+	--k-shadow-overlay: 0 8px 28px rgba(29, 27, 38, 0.14);
+
+	/* type */
+	--k-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	--k-font-display: var(--k-font-sans);
+	--k-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--k-weight-display: 650;
+	--k-weight-heading: 600;
+	--k-weight-label: 500;
+	--k-label-font: var(--k-font-sans);
+	--k-label-size: 14px;
+	--k-label-transform: none;
+	--k-label-tracking: 0;
+
+	--k-text-xs: 12px;
+	--k-text-sm: 14px;
+	--k-text-md: 16px;
+	--k-text-lg: 20px;
+	--k-text-xl: 28px;
+	--k-text-2xl: 48px;
+
+	/* size */
+	--k-control-h: 44px;
+	--k-control-h-sm: 34px;
+	--k-control-h-lg: 52px;
+
+	/* space */
+	--k-space-1: 4px;
+	--k-space-2: 8px;
+	--k-space-3: 12px;
+	--k-space-4: 16px;
+	--k-space-5: 20px;
+	--k-space-6: 24px;
+	--k-space-7: 32px;
+	--k-space-8: 40px;
+	--k-space-9: 56px;
+
+	/* focus and motion */
+	--k-focus-w: 2px;
+	--k-focus-offset: 2px;
+	--k-dur: 120ms;
+	--k-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme] {
+	background: var(--k-bg);
+	color: var(--k-fg);
+	font-family: var(--k-font-sans);
+	font-size: var(--k-text-md);
+	line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:root { --k-dur: 0ms; }
+}

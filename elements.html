@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de" data-theme="flower">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern — Custom Elements</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" href="./src/lib/themes/index.css" />
+		<style>
+			body { margin: 0; background: var(--k-bg); color: var(--k-fg); font-family: var(--k-font-sans); }
+			main { max-width: 880px; margin: 0 auto; padding: 40px 16px; display: grid; gap: 24px; }
+			.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+			h1 { margin: 0; font-weight: var(--k-weight-display); }
+			form { display: grid; gap: 16px; }
+		</style>
+	</head>
+	<body>
+		<main>
+			<k-navbar id="nav" label="Hauptmenü" menu-label="Menü" items='[{"label":"Sammlung","href":"#a","current":true},{"label":"Hilfe","href":"#b"}]'>
+				<span slot="brand">kern</span>
+				<k-button slot="actions" size="sm" variant="secondary">Anmelden</k-button>
+			</k-navbar>
+			<k-breadcrumb max="3" label="Brotkrumen" expand-label="Ausgeblendete Einträge anzeigen" items='[{"label":"Start","href":"#"},{"label":"Sammlung","href":"#"},{"label":"Lacke","href":"#"},{"label":"Pastell","href":"#"},{"label":"Mintgrün Nr. 14"}]'></k-breadcrumb>
+			<h1>Custom Elements</h1>
+			<label class="row">Theme
+				<select id="theme">
+					<option value="flower">Flower · Creme</option>
+					<option value="flower-wald">Flower · Wald</option>
+					<option value="stuffcloud">Stuffcloud · Dark</option>
+					<option value="stuffcloud-light">Stuffcloud · Light</option>
+					<option value="stuffcloud-paper">Stuffcloud · Paper</option>
+					<option value="stuffcloud-contrast">Stuffcloud · Contrast</option>
+				</select>
+			</label>
+			<div class="row">
+				<k-button id="hello">Toast zeigen</k-button>
+				<k-button variant="secondary" id="open">Dialog öffnen</k-button>
+				<k-button variant="accent">Akzent</k-button>
+				<k-badge tone="ok">Verfügbar</k-badge>
+				<k-tag removable>Pastell</k-tag>
+				<k-avatar name="Mara Lind"></k-avatar>
+				<k-tooltip text="Mehr Aktionen">
+					<k-dropdown-menu label="Mehr" items='[{"id":"rename","label":"Umbenennen"},{"type":"separator"},{"id":"delete","label":"Löschen","danger":true}]'></k-dropdown-menu>
+				</k-tooltip>
+			</div>
+			<k-alert tone="warn" title="Speicher fast voll" dismissible>Noch 1,2 GB frei.</k-alert>
+			<form id="form">
+				<k-input name="name" label="Name" placeholder="Mara Lind" required></k-input>
+				<k-select name="size" label="Größe" value="m" options='[{"value":"s","label":"Klein"},{"value":"m","label":"Mittel"},{"value":"l","label":"Groß"}]'></k-select>
+				<k-radio-group name="ship" label="Versand" value="standard" inline options='[{"value":"standard","label":"Standard"},{"value":"express","label":"Express"}]'></k-radio-group>
+				<k-checkbox name="terms" label="Bedingungen gelesen"></k-checkbox>
+				<k-switch name="news" label="Neuigkeiten" checked></k-switch>
+				<k-slider name="volume" label="Lautstärke" value="40" show-value unit=" %"></k-slider>
+				<k-file-drop id="fd" name="docs" label="Dateien" multiple accept=".pdf,image/*" max-size="2097152" drop-label="Dateien hierher ziehen oder klicken" remove-label="Entfernen:"></k-file-drop>
+				<div class="row"><k-button type="submit">Absenden</k-button> <output id="out"></output></div>
+			</form>
+			<k-tabs label="Bereiche" tabs='[{"id":"a","label":"Dateien"},{"id":"b","label":"Geteilt"}]'>
+				<div data-tab="a">Dateien-Inhalt</div>
+				<div data-tab="b">Geteilt-Inhalt</div>
+			</k-tabs>
+			<k-accordion>
+				<k-accordion-item title="Wie lange bleiben Links gültig?" open>Sieben Tage.</k-accordion-item>
+				<k-accordion-item title="Kann ich ein Passwort setzen?">Ja.</k-accordion-item>
+			</k-accordion>
+			<k-table caption="Dateien" columns='[{"key":"name","label":"Name","sortable":true},{"key":"size","label":"MB","align":"end","mono":true,"sortable":true}]' rows='[{"name":"a.zip","size":12},{"name":"b.pdf","size":0.3}]'></k-table>
+			<k-progress label="Speicher" value="64" show-value></k-progress>
+			<k-skeleton lines="3"></k-skeleton>
+			<div class="row"><k-skeleton variant="circle" width="48"></k-skeleton><k-skeleton variant="rect" width="160" height="48"></k-skeleton></div>
+			<k-empty-state title="Noch keine Lacke" description="Lege deinen ersten Lack an.">
+				<svg slot="icon" viewBox="0 0 24 24" width="24" height="24"><path d="M9 3h6v4H9zM7 7h10l1 14H6z" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+				<k-button slot="actions">Hinzufügen</k-button>
+			</k-empty-state>
+			<k-pagination id="pg" page="3" page-count="12" label="Seiten" prev-label="Zurück" next-label="Weiter" page-label="Seite" of-label="von"></k-pagination>
+			<k-carousel id="car" label="Neue Farben" prev-label="Vorherige Folie" next-label="Nächste Folie" dots-label="Folien" slide-label="Zu Folie" of-label="von">
+				<div style="height:120px;padding:16px;background:var(--k-accent-soft)">Mintgrün</div>
+				<div style="height:120px;padding:16px;background:var(--k-bg-sunken)">Beerenrot</div>
+				<div style="height:120px;padding:16px;background:var(--k-info-soft)">Nachtblau</div>
+			</k-carousel>
+			<div class="row">
+				<k-popover label="Filter">
+					<k-input label="Name enthält" placeholder="z. B. Urlaub"></k-input>
+				</k-popover>
+				<k-button variant="secondary" id="palette-open">Befehle (Strg+K)</k-button>
+			</div>
+			<form id="form2">
+				<k-combobox name="color" label="Farbe" no-results="Keine Treffer" toggle-label="Optionen anzeigen" options='[{"value":"rose","label":"Altrosa"},{"value":"creme","label":"Crème brûlée"},{"value":"mint","label":"Mint"},{"value":"petrol","label":"Petrol"}]'></k-combobox>
+				<k-date-picker name="date" label="Datum" locale="de-DE" placeholder="TT.MM.JJJJ" min="2026-01-01" calendar-label="Datum wählen" prev-month-label="Vorheriger Monat" next-month-label="Nächster Monat" invalid-text="Bitte ein gültiges Datum eingeben."></k-date-picker>
+				<div class="row"><k-button type="submit">Absenden</k-button> <k-button type="reset" variant="ghost">Zurücksetzen</k-button> <output id="out2"></output></div>
+			</form>
+			<k-context-menu label="Dateiaktionen" area-label="Datei urlaub-2026.zip" items='[{"id":"open","label":"Öffnen"},{"id":"rename","label":"Umbenennen","shortcut":"F2"},{"type":"separator"},{"id":"delete","label":"Löschen","danger":true}]'>
+				<div style="padding:24px;border:1px dashed var(--k-border);border-radius:var(--k-radius-card)">urlaub-2026.zip — Rechtsklick, lange drücken oder Umschalt+F10</div>
+			</k-context-menu>
+			<k-tree-view label="Ordner" expanded='["fotos"]' nodes='[{"id":"fotos","label":"Fotos","children":[{"id":"2025","label":"2025"},{"id":"2026","label":"2026"}]},{"id":"docs","label":"Dokumente","children":[{"id":"rechnungen","label":"Rechnungen"}]},{"id":"notizen","label":"notizen.md"}]'></k-tree-view>
+			<k-command-palette id="palette" hotkey="mod+k" label="Befehlspalette" placeholder="Befehl suchen …" empty="Kein passender Befehl" close-label="Schließen" commands='[{"id":"new","label":"Neue Datei","group":"Dateien","shortcut":"Strg+N"},{"id":"share","label":"Link teilen","group":"Dateien","keywords":["freigabe"]},{"id":"theme","label":"Theme wechseln","group":"Ansicht","keywords":["dunkel","hell"]}]'></k-command-palette>
+		</main>
+		<k-modal id="modal" title="Ordner löschen?" description="214 Dateien kommen in den Papierkorb.">
+			<p>Das lässt sich 30 Tage lang rückgängig machen.</p>
+			<div slot="footer" class="row"><k-button variant="secondary" id="cancel">Abbrechen</k-button><k-button variant="danger" id="confirm">Löschen</k-button></div>
+		</k-modal>
+		<k-toaster></k-toaster>
+		<script type="module">
+			import './dist-elements/kern-elements.js';
+			const $ = (s) => document.querySelector(s);
+			$('#theme').addEventListener('change', (e) => (document.documentElement.dataset.theme = e.target.value));
+			$('#hello').addEventListener('click', () => window.kern.toast.ok('Hallo aus <k-toaster>'));
+			$('#open').addEventListener('click', () => ($('#modal').open = true));
+			$('#cancel').addEventListener('click', () => ($('#modal').open = false));
+			$('#confirm').addEventListener('click', () => { $('#modal').open = false; window.kern.toast('Gelöscht'); });
+			$('k-dropdown-menu').addEventListener('select', (e) => window.kern.toast('Gewählt: ' + e.detail));
+			$('#form').addEventListener('submit', (e) => { e.preventDefault(); $('#out').textContent = JSON.stringify(Object.fromEntries(new FormData(e.target))); });
+			$('#pg').addEventListener('change', (e) => window.kern.toast('Seite ' + e.detail));
+			$('#car').addEventListener('change', (e) => window.kern.toast('Folie ' + (e.detail + 1)));
+			$('#fd').addEventListener('files', (e) => window.kern.toast(e.detail.length + ' Datei(en)'));
+			$('#palette-open').addEventListener('click', () => ($('#palette').open = true));
+			$('#palette').addEventListener('select', (e) => window.kern.toast('Befehl: ' + e.detail));
+			$('k-context-menu').addEventListener('select', (e) => window.kern.toast('Kontextmenü: ' + e.detail));
+			$('k-tree-view').addEventListener('select', (e) => window.kern.toast('Ordner: ' + e.detail));
+			$('#form2').addEventListener('submit', (e) => { e.preventDefault(); $('#out2').textContent = JSON.stringify(Object.fromEntries(new FormData(e.target))); });
+		</script>
+	</body>
+</html>

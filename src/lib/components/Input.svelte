@@ -1,0 +1,83 @@
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { HTMLInputAttributes } from 'svelte/elements';
+	import Field from './Field.svelte';
+
+	interface Props extends Omit<HTMLInputAttributes, 'value'> {
+		label?: string;
+		hint?: string;
+		error?: string;
+		value?: string | number | null;
+		/** Content inside the field before the text, e.g. an icon. */
+		leading?: Snippet;
+		/** Content inside the field after the text, e.g. a unit or button. */
+		trailing?: Snippet;
+	}
+	let {
+		label,
+		hint,
+		error,
+		value = $bindable(''),
+		id,
+		required,
+		class: cls = '',
+		leading,
+		trailing,
+		...rest
+	}: Props = $props();
+	const uid = $props.id();
+	const inputId = $derived(id ?? `${uid}-input`);
+</script>
+
+<Field {label} {hint} {error} {required} for={inputId} class={cls}>
+	{#snippet children({ describedby, invalid })}
+		<div class="k-input" class:invalid>
+			{#if leading}<span class="adorn">{@render leading()}</span>{/if}
+			<input
+				id={inputId}
+				bind:value
+				{required}
+				aria-invalid={invalid || undefined}
+				aria-describedby={describedby}
+				{...rest}
+			/>
+			{#if trailing}<span class="adorn">{@render trailing()}</span>{/if}
+		</div>
+	{/snippet}
+</Field>
+
+<style>
+	.k-input {
+		display: flex;
+		align-items: center;
+		gap: var(--k-space-2);
+		min-height: var(--k-control-h);
+		padding: 0 var(--k-space-4);
+		border: var(--k-border-w) solid var(--k-border);
+		border-radius: var(--k-radius-field);
+		background: var(--k-bg-raised);
+		color: var(--k-fg);
+		transition: border-color var(--k-dur) var(--k-ease);
+	}
+	.k-input:hover { border-color: var(--k-fg-muted); }
+	.k-input:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.invalid { border-color: var(--k-danger); }
+	input {
+		flex: 1;
+		min-width: 0;
+		height: 100%;
+		min-height: calc(var(--k-control-h) - 2 * var(--k-border-w));
+		padding: 0;
+		border: 0;
+		outline: 0;
+		background: transparent;
+		color: inherit;
+		font: inherit;
+		font-size: var(--k-text-md);
+	}
+	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
+	input:disabled { cursor: not-allowed; }
+	.k-input:has(input:disabled) { opacity: 0.55; }
+	.adorn { display: inline-flex; align-items: center; color: var(--k-fg-muted); }
+	.adorn :global(svg) { width: 18px; height: 18px; }
+</style>

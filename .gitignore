@@ -27,6 +27,14 @@ dist/
 build/
 coverage/
 
+# kern build output (svelte-package, custom elements, demo)
+dist-elements/
+demo-dist/
+.svelte-kit/
+
+# Claude Code worktrees
+.claude/worktrees/
+
 # Logs
 *.log
 logs/

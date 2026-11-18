@@ -1,25 +1,50 @@
-# <PROJECT_NAME>
+# kern
 
-> TODO: One-line description of what this project is.
+> Svelte 5 component kit (npm name `kern-ui`): one set of accessible components,
+> many brands. Themes set colour, shape, depth, type and motion via `--k-*` CSS
+> variables. Also shipped as framework-free custom elements (`<k-button>` …).
 
 ## Type
-TODO — e.g. "Web app", "CLI tool", "Infrastructure repo", "Library".
+Library (UI component kit) with a demo site.
 
 ## Stack
-TODO — languages, frameworks, key dependencies.
+Svelte 5 (runes, snippets), TypeScript, Vite 7, `@sveltejs/package`, svelte-check.
+No runtime dependencies besides Svelte, no Tailwind.
 
 ## Structure
 ```
-TODO — top-level directory layout
+src/lib/components/   Svelte components (one file each) + anchor.ts, toast.svelte.ts
+src/lib/themes/       base.css (all --k-* tokens) + one CSS file per brand, index.css
+src/lib/index.ts      public exports (components + types)
+src/elements/         custom-element wrappers K<Name>.svelte, form.ts helpers, index.ts
+src/demo/             demo app (App.svelte + sections/), themes.ts
+index.html            Svelte demo · elements.html: custom-elements demo
 ```
 
 ## Commands
 ```sh
-TODO — build / dev / test / lint commands
+npm install
+npm run dev     # demo: /index.html and /elements.html
+npm run check   # svelte-check, must end with 0 errors / 0 warnings
+npm run build   # dist/ (package), dist-elements/kern-elements.js, demo-dist/
 ```
 
 ## Notes
-TODO — env vars, deployment, anything a future session needs to know that isn't obvious from the code.
+- Components read only `--k-*` tokens. Every component must look right in
+  Stuffcloud (square, hard offset shadows, mono uppercase labels, `steps()` easing)
+  and Flower (soft, pills); check both themes, light and dark, desktop and 320 px.
+- A new theme = one CSS file overriding the tokens of `base.css` for
+  `[data-theme^='name']` plus an `@import` in `themes/index.css`. Planned: `pop`
+  and a Kagi-based theme.
+- `src/elements/` is not in `tsconfig.include`, so `npm run check` does not see
+  the wrappers; `npm run build` compiles them. In a wrapper, a `<slot>` inside a
+  `{#snippet}` needs the snippet to read a variable (`{#if footer}`), otherwise
+  Svelte hoists it and it throws `$$props is not defined`.
+- Overlays use `position: fixed` without a portal; inside shadow DOM, compare
+  focus via `getRootNode().activeElement` and outside clicks via `composedPath()`
+  (helpers in `anchor.ts`).
+- Default UI strings are English and overridable via props; the demo and README
+  are German.
 
 ---
 

@@ -8,31 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
-- CI building blocks from nagellacke and homelab-infra, stack-agnostic: `ci.yml`
-  skeleton (job `build`), `workflow-lint.yml` (actionlint + zizmor),
-  `secret-scan.yml` (gitleaks) with `.gitleaks.toml`, `dependabot.yml`, opt-in
-  labels-as-code (`labels.json`, `labels.yml`, `scripts/ci/`) and a ruleset
-  template under `.github/rulesets/` (not auto-applied).
-- `docs/TEMPLATE-SETUP.md`: secrets, runner choice, rulesets and costs of a new repo.
+- Core set of 27 Svelte 5 components (actions, status, forms, content, overlays,
+  navigation), Stuffcloud and Flower themes, custom-elements build.
+- 14 more components: Skeleton, EmptyState, Breadcrumb, Pagination, Navbar,
+  Slider, FileDrop, Carousel, Popover, Combobox, ContextMenu, CommandPalette,
+  TreeView, DatePicker, each with a custom-element wrapper. Overlays share
+  `anchor.ts` for viewport-aware placement and shadow-DOM-safe focus handling.
+- Repository scaffold from `repo-template-public`: CI (`build`, `workflow-lint`,
+  `gitleaks`), Dependabot for GitHub Actions and npm, issue/PR templates.
 
 ### Changed
-- `docs/TEMPLATE-SETUP.md`, README and ruleset README: runner decisions of
-  2026-11-04 (D1: hosted runners are the default, the own runner on CT121 only for
-  private homelab jobs or as fallback; D2: hosted minutes for private repos are
-  available; D6: workflows are copied per repo, no central reusable workflows).
+- License is GPL-3.0-or-later (was MIT in the first local import).
 
 ### Fixed
-- `claude.yml`: the job only starts for `@claude` mentions from an `OWNER`,
-  `MEMBER` or `COLLABORATOR` (job-level `author_association` gate), so drive-by
-  mentions on a public repo cannot start a run. The action's own write-permission
-  check remains as the second layer.
-- `claude.yml`: explicit `claude_args` tool allowlist
-  (`--allowedTools Skill,Bash,Read,Edit,Write,Grep,Glob`) instead of the action's
-  unrestricted default; documented in `docs/TEMPLATE-SETUP.md`.
-
-### Changed
-- `claude-code-review.yml` replaced by the hardened nagellacke version
-  (`--comment`, inline-comment allowlist, `--disallowedTools`, concurrency group,
-  execution-log artifact, fail-on-findings). Both Claude workflows now skip
-  green when `CLAUDE_CODE_OAUTH_TOKEN` is not set instead of failing red.
-- All actions pinned by commit SHA.
+- `Field` no longer stretches inside grid rows (`align-content: start`).
+- `package-lock.json` matches `package.json` again, so `npm ci` works.

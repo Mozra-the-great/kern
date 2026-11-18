@@ -1,63 +1,114 @@
-# Repo Template
+# kern
 
-Standard-Vorlage für neue Repositories. Enthält die Grundausstattung, die jedes
-neue Projekt sowieso bekommen soll, damit sie nicht jedes Mal manuell
-nachgezogen werden muss.
+**Kern**-Komponenten für Svelte 5: ein Satz zugänglicher Bausteine, viele Marken.
+Ein Theme setzt über `--k-*`-CSS-Variablen nicht nur Farben, sondern auch Form
+(Radien, Randbreite), Tiefe (Schatten), Schrift und Bewegung. Dieselben
+Komponenten sehen deshalb in Stuffcloud eckig mit Pixel-Schatten aus und in
+Flower-Designs weich mit Pillen.
 
-> **Sichtbarkeit: öffentlich.** Gehostete Actions-Runner sind hier kostenlos,
-> Secret Scanning, Push Protection und CodeQL Default Setup sind verfügbar (Repo-Settings,
-> Besitzer-Entscheidung). Das private Schwesterrepo `repo-template` ist sonst identisch.
+Es gibt zwei Builds:
 
-## Verwendung
+- **Svelte 5** (`dist/`): Komponenten mit Runes, Snippets und `bind:`.
+- **Custom Elements** (`dist-elements/kern-elements.js`): `<k-button>`, `<k-modal>` usw.,
+  für jede Seite ohne Svelte. Formularfelder nehmen über `ElementInternals` an `<form>` teil.
 
-1. Auf GitHub bei einem neuen Repo **"Repository template"** auf dieses Repo
-   setzen (Dropdown beim Erstellen, oder Button "Use this template" auf dieser
-   Repo-Seite). GitHub kopiert dann Dateien und Struktur, aber **nicht**
-   Branch-Protection, Secrets oder Repo-Settings — die müssen pro neuem Repo
-   einmal nachgezogen werden (siehe unten).
-2. `CLAUDE.md` oben ausfüllen (`<PROJECT_NAME>`, Type/Stack/Structure/Commands/
-   Notes) — der untere Abschnitt "Working rules" bleibt unverändert, der
-   spiegelt die globale Claude-Code-Konfiguration.
-3. `NOTICE` und `README.md` an das eigentliche Projekt anpassen.
-4. CI einrichten: in `.github/workflows/ci.yml` den Stack-Block des Projekts
-   einkommentieren (Job `build` nicht umbenennen) und in
-   `.github/dependabot.yml` die genutzten Ecosystems. Secrets, Runner-Wahl,
-   Labels, Rulesets und Kosten stehen in
-   [`docs/TEMPLATE-SETUP.md`](docs/TEMPLATE-SETUP.md) (englisch, danach löschen).
-5. Optional Claude-Review und `@claude`: Secret `CLAUDE_CODE_OAUTH_TOKEN` setzen
-   (`gh secret set CLAUDE_CODE_OAUTH_TOKEN --repo <owner>/<neues-repo>`, `gh`
-   fragt den Wert ab). Ohne Secret überspringen beide Workflows ihre Schritte
-   und bleiben **grün** — "grün" heißt dann "übersprungen", nicht "geprüft".
-6. Merge-Gate: Ruleset aus `.github/rulesets/default.json` erst anwenden, wenn die
-   Checks auf `main` grün gelaufen sind und der Besitzer die Check-Namen
-   bestätigt hat (Anleitung in `.github/rulesets/README.md`). Repo-Settings,
-   Secrets und Rulesets ändert nie ein Workflow-PR.
+Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 
-## Was hier drin ist
+## Themes
 
-| Datei | Zweck |
-|---|---|
-| `CLAUDE.md` | Arbeitsregeln für Claude Code (Git-Workflow, Security, Subagenten) + Platzhalter für Projekt-Kontext |
-| `.claude/settings.json` | Permissions, die Claude Code in diesem Repo automatisch erlaubt sind |
-| `LICENSE` / `NOTICE` | GNU General Public License v3.0 |
-| `.gitignore` / `.editorconfig` | generische Basis-Regeln |
-| `CONTRIBUTING.md` | Branch-Namen, Commit-Konvention, PR-Ablauf |
-| `SECURITY.md` | Meldeweg für Sicherheitslücken |
-| `CHANGELOG.md` | Keep-a-Changelog-Format, startet leer |
-| `.github/ISSUE_TEMPLATE/` | Bug-Report + Feature-Request |
-| `.github/PULL_REQUEST_TEMPLATE.md` | PR-Checkliste |
-| `.github/workflows/claude.yml` | `@claude` in Issues/PR-Kommentaren reagiert (ohne Secret übersprungen) |
-| `.github/workflows/claude-code-review.yml` | Claude-Code-Review auf jeden PR, gehärtet; Job `claude-review` (ohne Secret übersprungen) |
-| `.github/workflows/ci.yml` | Stack-neutrales Skelett, Job `build` |
-| `.github/workflows/workflow-lint.yml` | actionlint + zizmor, Job `workflow-lint` |
-| `.github/workflows/secret-scan.yml` | gitleaks über den PR-Diff, Job `gitleaks` (`.gitleaks.toml`) |
-| `.github/workflows/labels.yml` + `.github/labels.json` + `scripts/ci/` | Labels als Code, **opt-in** über die Repo-Variable `LABELS_ENABLED` |
-| `.github/dependabot.yml` | `github-actions` wöchentlich, 7 Tage Cooldown; Platzhalter für pip/npm/docker |
-| `.github/rulesets/` | Ruleset-Vorlage (`default.json`) + Erklärung, wird **nicht** automatisch angewandt |
-| `docs/TEMPLATE-SETUP.md` | Einrichtung eines neuen Repos: Secrets, Runner, Rulesets, Kosten |
+| `data-theme` | Quelle |
+| --- | --- |
+| `stuffcloud` (= `stuffcloud-dark`), `stuffcloud-light`, `stuffcloud-paper`, `stuffcloud-contrast` | Stuffcloud-Designsystem |
+| `flower` (= `flower-creme`), `flower-wald` | Flower-Designs |
+| `pop`, Kagi-basiert | geplant, Entwürfe in Arbeit |
+
+Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono und
+Silkscreen, Flower braucht Figtree (siehe `index.html`).
+
+Ein neues Theme ist eine CSS-Datei, die die Variablen aus `src/lib/themes/base.css`
+für `[data-theme^='name']` überschreibt, plus ein `@import` in `themes/index.css`.
+
+## Svelte
+
+```bash
+npm i kern-ui
+```
+
+```svelte
+<script>
+	import 'kern-ui/themes.css';
+	import { Button, Input, Modal, Toaster, toast } from 'kern-ui';
+	let open = $state(false);
+</script>
+
+<!-- <html data-theme="flower"> -->
+<Input label="Name" />
+<Button onclick={() => toast.ok('Gespeichert.')}>Speichern</Button>
+<Toaster />
+```
+
+## Custom Elements
+
+```html
+<html data-theme="stuffcloud">
+<link rel="stylesheet" href="kern-ui/dist/themes/index.css" />
+<script type="module" src="kern-ui/dist-elements/kern-elements.js"></script>
+
+<form>
+	<k-input name="name" label="Name" required></k-input>
+	<k-select name="size" label="Größe" options='[{"value":"s","label":"Klein"}]'></k-select>
+	<k-button type="submit">Absenden</k-button>
+</form>
+<k-toaster></k-toaster>
+<script> window.kern.toast('Hallo') </script>
+```
+
+Listen (`options`, `items`, `tabs`, `columns`, `rows`, `commands`, `nodes`, `expanded`) werden
+als JSON-Attribut übergeben.
+
+Ereignisse:
+
+- `change`: Felder, Tabs, Combobox, DatePicker, Slider (`detail` = Wert), Pagination (Seite),
+  Carousel (Folienindex)
+- `input`: Slider, während des Ziehens
+- `select`: DropdownMenu, ContextMenu, CommandPalette, TreeView (`detail` = id)
+- `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
+- `files`: FileDrop (`detail` = `File[]`, auch als `el.files`)
+- `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
+
+Slots: Tab-Inhalte sind Kinder mit `data-tab="<id>"`, Folien von `<k-carousel>` sind seine
+Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` (Card), `actions` (Alert,
+EmptyState, Navbar), `icon` (EmptyState), `brand` (Navbar), `trigger` (Popover, nur Inhalt
+des Buttons). Bei `<k-context-menu>` ist der Standard-Slot die Zielfläche.
+
+Combobox, DatePicker (sendet ISO `yyyy-mm-dd`), Slider und FileDrop nehmen wie Input über
+`name` am Formular teil. Texte wie `prev-label`, `menu-label` oder `no-results` lassen sich
+per Attribut übersetzen; die Vorgaben sind englisch.
+
+## Komponenten (Kern-Set)
+
+Aktionen: Button, IconButton, Link, DropdownMenu, ContextMenu, CommandPalette ·
+Status: Badge, Tag, Avatar, Spinner, Progress, Skeleton, Alert, Toaster/`toast()` ·
+Formulare: Field, Input, Textarea, Select, Combobox, DatePicker, Slider, FileDrop, Checkbox, RadioGroup, Switch ·
+Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel ·
+Overlays: Modal, Drawer, Tooltip, Popover ·
+Navigation: Navbar, Breadcrumb, Pagination, Tabs, Accordion/AccordionItem, TreeView
+
+Ziel ist ein Umfang wie [cock](https://github.com/JoshiCodes/cock) oder größer.
+
+Overlays (Popover, Combobox, DatePicker, ContextMenu) liegen mit `position: fixed`
+über der Seite, ohne Portal. Ein Vorfahr mit `transform`, `filter` oder `contain`
+verschiebt deshalb ihre Position.
+
+## Entwicklung
+
+```bash
+npm install
+npm run dev        # Demo: /index.html (Svelte) und /elements.html (Custom Elements)
+npm run check      # svelte-check
+npm run build      # dist/, dist-elements/, demo-dist/
+```
 
 ## Lizenz
 
-GNU General Public License v3.0 — siehe [`LICENSE`](LICENSE). Gilt für alle Projekte, die aus
-dieser Vorlage entstehen, sofern im jeweiligen Repo nicht ausdrücklich anders
-vermerkt.
+GNU General Public License v3.0 oder später, siehe [`LICENSE`](LICENSE) und [`NOTICE`](NOTICE).
