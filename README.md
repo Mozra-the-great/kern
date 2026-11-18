@@ -109,4 +109,6 @@ npm run check      # svelte-check
 npm run build      # dist/, dist-elements/, demo-dist/
 ```
 
-MIT
+## Lizenz
+
+GNU General Public License v3.0 oder später, siehe [`LICENSE`](LICENSE) und [`NOTICE`](NOTICE).
