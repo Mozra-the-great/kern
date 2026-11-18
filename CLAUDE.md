@@ -8,7 +8,8 @@
 Library (UI component kit) with a demo site.
 
 ## Stack
-Svelte 5 (runes, snippets), TypeScript, Vite 7, `@sveltejs/package`, svelte-check.
+Svelte 5 (runes, snippets), TypeScript 6, Vite 8, `@sveltejs/package` 3, svelte-check 4.
+TypeScript 7 waits for svelte-check support (Dependabot ignores its major).
 No runtime dependencies besides Svelte, no Tailwind.
 
 ## Structure

@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `gitleaks`), Dependabot for GitHub Actions and npm, issue/PR templates.
 
 ### Changed
+- Toolchain: vite 8, @sveltejs/vite-plugin-svelte 7, @sveltejs/package 3,
+  TypeScript 6 (`vite/client` types for CSS side-effect imports). Dependabot
+  groups vite with the Svelte plugin and skips TypeScript majors for now.
 - License is GPL-3.0-or-later (was MIT in the first local import).
 
 ### Fixed
