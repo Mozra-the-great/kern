@@ -58,6 +58,12 @@ import KSegmentedControl from './KSegmentedControl.svelte';
 import KStepper from './KStepper.svelte';
 import KTagInput from './KTagInput.svelte';
 import KColorPicker from './KColorPicker.svelte';
+import KDataTable from './KDataTable.svelte';
+import KStat from './KStat.svelte';
+import KSparkline from './KSparkline.svelte';
+import KHeatmap from './KHeatmap.svelte';
+import KHistoryBar from './KHistoryBar.svelte';
+import KTimeline from './KTimeline.svelte';
 import { toast, dismissToast } from '../lib/components/toast.svelte.js';
 
 export const elements = {
@@ -67,7 +73,8 @@ export const elements = {
 	KSkeleton, KEmptyState, KBreadcrumb, KPagination, KNavbar, KSlider, KFileDrop, KCarousel,
 	KPopover, KCombobox, KContextMenu, KCommandPalette, KTreeView, KDatePicker,
 	KTypewriter, KCaret, KScramble, KCountUp, KOdometer, KMarquee, KReveal, KHighlight, KGridBackground, KTerminal,
-	KLabel, KNumberInput, KPinInput, KRating, KSegmentedControl, KStepper, KTagInput, KColorPicker
+	KLabel, KNumberInput, KPinInput, KRating, KSegmentedControl, KStepper, KTagInput, KColorPicker,
+	KDataTable, KStat, KSparkline, KHeatmap, KHistoryBar, KTimeline
 };
 export { toast, dismissToast };
 
