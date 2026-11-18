@@ -40,6 +40,24 @@ import KContextMenu from './KContextMenu.svelte';
 import KCommandPalette from './KCommandPalette.svelte';
 import KTreeView from './KTreeView.svelte';
 import KDatePicker from './KDatePicker.svelte';
+import KTypewriter from './KTypewriter.svelte';
+import KCaret from './KCaret.svelte';
+import KScramble from './KScramble.svelte';
+import KCountUp from './KCountUp.svelte';
+import KOdometer from './KOdometer.svelte';
+import KMarquee from './KMarquee.svelte';
+import KReveal from './KReveal.svelte';
+import KHighlight from './KHighlight.svelte';
+import KGridBackground from './KGridBackground.svelte';
+import KTerminal from './KTerminal.svelte';
+import KLabel from './KLabel.svelte';
+import KNumberInput from './KNumberInput.svelte';
+import KPinInput from './KPinInput.svelte';
+import KRating from './KRating.svelte';
+import KSegmentedControl from './KSegmentedControl.svelte';
+import KStepper from './KStepper.svelte';
+import KTagInput from './KTagInput.svelte';
+import KColorPicker from './KColorPicker.svelte';
 import { toast, dismissToast } from '../lib/components/toast.svelte.js';
 
 export const elements = {
@@ -47,7 +65,9 @@ export const elements = {
 	KInput, KTextarea, KSelect, KCheckbox, KRadioGroup, KSwitch, KCard, KAlert, KToaster,
 	KModal, KDrawer, KTabs, KAccordion, KAccordionItem, KTooltip, KDropdownMenu, KTable,
 	KSkeleton, KEmptyState, KBreadcrumb, KPagination, KNavbar, KSlider, KFileDrop, KCarousel,
-	KPopover, KCombobox, KContextMenu, KCommandPalette, KTreeView, KDatePicker
+	KPopover, KCombobox, KContextMenu, KCommandPalette, KTreeView, KDatePicker,
+	KTypewriter, KCaret, KScramble, KCountUp, KOdometer, KMarquee, KReveal, KHighlight, KGridBackground, KTerminal,
+	KLabel, KNumberInput, KPinInput, KRating, KSegmentedControl, KStepper, KTagInput, KColorPicker
 };
 export { toast, dismissToast };
 

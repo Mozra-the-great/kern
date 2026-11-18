@@ -68,13 +68,18 @@ npm i kern-ui
 <script> window.kern.toast('Hallo') </script>
 ```
 
-Listen (`options`, `items`, `tabs`, `columns`, `rows`, `commands`, `nodes`, `expanded`) werden
-als JSON-Attribut übergeben.
+Listen (`options`, `items`, `tabs`, `columns`, `rows`, `commands`, `nodes`, `expanded`, `steps`,
+`suggestions`, `swatches`, `lines`, `format`, bei TagInput `value`, bei Typewriter `text`) werden als
+JSON-Attribut übergeben. Attribute mit Vorgabe `true` (`pausable`, `pause-on-hover`, `once`, `in-view`,
+`caret`, `blink` …) schaltet `="false"` ab.
 
 Ereignisse:
 
-- `change`: Felder, Tabs, Combobox, DatePicker, Slider (`detail` = Wert), Pagination (Seite),
-  Carousel (Folienindex)
+- `change`: Felder, Tabs, Combobox, DatePicker, Slider, NumberInput (Zahl oder `null`), PinInput,
+  Rating, SegmentedControl, ColorPicker (Hex), TagInput (`string[]`), Pagination (Seite), Carousel (Folienindex)
+- `complete`: PinInput (alle Felder gefüllt, `detail` = Code), Typewriter (ohne `loop`), Scramble,
+  CountUp, Terminal
+- `step`: Stepper mit `clickable`, Klick auf einen erledigten Schritt (`detail` = Index)
 - `input`: Slider, während des Ziehens
 - `select`: DropdownMenu, ContextMenu, CommandPalette, TreeView (`detail` = id)
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
@@ -86,18 +91,21 @@ Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` (Card), `actions
 EmptyState, Navbar), `icon` (EmptyState), `brand` (Navbar), `trigger` (Popover, nur Inhalt
 des Buttons). Bei `<k-context-menu>` ist der Standard-Slot die Zielfläche.
 
-Combobox, DatePicker (sendet ISO `yyyy-mm-dd`), Slider und FileDrop nehmen wie Input über
-`name` am Formular teil. Texte wie `prev-label`, `menu-label` oder `no-results` lassen sich
+Combobox, DatePicker (sendet ISO `yyyy-mm-dd`), Slider, FileDrop, NumberInput, PinInput, Rating,
+SegmentedControl und ColorPicker nehmen wie Input über `name` am Formular teil, TagInput mit einem
+Eintrag pro Schlagwort (wiederholter `name`). Marquee, Reveal, Highlight und GridBackground zeigen ihren
+Standard-Slot. Alle Effekte zeigen bei „Bewegung reduzieren“ sofort ihren Endzustand. Texte wie `prev-label`, `menu-label` oder `no-results` lassen sich
 per Attribut übersetzen; die Vorgaben sind englisch.
 
 ## Komponenten (Kern-Set)
 
 Aktionen: Button, IconButton, Link, DropdownMenu, ContextMenu, CommandPalette ·
 Status: Badge, Tag, Avatar, Spinner, Progress, Skeleton, Alert, Toaster/`toast()` ·
-Formulare: Field, Input, Textarea, Select, Combobox, DatePicker, Slider, FileDrop, Checkbox, RadioGroup, Switch ·
+Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
 Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel ·
 Overlays: Modal, Drawer, Tooltip, Popover ·
-Navigation: Navbar, Breadcrumb, Pagination, Tabs, Accordion/AccordionItem, TreeView
+Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, Accordion/AccordionItem, TreeView ·
+Effekte: Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal, Highlight, GridBackground, Terminal
 
 Ziel ist ein Umfang wie [cock](https://github.com/JoshiCodes/cock) oder größer.
 

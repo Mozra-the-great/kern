@@ -8,6 +8,8 @@
 	import { themes } from './themes.js';
 	import Extras from './sections/Extras.svelte';
 	import Widgets from './sections/Widgets.svelte';
+	import FormsMore from './sections/FormsMore.svelte';
+	import Effects from './sections/Effects.svelte';
 
 	let theme = $state(readTheme());
 	function readTheme() {
@@ -229,6 +231,8 @@
 
 	<Extras />
 	<Widgets />
+	<FormsMore />
+	<Effects />
 </main>
 
 <Modal bind:open={modalOpen} title="Ordner löschen?" description="„Urlaub 2026“ und 214 Dateien werden in den Papierkorb gelegt.">

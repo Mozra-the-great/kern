@@ -96,6 +96,28 @@
 				<div style="padding:24px;border:1px dashed var(--k-border);border-radius:var(--k-radius-card)">urlaub-2026.zip — Rechtsklick, lange drücken oder Umschalt+F10</div>
 			</k-context-menu>
 			<k-tree-view label="Ordner" expanded='["fotos"]' nodes='[{"id":"fotos","label":"Fotos","children":[{"id":"2025","label":"2025"},{"id":"2026","label":"2026"}]},{"id":"docs","label":"Dokumente","children":[{"id":"rechnungen","label":"Rechnungen"}]},{"id":"notizen","label":"notizen.md"}]'></k-tree-view>
+			<form id="form3">
+				<div><k-label for="nick" required>Spitzname</k-label> <input id="nick" name="nick" /></div>
+				<k-number-input name="qty" label="Menge" value="2" min="0" max="10" decrement-label="Weniger" increment-label="Mehr"></k-number-input>
+				<k-number-input name="price" label="Preis" value="12.5" step="0.5" locale="de-DE" format='{"style":"currency","currency":"EUR"}' decrement-label="Weniger" increment-label="Mehr"></k-number-input>
+				<k-pin-input id="pin" name="code" label="Bestätigungscode" length="6" digit-label="Ziffer {index} von {length}"></k-pin-input>
+				<k-rating name="stars" label="Bewertung" value="3" star-label="{value} von {max} Sternen"></k-rating>
+				<k-rating label="Durchschnitt" value="4.5" readonly star-label="{value} von {max} Sternen"></k-rating>
+				<k-segmented-control name="view" label="Ansicht" value="list" options='[{"value":"grid","label":"Raster"},{"value":"list","label":"Liste"},{"value":"map","label":"Karte"}]'></k-segmented-control>
+				<k-tag-input name="tags" label="Schlagwörter" value='["Gel","Matt"]' max="6" suggestions='["Gel","Matt","Pastell","Glitzer","Holo"]' placeholder="Wort, dann Enter" remove-label="{tag} entfernen" added-text="{tag} hinzugefügt" removed-text="{tag} entfernt" duplicate-text="{tag} ist schon dabei" max-text="Höchstens {max} Schlagwörter" instructions="Enter oder Komma fügt ein Schlagwort hinzu."></k-tag-input>
+				<k-color-picker name="color" label="Farbe" value="#d77b6f" swatches='["#2c4f38","#d77b6f",{"value":"#f5c518","label":"Gelb"}]' picker-label="Farbe wählen" area-label="Sättigung und Helligkeit" area-text="Sättigung {saturation} %, Helligkeit {brightness} %" hue-label="Farbton" swatches-label="Vorlagen" invalid-text="Bitte eine Farbe wie #rgb oder #rrggbb eingeben."></k-color-picker>
+				<div class="row"><k-button type="submit">Absenden</k-button> <k-button type="reset" variant="ghost">Zurücksetzen</k-button> <output id="out3" style="overflow-wrap:anywhere"></output></div>
+			</form>
+			<k-stepper id="stepper" clickable current="2" label="Bestellfortschritt" complete-label="erledigt" compact-label="Schritt {current} von {total}: {label}" back-label="Zurück zu {label}" steps='[{"id":"a","label":"Warenkorb"},{"id":"b","label":"Adresse"},{"id":"c","label":"Zahlung"},{"id":"d","label":"Bestätigung"}]'></k-stepper>
+			<p>Sammle <k-highlight>jede Farbe</k-highlight> und zähle <k-count-up id="cu" value="1248" duration="1200"></k-count-up> Lacke, Stand <k-odometer id="od" value="2026" format='{"useGrouping":false}'></k-odometer>.</p>
+			<p><k-typewriter text='["Lack sammeln.","Farben tauschen."]' loop></k-typewriter> · <k-scramble hover>Mintgrün Nr. 14</k-scramble> · <k-caret shape="block"></k-caret></p>
+			<k-marquee label="Farben" speed="60" fade>
+				<span style="padding:8px 16px;border:1px solid var(--k-line)">Mintgrün</span><span style="padding:8px 16px;border:1px solid var(--k-line)">Beerenrot</span><span style="padding:8px 16px;border:1px solid var(--k-line)">Nachtblau</span>
+			</k-marquee>
+			<k-reveal direction="left"><k-card title="Von rechts">Gleitet an seinen Platz.</k-card></k-reveal>
+			<k-grid-background variant="dots" size="20" fade style="border:1px solid var(--k-line)"><div style="padding:48px;text-align:center">Punkte</div></k-grid-background>
+			<k-terminal id="term" title="bash" typewriter copy lines='[{"text":"npm install kern-ui","output":"added 1 package"}]'></k-terminal>
+			<div class="row"><k-button id="odplus">Odometer +1</k-button></div>
 			<k-command-palette id="palette" hotkey="mod+k" label="Befehlspalette" placeholder="Befehl suchen …" empty="Kein passender Befehl" close-label="Schließen" commands='[{"id":"new","label":"Neue Datei","group":"Dateien","shortcut":"Strg+N"},{"id":"share","label":"Link teilen","group":"Dateien","keywords":["freigabe"]},{"id":"theme","label":"Theme wechseln","group":"Ansicht","keywords":["dunkel","hell"]}]'></k-command-palette>
 		</main>
 		<k-modal id="modal" title="Ordner löschen?" description="214 Dateien kommen in den Papierkorb.">
@@ -120,6 +142,18 @@
 			$('#palette').addEventListener('select', (e) => window.kern.toast('Befehl: ' + e.detail));
 			$('k-context-menu').addEventListener('select', (e) => window.kern.toast('Kontextmenü: ' + e.detail));
 			$('k-tree-view').addEventListener('select', (e) => window.kern.toast('Ordner: ' + e.detail));
+			$('#odplus').addEventListener('click', () => ($('#od').value += 1));
+			$('#cu').addEventListener('complete', () => window.kern.toast('Gezählt'));
+			$('#term').addEventListener('complete', () => window.kern.toast('Terminal fertig'));
+			$('#form3').addEventListener('submit', (e) => {
+				e.preventDefault();
+				const d = new FormData(e.target), out = {};
+				for (const k of new Set(d.keys())) { const all = d.getAll(k); out[k] = all.length > 1 ? all : all[0]; }
+				$('#out3').textContent = JSON.stringify(out);
+			});
+			$('#pin').addEventListener('complete', (e) => window.kern.toast.ok('Code: ' + e.detail));
+			$('k-tag-input').addEventListener('change', (e) => window.kern.toast(e.detail.length + ' Schlagwörter'));
+			$('#stepper').addEventListener('step', (e) => window.kern.toast('Schritt ' + (e.detail + 1)));
 			$('#form2').addEventListener('submit', (e) => { e.preventDefault(); $('#out2').textContent = JSON.stringify(Object.fromEntries(new FormData(e.target))); });
 		</script>
 	</body>
