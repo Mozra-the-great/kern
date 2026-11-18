@@ -18,6 +18,11 @@
 	</head>
 	<body>
 		<main>
+			<k-navbar id="nav" label="Hauptmenü" menu-label="Menü" items='[{"label":"Sammlung","href":"#a","current":true},{"label":"Hilfe","href":"#b"}]'>
+				<span slot="brand">kern</span>
+				<k-button slot="actions" size="sm" variant="secondary">Anmelden</k-button>
+			</k-navbar>
+			<k-breadcrumb max="3" label="Brotkrumen" expand-label="Ausgeblendete Einträge anzeigen" items='[{"label":"Start","href":"#"},{"label":"Sammlung","href":"#"},{"label":"Lacke","href":"#"},{"label":"Pastell","href":"#"},{"label":"Mintgrün Nr. 14"}]'></k-breadcrumb>
 			<h1>Custom Elements</h1>
 			<label class="row">Theme
 				<select id="theme">
@@ -25,6 +30,8 @@
 					<option value="flower-wald">Flower · Wald</option>
 					<option value="stuffcloud">Stuffcloud · Dark</option>
 					<option value="stuffcloud-light">Stuffcloud · Light</option>
+					<option value="stuffcloud-paper">Stuffcloud · Paper</option>
+					<option value="stuffcloud-contrast">Stuffcloud · Contrast</option>
 				</select>
 			</label>
 			<div class="row">
@@ -45,6 +52,8 @@
 				<k-radio-group name="ship" label="Versand" value="standard" inline options='[{"value":"standard","label":"Standard"},{"value":"express","label":"Express"}]'></k-radio-group>
 				<k-checkbox name="terms" label="Bedingungen gelesen"></k-checkbox>
 				<k-switch name="news" label="Neuigkeiten" checked></k-switch>
+				<k-slider name="volume" label="Lautstärke" value="40" show-value unit=" %"></k-slider>
+				<k-file-drop id="fd" name="docs" label="Dateien" multiple accept=".pdf,image/*" max-size="2097152" drop-label="Dateien hierher ziehen oder klicken" remove-label="Entfernen:"></k-file-drop>
 				<div class="row"><k-button type="submit">Absenden</k-button> <output id="out"></output></div>
 			</form>
 			<k-tabs label="Bereiche" tabs='[{"id":"a","label":"Dateien"},{"id":"b","label":"Geteilt"}]'>
@@ -57,6 +66,34 @@
 			</k-accordion>
 			<k-table caption="Dateien" columns='[{"key":"name","label":"Name","sortable":true},{"key":"size","label":"MB","align":"end","mono":true,"sortable":true}]' rows='[{"name":"a.zip","size":12},{"name":"b.pdf","size":0.3}]'></k-table>
 			<k-progress label="Speicher" value="64" show-value></k-progress>
+			<k-skeleton lines="3"></k-skeleton>
+			<div class="row"><k-skeleton variant="circle" width="48"></k-skeleton><k-skeleton variant="rect" width="160" height="48"></k-skeleton></div>
+			<k-empty-state title="Noch keine Lacke" description="Lege deinen ersten Lack an.">
+				<svg slot="icon" viewBox="0 0 24 24" width="24" height="24"><path d="M9 3h6v4H9zM7 7h10l1 14H6z" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+				<k-button slot="actions">Hinzufügen</k-button>
+			</k-empty-state>
+			<k-pagination id="pg" page="3" page-count="12" label="Seiten" prev-label="Zurück" next-label="Weiter" page-label="Seite" of-label="von"></k-pagination>
+			<k-carousel id="car" label="Neue Farben" prev-label="Vorherige Folie" next-label="Nächste Folie" dots-label="Folien" slide-label="Zu Folie" of-label="von">
+				<div style="height:120px;padding:16px;background:var(--k-accent-soft)">Mintgrün</div>
+				<div style="height:120px;padding:16px;background:var(--k-bg-sunken)">Beerenrot</div>
+				<div style="height:120px;padding:16px;background:var(--k-info-soft)">Nachtblau</div>
+			</k-carousel>
+			<div class="row">
+				<k-popover label="Filter">
+					<k-input label="Name enthält" placeholder="z. B. Urlaub"></k-input>
+				</k-popover>
+				<k-button variant="secondary" id="palette-open">Befehle (Strg+K)</k-button>
+			</div>
+			<form id="form2">
+				<k-combobox name="color" label="Farbe" no-results="Keine Treffer" toggle-label="Optionen anzeigen" options='[{"value":"rose","label":"Altrosa"},{"value":"creme","label":"Crème brûlée"},{"value":"mint","label":"Mint"},{"value":"petrol","label":"Petrol"}]'></k-combobox>
+				<k-date-picker name="date" label="Datum" locale="de-DE" placeholder="TT.MM.JJJJ" min="2026-01-01" calendar-label="Datum wählen" prev-month-label="Vorheriger Monat" next-month-label="Nächster Monat" invalid-text="Bitte ein gültiges Datum eingeben."></k-date-picker>
+				<div class="row"><k-button type="submit">Absenden</k-button> <k-button type="reset" variant="ghost">Zurücksetzen</k-button> <output id="out2"></output></div>
+			</form>
+			<k-context-menu label="Dateiaktionen" area-label="Datei urlaub-2026.zip" items='[{"id":"open","label":"Öffnen"},{"id":"rename","label":"Umbenennen","shortcut":"F2"},{"type":"separator"},{"id":"delete","label":"Löschen","danger":true}]'>
+				<div style="padding:24px;border:1px dashed var(--k-border);border-radius:var(--k-radius-card)">urlaub-2026.zip — Rechtsklick, lange drücken oder Umschalt+F10</div>
+			</k-context-menu>
+			<k-tree-view label="Ordner" expanded='["fotos"]' nodes='[{"id":"fotos","label":"Fotos","children":[{"id":"2025","label":"2025"},{"id":"2026","label":"2026"}]},{"id":"docs","label":"Dokumente","children":[{"id":"rechnungen","label":"Rechnungen"}]},{"id":"notizen","label":"notizen.md"}]'></k-tree-view>
+			<k-command-palette id="palette" hotkey="mod+k" label="Befehlspalette" placeholder="Befehl suchen …" empty="Kein passender Befehl" close-label="Schließen" commands='[{"id":"new","label":"Neue Datei","group":"Dateien","shortcut":"Strg+N"},{"id":"share","label":"Link teilen","group":"Dateien","keywords":["freigabe"]},{"id":"theme","label":"Theme wechseln","group":"Ansicht","keywords":["dunkel","hell"]}]'></k-command-palette>
 		</main>
 		<k-modal id="modal" title="Ordner löschen?" description="214 Dateien kommen in den Papierkorb.">
 			<p>Das lässt sich 30 Tage lang rückgängig machen.</p>
@@ -73,6 +110,14 @@
 			$('#confirm').addEventListener('click', () => { $('#modal').open = false; window.kern.toast('Gelöscht'); });
 			$('k-dropdown-menu').addEventListener('select', (e) => window.kern.toast('Gewählt: ' + e.detail));
 			$('#form').addEventListener('submit', (e) => { e.preventDefault(); $('#out').textContent = JSON.stringify(Object.fromEntries(new FormData(e.target))); });
+			$('#pg').addEventListener('change', (e) => window.kern.toast('Seite ' + e.detail));
+			$('#car').addEventListener('change', (e) => window.kern.toast('Folie ' + (e.detail + 1)));
+			$('#fd').addEventListener('files', (e) => window.kern.toast(e.detail.length + ' Datei(en)'));
+			$('#palette-open').addEventListener('click', () => ($('#palette').open = true));
+			$('#palette').addEventListener('select', (e) => window.kern.toast('Befehl: ' + e.detail));
+			$('k-context-menu').addEventListener('select', (e) => window.kern.toast('Kontextmenü: ' + e.detail));
+			$('k-tree-view').addEventListener('select', (e) => window.kern.toast('Ordner: ' + e.detail));
+			$('#form2').addEventListener('submit', (e) => { e.preventDefault(); $('#out2').textContent = JSON.stringify(Object.fromEntries(new FormData(e.target))); });
 		</script>
 	</body>
 </html>

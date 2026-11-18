@@ -26,12 +26,28 @@ import KAccordionItem from './KAccordionItem.svelte';
 import KTooltip from './KTooltip.svelte';
 import KDropdownMenu from './KDropdownMenu.svelte';
 import KTable from './KTable.svelte';
+import KSkeleton from './KSkeleton.svelte';
+import KEmptyState from './KEmptyState.svelte';
+import KBreadcrumb from './KBreadcrumb.svelte';
+import KPagination from './KPagination.svelte';
+import KNavbar from './KNavbar.svelte';
+import KSlider from './KSlider.svelte';
+import KFileDrop from './KFileDrop.svelte';
+import KCarousel from './KCarousel.svelte';
+import KPopover from './KPopover.svelte';
+import KCombobox from './KCombobox.svelte';
+import KContextMenu from './KContextMenu.svelte';
+import KCommandPalette from './KCommandPalette.svelte';
+import KTreeView from './KTreeView.svelte';
+import KDatePicker from './KDatePicker.svelte';
 import { toast, dismissToast } from '../lib/components/toast.svelte.js';
 
 export const elements = {
 	KButton, KIconButton, KLink, KBadge, KTag, KAvatar, KSpinner, KProgress, KDivider,
 	KInput, KTextarea, KSelect, KCheckbox, KRadioGroup, KSwitch, KCard, KAlert, KToaster,
-	KModal, KDrawer, KTabs, KAccordion, KAccordionItem, KTooltip, KDropdownMenu, KTable
+	KModal, KDrawer, KTabs, KAccordion, KAccordionItem, KTooltip, KDropdownMenu, KTable,
+	KSkeleton, KEmptyState, KBreadcrumb, KPagination, KNavbar, KSlider, KFileDrop, KCarousel,
+	KPopover, KCombobox, KContextMenu, KCommandPalette, KTreeView, KDatePicker
 };
 export { toast, dismissToast };
 

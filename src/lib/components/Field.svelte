@@ -39,7 +39,7 @@
 </div>
 
 <style>
-	.k-field { display: grid; gap: var(--k-space-2); min-width: 0; }
+	.k-field { display: grid; gap: var(--k-space-2); align-content: start; min-width: 0; }
 	.label {
 		font-family: var(--k-label-font);
 		font-size: var(--k-label-size);

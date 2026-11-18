@@ -63,23 +63,42 @@ npm i kern-ui
 <script> window.kern.toast('Hallo') </script>
 ```
 
-Listen (`options`, `items`, `tabs`, `columns`, `rows`) werden als JSON-Attribut übergeben.
-Ereignisse: `change` (Felder, Tabs), `select` (Menü, `detail` = id), `close` (Modal, Drawer),
-`dismiss` (Alert), `remove` (Tag). Tab-Inhalte sind Kinder mit `data-tab="<id>"`, benannte
-Slots: `footer` (Modal, Drawer, Card), `media` (Card), `actions` (Alert).
+Listen (`options`, `items`, `tabs`, `columns`, `rows`, `commands`, `nodes`, `expanded`) werden
+als JSON-Attribut übergeben.
+
+Ereignisse:
+
+- `change`: Felder, Tabs, Combobox, DatePicker, Slider (`detail` = Wert), Pagination (Seite),
+  Carousel (Folienindex)
+- `input`: Slider, während des Ziehens
+- `select`: DropdownMenu, ContextMenu, CommandPalette, TreeView (`detail` = id)
+- `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
+- `files`: FileDrop (`detail` = `File[]`, auch als `el.files`)
+- `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
+
+Slots: Tab-Inhalte sind Kinder mit `data-tab="<id>"`, Folien von `<k-carousel>` sind seine
+Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` (Card), `actions` (Alert,
+EmptyState, Navbar), `icon` (EmptyState), `brand` (Navbar), `trigger` (Popover, nur Inhalt
+des Buttons). Bei `<k-context-menu>` ist der Standard-Slot die Zielfläche.
+
+Combobox, DatePicker (sendet ISO `yyyy-mm-dd`), Slider und FileDrop nehmen wie Input über
+`name` am Formular teil. Texte wie `prev-label`, `menu-label` oder `no-results` lassen sich
+per Attribut übersetzen; die Vorgaben sind englisch.
 
 ## Komponenten (Kern-Set)
 
-Aktionen: Button, IconButton, Link, DropdownMenu ·
-Status: Badge, Tag, Avatar, Spinner, Progress, Alert, Toaster/`toast()` ·
-Formulare: Field, Input, Textarea, Select, Checkbox, RadioGroup, Switch ·
-Inhalt: Card, Divider, Table (sortierbar, auf Mobil als Karten) ·
-Overlays: Modal, Drawer, Tooltip ·
-Navigation: Tabs, Accordion/AccordionItem
+Aktionen: Button, IconButton, Link, DropdownMenu, ContextMenu, CommandPalette ·
+Status: Badge, Tag, Avatar, Spinner, Progress, Skeleton, Alert, Toaster/`toast()` ·
+Formulare: Field, Input, Textarea, Select, Combobox, DatePicker, Slider, FileDrop, Checkbox, RadioGroup, Switch ·
+Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel ·
+Overlays: Modal, Drawer, Tooltip, Popover ·
+Navigation: Navbar, Breadcrumb, Pagination, Tabs, Accordion/AccordionItem, TreeView
 
 Ziel ist ein Umfang wie [cock](https://github.com/JoshiCodes/cock) oder größer.
-Als Nächstes geplant: Combobox, Popover, ContextMenu, CommandPalette, Pagination,
-Breadcrumb, Navbar, TreeView, Slider, DatePicker, FileDrop, Skeleton, EmptyState, Carousel.
+
+Overlays (Popover, Combobox, DatePicker, ContextMenu) liegen mit `position: fixed`
+über der Seite, ohne Portal. Ein Vorfahr mit `transform`, `filter` oder `contain`
+verschiebt deshalb ihre Position.
 
 ## Entwicklung
 

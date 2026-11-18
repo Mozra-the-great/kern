@@ -1,0 +1,11 @@
+<svelte:options customElement={{ tag: 'k-context-menu', props: { items: { type: "Array" }, label: { type: "String" }, areaLabel: { type: 'String', attribute: 'area-label' }, focusable: { type: "String" }, longPress: { type: 'Number', attribute: 'long-press' }, disabled: { type: "Boolean" } } }} />
+<script lang="ts">
+	import ContextMenu from '../lib/components/ContextMenu.svelte';
+	import { emit } from './form.js';
+	/* Default slot = target area. items: JSON list like k-dropdown-menu; choosing an item fires "select" with its id.
+	   focusable="false" takes the area out of the tab order (when the slotted content is focusable itself). */
+	let { items = [], label, areaLabel, focusable, longPress, disabled = false } = $props();
+	const host = $host();
+	const wired = $derived(items.map((i: any) => (i.type === 'separator' || i.type === 'label' ? i : { ...i, onselect: () => emit(host, 'select', i.id) })));
+</script>
+<ContextMenu items={wired} {label} {areaLabel} focusable={focusable !== 'false' && focusable !== false} {longPress} {disabled}><slot /></ContextMenu>

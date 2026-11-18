@@ -6,6 +6,8 @@
 		toast
 	} from '../lib/index.js';
 	import { themes } from './themes.js';
+	import Extras from './sections/Extras.svelte';
+	import Widgets from './sections/Widgets.svelte';
 
 	let theme = $state(readTheme());
 	function readTheme() {
@@ -223,6 +225,9 @@
 			<AccordionItem title="Was passiert im Papierkorb?"><p>Dateien werden nach 30 Tagen gelöscht.</p></AccordionItem>
 		</Accordion>
 	</section>
+
+	<Extras />
+	<Widgets />
 </main>
 
 <Modal bind:open={modalOpen} title="Ordner löschen?" description="„Urlaub 2026“ und 214 Dateien werden in den Papierkorb gelegt.">
