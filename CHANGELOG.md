@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Repository scaffold from `repo-template-public`: CI (`build`, `workflow-lint`,
   `gitleaks`), Dependabot for GitHub Actions and npm, issue/PR templates.
 
+- Pop theme (`pop` / `pop-light`, `pop-dark`) from the Pop design system:
+  pill controls, 32px cards, one soft shadow, Figtree 900 display, green accent.
+
 ### Changed
 - Toolchain: vite 8, @sveltejs/vite-plugin-svelte 7, @sveltejs/package 3,
   TypeScript 6 (`vite/client` types for CSS side-effect imports). Dependabot

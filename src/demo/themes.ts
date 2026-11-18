@@ -4,5 +4,7 @@ export const themes = [
 	{ id: 'stuffcloud-paper', label: 'Stuffcloud · Paper' },
 	{ id: 'stuffcloud-contrast', label: 'Stuffcloud · Contrast' },
 	{ id: 'flower', label: 'Flower · Creme' },
-	{ id: 'flower-wald', label: 'Flower · Wald' }
+	{ id: 'flower-wald', label: 'Flower · Wald' },
+	{ id: 'pop', label: 'Pop · Light' },
+	{ id: 'pop-dark', label: 'Pop · Dark' }
 ];
