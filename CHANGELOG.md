@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-19
+
 ### Added
 - `SortableList` and `<k-sortable-list>` (#68): an ordered list whose items have Up, Down and Remove buttons with the
   item name in their accessible name (`Move {name} up`; it contains the visible text, WCAG 2.5.3, English
