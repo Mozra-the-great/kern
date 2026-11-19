@@ -59,6 +59,52 @@ state surfaces, code/hint colours or drop line for them, so they keep the base d
 - Every other derived token keeps its base default in both brands (their designs have no
   separate value), so their look does not change.
 
+## Line variables and their kern tokens
+
+Source: the Line-Designsystem (`tokens.json`, README). `line` (= `line-dark`) is the first theme
+and the fallback, `line-light` a full second theme. Values are dark / light.
+
+| Line | value (dark / light) | kern token | kern value (dark / light) | note |
+| --- | --- | --- | --- | --- |
+| `bg` | `#19191c` / `#f2f2f3` | `--k-bg` | same | |
+| `surface` | `#232327` / `#ffffff` | `--k-bg-raised` | same | |
+| `bg2` | `#121214` / `#e6e6e9` | `--k-bg-sunken` | same | |
+| `surface2` | `#2d2d32` / `#f0f0f2` | `--k-selected` | same | hover and active items |
+| `ink` | `#ffffff` / `#18181a` | `--k-fg` | same | |
+| `ink2` | `#d6d6dc` / `#3a3a41` | `--k-fg-soft` | same | |
+| `mut` | `#a4a4af` / `#5f5f69` | `--k-fg-muted` (= `--k-fg-hint`) | same | |
+| `line` | `#3b3b42` / `#d4d4da` | `--k-line` (= `--k-line-strong`) | same | dividers, panel edges |
+| `line2` | `#5a5a63` / `#9c9ca6` | `--k-border` | `#70707a` / `#7e7e88` | **deviation**: `line2` is 2.3-2.7:1 (dark) and 2.2-2.7:1 (light); moved towards `mut` to reach 3:1 on bg, raised and sunken (3.2:1 worst case) |
+| `solid` / `on-solid` / `solid-h` | `#f2f2f3` `#18181a` `#ffffff` / `#18181a` `#ffffff` `#000000` | `--k-primary` / `--k-on-primary` / `--k-primary-hover` | same | |
+| `sun` / `art` | `#ffb81c` / `#18181a` | `--k-accent` / `--k-on-accent` | same | |
+| `sun` as mark | `#ffb81c` | `--k-accent-mark` | `#ffb81c` / `#a67812` | **deviation** in light: `sun` is 1.4-1.7:1 on a light ground; `sun` at 65 % brightness reaches 3.2:1 on bg-sunken |
+| `sun` / `warn` as text | | `--k-accent-text` | `#ffb81c` / `#8a5a00` | light `sun` text would be 1.5:1 |
+| `link` | `#c5bdff` / `#4b3bd1` | `--k-link`, `--k-info` | same | |
+| `focus` | `#ffb81c` / `#4b3bd1` | `--k-focus` | same | 2.5px, offset 3px |
+| `sel-bg` | `#232327` / `#fff1c9` | `--k-surface-selected`; light `--k-accent-soft` | same | |
+| `sel` | `#ffb81c` / `#18181a` | not a token | | kern draws selection with the accent mark and focus |
+| `ok` | `#8fd86b` / `#2b7a1c` | `--k-ok` | same | |
+| `warn` | `#ffb81c` / `#8a5a00` | `--k-warn` | same | |
+| `danger` / `danger-bg` | `#ff8a7a` `#c9372c` / `#b92f26` `#c9372c` | `--k-danger` / `--k-on-danger` | `#ff8a7a` + `#18181a` / `#b92f26` + `#ffffff` | **deviation**: one kern token is both error text and destructive fill; dark takes the text value with `art` text (7.7:1), as `danger-bg` is 3.4:1 as text on bg; light takes the text value (`paper` on it 6.0:1; `danger-bg` would be 4.2:1 as text on bg-sunken) |
+| (none) | | `--k-ok-soft`, `--k-warn-soft`, `--k-danger-soft`, `--k-info-soft`, dark `--k-accent-soft` | dark `#30392f` `#3d3526` `#3d2f31` `#363541`; light `#eaf2e8` `#f3efe6` `#f8eae9` `#edebfa` | derived: status colour at 12 % over raised (dark) / 10 % over white (light); status text keeps >= 4.7:1 |
+| `term` / `term-ink` | `#101012` / `#ededf0` | `--k-bg-code` / `--k-fg-code` | dark same; light `#e6e6e9` / `#18181a` | **deviation** in light: kern sets `--k-fg-muted` on bg-code and light `mut` is 2.8:1 on `term` |
+| `stroke-ui` | 1.5px | `--k-border-w` | 1.5px | |
+| `stroke-focus` / focus offset | 2.5px / 3px | `--k-focus-w` / `--k-focus-offset` | same | |
+| `radius-pill` | 999px | `--k-radius-control`, `--k-radius-badge`, `--k-radius-avatar` | same | |
+| `radius-lg` | 22px | `--k-radius-card`, `--k-radius-overlay` | same | |
+| `size-field` pill | 54px | `--k-radius-field` | 27px | exactly a pill at 54px; a 999px radius would turn Alert, FileDrop and Collapsible into ovals (the design's drop zone is 26px) |
+| `size-touch` | 44px | `--k-tap-min`, `--k-tap-target`, `--k-tap-icon`, `--k-control-h-sm` | 44px | every pointer |
+| `size-button` / `size-field` | 52px / 54px | `--k-control-h` / `--k-control-h-lg` | 52px / 54px | Button, Input and Select use `--k-control-h` (52px); `--k-control-h-lg` (54px) is the large Button and Accordion; fields are 52px, not 54px, as kern has no separate field height |
+| `display` / `sans` / `mono` | Outfit / Inter / JetBrains Mono | `--k-font-display` / `--k-font-sans` / `--k-font-mono` | same | weights 600 / 600 / 500 |
+| text styles | 14 / 15 / 17 / 20 / 30 / 68px | `--k-text-xs` ... `--k-text-2xl` | same; 26px and 44px for xl and 2xl up to 760px | |
+| no shadows | | `--k-shadow-raised`, `--k-shadow-overlay`, `--k-shadow-sm` | `none` | |
+| motion | 0.15s | `--k-dur` | 150ms | |
+
+Not used: `lav`, `green`, `orange`, `sky`, `pink`, `peach`, `teal`, `fog`, `alert`, `hot`,
+`term-mut`, `term-str` (illustration and tile colours), the hand font, `danger-h`, `sun-h`.
+Inter's contextual alternates are switched off in the design; kern has no token for font
+features, so that is left to the page (`font-feature-settings: 'calt' 0`).
+
 ## Contract
 
 `npm test` checks, for every `data-theme` value a theme file names:

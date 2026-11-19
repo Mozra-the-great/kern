@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Theme `line` (= `line-dark`) and `line-light` from the Line-Designsystem (#77): pill controls, 1.5px
+  borders, no shadows, Outfit / Inter / JetBrains Mono, 44px targets for every pointer, buttons 52px.
+  Entry `@mozra-the-great/kern/themes/line.css`, also part of `themes.css`. Control borders and the
+  light accent mark are adjusted to kern's 3:1 contract (mapping in `brands/line.css` and
+  `docs/themes.md`). `ThemeToggle` and `createThemeScript` know the `line` family.
 - `Progress` parity with stuffcloud (#42): `tone` (`'default' | 'warn'`), `valueText`
   (`aria-valuetext`), `hideLabel`; `<k-progress>` gets `tone`, `value-text`, `hide-label`. Inputs are
   normalised (value clamped to 0…max, NaN/Infinity count as 0, a non-positive or non-finite `max`

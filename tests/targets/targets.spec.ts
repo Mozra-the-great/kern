@@ -221,7 +221,7 @@ async function check(page: Page): Promise<void> {
 }
 
 test.describe('touch (pointer: coarse, 375px)', () => {
-	for (const theme of ['stuffcloud', 'flower', 'pop']) {
+	for (const theme of ['stuffcloud', 'flower', 'pop', 'line', 'line-light']) {
 		test(`every target is >= ${TAP}px in ${theme}`, async ({ page }) => {
 			await openDemo(page, theme);
 			expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
@@ -232,7 +232,7 @@ test.describe('touch (pointer: coarse, 375px)', () => {
 
 test.describe('mouse (pointer: fine, 1280px), themes whose design sets 44px for every pointer', () => {
 	test.use({ isMobile: false, hasTouch: false, viewport: { width: 1280, height: 900 } });
-	for (const theme of ['stuffcloud', 'pop']) {
+	for (const theme of ['stuffcloud', 'pop', 'line', 'line-light']) {
 		test(`every target is >= ${TAP}px in ${theme}`, async ({ page }) => {
 			await openDemo(page, theme);
 			expect(await page.evaluate(() => matchMedia('(pointer: fine)').matches)).toBe(true);
@@ -265,11 +265,19 @@ test.describe('sizes of the design', () => {
 		await openDemo(page, 'pop');
 		expect(await buttonSizes(page)).toEqual({ md: 56, sm: 44, icon: [48, 48] });
 	});
+	test('line on a phone: button 52px, compact 44px, icon 44px', async ({ page }) => {
+		await openDemo(page, 'line');
+		expect(await buttonSizes(page)).toEqual({ md: 52, sm: 44, icon: [44, 44] });
+	});
 	test.describe('desktop', () => {
 		test.use({ isMobile: false, hasTouch: false, viewport: { width: 1280, height: 900 } });
 		test('stuffcloud: button 52px, compact 44px, icon 48px', async ({ page }) => {
 			await openDemo(page, 'stuffcloud');
 			expect(await buttonSizes(page)).toEqual({ md: 52, sm: 44, icon: [48, 48] });
+		});
+		test('line: button 52px, compact 44px, icon 44px', async ({ page }) => {
+			await openDemo(page, 'line');
+			expect(await buttonSizes(page)).toEqual({ md: 52, sm: 44, icon: [44, 44] });
 		});
 		test('flower keeps 44px buttons and 34px compact ones for the mouse', async ({ page }) => {
 			await openDemo(page, 'flower');
