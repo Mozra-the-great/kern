@@ -8,7 +8,13 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 export default defineConfig({
 	plugins: [svelte()],
 	test: {
-		include: ['tests/tokens/**/*.test.ts', 'tests/mascot/**/*.test.ts', 'tests/components/**/*.test.ts', 'src/**/*.test.ts'],
+		include: [
+			'tests/tokens/**/*.test.ts',
+			'tests/mascot/**/*.test.ts',
+			'tests/unit/**/*.test.ts',
+			'tests/components/**/*.test.ts',
+			'src/**/*.test.ts'
+		],
 		environment: 'node'
 	}
 });

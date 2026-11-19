@@ -6712,6 +6712,34 @@
 						},
 						{
 							"kind": "field",
+							"name": "dismissible",
+							"type": {
+								"text": "boolean | 'true' | 'false' | undefined"
+							},
+							"attribute": "dismissible",
+							"description": "`false` (property or attribute): Escape, the backdrop and the close button (hidden) do nothing; only setting `open` to false closes it. Default true."
+						},
+						{
+							"kind": "field",
+							"name": "initialFocus",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "initial-focus",
+							"description": "CSS selector of the element that gets focus on open, looked up in the children (light DOM). Default: the browser's choice."
+						},
+						{
+							"kind": "field",
+							"name": "alert",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "alert",
+							"description": "role=\"alertdialog\", for confirmations that interrupt the user."
+						},
+						{
+							"kind": "field",
 							"name": "closeLabel",
 							"type": {
 								"text": "string | undefined"
@@ -6758,6 +6786,28 @@
 							"fieldName": "closeOnBackdrop"
 						},
 						{
+							"name": "dismissible",
+							"type": {
+								"text": "boolean | 'true' | 'false'"
+							},
+							"fieldName": "dismissible"
+						},
+						{
+							"name": "initial-focus",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "initialFocus"
+						},
+						{
+							"name": "alert",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "alert"
+						},
+						{
 							"name": "close-label",
 							"type": {
 								"text": "string"
@@ -6767,11 +6817,18 @@
 					],
 					"events": [
 						{
+							"name": "cancel",
+							"type": {
+								"text": "CustomEvent<null>"
+							},
+							"description": "The user asked to close (Escape, close button, backdrop); cancelable: `preventDefault()` keeps it open."
+						},
+						{
 							"name": "close",
 							"type": {
 								"text": "CustomEvent<null>"
 							},
-							"description": "The modal was closed by the user (Escape, close button, backdrop)."
+							"description": "The modal closed (by the user or by setting `open` to false)."
 						}
 					],
 					"slots": [
@@ -7960,6 +8017,7 @@
 					"customElement": true,
 					"tagName": "k-progress",
 					"name": "KProgressElement",
+					"description": "Progress bar. Without `value` it is indeterminate (stripes, still under reduced motion).",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -7968,9 +8026,10 @@
 							"kind": "field",
 							"name": "value",
 							"type": {
-								"text": "number | undefined"
+								"text": "number | null | undefined"
 							},
-							"attribute": "value"
+							"attribute": "value",
+							"description": "Clamped to 0..max; NaN counts as 0; none or null: indeterminate."
 						},
 						{
 							"kind": "field",
@@ -7997,13 +8056,39 @@
 							},
 							"default": "false",
 							"attribute": "show-value"
+						},
+						{
+							"kind": "field",
+							"name": "hideLabel",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "hide-label"
+						},
+						{
+							"kind": "field",
+							"name": "tone",
+							"type": {
+								"text": "'default' | 'warn' | undefined"
+							},
+							"attribute": "tone",
+							"description": "`warn` draws the bar in the warning colour."
+						},
+						{
+							"kind": "field",
+							"name": "valueText",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "value-text"
 						}
 					],
 					"attributes": [
 						{
 							"name": "value",
 							"type": {
-								"text": "number"
+								"text": "number | null"
 							},
 							"fieldName": "value"
 						},
@@ -8029,6 +8114,28 @@
 							},
 							"default": "false",
 							"fieldName": "showValue"
+						},
+						{
+							"name": "hide-label",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "hideLabel"
+						},
+						{
+							"name": "tone",
+							"type": {
+								"text": "'default' | 'warn'"
+							},
+							"fieldName": "tone"
+						},
+						{
+							"name": "value-text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "valueText"
 						}
 					],
 					"events": [],
@@ -13096,6 +13203,7 @@
 					"customElement": true,
 					"tagName": "k-toaster",
 					"name": "KToasterElement",
+					"description": "Renders the page-wide toasts of `window.kern.toast()`. Callbacks such as `oncommit` belong in the toast options; the events report what the user pressed in this toaster.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -13104,7 +13212,7 @@
 							"kind": "field",
 							"name": "position",
 							"type": {
-								"text": "string | undefined"
+								"text": "'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'top-left' | 'top-center' | undefined"
 							},
 							"attribute": "position"
 						},
@@ -13118,18 +13226,35 @@
 						},
 						{
 							"kind": "field",
+							"name": "undoLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "undo-label"
+						},
+						{
+							"kind": "field",
 							"name": "label",
 							"type": {
 								"text": "string | undefined"
 							},
 							"attribute": "label"
+						},
+						{
+							"kind": "field",
+							"name": "max",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "max",
+							"description": "Most toasts open at once (default 5); sets the limit of the page-wide queue."
 						}
 					],
 					"attributes": [
 						{
 							"name": "position",
 							"type": {
-								"text": "string"
+								"text": "'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'top-left' | 'top-center'"
 							},
 							"fieldName": "position"
 						},
@@ -13141,14 +13266,50 @@
 							"fieldName": "dismissLabel"
 						},
 						{
+							"name": "undo-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "undoLabel"
+						},
+						{
 							"name": "label",
 							"type": {
 								"text": "string"
 							},
 							"fieldName": "label"
+						},
+						{
+							"name": "max",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "max"
 						}
 					],
-					"events": [],
+					"events": [
+						{
+							"name": "dismiss",
+							"type": {
+								"text": "CustomEvent<ToastEventDetail>"
+							},
+							"description": "The user pressed a toast's dismiss button."
+						},
+						{
+							"name": "undo",
+							"type": {
+								"text": "CustomEvent<ToastEventDetail>"
+							},
+							"description": "The user pressed a toast's undo button."
+						},
+						{
+							"name": "action",
+							"type": {
+								"text": "CustomEvent<ToastEventDetail>"
+							},
+							"description": "The user pressed a toast's action button."
+						}
+					],
 					"slots": []
 				}
 			],

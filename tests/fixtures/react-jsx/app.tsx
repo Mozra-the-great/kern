@@ -34,7 +34,20 @@ export function App() {
 				onchange={(e) => setName(e.detail)}
 				oninput={() => input.current?.checkValidity()}
 			/>
-			<k-modal open={open} title="Delete?" onclose={() => setOpen(false)}>
+			<k-modal
+				open={open}
+				title="Adopt local data?"
+				dismissible={false}
+				initial-focus="#adopt"
+				alert
+				oncancel={(e) => e.preventDefault()}
+				onclose={() => setOpen(false)}
+			>
+				<button id="adopt" type="button" onClick={() => setOpen(false)}>
+					Adopt
+				</button>
+			</k-modal>
+			<k-modal open={open} title="Delete?" dismissible="false" onclose={() => setOpen(false)}>
 				<p>Body</p>
 				<div slot="footer">
 					<k-button variant="danger" onclick={() => setOpen(false)}>
@@ -49,6 +62,21 @@ export function App() {
 			<k-number-input value={null} min={0} onchange={(e) => console.log(e.detail?.toFixed(2))} />
 			<k-tree-view nodes={[{ id: 'root', label: 'Root' }]} ontoggle={(e) => console.log(e.detail.id, e.detail.expanded)} />
 			<k-copy-button value="x" oncopy-error={() => toast.warn('Copy failed')} />
+			<k-progress label="Storage" value={100} tone="warn" value-text="Full" hide-label />
+			<k-toaster position="bottom-left" undo-label="Undo" max={3} onundo={(e) => console.log(e.detail.id, e.detail.key)} />
+			<k-button
+				onclick={() =>
+					toast({
+						message: 'Deleted',
+						key: 'undo',
+						onundo: () => undefined,
+						oncommit: () => undefined,
+						onclose: (reason) => console.log(reason)
+					})
+				}
+			>
+				Delete
+			</k-button>
 			<k-button type="submit" onclick={() => dismissToast(toast('Saved'))}>
 				Save
 			</k-button>
@@ -58,6 +86,8 @@ export function App() {
 			<k-input onchange={(e) => e.detail.toFixed()} />
 			{/* @ts-expect-error kern's change event is `onchange`; React's `onChange` would not get it */}
 			<k-input onChange={() => undefined} />
+			{/* @ts-expect-error tone is 'default' | 'warn' */}
+			<k-progress label="x" tone="loud" />
 			{/* @ts-expect-error unknown prop */}
 			<k-button nope="1" />
 		</form>
@@ -71,3 +101,4 @@ el.addEventListener('change', (e) => console.log(e.detail.slice(0, 4)));
 const box = document.querySelector('k-checkbox');
 box?.addEventListener('change', (e) => console.log(e.detail === true));
 window.kern?.toast.ok('Hi');
+window.kern?.toast.clear();

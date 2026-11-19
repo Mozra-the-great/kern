@@ -211,6 +211,8 @@ es meldet das Ende einer Animation.
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
 - `files`: FileDrop (`detail` = `File[]`, auch als `el.files`) · `reject`: FileDrop (abgelehnte Dateien, `File[]`)
 - `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
+- `cancel`: Modal, bevor Escape, ✕ oder Hintergrund ihn schließen; abbrechbar (`preventDefault()` hält ihn offen)
+- `dismiss`, `undo`, `action`: Toaster, Klick auf ✕, „Rückgängig“ oder die Aktion eines Toasts (`detail` = `{id, key}`)
 
 Toasts: `toast()` aus `@mozra-the-great/kern` und `window.kern.toast()` aus `kern-elements.js` schreiben in
 denselben Speicher (`globalThis[Symbol.for('kern.toasts')]`). Ein Toast erscheint in jedem
@@ -219,6 +221,48 @@ denselben Speicher (`globalThis[Symbol.for('kern.toasts')]`). Ein Toast erschein
 doppelt: solange React-Seiten noch da sind `<k-toaster>` im gemeinsamen Layout, danach
 `<Toaster />`. Aufrufen lässt sich `toast()` von beiden Seiten. `toasts` ist eine
 schreibgeschützte Live-Liste; ändern nur über `toast()` und `dismissToast()`.
+
+Toasts mit Rückgängig (Snackbar wie in nagellacke): `onundo` zeigt einen Knopf mit dem Text aus
+`undoLabel` (`undo-label`), `oncommit` läuft **genau einmal**, wenn der Toast aus einem anderen
+Grund schließt (Zeit abgelaufen, ✕, Aktion, ersetzt, `toast.clear()`), nach „Rückgängig“ nie.
+`onclose(reason)` meldet jeden Grund: `timeout`, `dismiss`, `action`, `undo`, `replaced`, `cleared`.
+Ein neuer Toast mit demselben `key` ersetzt den alten; der alte committet vorher.
+
+```js
+window.kern.toast({
+	message: '„Rosé“ gelöscht',
+	key: 'undo', // der nächste Löschen-Toast ersetzt diesen und committet ihn
+	onundo: () => restore(id),
+	oncommit: () => deleteOnServer(id)
+});
+```
+
+Die Zeit läuft nicht, solange der Toast unter dem Mauszeiger liegt, den Fokus hat oder der Tab
+verborgen ist, und läuft danach mit der Restzeit weiter (WCAG 2.2.1). Vorgaben: info/ok 6 s,
+warn 10 s, danger bleibt bis zum Schließen; höchstens 5 offen (`max`), der älteste schließt
+zuerst. Der Toaster hat von Anfang an zwei Live-Regionen (`role="status"`, danger in
+`role="alert"`), damit Screenreader auch den ersten Toast ansagen. Nach „Rückgängig“ oder ✕ per
+Tastatur geht der Fokus zum nächsten Toast, sonst dorthin zurück, wo er herkam. Positionen:
+`bottom-right` (Vorgabe), `bottom-left`, `bottom-center`, `top-right`, `top-left`, `top-center`;
+Abstand zum Rand `--k-toaster-offset`, unten unter 760 px `--k-toaster-offset-mobile`
+(stuffcloud: 76 px über der Tab-Leiste). In Svelte rendert `<Toaster queue={createToastQueue()} />`
+eine eigene Warteschlange, etwa für Tests; ohne `queue` die gemeinsame.
+
+Dialoge, die beantwortet werden müssen: `dismissible={false}` (Element: `dismissible="false"`
+oder die Eigenschaft `false`) blendet ✕ aus, Escape und Hintergrund tun nichts; schließen kann
+nur die App über `open`. `initialFocus` (`initial-focus`, CSS-Selektor oder Element) bestimmt,
+was beim Öffnen den Fokus bekommt, etwa die Hauptaktion statt ✕. `alert` setzt
+`role="alertdialog"`. Solange ein Modal offen ist, scrollt die Seite dahinter nicht (auch
+verschachtelt); langer Inhalt scrollt im Dialog. Fokusfalle, inerte Seite und Rückgabe des
+Fokus an den Öffner kommen vom nativen `<dialog>`. `close` feuert auch, wenn die App den Dialog
+über `open` schließt.
+
+Progress: `tone="warn"` (Speicher voll), `valueText` (`value-text`, gesprochen statt der Zahl,
+etwa „3 von 12 Dateien“), `hideLabel` (`hide-label`, Beschriftung nur für Screenreader). Werte
+werden auf 0 … `max` begrenzt, `NaN` zählt als 0, ein `max` ≤ 0 als 100. Ohne `value` laufen
+Streifen (stuffcloud: `steps(4)`, nur `transform`), bei „Bewegung reduzieren“ stehen sie still;
+Themes stellen `--k-progress-period`, `--k-progress-loop` und `--k-progress-ease` ein. Im
+Kontrastmodus (`forced-colors`) bleibt der Balken in `Highlight` sichtbar.
 
 Slots: Tab-Inhalte sind Kinder mit `data-tab="<id>"`, Folien von `<k-carousel>` sind seine
 Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` und `badges` (Card), `actions` (Alert,

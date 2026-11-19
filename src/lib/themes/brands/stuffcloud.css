@@ -41,6 +41,13 @@
 	--k-shadow-sm: 4px 4px 0 rgba(0, 0, 0, 0.4);
 	--k-dur: 120ms;
 	--k-ease: steps(2, end);
+	/* pixel stripes that step along (the app's Progress) */
+	--k-progress-period: 32px;
+	--k-progress-loop: 0.8s;
+	--k-progress-ease: steps(4);
+	/* the app's toast region: 16px, 76px above the tab bar on phones */
+	--k-toaster-offset: 16px;
+	--k-toaster-offset-mobile: 76px;
 }
 @media (max-width: 760px) {
 	[data-theme^='stuffcloud'] {

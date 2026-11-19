@@ -40,6 +40,8 @@
 			<div class="row">
 				<k-button id="hello">Toast zeigen</k-button>
 				<k-button variant="secondary" id="open">Dialog öffnen</k-button>
+				<k-button variant="secondary" id="undoable">Löschen mit Rückgängig</k-button>
+				<k-button variant="secondary" id="open-block">Blockierender Dialog</k-button>
 				<k-button variant="accent">Akzent</k-button>
 				<k-badge tone="ok">Verfügbar</k-badge>
 				<k-tag removable>Pastell</k-tag>
@@ -69,6 +71,9 @@
 			</k-accordion>
 			<k-table caption="Dateien" columns='[{"key":"name","label":"Name","sortable":true},{"key":"size","label":"MB","align":"end","mono":true,"sortable":true}]' rows='[{"name":"a.zip","size":12},{"name":"b.pdf","size":0.3}]'></k-table>
 			<k-progress label="Speicher" value="64" show-value></k-progress>
+			<k-progress label="Speicher voll" value="100" tone="warn"></k-progress>
+			<k-progress label="Dateien" value="3" max="12" value-text="3 von 12 Dateien" show-value></k-progress>
+			<k-progress label="Wird synchronisiert"></k-progress>
 			<k-skeleton lines="3"></k-skeleton>
 			<div class="row"><k-skeleton variant="circle" width="48"></k-skeleton><k-skeleton variant="rect" width="160" height="48"></k-skeleton></div>
 			<k-empty-state title="Noch keine Lacke" description="Lege deinen ersten Lack an.">
@@ -190,7 +195,11 @@
 			<p>Das lässt sich 30 Tage lang rückgängig machen.</p>
 			<div slot="footer" class="row"><k-button variant="secondary" id="cancel">Abbrechen</k-button><k-button variant="danger" id="confirm">Löschen</k-button></div>
 		</k-modal>
-		<k-toaster></k-toaster>
+		<k-modal id="block" title="Lokale Daten übernehmen?" dismissible="false" initial-focus="#adopt">
+			<p>Bis du dich entscheidest, wird nichts synchronisiert.</p>
+			<div slot="footer" class="row"><k-button variant="secondary" id="later">Später</k-button><k-button id="adopt">Übernehmen</k-button></div>
+		</k-modal>
+		<k-toaster label="Benachrichtigungen" dismiss-label="Schließen" undo-label="Rückgängig"></k-toaster>
 		<script type="module">
 			import './dist-elements/kern-elements.js';
 			// Pixel art as file URLs (vite.config.ts keeps SVGs out of data: URIs).
@@ -204,6 +213,14 @@
 			$('#theme').addEventListener('change', (e) => (document.documentElement.dataset.theme = e.target.value));
 			$('#hello').addEventListener('click', () => window.kern.toast.ok('Hallo aus <k-toaster>'));
 			$('#open').addEventListener('click', () => ($('#modal').open = true));
+			$('#open-block').addEventListener('click', () => ($('#block').open = true));
+			$('#later').addEventListener('click', () => ($('#block').open = false));
+			$('#adopt').addEventListener('click', () => { $('#block').open = false; window.kern.toast.ok('Übernommen'); });
+			let deleted = 0;
+			$('#undoable').addEventListener('click', () => {
+				const n = ++deleted;
+				window.kern.toast({ message: `Lack ${n} gelöscht`, key: 'undo', onundo: () => window.kern.toast('Lack ' + n + ' wiederhergestellt'), oncommit: () => console.log('commit', n) });
+			});
 			$('#cancel').addEventListener('click', () => ($('#modal').open = false));
 			$('#confirm').addEventListener('click', () => { $('#modal').open = false; window.kern.toast('Gelöscht'); });
 			$('k-dropdown-menu').addEventListener('select', (e) => window.kern.toast('Gewählt: ' + e.detail));

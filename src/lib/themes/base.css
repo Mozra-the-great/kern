@@ -101,6 +101,14 @@
 	--k-focus-offset: 2px;
 	--k-dur: 120ms;
 	--k-ease: cubic-bezier(0.2, 0, 0, 1);
+	/* indeterminate Progress: stripes half a period wide move one period per loop */
+	--k-progress-period: 32px;
+	--k-progress-loop: 0.8s;
+	--k-progress-ease: linear;
+
+	/* Toaster: distance from the viewport edges; -mobile below 760px (room for a tab bar) */
+	--k-toaster-offset: 16px;
+	--k-toaster-offset-mobile: 16px;
 }
 
 /* Derived tokens. They default to another token, so a theme only sets them where
