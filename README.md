@@ -40,8 +40,43 @@ ein kleines Inline-Script für `<head>` (Schlüssel = `persist` des ThemeToggle;
 `data-panel` (bis zu 8); unter 520 px Containerbreite stapeln sie sich. `<k-relative-time>` nennt die Stilvariante
 `format-style`, weil `style` das HTML-Attribut ist.
 
-Ein neues Theme ist eine CSS-Datei, die die Variablen aus `src/lib/themes/base.css`
-für `[data-theme^='name']` überschreibt, plus ein `@import` in `themes/index.css`.
+**Nur eine Marke ausliefern.** `themes.css` enthält alle Marken (für die Demo und Seiten, die zur
+Laufzeit wechseln). Eine App mit einer Marke importiert stattdessen deren Einstieg; er bringt die
+Basis-Tokens mit und sonst nichts:
+
+```js
+import '@mozra-the-great/kern/themes/stuffcloud.css'; // oder flower.css, pop.css
+```
+
+Für Custom Elements ohne Bundler dasselbe als `<link rel="stylesheet" href="…/dist/themes/stuffcloud.css">`
+(die Datei lädt `base.css` und `brands/stuffcloud.css` per `@import`). `npm test` baut jeden Einstieg mit
+Vite und prüft, dass kein Selektor und keine Farbe einer anderen Marke darin landet. Komponenten
+werden einzeln importiert (`import { Button } from '@mozra-the-great/kern'`): ein Svelte-Bundler
+kompiliert nur die benutzten. Die Pixel-Art unter `assets/stuffcloud/` bleibt vorerst im Paket: keine
+Komponente lädt sie, sie landet also nie in einem Bundle, nur in `node_modules` (Entscheidung in #39,
+neu bewerten mit der Theme-Quelle in #37).
+
+**Touch-Ziele.** Jedes bedienbare Teil ist mindestens `--k-tap-target` groß, sichtbar oder über eine
+unsichtbare Trefferfläche: 44 px (`--k-tap-min`) bei grobem Zeiger (`pointer: coarse`), bei der Maus 0,
+außer das Theme verlangt es (Stuffcloud und Pop: 44 px für jeden Zeiger, Icon-Buttons
+`--k-tap-icon` 48 px; Stuffcloud-Buttons und -Felder 52 px, unter 760 px 56 px). Alle Höhen sind
+Außenmaße, der Rand zählt mit.
+
+**Tokens für Marken.** Neben Farbe, Form, Schrift und Größe gibt es abgeleitete Tokens, die ohne
+eigenen Wert auf einen anderen zeigen: `--k-accent-mark` (Akzent als Markierung ohne Text: Fortschritt,
+aktiver Tab, gewählter Rand; braucht 3:1), `--k-line-strong` (Rand von Karten, Dialogen, Toasts,
+Menüs), `--k-line-dashed` (Ablagefläche), `--k-surface-info|ok|warn|danger|selected` (Grund ganzer
+Statusflächen), `--k-bg-code`/`--k-fg-code`, `--k-fg-hint`, `--k-fg-soft`, `--k-fg-disabled`,
+`--k-shadow-sm` und die Zwischenabstände `--k-space-2-5|3-5|6-5` (10/14/28 px). Welche
+Stuffcloud-Variable welchem Token entspricht, steht in [`docs/themes.md`](docs/themes.md).
+
+**Neues Theme.** Eine CSS-Datei `src/lib/themes/brands/<name>.css`, die die Variablen aus
+`src/lib/themes/base.css` für `[data-theme^='<name>']` (Form, Schrift, Größe) und
+`[data-theme='<name>-<variante>']` (Farben, nicht in `@media`) überschreibt, ein Einstieg
+`src/lib/themes/<name>.css` (`@import './base.css'; @import './brands/<name>.css';`), ein `@import` in
+`themes/index.css` und ein Eintrag in `exports`. **Jedes Theme muss `npm test` bestehen:** der
+Kontrasttest liest die Theme-Dateien selbst und prüft für jede `data-theme`-Variante Textpaare (4,5:1)
+und Ränder, Fokus und Markierungen (3:1).
 
 ## Installation und Pinning
 
@@ -124,7 +159,8 @@ Tag `vX.Y.Z` auf `main`; der Workflow `release` baut den Tarball und legt das Gi
 ## Custom Elements
 
 ```html
-<!-- Mit Bundler: import '@mozra-the-great/kern/themes.css' und '@mozra-the-great/kern/elements'.
+<!-- Mit Bundler: import '@mozra-the-great/kern/themes.css' (oder nur eine Marke: themes/stuffcloud.css)
+     und '@mozra-the-great/kern/elements'.
      Ohne Bundler die Dateien aus node_modules ausliefern (Pfade hier relativ zur Seite). -->
 <html data-theme="stuffcloud">
 <link rel="stylesheet" href="node_modules/@mozra-the-great/kern/dist/themes/index.css" />
@@ -212,6 +248,9 @@ npm ci
 npm run dev        # Demo: /index.html (Svelte) und /elements.html (Custom Elements)
 npm run check      # svelte-check
 npm run build      # dist/, dist-elements/, demo-dist/
+npm test           # Vitest: Theme-Kontrast und Marken-Einstiege
+npx playwright install chromium   # einmalig
+npm run test:targets              # Playwright: Touch-Ziele in der gebauten Demo (nach npm run build)
 ```
 
 `npm ci` baut über `prepare` bereits `dist/` und `dist-elements/`. Release: `version` in

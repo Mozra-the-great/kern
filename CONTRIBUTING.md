@@ -33,6 +33,18 @@ never into `run:` via `${{ }}`, and `permissions:` stays minimal. Run
 steps, costs and the open runner/ruleset decisions are in
 [`docs/TEMPLATE-SETUP.md`](docs/TEMPLATE-SETUP.md).
 
+## Themes and components
+
+- Components read only `--k-*` tokens (`src/lib/themes/base.css`).
+- **Every theme must pass `npm test`.** The contrast test (`tests/tokens/contrast.test.ts`)
+  reads the theme CSS and checks every `data-theme` variant: text pairs 4.5:1, borders, focus
+  and accent marks 3:1. Fix a failing pair in the token value (keep the hue, change the
+  lightness, note the deviation in the theme file) rather than in the test.
+- `npm test` also builds each per-brand entry (`themes/<brand>.css`) and fails when another
+  brand's selectors or colours end up in it.
+- Interactive parts are at least `--k-tap-target` (44px on touch): `npm run build` then
+  `npm run test:targets` measures every control of the demo with Playwright.
+
 ## Reporting bugs / requesting features
 
 Use the issue templates under `.github/ISSUE_TEMPLATE/`.
