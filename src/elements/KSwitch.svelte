@@ -4,9 +4,9 @@
 			checked: { type: 'Boolean', reflect: true },
 			label: { type: 'String' },
 			hint: { type: 'String' },
-			name: { type: 'String' },
+			name: { type: 'String', reflect: true },
 			value: { type: 'String' },
-			disabled: { type: 'Boolean' },
+			disabled: { type: 'Boolean', reflect: true },
 			labelFirst: { type: 'Boolean', attribute: 'label-first' }
 		},
 		extend: formAssociated

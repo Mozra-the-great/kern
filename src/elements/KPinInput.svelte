@@ -8,9 +8,9 @@
 			length: { type: 'Number' },
 			type: { type: 'String' },
 			mask: { type: 'Boolean' },
-			name: { type: 'String' },
+			name: { type: 'String', reflect: true },
 			required: { type: 'Boolean' },
-			disabled: { type: 'Boolean' },
+			disabled: { type: 'Boolean', reflect: true },
 			digitLabel: { type: 'String', attribute: 'digit-label' }
 		},
 		extend: formAssociated

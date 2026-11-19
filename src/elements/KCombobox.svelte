@@ -7,9 +7,9 @@
 			value: { type: 'String', reflect: true },
 			options: { type: 'Array' },
 			placeholder: { type: 'String' },
-			name: { type: 'String' },
+			name: { type: 'String', reflect: true },
 			required: { type: 'Boolean' },
-			disabled: { type: 'Boolean' },
+			disabled: { type: 'Boolean', reflect: true },
 			allowCustom: { type: 'Boolean', attribute: 'allow-custom' },
 			noResults: { type: 'String', attribute: 'no-results' },
 			toggleLabel: { type: 'String', attribute: 'toggle-label' }
