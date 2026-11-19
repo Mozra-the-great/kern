@@ -6,7 +6,7 @@
 			block: { type: 'Boolean' },
 			wide: { type: 'Boolean' },
 			loading: { type: 'Boolean' },
-			disabled: { type: 'Boolean' },
+			disabled: { type: 'Boolean', reflect: true },
 			href: { type: 'String' },
 			target: { type: 'String' },
 			rel: { type: 'String' },
@@ -46,8 +46,9 @@
 	function onclick() {
 		const form = (host as FormHost).internals?.form ?? null;
 		if (!form) return;
-		if (type === 'submit') form.requestSubmit();
-		else if (type === 'reset') form.reset();
+		// Through the prototype: a form control named `reset` or `submit` (id or name) shadows the method on the form.
+		if (type === 'submit') HTMLFormElement.prototype.requestSubmit.call(form);
+		else if (type === 'reset') HTMLFormElement.prototype.reset.call(form);
 	}
 </script>
 

@@ -29,6 +29,15 @@ export function formAssociated(Base: typeof HTMLElement) {
 		get form(): HTMLFormElement | null {
 			return this.internals.form;
 		}
+		/**
+		 * Native `form` is read-only; the attribute names the owner by id. A framework that sets props
+		 * (React 19 sets `form="id"` as a property because the element has one) would throw on a getter without setter.
+		 */
+		set form(owner: HTMLFormElement | string | null | undefined) {
+			const id = owner instanceof HTMLFormElement ? owner.id : owner;
+			if (!id) this.removeAttribute('form');
+			else this.setAttribute('form', id);
+		}
 		get labels(): NodeList {
 			return this.internals.labels;
 		}

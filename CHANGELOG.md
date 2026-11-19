@@ -42,6 +42,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   only. Attributes `text`, `name`, `type`, `label`, `show-label`, `started-label`, `error-label`, `show-status`, `variant`,
   `size`, `reset-after`, `disabled`; the Blob and the producer are the properties `blob` and `getContent`.
 - Catalogue `downloadButton` (`label`, `startedLabel`, `errorLabel`, `fallbackName`) in English and German.
+- React 19 bridge tests (#35): a real React 19 app (`tests/fixtures/react-app`, StrictMode, development build, strict
+  TypeScript with the shipped element typings) runs in Chromium against the built element entries. The Playwright
+  specs `tests/elements/react-*.spec.ts` cover form controls with `FormData`, validity and reset, modal, drawer,
+  popover and toasts, tabs, tab links, data table, pagination, sortable list, select grid and file drop, controlled
+  values, refs, unmount and remount, two roots on one page and `setStrings(de)`. Every test fails on a `pageerror` or a
+  console error or warning. They run in `npm run test:elements` (which builds the app first, `npm run build:react-app`);
+  `npm run test:types` also type-checks the app. New devDependencies: `react`, `react-dom`, `@types/react-dom`.
+- README: "React 19" section with a tested example and the rules for properties, attributes, events and forms.
+
+### Fixed
+- `<k-button type="submit">` and `type="reset"` failed with `TypeError: form.reset is not a function` when a control in
+  the form had the id or name `reset` or `submit` (the control shadows the form's method). They now call the
+  `HTMLFormElement` methods directly.
+- A kern form element whose `name` was set as a property (what React 19 does for `name="…"`) was missing from
+  `FormData` and the submit: a form-associated element is named by its `name` attribute. `name` is reflected to the
+  attribute now, on every form element.
+- `disabled={true}` set as a property (React 19) did not disable the host for the form: the field was still submitted
+  and matched `:enabled`. `disabled` is reflected to the attribute, so the host is disabled like a native field.
+- `form="id"` on a kern form element threw `Cannot set property form … which has only a getter` in React 19 (it sets
+  the property because the element has one) and unmounted the tree. `form` accepts the id now and sets the attribute.
 
 ## [0.8.0] - 2026-11-19
 

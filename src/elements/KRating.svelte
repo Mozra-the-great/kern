@@ -7,8 +7,8 @@
 			value: { type: 'Number', reflect: true },
 			max: { type: 'Number' },
 			readonly: { type: 'Boolean' },
-			disabled: { type: 'Boolean' },
-			name: { type: 'String' },
+			disabled: { type: 'Boolean', reflect: true },
+			name: { type: 'String', reflect: true },
 			required: { type: 'Boolean' },
 			starLabel: { type: 'String', attribute: 'star-label' }
 		},

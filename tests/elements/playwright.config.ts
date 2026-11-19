@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 // Browser tests of the built custom elements (dist-elements/). Run `npm run build` first.
-// Wave 7 (#35, React bridge tests) extends this setup.
+// react-*.spec.ts (#35) drive the built React 19 app in tests/fixtures/react-app (`npm run build:react-app`, which
+// `npm run test:elements` runs first).
 const port = Number(process.env.KERN_TEST_PORT ?? 4791);
 
 export default defineConfig({

@@ -5,9 +5,9 @@
 			indeterminate: { type: 'Boolean' },
 			label: { type: 'String' },
 			hint: { type: 'String' },
-			name: { type: 'String' },
+			name: { type: 'String', reflect: true },
 			value: { type: 'String' },
-			disabled: { type: 'Boolean' },
+			disabled: { type: 'Boolean', reflect: true },
 			required: { type: 'Boolean' }
 		},
 		extend: formAssociated

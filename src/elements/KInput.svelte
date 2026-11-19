@@ -6,11 +6,11 @@
 			error: { type: 'String' },
 			keepHint: { type: 'Boolean', attribute: 'keep-hint' },
 			value: { type: 'String', reflect: true },
-			name: { type: 'String' },
+			name: { type: 'String', reflect: true },
 			type: { type: 'String' },
 			placeholder: { type: 'String' },
 			required: { type: 'Boolean' },
-			disabled: { type: 'Boolean' },
+			disabled: { type: 'Boolean', reflect: true },
 			autocomplete: { type: 'String' },
 			inputmode: { type: 'String' }
 		},
