@@ -16,15 +16,19 @@
 		look?: 'line' | 'pill';
 		/** Renders the panel of the given tab id. */
 		panel: Snippet<[string]>;
+		/** Called when the user picks another tab (click or arrow keys), not when `value` is set from outside. */
+		onchange?: (id: string) => void;
 		class?: string;
 	}
-	let { tabs, value = $bindable(), label, look = 'line', panel, class: cls = '' }: Props = $props();
+	let { tabs, value = $bindable(), label, look = 'line', panel, onchange, class: cls = '' }: Props = $props();
 	const uid = $props.id();
 	const active = $derived(value ?? tabs.find((t) => !t.disabled)?.id ?? '');
 	let list: HTMLElement | undefined = $state();
 
 	function select(id: string, focus = false) {
+		const changed = id !== active;
 		value = id;
+		if (changed) onchange?.(id);
 		if (focus) list?.querySelector<HTMLElement>(`#${CSS.escape(`${uid}-tab-${id}`)}`)?.focus();
 	}
 	function onkeydown(e: KeyboardEvent) {
