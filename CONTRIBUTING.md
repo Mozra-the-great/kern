@@ -45,6 +45,15 @@ steps, costs and the open runner/ruleset decisions are in
 - Interactive parts are at least `--k-tap-target` (44px on touch): `npm run build` then
   `npm run test:targets` measures every control of the demo with Playwright.
 
+- **Every component works in forced colors** (Windows high contrast, `@media (forced-colors: active)`): a visible
+  edge on every control (border or outline, `ButtonText`/`CanvasText`), the focus ring in `Highlight`, selected /
+  current / checked / pressed / invalid states that differ in more than colour (inverted `Highlight`/`HighlightText`,
+  a shape, a heavier edge), disabled as `GrayText` at full opacity, SVG icons with a system colour (they keep their
+  authored one otherwise) and nothing that is drawn only by `background` or `box-shadow`. Put the rule at the end of
+  the component's `<style>`, add the element to `tests/elements/pages/forced-colors.html` and to the table in
+  `tests/elements/forced-colors.spec.ts`; `tests/unit/forced-colors.test.ts` fails for a styled component without a
+  rule. See README, "Kontrastmodus", and docs/themes.md, "Forced colors".
+
 ## Reporting bugs / requesting features
 
 Use the issue templates under `.github/ISSUE_TEMPLATE/`.

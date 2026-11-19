@@ -296,6 +296,13 @@ async function failuresOf(page: Page, c: Case): Promise<string[]> {
 			[t.handle, property, t.pseudo] as const
 		);
 		if (value !== palette[color]) failures.push(`uses: ${selector} ${property} is ${value}, expected ${color} (${palette[color]})`);
+		// disabled is GrayText at full strength: a dimmed GrayText would be unreadable
+		if (color === 'GrayText' && !t.pseudo) {
+			const opacity = await page.evaluate(([el]) => (window as unknown as FcWindow).__fc.computed(el as Element, 'opacity'), [
+				t.handle
+			] as const);
+			if (opacity !== '1') failures.push(`uses: ${selector} is GrayText but dimmed (opacity ${opacity})`);
+		}
 	}
 	return failures;
 }
@@ -661,5 +668,192 @@ test.describe('forced colors: elements', () => {
 					`${tag} checks something`
 				).toBeGreaterThan(0);
 		});
+	}
+});
+
+/** Overlays: opened first, then the same checks as above on the part that appears. */
+const OVERLAYS: Record<string, Case> = {
+	'k-modal': {
+		prepare: async (page) => {
+			await page.evaluate(() => ((document.querySelector('#modal') as HTMLElement & { open: boolean }).open = true));
+			await expect(page.locator('#modal dialog[open]')).toBeVisible();
+		},
+		edge: ['#modal dialog.k-modal', '#modal .x'],
+		focus: ['#modal .x']
+	},
+	'k-drawer': {
+		prepare: async (page) => {
+			await page.evaluate(() => ((document.querySelector('#drawer') as HTMLElement & { open: boolean }).open = true));
+			await expect(page.locator('#drawer dialog[open]')).toBeVisible();
+		},
+		edge: ['#drawer dialog.k-drawer', '#drawer .x'],
+		focus: ['#drawer .x']
+	},
+	'k-command-palette': {
+		prepare: async (page) => {
+			await page.evaluate(() => ((document.querySelector('#palette') as HTMLElement & { open: boolean }).open = true));
+			await expect(page.locator('#palette dialog[open]')).toBeVisible();
+		},
+		edge: ['#palette dialog.k-command-palette', '#palette .x', '#palette .option.active'],
+		focus: [['#palette input[role=combobox]', '#palette .search']]
+	},
+	'k-popover': {
+		prepare: async (page) => {
+			await page.locator('#popover .trigger').click();
+			await expect(page.locator('#popover .panel')).toBeVisible();
+		},
+		edge: ['#popover .panel', '#popover .trigger']
+	},
+	'k-dropdown-menu': {
+		prepare: async (page) => {
+			await page.locator('#dropdown .trigger').focus();
+			await page.keyboard.press('Enter');
+			await expect(page.locator('#dropdown .menu')).toBeVisible();
+		},
+		edge: ['#dropdown .menu'],
+		focus: ['#dropdown [role=menuitem]:not([aria-disabled=true])'],
+		uses: [['#dropdown [role=menuitem][aria-disabled=true]', 'color', 'GrayText']]
+	},
+	'k-context-menu': {
+		prepare: async (page) => {
+			await page.locator('#context .k-context-area').focus();
+			await page.keyboard.press('Shift+F10');
+			await expect(page.locator('#context .menu')).toBeVisible();
+		},
+		edge: ['#context .menu'],
+		focus: ['#context [role=menuitem]']
+	},
+	'k-combobox': {
+		prepare: async (page) => {
+			await page.locator('#combobox input[role=combobox]').focus();
+			await page.keyboard.press('ArrowDown');
+			await expect(page.locator('#combobox .popup')).toBeVisible();
+		},
+		edge: ['#combobox .popup', '#combobox [role=option].active'],
+		states: [{ name: 'active vs other option', a: '#combobox [role=option].active', b: '#combobox [role=option]:not(.active)' }]
+	},
+	'k-tag-input': {
+		prepare: async (page) => {
+			await page.locator('#taginput input[role=combobox]').focus();
+			await page.keyboard.type('H');
+			await expect(page.locator('#taginput .popup')).toBeVisible();
+		},
+		edge: ['#taginput .popup']
+	},
+	'k-date-picker': {
+		prepare: async (page) => {
+			await page.locator('#date .cal').click();
+			await expect(page.locator('#date .dialog')).toBeVisible();
+		},
+		edge: ['#date .dialog', '#date .nav'],
+		focus: ['#date [role=gridcell][tabindex="0"]', '#date .nav'],
+		states: [
+			{
+				name: 'selected vs other day',
+				a: '#date [role=gridcell][aria-selected=true]',
+				b: '#date [role=gridcell][aria-selected=true] ~ [role=gridcell]'
+			}
+		]
+	},
+	'k-color-picker': {
+		prepare: async (page) => {
+			await page.locator('#color .swatch-btn').click();
+			await expect(page.locator('#color .panel')).toBeVisible();
+		},
+		edge: ['#color .panel', '#color .swatch', '#color .area'],
+		focus: ['#color .swatch', '#color .area'],
+		states: [{ name: 'pressed vs other swatch', a: '#color .swatch[aria-pressed=true]', b: '#color .swatch[aria-pressed=false]' }]
+	},
+	'k-toaster': {
+		prepare: async (page) => {
+			await page.evaluate(() => {
+				const k = (window as unknown as { kern: { toast: (o: object) => number } }).kern;
+				k.toast({ message: 'Site published.', tone: 'ok', duration: 0 });
+				k.toast({ message: 'Storage almost full.', tone: 'warn', duration: 0 });
+				k.toast({ message: 'Upload failed.', tone: 'danger', duration: 0 });
+			});
+			await expect(page.getByText('Upload failed.')).toBeVisible();
+		},
+		edge: ['#toaster .toast', '#toaster .toast button'],
+		states: [
+			{ name: 'danger vs ok toast', a: '#toaster [data-tone=danger]', b: '#toaster [data-tone=ok]' },
+			{ name: 'ok vs warn toast', a: '#toaster [data-tone=ok]', b: '#toaster [data-tone=warn]' }
+		]
+	},
+	'k-tooltip': {
+		prepare: async (page) => {
+			await page.keyboard.press('Shift');
+			await page.locator('#tooltip #dropdown .trigger').focus();
+			await expect(page.locator('#tooltip .tip.shown')).toBeVisible();
+		},
+		edge: ['#tooltip .tip']
+	}
+};
+
+test.describe('forced colors: overlays', () => {
+	test('every overlay of the table is opened here', () => {
+		const overlays = Object.entries(CASES)
+			.filter(([, c]) => c.exempt?.startsWith('overlay'))
+			.map(([tag]) => tag);
+		for (const tag of overlays) expect(OVERLAYS, `${tag} has an overlay test`).toHaveProperty(tag);
+	});
+	for (const [tag, c] of Object.entries(OVERLAYS)) {
+		test(`${tag}: opened, edge, focus, no theme colour`, async ({ page }) => {
+			await open(page);
+			await c.prepare?.(page);
+			const failures = await failuresOf(page, c);
+			const leaks = await page.evaluate(() => (window as unknown as FcWindow).__fc.leaks());
+			expect(failures, failures.join('\n')).toEqual([]);
+			expect(leaks, 'colours that are not system colours').toEqual([]);
+		});
+	}
+});
+
+test.describe('forced colors: no theme colour reaches the screen', () => {
+	// Five themes and both system palettes (the emulated palette follows the colour scheme), at desktop and phone width.
+	const themes: [string, 'dark' | 'light'][] = [
+		['code', 'dark'],
+		['code-light', 'light'],
+		['flower', 'light'],
+		['pop-dark', 'dark'],
+		['line', 'dark'],
+		['code', 'light'],
+		['flower', 'dark']
+	];
+	for (const [theme, scheme] of themes) {
+		for (const width of [1280, 375]) {
+			test(`${theme} in a ${scheme} palette at ${width}px`, async ({ page }) => {
+				await open(page, { theme, scheme, width });
+				const leaks = await page.evaluate(() => (window as unknown as FcWindow).__fc.leaks());
+				expect(leaks, 'colours that are not system colours').toEqual([]);
+			});
+		}
+	}
+});
+
+test.describe('forced colors: axe', () => {
+	// The pages of the other specs plus the forced-colors page, in the two themes with their own look
+	// (Code: mono and hard edges, Flower: soft): no serious or critical violation under forced colors.
+	for (const name of ['parity', 'feedback', 'form', 'navigation', 'reorder', 'strings', 'primitives', 'forced-colors']) {
+		for (const theme of ['code', 'flower']) {
+			test(`${name} page in ${theme}`, async ({ page }) => {
+				await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+				await page.goto(`/tests/elements/pages/${name}.html`);
+				await page.evaluate((t) => (document.documentElement.dataset.theme = t), theme);
+				await page.waitForFunction(() =>
+					[...document.querySelectorAll('*')]
+						.filter((el) => el.tagName.startsWith('K-'))
+						.every((el) => customElements.get(el.tagName.toLowerCase()) && el.shadowRoot)
+				);
+				await page.evaluate(async () => {
+					await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+					await Promise.all(document.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined)));
+				});
+				// colour contrast is the user's palette under forced colors, and axe reads the authored colours instead
+				// of the forced ones (it reports #101012 on #000000 for text that is white on black): leave that rule out
+				const findings = await axeViolations(page, { disable: ['color-contrast'] });
+				expect(findings, JSON.stringify(findings, null, 2)).toEqual([]);
+			});
+		}
 	}
 });

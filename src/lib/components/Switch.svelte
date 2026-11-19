@@ -122,6 +122,7 @@
 			background: HighlightText;
 		}
 		input:disabled {
+			opacity: 1;
 			border-color: GrayText;
 			background: Canvas;
 		}

@@ -93,3 +93,63 @@ for (const [theme, base] of THEMES) {
 		});
 	}
 }
+
+/**
+ * Forced colors (#27): the same page under `forcedColors: 'active'`, in the dark palette (Code) and the
+ * light palette (Code light), at 1280 and 375 px. The baselines are named `fc-<shot>-<palette>-<width>`.
+ * Besides the components above: `controls` (switch, radio, slider, segmented control, rating) and `status`
+ * (alerts, badges, tags, pagination, stepper), which carry their state in the shot. The assertions per
+ * element are in forced-colors.spec.ts; these screenshots are what a person looks at.
+ */
+const FC_PALETTES = [
+	['code', 'dark'],
+	['code-light', 'light']
+] as const;
+const FC_SHOTS = ['button', 'input', 'checkbox', 'tabs', 'progress', 'filedrop', 'controls', 'status'] as const;
+
+async function openForced(page: Page, theme: string, scheme: 'dark' | 'light', width: number, overlay = ''): Promise<void> {
+	await page.emulateMedia({ forcedColors: 'active', colorScheme: scheme });
+	await open(page, theme, width, overlay);
+	await page.waitForFunction(() =>
+		[...document.querySelectorAll('*')]
+			.filter((el) => el.tagName.startsWith('K-'))
+			.every((el) => customElements.get(el.tagName.toLowerCase()) && el.shadowRoot?.firstElementChild)
+	);
+	expect(await page.evaluate(() => matchMedia('(forced-colors: active)').matches), 'forced colors are on').toBe(true);
+}
+
+for (const [theme, scheme] of FC_PALETTES) {
+	for (const width of [1280, 375]) {
+		test(`forced colors, ${scheme} palette: components at ${width}px`, async ({ page }) => {
+			await openForced(page, theme, scheme, width);
+			const missing: string[] = [];
+			for (const name of FC_SHOTS) await shot(page.locator(`[data-shot="${name}"]`), `fc-${name}-${scheme}-${width}.png`, missing);
+			noneMissing(missing);
+		});
+
+		test(`forced colors, ${scheme} palette: modal at ${width}px`, async ({ page }) => {
+			await openForced(page, theme, scheme, width, 'modal');
+			await page.evaluate(() => document.getElementById('modal')?.setAttribute('open', ''));
+			await expect(page.getByRole('dialog')).toBeVisible();
+			// the ring of the focused close button is part of what is shown here
+			const missing: string[] = [];
+			await shot(page, `fc-modal-${scheme}-${width}.png`, missing);
+			noneMissing(missing);
+		});
+
+		test(`forced colors, ${scheme} palette: toasts at ${width}px`, async ({ page }) => {
+			await openForced(page, theme, scheme, width, 'toast');
+			await page.evaluate(() => {
+				const k = (window as unknown as { kern: { toast: (o: object) => number } }).kern;
+				k.toast({ message: 'Site published.', tone: 'ok', duration: 0 });
+				k.toast({ message: 'Storage almost full.', tone: 'warn', duration: 0 });
+				k.toast({ message: 'Upload failed. Try again.', tone: 'danger', duration: 0 });
+				k.toast({ message: 'Link copied.', duration: 0 });
+			});
+			await expect(page.getByText('Link copied.')).toBeVisible();
+			const missing: string[] = [];
+			await shot(page, `fc-toasts-${scheme}-${width}.png`, missing);
+			noneMissing(missing);
+		});
+	}
+}

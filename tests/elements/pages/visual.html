@@ -121,6 +121,40 @@
 			<k-file-drop label="Image" drop-label="Drop an image or click to choose" accept="image/*"></k-file-drop>
 		</section>
 
+		<!-- The two shots below are only taken under forced colors (visual.spec.ts, "forced colors"). -->
+		<section data-shot="controls">
+			<k-switch label="Notifications" checked></k-switch>
+			<k-switch label="Dark mode"></k-switch>
+			<k-radio-group
+				label="Shipping"
+				value="express"
+				options='[{"value":"standard","label":"Standard"},{"value":"express","label":"Express"},{"value":"pickup","label":"Pickup","disabled":true}]'
+			></k-radio-group>
+			<k-slider label="Volume" value="40" show-value unit=" %"></k-slider>
+			<k-segmented-control
+				label="View"
+				value="list"
+				options='[{"value":"grid","label":"Grid"},{"value":"list","label":"List"},{"value":"map","label":"Map"}]'
+			></k-segmented-control>
+			<k-rating label="Rating" value="3"></k-rating>
+		</section>
+		<section data-shot="status">
+			<k-alert tone="info" title="Heads up">Your plan renews on Friday.</k-alert>
+			<k-alert tone="danger" title="Upload failed">Try again.</k-alert>
+			<div style="display: flex; gap: 8px; flex-wrap: wrap">
+				<k-badge tone="ok">Available</k-badge>
+				<k-badge tone="danger" look="solid">Down</k-badge>
+				<k-tag selected>Selected</k-tag>
+				<k-tag removable>Removable</k-tag>
+			</div>
+			<k-pagination page="3" page-count="9" label="Pages"></k-pagination>
+			<k-stepper
+				current="2"
+				label="Checkout"
+				steps='[{"id":"a","label":"Cart"},{"id":"b","label":"Address"},{"id":"c","label":"Payment"}]'
+			></k-stepper>
+		</section>
+
 		<k-modal id="modal" title="Delete this site?" description="It goes away for good.">
 			<p style="margin: 0">14 files · 1.2 MB · expires in 7 days</p>
 			<k-button slot="footer" variant="secondary">Cancel</k-button>

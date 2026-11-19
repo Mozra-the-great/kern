@@ -966,6 +966,39 @@ Live-Region. Texte: `offlineTitle`, `offlineText`, `onlineText` (`offline-title`
 <!-- irgendwo: announce('Gespeichert'); announce('Verbindung verloren', 'assertive'); -->
 ```
 
+### Kontrastmodus (Windows Hochkontrast, `forced-colors`)
+
+Alle Komponenten bleiben unter `@media (forced-colors: active)` benutzbar (#27). Der Browser ersetzt dann
+jede Farbe durch die Systempalette der Nutzerin und entfernt Schatten; was nur über `background` oder
+`box-shadow` gezeichnet war (Progress-Füllung, Switch, gewählter Tab, Heatmap-Zelle, Toast-Rand), würde
+verschwinden. Jede Komponente bringt deshalb eine eigene Regel mit, nach diesem Muster:
+
+- **Kanten**: jedes bedienbare Teil hat Rand oder Outline (`ButtonText`/`CanvasText`), auch Knöpfe ohne
+  Rahmen (Schließen-Knöpfe, Stepper, Tag-Entfernen); Overlays (Modal, Drawer, Popover, Menüs, Tooltip, Toast,
+  Palette, Kalender) haben einen sichtbaren Rand.
+- **Fokus**: der Ring bleibt, in `Highlight`; ein ausgewähltes Element mit Highlight-Fläche bekommt ihn in
+  `HighlightText`.
+- **Zustand ohne Farbe allein**: gewählt, aktuell, an, markiert = invertiert (`Highlight`/`HighlightText`) oder
+  mit Form (Haken, Punkt, Position des Switch-Daumens, doppelter Rand bei ungültig, dicker Rand bei
+  Gefahr, Rautenpunkt bei Warnung im Toast, Schraffur bei „Ausfall“ in HistoryBar); Stufen von Heatmap und
+  Füllungen von Progress, Slider und ProgressRing bleiben als Mischung aus `Highlight` und `Canvas` sichtbar.
+- **Deaktiviert** ist `GrayText` in voller Deckkraft, nie nur gedimmt.
+- **Links** sind `LinkText` mit Unterstrich; Icons folgen `currentColor` oder bekommen ihre Systemfarbe
+  (SVG behalten sonst ihre eigene Farbe). ColorPicker behält die Farben seiner Muster, nur die Ränder sind
+  Systemfarben.
+
+Die Themes ändern daran nichts: `themes/base.css` setzt in der Media Query Rand-, Linien-, Fokus-, Akzent- und
+Deaktiviert-Tokens mit `!important` auf Systemfarben und die Deckkraft deaktivierter Teile auf 1, damit auch ein
+Theme, das diese Tokens auf `[data-theme^='…']` setzt, sie nicht aushebeln kann. Ohne Kontrastmodus ändert sich
+nichts (alles steckt in der Media Query). Eigene Komponenten brauchen dieselbe Regel (Checkliste im PR-Template).
+
+Geprüft wird in Chromium mit `forcedColors: 'active'` (`tests/elements/forced-colors.spec.ts`, Seite
+`pages/forced-colors.html` mit jedem Element in seinen Zuständen): Kante, Fokusring, Zustandsunterschiede ohne
+Hintergrundfarbe, `GrayText` bei deaktiviert und geöffnete Overlays je Element; dass in fünf Themes und beiden
+Systempaletten keine Themenfarbe durchschlägt; axe ohne schwere Verstöße (ohne die Kontrastregel, die unter
+Hochkontrast die Palette der Nutzerin misst); dazu Screenshots (`visual.spec.ts`, `fc-*`). Ansehen:
+Edge/Chrome → DevTools → Rendering → „Emulate CSS media feature forced-colors: active“.
+
 ## Komponenten (Kern-Set)
 
 Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
