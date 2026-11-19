@@ -1,0 +1,446 @@
+{
+	"$comment": "Source of the Code theme (#37). brands/code.css is generated from this file by `npm run tokens:code` (scripts/ci/code-theme.mjs --write); do not edit the CSS by hand. `from` names where a value comes from in stuffcloud's design (design:<file>|<selector>{<property>} in docs/design/prototypes, design:<file>#<text> for a literal in a mockup, app:<file>|... for stuffcloud's web/apps/web/src, ds:<token>@<theme> for the 'Stuffcloud - Designsystem' artifact); `design` is the source value when the kern value is derived from it (a font shorthand split into family and size, a length mapped onto the kern scale); `deviation` says why the kern value differs on purpose. The drift check compares every `from` with the snapshot in scripts/ci/code-theme-snapshot.json (docs/themes.md, 'Code theme source').",
+	"theme": "code",
+	"aliases": ["stuffcloud"],
+	"header": [
+		"Code — from the stuffcloud design (the app that first used it). Grid look: square corners,",
+		"hard offset shadows, ink-filled buttons that turn accent on hover.",
+		"Fonts: Inter, JetBrains Mono, Silkscreen (load them yourself).",
+		"",
+		"GENERATED from src/lib/themes/code.tokens.json by `npm run tokens:code`: change that file,",
+		"never this one (docs/themes.md, 'Code theme source'). Every value there names its source in",
+		"stuffcloud's docs/design (or the app, or the design-system artifact for light, paper and contrast).",
+		"",
+		"Sizes: target-min 44px for every target (mouse too), 48px for icon-only buttons, 52px for",
+		"fields and buttons, 56px below the 760px breakpoint. The component tokens (--k-button-*,",
+		"--k-field-*, --k-tab-*, --k-modal-*, ...) reproduce the look of stuffcloud's components (#38).",
+		"",
+		"Renamed from \"stuffcloud\" (#85): every rule also answers to the old data-theme values",
+		"(stuffcloud, stuffcloud-dark, -light, -paper, -contrast) as deprecated aliases until 1.0."
+	],
+	"blocks": [
+		{
+			"variants": "*",
+			"tokens": {
+				"--k-border-w": { "value": "1px", "from": "ds:line-w" },
+				"--k-radius-control": { "value": "0", "from": "ds:radius-none" },
+				"--k-radius-field": { "value": "0", "from": "ds:radius-none" },
+				"--k-radius-card": { "value": "0", "from": "ds:radius-none" },
+				"--k-radius-overlay": { "value": "0", "from": "ds:radius-none" },
+				"--k-radius-badge": { "value": "0", "from": "ds:radius-none" },
+				"--k-radius-avatar": { "value": "999px", "from": "ds:radius-pill" },
+				"--k-shadow-raised": { "value": "none", "from": "design:stuff.css|.card{box-shadow}", "design": null },
+				"--k-shadow-overlay": {
+					"value": "8px 8px 0 rgba(16, 16, 18, 0.6)",
+					"from": "design:S.dc.html#box-shadow: 8px 8px 0 rgba(16,16,18,.6)"
+				},
+				"--k-font-sans": { "value": "'Inter', system-ui, sans-serif", "from": "design:stuff.css|:root{--sans}" },
+				"--k-font-display": { "value": "'Silkscreen', monospace", "from": "design:stuff.css|:root{--pix}" },
+				"--k-font-mono": { "value": "'JetBrains Mono', ui-monospace, monospace", "from": "design:stuff.css|:root{--mono}" },
+				"--k-weight-display": { "value": "700", "from": "ds:type/display{fontWeight}", "design": "700" },
+				"--k-weight-heading": { "value": "500", "from": "design:stuff.css|.title{font-weight}" },
+				"--k-weight-label": { "value": "400", "from": "design:stuff.css|.label{font}", "design": "12px var(--mono)" },
+				"--k-label-font": { "value": "var(--k-font-mono)", "from": "design:stuff.css|.label{font}", "design": "12px var(--mono)" },
+				"--k-label-size": { "value": "12px", "from": "design:stuff.css|.label{font}", "design": "12px var(--mono)" },
+				"--k-label-transform": { "value": "uppercase", "from": "design:stuff.css|.label{text-transform}" },
+				"--k-label-tracking": { "value": "1px", "from": "design:stuff.css|.label{letter-spacing}" },
+				"--k-text-2xl": { "value": "48px", "from": "design:stuff.css|.title{font-size}" },
+				"--k-control-h": { "value": "52px", "from": "design:stuff.css|.btn{min-height}" },
+				"--k-control-h-sm": { "value": "44px", "from": "app:styles/theme.css|:root{--target-min}" },
+				"--k-control-h-lg": { "value": "56px", "from": "app:styles/theme.css|:root{--control-h-m}" },
+				"--k-tap-icon": { "value": "48px", "from": "design:stuff.css|.btn-icon{width}" },
+				"--k-tap-target": { "value": "var(--k-tap-min)", "from": "ds:target-min", "design": "44px" },
+				"--k-disabled-opacity": { "value": "0.4", "from": "design:stuff.css|.btn:disabled{opacity}" },
+				"--k-shadow-sm": { "value": "4px 4px 0 rgba(0, 0, 0, 0.4)", "from": "design:stuff.css|.theme summary{box-shadow}" },
+				"--k-dur": { "value": "120ms", "note": "the design system's '120ms colour changes'; docs/design has no transition" },
+				"--k-ease": { "value": "steps(2, end)", "note": "stepped like the two-step bob of the mascot (design README, Motion)" },
+				"--k-progress-period": {
+					"value": "32px",
+					"from": "app:ui/Progress.svelte|.indeterminate i{left}",
+					"design": "-32px",
+					"note": "pixel stripes that step along (the app's Progress)"
+				},
+				"--k-progress-loop": {
+					"value": "0.8s",
+					"from": "app:ui/Progress.svelte|.indeterminate i{animation}",
+					"design": "slide 0.8s steps(4) infinite"
+				},
+				"--k-progress-ease": {
+					"value": "steps(4)",
+					"from": "app:ui/Progress.svelte|.indeterminate i{animation}",
+					"design": "slide 0.8s steps(4) infinite"
+				},
+				"--k-toaster-offset": { "value": "16px", "from": "app:ui/ToastRegion.svelte|.region{bottom}", "design": "var(--space-16)" },
+				"--k-toaster-offset-mobile": {
+					"value": "76px",
+					"from": "app:ui/ToastRegion.svelte|@media (max-width:760px)|.region{bottom}",
+					"note": "the app's toast region: 76px above the tab bar on phones"
+				},
+				"--k-button-font": { "value": "var(--k-font-sans)", "from": "design:stuff.css|.btn{font}", "design": "600 15px var(--sans)" },
+				"--k-button-size": { "value": "15px", "from": "design:stuff.css|.btn{font}", "design": "600 15px var(--sans)" },
+				"--k-button-weight": { "value": "600", "from": "design:stuff.css|.btn{font}", "design": "600 15px var(--sans)" },
+				"--k-button-transform": { "value": "none", "from": "design:stuff.css|.btn{text-transform}", "design": null },
+				"--k-button-tracking": { "value": "0", "from": "design:stuff.css|.btn{letter-spacing}", "design": null },
+				"--k-button-pad-x": { "value": "var(--k-space-6-5)", "from": "design:stuff.css|.btn{padding}", "design": "0 28px" },
+				"--k-button-gap": { "value": "var(--k-space-2-5)", "from": "design:stuff.css|.btn{gap}", "design": "10px" },
+				"--k-button-secondary-border": {
+					"value": "var(--k-line-strong)",
+					"from": "design:stuff.css|.btn-ghost{border}",
+					"design": "1px solid var(--line2)",
+					"note": "kern's secondary button is the design's ghost button"
+				},
+				"--k-button-secondary-weight": { "value": "500", "from": "design:stuff.css|.btn-ghost{font-weight}" },
+				"--k-button-secondary-hover-bg": { "value": "transparent", "from": "design:stuff.css|.btn-ghost:hover{background}" },
+				"--k-field-font": { "value": "var(--k-font-mono)", "from": "design:stuff.css|.field{font}", "design": "15px var(--mono)" },
+				"--k-field-size": { "value": "15px", "from": "design:stuff.css|.field{font}", "design": "15px var(--mono)" },
+				"--k-field-bg": { "value": "transparent", "from": "design:stuff.css|.field{background}" },
+				"--k-select-bg": { "value": "var(--k-bg)", "from": "design:stuff.css|select.field{background}", "design": "var(--bg)" },
+				"--k-field-pad-x": { "value": "var(--k-space-3-5)", "from": "design:stuff.css|.field{padding}", "design": "0 14px" },
+				"--k-field-disabled-opacity": {
+					"value": "var(--k-disabled-opacity)",
+					"from": "app:ui/field.css|.sc-field:disabled{opacity}",
+					"design": "0.4"
+				},
+				"--k-field-label-color": { "value": "var(--k-fg-muted)", "from": "design:stuff.css|.label{color}", "design": "var(--mut)" },
+				"--k-field-hint-font": {
+					"value": "var(--k-font-mono)",
+					"from": "app:ui/field.css|.sc-fld__hint,.sc-fld__error{font}",
+					"design": "13px var(--mono)"
+				},
+				"--k-field-hint-size": {
+					"value": "13px",
+					"from": "app:ui/field.css|.sc-fld__hint,.sc-fld__error{font}",
+					"design": "13px var(--mono)"
+				},
+				"--k-field-hint-color": { "value": "var(--k-fg-muted)", "from": "app:ui/field.css|.sc-fld__hint{color}", "design": "var(--mut)" },
+				"--k-check-gap": { "value": "var(--k-space-3-5)", "from": "design:stuff.css|.toggle{gap}", "design": "14px" },
+				"--k-check-checked": {
+					"value": "var(--k-accent)",
+					"from": "design:stuff.css|.toggle input{accent-color}",
+					"design": "var(--pink)"
+				},
+				"--k-check-mark": {
+					"value": "var(--k-on-accent)",
+					"note": "the design draws a native checkbox with accent-color pink, whose tick the browser paints dark on it"
+				},
+				"--k-check-label-size": { "value": "15px", "from": "design:stuff.css|.toggle{font-size}" },
+				"--k-card-bg": { "value": "transparent", "from": "design:stuff.css|.card{background}", "design": null },
+				"--k-card-pad": { "value": "var(--k-space-5)", "from": "design:stuff.css|.card{padding}", "design": "20px" },
+				"--k-card-gap": { "value": "var(--k-space-2-5)", "from": "design:stuff.css|.card{gap}", "design": "10px" },
+				"--k-tabs-gap": { "value": "0", "from": "design:stuff.css|.tabs{gap}", "design": null },
+				"--k-tabs-scrollbar": { "value": "none", "from": "design:stuff.css|.tabs,.tabs *,.bld-l,.stage{scrollbar-width}" },
+				"--k-tab-h": { "value": "52px", "from": "design:stuff.css|.tabs a{min-height}" },
+				"--k-tab-pad-x": { "value": "22px", "from": "design:stuff.css|.tabs a{padding}", "design": "0 22px" },
+				"--k-tab-font": {
+					"value": "var(--k-font-sans)",
+					"from": "design:stuff.css|.tabs a{font-family}",
+					"design": null,
+					"note": "inherits the page's Inter"
+				},
+				"--k-tab-size": { "value": "15px", "from": "design:stuff.css|.tabs a{font-size}" },
+				"--k-tab-weight": { "value": "400", "from": "design:stuff.css|.tabs a{font-weight}", "design": null },
+				"--k-tab-selected-weight": { "value": "600", "from": "design:stuff.css|.tabs a[aria-current=page]{font-weight}" },
+				"--k-tab-transform": { "value": "none", "from": "design:stuff.css|.tabs a{text-transform}", "design": null },
+				"--k-tab-tracking": { "value": "0", "from": "design:stuff.css|.tabs a{letter-spacing}", "design": null },
+				"--k-tab-fg": { "value": "var(--k-fg)", "from": "design:stuff.css|a{color}", "design": "var(--fg)" },
+				"--k-tab-hover-fg": { "value": "var(--k-accent-text)", "from": "app:ui/tabs.css|.sc-tab:hover{color}", "design": "var(--pink)" },
+				"--k-tab-selected-bg": {
+					"value": "var(--k-bg-raised)",
+					"from": "design:stuff.css|.tabs a[aria-current=page]{background}",
+					"design": "#17171a"
+				},
+				"--k-tab-divider-w": { "value": "1px", "from": "design:stuff.css|.tabs a{border-right}", "design": "1px solid var(--line)" },
+				"--k-modal-bg": {
+					"value": "var(--k-bg)",
+					"from": "design:S.dc.html#background: #101012; border: 1px solid #3a3a42; box-shadow: 8px 8px 0 rgba(16,16,18,.6); padding: 36px 36px 32px; display: flex; flex-direction: column; gap: 24px",
+					"design": "#101012",
+					"note": "the delete-site dialog (S), the one dialog of the design"
+				},
+				"--k-modal-pad": {
+					"value": "36px 36px 32px",
+					"from": "design:S.dc.html#background: #101012; border: 1px solid #3a3a42; box-shadow: 8px 8px 0 rgba(16,16,18,.6); padding: 36px 36px 32px; display: flex; flex-direction: column; gap: 24px",
+					"design": "36px 36px 32px"
+				},
+				"--k-modal-gap": {
+					"value": "var(--k-space-6)",
+					"from": "design:S.dc.html#background: #101012; border: 1px solid #3a3a42; box-shadow: 8px 8px 0 rgba(16,16,18,.6); padding: 36px 36px 32px; display: flex; flex-direction: column; gap: 24px",
+					"design": "24px"
+				},
+				"--k-modal-title-size": {
+					"value": "32px",
+					"from": "design:S.dc.html#font-size: 32px; font-weight: 500; letter-spacing: -.8px; line-height: 1.1",
+					"design": "32px"
+				},
+				"--k-modal-title-tracking": {
+					"value": "-0.8px",
+					"from": "design:S.dc.html#font-size: 32px; font-weight: 500; letter-spacing: -.8px; line-height: 1.1",
+					"design": "-0.8px"
+				},
+				"--k-modal-title-leading": {
+					"value": "1.1",
+					"from": "design:S.dc.html#font-size: 32px; font-weight: 500; letter-spacing: -.8px; line-height: 1.1",
+					"design": "1.1"
+				},
+				"--k-progress-track": { "value": "var(--k-line)", "from": "design:stuff.css|.bar{background}", "design": "var(--line)" },
+				"--k-progress-track-border-w": { "value": "0px", "from": "design:stuff.css|.bar{border}", "design": null },
+				"--k-toaster-width": {
+					"value": "452px",
+					"from": "app:ui/ToastRegion.svelte|.region{width}",
+					"design": "min(420px, calc(100vw - 32px))",
+					"note": "420px of toasts plus the 16px offset on both sides"
+				},
+				"--k-toast-pad": {
+					"value": "var(--k-space-2) var(--k-space-2) var(--k-space-2) var(--k-space-4)",
+					"from": "app:ui/ToastRegion.svelte|.toast{padding}",
+					"design": "var(--space-8) var(--space-8) var(--space-8) var(--space-16)"
+				},
+				"--k-toast-msg-size": { "value": "15px", "from": "app:ui/ToastRegion.svelte|.toast{font-size}" },
+				"--k-toast-ok-border": {
+					"value": "var(--k-ok)",
+					"from": "app:ui/ToastRegion.svelte|.success{border-color}",
+					"design": "var(--green)"
+				},
+				"--k-toast-warn-border": {
+					"value": "var(--k-warn)",
+					"from": "app:ui/ToastRegion.svelte|.warn{border-color}",
+					"design": "var(--amber)"
+				},
+				"--k-filedrop-bg": { "value": "transparent", "from": "app:ui/FileDropzone.svelte|.dz{background}", "design": null },
+				"--k-filedrop-pad": {
+					"value": "var(--k-space-6) var(--k-space-6-5)",
+					"from": "app:ui/FileDropzone.svelte|.dz{padding}",
+					"design": "var(--space-24) var(--space-28)"
+				},
+				"--k-filedrop-prompt-font": {
+					"value": "var(--k-font-mono)",
+					"from": "app:ui/FileDropzone.svelte|.hint{font}",
+					"design": "14px var(--mono)"
+				},
+				"--k-filedrop-prompt-size": { "value": "14px", "from": "app:ui/FileDropzone.svelte|.hint{font}", "design": "14px var(--mono)" },
+				"--k-filedrop-prompt-weight": { "value": "400", "from": "app:ui/FileDropzone.svelte|.hint{font}", "design": "14px var(--mono)" },
+				"--k-filedrop-prompt-transform": { "value": "none", "from": "app:ui/FileDropzone.svelte|.hint{text-transform}", "design": null },
+				"--k-filedrop-prompt-tracking": { "value": "0", "from": "app:ui/FileDropzone.svelte|.hint{letter-spacing}", "design": null }
+			}
+		},
+		{
+			"variants": "*",
+			"media": "(max-width: 760px)",
+			"tokens": {
+				"--k-control-h": { "value": "56px", "from": "design:stuff.css|@media (max-width:760px)|.btn{min-height}" },
+				"--k-modal-pad": {
+					"value": "28px 16px 24px",
+					"from": "design:T.dc.html#background: #101012; border-top: 1px solid #3a3a42; padding: 28px 16px 24px; display: flex; flex-direction: column; gap: 20px",
+					"design": "28px 16px 24px"
+				},
+				"--k-modal-gap": {
+					"value": "var(--k-space-5)",
+					"from": "design:T.dc.html#background: #101012; border-top: 1px solid #3a3a42; padding: 28px 16px 24px; display: flex; flex-direction: column; gap: 20px",
+					"design": "20px"
+				},
+				"--k-modal-title-size": {
+					"value": "28px",
+					"from": "design:T.dc.html#font-size: 28px; font-weight: 500; letter-spacing: -.7px; line-height: 1.1",
+					"design": "28px"
+				},
+				"--k-modal-title-tracking": {
+					"value": "-0.7px",
+					"from": "design:T.dc.html#font-size: 28px; font-weight: 500; letter-spacing: -.7px; line-height: 1.1",
+					"design": "-0.7px"
+				},
+				"--k-modal-actions-direction": {
+					"value": "column-reverse",
+					"from": "design:T.dc.html#<div style=\"display: flex; flex-direction: column; gap: 10px\">",
+					"design": "column",
+					"note": "stacked, the main action on top (the footer lists it last, as on desktop)"
+				}
+			}
+		},
+		{
+			"variants": ["", "dark"],
+			"tokens": {
+				"color-scheme": { "value": "dark", "from": "app:styles/theme.css|:root{color-scheme}" },
+				"--k-bg": { "value": "#101012", "from": "design:stuff.css|:root{--bg}" },
+				"--k-bg-raised": { "value": "#17171a", "from": "design:stuff.css|.tabs a[aria-current=page]{background}" },
+				"--k-bg-sunken": { "value": "#0c0c0e", "from": "app:styles/theme.css|:root{--bg-code}" },
+				"--k-fg": { "value": "#f4f4f0", "from": "design:stuff.css|:root{--fg}" },
+				"--k-fg-muted": { "value": "#a2a2ab", "from": "design:stuff.css|:root{--mut}" },
+				"--k-line": { "value": "#26262b", "from": "design:stuff.css|:root{--line}" },
+				"--k-border": {
+					"value": "#6c6c76",
+					"from": "design:stuff.css|:root{--field-border}",
+					"note": "the design-system artifact says #6e6e78; docs/design wins (#37)"
+				},
+				"--k-primary": { "value": "#f4f4f0", "from": "design:stuff.css|.btn{background}", "design": "var(--fg)" },
+				"--k-on-primary": { "value": "#101012", "from": "design:stuff.css|.btn{color}", "design": "var(--bg)" },
+				"--k-primary-hover": { "value": "#ff79b0", "from": "design:stuff.css|.btn:hover{background}", "design": "var(--pink)" },
+				"--k-on-primary-hover": { "value": "#101012", "from": "design:stuff.css|.btn:hover{color}", "design": "var(--bg)" },
+				"--k-accent": { "value": "#ff79b0", "from": "design:stuff.css|:root{--pink}" },
+				"--k-on-accent": { "value": "#101012", "from": "design:stuff.css|:root{--bg}" },
+				"--k-accent-soft": { "value": "#17171a", "note": "no tinted badge ground in the design: the raised surface" },
+				"--k-accent-text": { "value": "#ff79b0", "from": "design:stuff.css|:root{--pink}" },
+				"--k-link": { "value": "#c78bff", "from": "design:stuff.css|:root{--lilac}" },
+				"--k-danger": { "value": "#ff4f8b", "from": "design:stuff.css|:root{--pink2}" },
+				"--k-on-danger": { "value": "#101012", "from": "design:stuff.css|.btn-danger{color}", "design": "var(--bg)" },
+				"--k-danger-soft": { "value": "#17171a", "note": "no tinted badge ground in the design: the raised surface" },
+				"--k-ok": { "value": "#3ddc84", "from": "design:stuff.css|:root{--green}" },
+				"--k-ok-soft": { "value": "#17171a", "note": "no tinted badge ground in the design: the raised surface" },
+				"--k-warn": { "value": "#ffb000", "from": "design:stuff.css|.dot.amber{background}" },
+				"--k-warn-soft": { "value": "#17171a", "note": "no tinted badge ground in the design: the raised surface" },
+				"--k-info": {
+					"value": "#c78bff",
+					"from": "design:stuff.css|:root{--lilac}",
+					"note": "the design has no info colour: lilac, as for links"
+				},
+				"--k-info-soft": { "value": "#17171a", "note": "no tinted badge ground in the design: the raised surface" },
+				"--k-focus": { "value": "#f4f4f0", "from": "design:stuff.css|:focus-visible{outline}", "design": "2px solid var(--fg)" },
+				"--k-backdrop": {
+					"value": "rgba(16, 16, 18, 0.55)",
+					"from": "design:S.dc.html#background: rgba(16,16,18,.55)",
+					"note": "the dim layer behind the delete-site dialog"
+				},
+				"--k-selected": { "value": "#17171a", "from": "design:stuff.css|a.cell:hover{background}" },
+				"--k-bg-code": { "value": "#0c0c0e", "from": "app:styles/theme.css|:root{--bg-code}" },
+				"--k-line-strong": { "value": "#3a3a42", "from": "design:stuff.css|:root{--line2}" },
+				"--k-line-dashed": { "value": "#6b5a8f", "from": "app:styles/theme.css|:root{--line-drop}" },
+				"--k-surface-danger": { "value": "#2a0f1a", "from": "app:styles/theme.css|:root{--bg-error}" },
+				"--k-surface-warn": { "value": "#2a200a", "from": "app:styles/theme.css|:root{--bg-warn}" },
+				"--k-surface-selected": { "value": "#1a1220", "from": "design:stuff.css|.opt:checked+.box{background}" },
+				"--k-fg-code": { "value": "#e8e8ee", "from": "app:styles/theme.css|:root{--fg-code}" },
+				"--k-fg-hint": { "value": "#c7c7cf", "from": "app:styles/theme.css|:root{--fg-hint}" },
+				"--k-fg-soft": { "value": "#d8d8de", "from": "design:stuff.css|.tcard ul{color}" },
+				"--k-fg-disabled": { "value": "#6a6a74", "from": "design:stuff.css|.opt:disabled+.box{color}" }
+			}
+		},
+		{
+			"variants": ["light"],
+			"note": "light, paper and contrast exist only in the design-system artifact (docs/design is dark only)",
+			"tokens": {
+				"color-scheme": "light",
+				"--k-bg": { "value": "#fbfaf8", "from": "ds:surface@light" },
+				"--k-bg-raised": { "value": "#ffffff", "from": "ds:surface-raised@light" },
+				"--k-bg-sunken": { "value": "#f1f0ee", "from": "ds:surface-code@light" },
+				"--k-fg": { "value": "#16141a", "from": "ds:ink@light" },
+				"--k-fg-muted": { "value": "#5a5862", "from": "ds:ink-muted@light" },
+				"--k-line": { "value": "#dcdae0", "from": "ds:line@light" },
+				"--k-border": { "value": "#767480", "from": "ds:border-control@light" },
+				"--k-primary": { "value": "#16141a", "from": "ds:ink@light" },
+				"--k-on-primary": { "value": "#fbfaf8", "from": "ds:surface@light" },
+				"--k-primary-hover": { "value": "#c2185b", "from": "ds:accent@light" },
+				"--k-on-primary-hover": { "value": "#ffffff", "from": "ds:on-accent@light" },
+				"--k-accent": { "value": "#c2185b", "from": "ds:accent@light" },
+				"--k-on-accent": { "value": "#ffffff", "from": "ds:on-accent@light" },
+				"--k-accent-soft": { "value": "#ffffff", "from": "ds:surface-raised@light" },
+				"--k-accent-text": { "value": "#c2185b", "from": "ds:accent@light" },
+				"--k-link": { "value": "#5b2fc9", "from": "ds:link@light" },
+				"--k-danger": { "value": "#b00040", "from": "ds:danger@light" },
+				"--k-on-danger": { "value": "#ffffff", "from": "ds:on-danger@light" },
+				"--k-danger-soft": { "value": "#ffffff", "from": "ds:surface-raised@light" },
+				"--k-ok": { "value": "#0b6b34", "from": "ds:ok@light" },
+				"--k-ok-soft": { "value": "#ffffff", "from": "ds:surface-raised@light" },
+				"--k-warn": { "value": "#7a4f00", "from": "ds:warn@light" },
+				"--k-warn-soft": { "value": "#ffffff", "from": "ds:surface-raised@light" },
+				"--k-info": { "value": "#5b2fc9", "from": "ds:link@light" },
+				"--k-info-soft": { "value": "#ffffff", "from": "ds:surface-raised@light" },
+				"--k-focus": { "value": "#16141a", "from": "ds:ink@light" },
+				"--k-backdrop": { "value": "rgba(16, 16, 18, 0.4)", "note": "kern's: the design system has no backdrop" },
+				"--k-selected": { "value": "#ffffff", "from": "ds:surface-raised@light" },
+				"--k-bg-code": { "value": "#f1f0ee", "from": "ds:surface-code@light" },
+				"--k-line-strong": { "value": "#bdbbc3", "note": "derived: 30 % from line toward border, like the dark pair" }
+			}
+		},
+		{
+			"variants": ["paper"],
+			"tokens": {
+				"color-scheme": "light",
+				"--k-bg": { "value": "#ffffff", "from": "ds:surface@paper" },
+				"--k-bg-raised": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
+				"--k-bg-sunken": { "value": "#f4f3f1", "from": "ds:surface-code@paper" },
+				"--k-fg": { "value": "#111111", "from": "ds:ink@paper" },
+				"--k-fg-muted": { "value": "#555555", "from": "ds:ink-muted@paper" },
+				"--k-line": { "value": "#d0d0d0", "from": "ds:line@paper" },
+				"--k-border": { "value": "#767676", "from": "ds:border-control@paper" },
+				"--k-primary": { "value": "#111111", "from": "ds:ink@paper" },
+				"--k-on-primary": { "value": "#ffffff", "from": "ds:surface@paper" },
+				"--k-primary-hover": { "value": "#b3004f", "from": "ds:accent@paper" },
+				"--k-on-primary-hover": { "value": "#ffffff", "from": "ds:on-accent@paper" },
+				"--k-accent": { "value": "#b3004f", "from": "ds:accent@paper" },
+				"--k-on-accent": { "value": "#ffffff", "from": "ds:on-accent@paper" },
+				"--k-accent-soft": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
+				"--k-accent-text": { "value": "#b3004f", "from": "ds:accent@paper" },
+				"--k-link": { "value": "#4a22a8", "from": "ds:link@paper" },
+				"--k-danger": { "value": "#a00038", "from": "ds:danger@paper" },
+				"--k-on-danger": { "value": "#ffffff", "from": "ds:on-danger@paper" },
+				"--k-danger-soft": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
+				"--k-ok": { "value": "#0b6b34", "from": "ds:ok@paper" },
+				"--k-ok-soft": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
+				"--k-warn": { "value": "#6e4700", "from": "ds:warn@paper" },
+				"--k-warn-soft": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
+				"--k-info": { "value": "#4a22a8", "from": "ds:link@paper" },
+				"--k-info-soft": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
+				"--k-focus": { "value": "#111111", "from": "ds:ink@paper" },
+				"--k-backdrop": { "value": "rgba(0, 0, 0, 0.35)", "note": "kern's: the design system has no backdrop" },
+				"--k-selected": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
+				"--k-bg-code": { "value": "#f4f3f1", "from": "ds:surface-code@paper" },
+				"--k-line-strong": { "value": "#b5b5b5", "note": "derived: 30 % from line toward border, like the dark pair" }
+			}
+		},
+		{
+			"variants": ["contrast"],
+			"tokens": {
+				"color-scheme": "dark",
+				"--k-bg": { "value": "#000000", "from": "ds:surface@contrast" },
+				"--k-bg-raised": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
+				"--k-bg-sunken": { "value": "#000000", "from": "ds:surface-code@contrast" },
+				"--k-fg": { "value": "#ffffff", "from": "ds:ink@contrast" },
+				"--k-fg-muted": { "value": "#d0d0d8", "from": "ds:ink-muted@contrast" },
+				"--k-line": { "value": "#8a8a94", "from": "ds:line@contrast" },
+				"--k-border": { "value": "#9a9aa4", "from": "ds:border-control@contrast" },
+				"--k-primary": { "value": "#ffffff", "from": "ds:ink@contrast" },
+				"--k-on-primary": { "value": "#000000", "from": "ds:surface@contrast" },
+				"--k-primary-hover": { "value": "#ff9cc6", "from": "ds:accent@contrast" },
+				"--k-on-primary-hover": { "value": "#000000", "from": "ds:on-accent@contrast" },
+				"--k-accent": { "value": "#ff9cc6", "from": "ds:accent@contrast" },
+				"--k-on-accent": { "value": "#000000", "from": "ds:on-accent@contrast" },
+				"--k-accent-soft": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
+				"--k-accent-text": { "value": "#ff9cc6", "from": "ds:accent@contrast" },
+				"--k-link": { "value": "#d9b8ff", "from": "ds:link@contrast" },
+				"--k-danger": { "value": "#ff8fb5", "from": "ds:danger@contrast" },
+				"--k-on-danger": { "value": "#000000", "from": "ds:on-danger@contrast" },
+				"--k-danger-soft": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
+				"--k-ok": { "value": "#3dff9a", "from": "ds:ok@contrast" },
+				"--k-ok-soft": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
+				"--k-warn": { "value": "#ffd000", "from": "ds:warn@contrast" },
+				"--k-warn-soft": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
+				"--k-info": { "value": "#d9b8ff", "from": "ds:link@contrast" },
+				"--k-info-soft": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
+				"--k-focus": { "value": "#ffffff", "from": "ds:ink@contrast" },
+				"--k-backdrop": { "value": "rgba(0, 0, 0, 0.75)", "note": "kern's: the design system has no backdrop" },
+				"--k-selected": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
+				"--k-bg-code": { "value": "#000000", "from": "ds:surface-code@contrast" }
+			}
+		}
+	],
+	"unused": {
+		"design:stuff.css|:root{--violet}": "the decorative grid panel behind the mascot; no component draws it",
+		"app:styles/theme.css|:root{--gray}": "the grey status dot of a list; kern's StatusDot has no grey tone",
+		"app:styles/theme.css|:root{--shadow}": "kern takes the whole shadow value (--k-shadow-sm) from the design",
+		"app:styles/theme.css|:root{--bg-raised}": "same value as the design's raised cell, which --k-bg-raised names",
+		"app:styles/theme.css|:root{--bg-selected}": "same value as the design's checked option, which --k-surface-selected names",
+		"app:styles/theme.css|:root{--fg-soft}": "same value as the design's theme card copy, which --k-fg-soft names",
+		"app:styles/theme.css|:root{--fg-disabled}": "same value as the design's disabled option, which --k-fg-disabled names",
+		"app:styles/theme.css|:root{--amber}": "same value as the design's amber dot, which --k-warn names",
+		"app:styles/theme.css|:root{--space-8}": "kern's --k-space-* scale has the same steps",
+		"app:styles/theme.css|:root{--space-10}": "kern's --k-space-2-5",
+		"app:styles/theme.css|:root{--space-12}": "kern's --k-space-3",
+		"app:styles/theme.css|:root{--space-14}": "kern's --k-space-3-5",
+		"app:styles/theme.css|:root{--space-16}": "kern's --k-space-4",
+		"app:styles/theme.css|:root{--space-20}": "kern's --k-space-5",
+		"app:styles/theme.css|:root{--space-24}": "kern's --k-space-6",
+		"app:styles/theme.css|:root{--space-28}": "kern's --k-space-6-5",
+		"app:styles/theme.css|:root{--space-32}": "kern's --k-space-7",
+		"app:styles/theme.css|:root{--space-40}": "kern's --k-space-8",
+		"app:styles/theme.css|:root{--radius}": "the radius tokens come from the design system's radius-none (same value)",
+		"app:styles/theme.css|:root{--target-icon}": "--k-tap-icon names the design's icon button (same value)",
+		"app:styles/theme.css|:root{--control-h}": "--k-control-h names the design's button height (same value)"
+	}
+}

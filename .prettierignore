@@ -9,6 +9,7 @@ tmp/
 custom-elements.json
 package-lock.json
 scripts/ci/size-baseline.json
+scripts/ci/code-theme-snapshot.json
 # Hand-written prose, brand artwork, workflow files and static HTML shells/test pages
 *.md
 *.html

@@ -81,7 +81,10 @@
 		"size": "node scripts/ci/size-budget.mjs",
 		"assets:check": "node scripts/ci/assets-drift.mjs",
 		"assets:manifest": "node scripts/ci/assets-drift.mjs --write",
-		"test:mascot": "playwright test -c tests/mascot/playwright.config.ts"
+		"test:mascot": "playwright test -c tests/mascot/playwright.config.ts",
+		"tokens:code": "node scripts/ci/code-theme.mjs --write",
+		"tokens:check": "node scripts/ci/code-theme.mjs",
+		"neutrality:check": "node scripts/ci/neutrality.mjs"
 	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"
