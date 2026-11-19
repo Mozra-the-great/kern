@@ -4,3 +4,6 @@
 
 # style: apply prettier (#22, #23)
 5e196da1cf64b02b1e0a22ca7d48cc8945988b25
+
+# style: apply prettier to the Mascot files (#69 merged into #70)
+5f061126b1cd482f6bd5b0349d55bacfa05d076c

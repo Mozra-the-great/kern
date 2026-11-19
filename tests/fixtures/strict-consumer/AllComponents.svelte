@@ -39,6 +39,7 @@
 		Label,
 		Link,
 		Marquee,
+		Mascot,
 		Modal,
 		Navbar,
 		NumberInput,
@@ -211,6 +212,18 @@
 <Label for={maybeString} required={maybeBoolean} text={maybeString} />
 <Link href={maybeString} external={maybeBoolean}>Link</Link>
 <Marquee bind:paused={checked} speed={maybeNumber} gap={maybeString} label={maybeString}>Ticker</Marquee>
+<Mascot
+	name="stuffy"
+	src={maybeString}
+	base={maybeString}
+	cols={maybeNumber}
+	rows={maybeNumber}
+	scale={maybeNumber}
+	compactScale={maybeNumber}
+	animated={maybeBoolean}
+	label={maybeString}
+	class={maybeString}
+/>
 <Modal bind:open title="Modal" description={maybeString} size={undefined} closeOnBackdrop={maybeBoolean}>Modal</Modal>
 <Navbar items={nav} label={maybeString} menuLabel={maybeString} />
 <NumberInput bind:value={nullableNum} min={maybeNumber} max={maybeNumber} step={maybeNumber} format={undefined} />
