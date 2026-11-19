@@ -12,11 +12,13 @@ export interface FormHost extends HTMLElement {
  * same validation API as a native control (`form`, `validity`, `checkValidity()` …); the wrapper
  * fills in the validity with `formControl()` from control.svelte.ts.
  */
-export function formAssociated(Base: any) {
-	return class extends Base {
+export function formAssociated(Base: typeof HTMLElement) {
+	return class extends Base implements FormHost {
 		static formAssociated = true;
 		internals: ElementInternals;
 		kernCustomValidity = '';
+		// Assigned later by `formControl()`; `declare` emits no field, so nothing resets it.
+		declare kernSyncValidity?: (() => void) | undefined;
 		constructor() {
 			super();
 			this.internals = this.attachInternals();
@@ -52,6 +54,7 @@ export function formAssociated(Base: any) {
 		}
 		/** Like the native method: a non-empty message makes the element invalid (`customError`). */
 		setCustomValidity(message: string): void {
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion -- plain-JS callers may pass anything, like the native method
 			this.kernCustomValidity = String(message ?? '');
 			this.dispatchEvent(new CustomEvent('k-validate'));
 		}
