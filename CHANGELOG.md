@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-11-20
+
 ### Added
 - Text for assistive technology only (#100): `VisuallyHidden` (`as`: `span` (default), `div`, `p`, `label`,
   `h2`–`h4`; `focusable` shows the content while it has focus; other attributes go to the element),
