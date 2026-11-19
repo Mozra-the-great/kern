@@ -2,9 +2,9 @@
 <script lang="ts">
 	import RadioGroup from '../lib/components/RadioGroup.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
+	/* "change" fires when the user picks an option, not when value/options are set. */
 	let { label = '', options = [], value = $bindable(''), name, inline = false, error } = $props();
 	const host = $host();
-	let first = true;
-	$effect(() => { setFormValue(host, value || null); if (!first) emit(host, 'change', value); first = false; });
+	$effect(() => setFormValue(host, value || null));
 </script>
-<RadioGroup {label} {options} bind:value {name} {inline} {error} />
+<RadioGroup {label} {options} bind:value {name} {inline} {error} onchange={(v: string) => emit(host, 'change', v)} />

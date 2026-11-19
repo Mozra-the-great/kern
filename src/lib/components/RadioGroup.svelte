@@ -14,9 +14,11 @@
 		/** Lay options out in a row. */
 		inline?: boolean;
 		error?: string;
+		/** Called when the user picks an option, not when `value` is set from outside. */
+		onchange?: (value: string) => void;
 		class?: string;
 	}
-	let { label, options, value = $bindable(''), name, inline = false, error, class: cls = '' }: Props = $props();
+	let { label, options, value = $bindable(''), name, inline = false, error, onchange, class: cls = '' }: Props = $props();
 	const uid = $props.id();
 	const groupName = $derived(name ?? `${uid}-radio`);
 </script>
@@ -26,7 +28,7 @@
 	<div class="opts">
 		{#each options as o (o.value)}
 			<div class="opt">
-				<input type="radio" id="{uid}-{o.value}" name={groupName} value={o.value} bind:group={value} disabled={o.disabled} aria-describedby={o.hint ? `${uid}-${o.value}-hint` : undefined} />
+				<input type="radio" id="{uid}-{o.value}" name={groupName} value={o.value} bind:group={value} onchange={() => onchange?.(o.value)} disabled={o.disabled} aria-describedby={o.hint ? `${uid}-${o.value}-hint` : undefined} />
 				<span class="text">
 					<label for="{uid}-{o.value}">{o.label}</label>
 					{#if o.hint}<span class="hint" id="{uid}-{o.value}-hint">{o.hint}</span>{/if}
