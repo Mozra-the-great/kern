@@ -253,6 +253,23 @@ export interface OnlineChangeDetail {
 	/** `true` when the connection came back, `false` when it was lost. */
 	online: boolean;
 }
+/** Detail of the `download` event of <k-download-button>. */
+export interface DownloadDetail {
+	/** The file name used, after cleaning. */
+	name: string;
+	/** Size in bytes. */
+	size: number;
+	/** MIME type; empty when there is none. */
+	type: string;
+}
+export type DownloadErrorCode = 'no-dom' | 'invalid' | 'failed' | 'content';
+/** Detail of the `download-error` event of <k-download-button>. */
+export interface DownloadErrorDetail {
+	/** `content`: no content or `getContent` failed; `failed`: the browser refused; `invalid`, `no-dom`: not a Blob, no document. */
+	code: DownloadErrorCode;
+	/** For developers (English). */
+	message: string;
+}
 export type AnnouncePoliteness = 'polite' | 'assertive';
 type StringsDeepPartial<T> = { [K in keyof T]?: (T[K] extends string ? string : StringsDeepPartial<T[K]>) | undefined };
 /** A part of the default texts, by component and name (`{ modal: { closeLabel: 'Schließen' } }`); `lang` is a BCP 47 tag. */

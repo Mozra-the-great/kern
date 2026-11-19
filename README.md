@@ -278,6 +278,7 @@ es meldet das Ende einer Animation.
   gewählte Schlüssel nach `row-key`), Heatmap (`detail` = `{date, value}`)
 - `sort`: DataTable (`detail` = `{key, dir}`)
 - `copy`: CopyButton, Code und CodeBlock (`detail` = kopierter Text) · `copy-error`: CopyButton, CodeBlock
+- `download`: DownloadButton (`detail` = `{name, size, type}`) · `download-error`: DownloadButton (`detail` = `{code, message}`)
 - `action`: Card mit `clickable` (Klick, Enter oder Leertaste auf den Karten-Button)
 - `change` außerdem: ThemeToggle (Theme-Id), Resizable (Größen in %, `number[]`) · `toggle` außerdem: Collapsible
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
@@ -1060,9 +1061,70 @@ Live-Region. Texte: `offlineTitle`, `offlineText`, `onlineText` (`offline-title`
 <!-- irgendwo: announce('Gespeichert'); announce('Verbindung verloren', 'assertive'); -->
 ```
 
+## Dateien speichern: `saveBlob`, `saveText`, DownloadButton
+
+Für Daten, die die Seite schon hat (Ergebnis eines Werkzeugs, Export, erzeugte Datei). Es wird nichts
+gesendet: der Browser bekommt eine Object-URL dieser Seite auf einen kurz eingehängten `<a download>`,
+der einmal geklickt wird; die URL wird danach wieder freigegeben.
+
+```ts
+import { saveBlob, saveText } from '@mozra-the-great/kern';
+
+const result = saveText('bericht.csv', csv, 'text/csv'); // UTF-8, MIME-Typ text/csv;charset=utf-8
+saveBlob('bild.png', blob); // Bytes unverändert
+if (!result.ok) console.warn(result.error.code, result.error.message);
+```
+
+- **Ergebnis, nie eine Ausnahme:** `{ ok: true, name, size, type }` mit dem tatsächlich benutzten Namen,
+  sonst `{ ok: false, error: { code, message, cause? } }`. `code`: `no-dom` (kein `document`, etwa beim
+  Server-Rendering: dann passiert nichts), `invalid` (kein `Blob` bzw. kein Text), `failed` (der Browser hat
+  abgelehnt; `cause` ist der Fehler) und `content` (nur DownloadButton: kein Inhalt oder `getContent` ist
+  gescheitert).
+- **Dateiname:** `sanitizeFileName` läuft immer: Steuer-, Unsichtbar- und Richtungsumkehr-Zeichen
+  fallen weg, Pfadtrenner und die unter Windows verbotenen Zeichen (`\ / : * ? " < > |`) werden zu `_`,
+  Leerzeichen am Rand und Punkte am Ende entfallen, reservierte Namen (`CON`, `NUL` …) bekommen ein `_`,
+  sehr lange Namen werden unter Erhalt der Endung gekürzt. Bleibt nichts übrig, gilt der Katalogtext
+  `downloadButton.fallbackName` („download“, deutsch „datei“) oder `options.fallbackName`.
+- **Typ:** `saveText` nimmt `text/plain`, hängt `;charset=utf-8` an (außer der Typ nennt selbst ein
+  Charset) und ersetzt etwas, das kein MIME-Typ ist, durch `text/plain`. `saveBlob` behält den Typ des Blobs.
+- **Zeitpunkt:** aus einem Klick- oder Tasten-Handler aufrufen; Browser erlauben mehrere Downloads ohne
+  Geste nicht oder fragen nach. Der synthetische Klick steigt nicht zum `document` auf, ein Popover oder
+  Router sieht ihn nicht. Die Object-URL wird `REVOKE_DELAY_MS` (1 s) nach dem Klick widerrufen, nicht in
+  derselben Task: Chromium und Firefox nehmen die Datei sofort, bei Safari ist ein sofortiger Widerruf
+  dafür bekannt, den Download zu verlieren (hier nicht getestet).
+
+**DownloadButton** (`<k-download-button>`) ist der Button dazu, nach dem Vorbild von CopyButton:
+Symbol allein, `label` ist dann der zugängliche Name; `showLabel` (Element: `show-label`) zeigt ihn als
+Text. Den Inhalt liefert `getContent`, sonst `blob`, sonst `text`; `getContent` darf einen String oder `Blob` auch asynchron liefern
+und läuft erst beim Klick. Währenddessen zeigt der Button einen Spinner und ignoriert weitere Klicks;
+danach bekommt er den Fokus zurück. `name` ist der Dateiname, `type` der MIME-Typ (bei einem `Blob`
+ersetzt er dessen Typ). Ohne Inhalt gibt es keine leere Datei, sondern einen Fehler.
+
+Die Meldung steht in einer höflichen Live-Region (`startedLabel`, „Download gestartet“): sie wird bei
+jedem Klick geleert und neu gesetzt und bleibt bis zum nächsten Klick, nur das Symbol springt nach
+`resetAfter` zurück. Sie ist unsichtbar, außer mit `showStatus`. Ein Fehler (`errorLabel`, „Download
+fehlgeschlagen“) ist immer sichtbarer Text mit `role="alert"` unter dem Button. `ondownload(result)` und
+`onerror(error)` laufen nach dem Ergebnis; Element: `download` (`detail` = `{ name, size, type }`) und
+`download-error` (`detail` = `{ code, message }`), beide nur nach Nutzereingabe. Am Element sind `text`,
+`name`, `type`, `label` & Co. Attribute, `blob` und `getContent` nur Eigenschaften.
+
+```svelte
+<DownloadButton text={csv} name="bericht.csv" type="text/csv" label="Bericht herunterladen" showLabel />
+<DownloadButton getContent={buildReport} name="bericht.pdf" label="Bericht" showLabel showStatus
+	ondownload={(r) => log(r.name, r.size)} onerror={(e) => report(e.code)} />
+```
+
+```html
+<k-download-button id="dl" name="bericht.csv" type="text/csv" label="Bericht herunterladen" show-label></k-download-button>
+<script>
+	dl.getContent = async () => (await fetch('/api/bericht')).text(); // oder dl.blob = new Blob([...])
+	dl.addEventListener('download-error', (e) => console.warn(e.detail.code));
+</script>
+```
+
 ## Komponenten (Kern-Set)
 
-Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
+Aktionen: Button, IconButton, Link, CopyButton, DownloadButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
 Status: Badge, Tag, Avatar, StatusDot, StatusMessage, Spinner, Progress, ProgressRing, Skeleton, Alert, Toaster/`toast()` ·
 Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
 Inhalt: Card, Tile/TileGrid, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel, Code, CodeBlock, Kbd, RelativeTime,

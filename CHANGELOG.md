@@ -24,6 +24,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Save-as-download helpers (#92): `saveBlob(name, blob)` and `saveText(name, text, type?)` offer data the page holds as
+  a file: an object URL on a temporary `<a download>` that is clicked once (its click does not bubble to the
+  document) and revoked `REVOKE_DELAY_MS` (1 s) later; nothing is sent anywhere. They never throw and return
+  `{ ok: true, name, size, type }` or `{ ok: false, error: { code, message, cause? } }` with `code` `no-dom` (no
+  document: server rendering, a worker), `invalid` or `failed`. File names go through `sanitizeFileName` (no path
+  separators, control, zero-width or direction-override characters, no characters Windows forbids, reserved names
+  prefixed, long names shortened keeping the extension; the catalogue's `downloadButton.fallbackName` when nothing is
+  left). `saveText` writes UTF-8 with `text/plain` as the default type (`textMimeType`). Types:
+  `DownloadResult`, `DownloadOk`, `DownloadFailure`, `DownloadError`, `DownloadErrorCode`, `SaveOptions`.
+- `DownloadButton` / `<k-download-button>` (#92), built like `CopyButton`: icon-only with `label` as the accessible name,
+  or `showLabel` / `show-label`. Content from `getContent` (a string or `Blob`, also async, called at click time; a spinner
+  and ignored clicks while it runs), `blob` or `text`; `name`, `type`. A polite live message (`startedLabel`) set fresh per
+  click, visible with `showStatus`; a failure (`getContent` throws or rejects, no content, the browser refuses) shows
+  `errorLabel` as an alert under the button. `ondownload(result)` / `onerror(error)`; element events `download`
+  (`{ name, size, type }`) and `download-error` (`{ code, message }`, code `content` for a failing producer), for user input
+  only. Attributes `text`, `name`, `type`, `label`, `show-label`, `started-label`, `error-label`, `show-status`, `variant`,
+  `size`, `reset-after`, `disabled`; the Blob and the producer are the properties `blob` and `getContent`.
+- Catalogue `downloadButton` (`label`, `startedLabel`, `errorLabel`, `fallbackName`) in English and German.
 - React 19 bridge tests (#35): a real React 19 app (`tests/fixtures/react-app`, StrictMode, development build, strict
   TypeScript with the shipped element typings) runs in Chromium against the built element entries. The Playwright
   specs `tests/elements/react-*.spec.ts` cover form controls with `FormData`, validity and reset, modal, drawer,

@@ -26,6 +26,7 @@ import type { ToastCloseReason, ToastInput, ToastItem } from '../lib/components/
 import type { toast, dismissToast } from '../lib/components/toast.svelte.js';
 import type { KernBundle, KernStringsInput } from '../lib/components/strings.js';
 import type { Politeness } from '../lib/components/announcer.js';
+import type { DownloadError, DownloadErrorCode, DownloadOk } from '../lib/components/download.js';
 import type * as A from '../lib/components/accent.js';
 
 type Mutual<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
@@ -66,6 +67,9 @@ export type Checks = [
 	Assert<Same<E.KernStringsInput, KernStringsInput>>,
 	Assert<Same<E.KernBundle, KernBundle>>,
 	Assert<Same<E.AnnouncePoliteness, Politeness>>,
+	Assert<Same<E.DownloadDetail, Omit<DownloadOk, 'ok'>>>,
+	Assert<Same<E.DownloadErrorCode, DownloadErrorCode>>,
+	Assert<Same<E.DownloadErrorDetail, Pick<DownloadError, 'code' | 'message'>>>,
 	Assert<Same<E.AccentScheme, A.AccentScheme>>,
 	Assert<Same<E.AccentRole, A.AccentRole>>,
 	Assert<Same<E.AccentErrorCode, A.AccentErrorCode>>,
