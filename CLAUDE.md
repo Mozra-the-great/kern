@@ -21,7 +21,10 @@ src/lib/components/   Svelte components (one file each) + anchor.ts, toast.svelt
 src/lib/themes/       base.css (all --k-* tokens), brands/<brand>.css (theme rules),
                       <brand>.css (self-contained entry: base + one brand), index.css (all),
                       accent.css (opt-in CSS-only accent fill, not in index.css)
-tests/tokens/         Vitest: theme contrast, per-brand entry isolation (npm test)
+tests/tokens/         Vitest (node project): theme contrast, per-brand entry isolation (npm test)
+tests/unit/ tests/components/  Vitest (node project): logic and server-rendered markup (svelte/server, no DOM)
+tests/dom/            Vitest (dom project, jsdom + @testing-library/svelte): smoke test of every export (smoke.test.ts)
+                      and behaviour tests per component; env.ts = jsdom stand-ins (dialog, matchMedia, observers)
 tests/targets/        Playwright: touch targets in the built demo (npm run test:targets)
 src/lib/index.ts      public exports (components + types)
 src/elements/         custom-element wrappers K<Name>.svelte; form.ts, control.svelte.ts + native.ts
@@ -45,7 +48,8 @@ npm run check   # svelte-check, must end with 0 errors / 0 warnings
 npm run lint    # ESLint + prettier --check; must pass (no `any`, see eslint.config.js)
 npm run format  # prettier --write + eslint --fix (formatting-only commits go into .git-blame-ignore-revs)
 npm run build   # dist/ (package), dist-elements/kern-elements.js, demo-dist/
-npm test        # Vitest: theme contrast + brand isolation
+npm test        # Vitest, both projects: node (theme contrast, brand isolation, units, markup) + dom (jsdom component behaviour)
+npm run test:coverage # Vitest + v8 coverage over src/lib (text report, coverage/lcov.info); fails below the ratchet in vitest.config.ts
 npm run test:targets  # Playwright touch targets (after build; npx playwright install chromium)
 npm run test:elements # Playwright custom elements (after build)
 npm run test:types    # tsc on the React 19 typing fixture
@@ -98,7 +102,12 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
   (Svelte throws for `bind:x={undefined}` when it has one); apply the default where the value is
   read (`value ?? ''`, a `$derived`, or a function binding `bind:value={() => value ?? '', (v) => (value = v)}`).
   Merge option objects with `withDefaults()` (data-utils.ts), not a spread. New components go into
-  tests/fixtures/strict-consumer (coverage.mjs fails otherwise).
+  tests/fixtures/strict-consumer (coverage.mjs fails otherwise) and into the `SMOKE` table of
+  tests/dom/smoke.test.ts (`every export has an entry` fails otherwise). Component behaviour (props, bindable
+  values, callbacks, keyboard, focus, ARIA, states) is tested in tests/dom/<component>.test.ts with
+  `@testing-library/svelte`; read docs/testing.md first (props named `target`, `reactive()` for `bind:`, the
+  jsdom stand-ins). Coverage has a ratchet: the thresholds in vitest.config.ts are the current numbers rounded
+  down, so a PR that lowers coverage fails; raise them when coverage grows (goal 95 %, stage 2 of #24).
 
 ---
 

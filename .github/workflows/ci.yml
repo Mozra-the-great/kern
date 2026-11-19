@@ -79,8 +79,18 @@ jobs:
         run: npm run test:consumer
       - name: No any in published types
         run: npm run check:dts
-      - name: Unit tests (theme contrast, brand entries)
-        run: npm test
+      - name: Tests (Vitest, node + dom projects with coverage)
+        # The same run as `npm test`, with the v8 coverage of src/lib: the table is printed here and the
+        # thresholds in vitest.config.ts are the ratchet (they fail the step when coverage drops, #24).
+        run: npm run test:coverage
+      - name: Upload coverage report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Custom Elements Manifest is up to date
         # The build regenerates custom-elements.json from src/elements; commit the result.
         run: git diff --exit-code custom-elements.json

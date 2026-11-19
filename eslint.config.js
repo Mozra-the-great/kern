@@ -26,6 +26,7 @@ export default defineConfig(
 			'tests/fixtures/react-app/dist/',
 			'dist-elements/',
 			'demo-dist/',
+			'coverage/',
 			'test-results/',
 			'playwright-report/',
 			'tmp/',
