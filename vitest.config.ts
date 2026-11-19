@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 // (npm run test:targets), not here.
 export default defineConfig({
 	test: {
-		include: ['tests/tokens/**/*.test.ts', 'src/**/*.test.ts'],
+		include: ['tests/tokens/**/*.test.ts', 'tests/mascot/**/*.test.ts', 'src/**/*.test.ts'],
 		environment: 'node'
 	}
 });

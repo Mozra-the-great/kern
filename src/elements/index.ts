@@ -76,6 +76,7 @@ import KProgressRing from './KProgressRing.svelte';
 import KCollapsible from './KCollapsible.svelte';
 import KResizable from './KResizable.svelte';
 import KScrollArea from './KScrollArea.svelte';
+import KMascot from './KMascot.svelte';
 import { define, tagOf, type ElementComponent } from './define.js';
 import { toast, dismissToast, installGlobal } from './global.js';
 
@@ -88,7 +89,8 @@ export const elements = {
 	KTypewriter, KCaret, KScramble, KCountUp, KOdometer, KMarquee, KReveal, KHighlight, KGridBackground, KTerminal,
 	KLabel, KNumberInput, KPinInput, KRating, KSegmentedControl, KStepper, KTagInput, KColorPicker,
 	KDataTable, KStat, KSparkline, KHeatmap, KHistoryBar, KTimeline,
-	KCode, KCopyButton, KKbd, KRelativeTime, KStatusDot, KThemeToggle, KProgressRing, KCollapsible, KResizable, KScrollArea
+	KCode, KCopyButton, KKbd, KRelativeTime, KStatusDot, KThemeToggle, KProgressRing, KCollapsible, KResizable, KScrollArea,
+	KMascot
 };
 export { toast, dismissToast };
 

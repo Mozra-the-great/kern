@@ -23,6 +23,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `Mascot` component and `<k-mascot>` element: the pixel-art runtime moves from stuffcloud into kern
+  (#55, stuffcloud ADR 0008). Draws any shipped stuffcloud SVG (by mascot name or
+  `<group>/<file>` path) or a consumer URL through `<img>`: integer scales only (`scale`,
+  `compactScale` below 760px), box reserved before the image loads, `transform`-only `steps(1)`
+  bob with the tokens `--k-mascot-bob-period` (1.2s) and `--k-mascot-bob-offset` (4px), paused
+  off-screen and in hidden tabs, still under `prefers-reduced-motion`, decorative unless `label`
+  is set, no canvas, no `data:` URIs.
+- Exports `MASCOT_NAMES`, `MASCOT_SOURCES` (stuffcloud names → kern files, same shape as
+  stuffcloud's), `STUFFCLOUD_ART` (pixel grid of every shipped SVG), `artPath`, `artUrl`,
+  `normaliseScale`, `integerScale`, `mascotSize`, `BOB_PERIOD_MS`, `BOB_OFFSET_PX`,
+  `COMPACT_MAX_WIDTH_PX` and the types `MascotName`, `MascotSource`, `MascotArt`, `MascotMotion`,
+  `PixelGrid`, `StuffcloudArt`.
+- The missing stuffcloud pixel art (#56): 31 tool stickers and 7 seasonal decorations; kern now
+  ships the same 115 SVGs as stuffcloud's `docs/design/prototypes`, byte for byte.
+- `assets/stuffcloud/manifest.json` (size, sha256 and grid per file) and a drift check
+  (`npm run assets:check`, in the `build` job; `--against <dir>` compares with a stuffcloud
+  checkout); refresh with `npm run assets:manifest` (see `assets/README.md`).
+- Playwright tests of `<k-mascot>` under a strict CSP (`npm run test:mascot`, in the `build` job)
+  and Vitest tests of the catalogue, the name mapping and the stylesheet rules.
+
+### Changed
+- The demo build no longer inlines SVGs as `data:` URIs (`build.assetsInlineLimit`).
+
 ## [0.3.0] - 2026-11-19
 
 ### Added

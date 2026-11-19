@@ -13,6 +13,7 @@
 	import Primitives from './sections/Primitives.svelte';
 	import Layout from './sections/Layout.svelte';
 	import Assets from './sections/Assets.svelte';
+	import Mascots from './sections/Mascots.svelte';
 	import Data from './sections/Data.svelte';
 
 	let theme = $state(readTheme());
@@ -240,6 +241,7 @@
 	<Primitives />
 	<Layout />
 	<Effects />
+	<Mascots />
 	<Assets />
 </main>
 
