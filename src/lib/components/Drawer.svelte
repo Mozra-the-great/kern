@@ -1,47 +1,91 @@
 <script lang="ts">
 	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
+	import { ModalDialog } from './modal-dialog.js';
 
 	interface Props {
 		open?: boolean | undefined;
 		title: string;
 		side?: 'right' | 'left' | 'bottom' | undefined;
+		/** Close when the backdrop is clicked. Default true. */
+		closeOnBackdrop?: boolean | undefined;
+		/**
+		 * `false`: Escape, the backdrop and the close button (hidden) do nothing; only the app closes
+		 * the drawer by setting `open` to false. Default true.
+		 */
+		dismissible?: boolean | undefined;
+		/**
+		 * What gets focus when the drawer opens: an element, or a CSS selector looked up inside the
+		 * drawer (and in the light DOM of a custom-element host). Default: the browser's choice.
+		 */
+		initialFocus?: string | HTMLElement | undefined;
 		closeLabel?: string | undefined;
+		/**
+		 * The user asked to close (Escape, close button, backdrop). Call `event.preventDefault()` to
+		 * keep the drawer open.
+		 */
+		oncancel?: ((event: Event) => void) | undefined;
+		/**
+		 * The user closed the drawer (Escape, close button, backdrop, a `<form method="dialog">`
+		 * button). Not called when the app closes it by setting `open` to false.
+		 */
 		onclose?: (() => void) | undefined;
 		footer?: Snippet | undefined;
 		children?: Snippet | undefined;
 	}
-	let { open = $bindable(), title, side = 'right', closeLabel: closeLabelProp, onclose, footer, children }: Props = $props();
+	let {
+		open = $bindable(),
+		title,
+		side = 'right',
+		closeOnBackdrop = true,
+		dismissible = true,
+		initialFocus,
+		closeLabel: closeLabelProp,
+		oncancel,
+		onclose,
+		footer,
+		children
+	}: Props = $props();
 	const closeLabel = $derived(closeLabelProp ?? strings().drawer.closeLabel);
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();
+	// Same open/close, scroll lock and focus handling as Modal.
+	const control = new ModalDialog({
+		dismissible: () => dismissible,
+		initialFocus: () => initialFocus,
+		cancel: (event) => oncancel?.(event),
+		closed: () => {
+			open = false;
+			onclose?.();
+		}
+	});
 
 	$effect(() => {
-		if (!dialog) return;
-		if (open && !dialog.open) dialog.showModal();
-		else if (!open && dialog.open) dialog.close();
+		if (dialog) control.sync(dialog, !!open);
 	});
+	$effect(() => () => control.destroy());
 </script>
 
 <dialog
 	bind:this={dialog}
 	class="k-drawer"
 	data-side={side}
+	closedby={dismissible ? undefined : 'none'}
 	aria-labelledby="{uid}-t"
-	onclose={() => {
-		open = false;
-		onclose?.();
-	}}
+	oncancel={control.oncancel}
+	onclose={control.onclose}
 	onclick={(e) => {
-		if (e.target === dialog) dialog?.close();
+		if (closeOnBackdrop && e.target === dialog) control.requestClose();
 	}}
 >
 	<div class="inner">
 		<header>
 			<h2 id="{uid}-t">{title}</h2>
-			<button type="button" class="x" aria-label={closeLabel} onclick={() => dialog?.close()}>
-				<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" /></svg>
-			</button>
+			{#if dismissible}
+				<button type="button" class="x" aria-label={closeLabel} onclick={() => control.requestClose()}>
+					<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" /></svg>
+				</button>
+			{/if}
 		</header>
 		<div class="body">{@render children?.()}</div>
 		{#if footer}<footer>{@render footer()}</footer>{/if}

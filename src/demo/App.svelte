@@ -36,6 +36,7 @@
 	import Widgets from './sections/Widgets.svelte';
 	import FormsMore from './sections/FormsMore.svelte';
 	import FormsContent from './sections/FormsContent.svelte';
+	import NavContent from './sections/NavContent.svelte';
 	import Effects from './sections/Effects.svelte';
 	import Primitives from './sections/Primitives.svelte';
 	import Layout from './sections/Layout.svelte';
@@ -307,6 +308,7 @@
 	<Widgets />
 	<FormsMore />
 	<FormsContent />
+	<NavContent />
 	<Data />
 	<Primitives />
 	<Layout />

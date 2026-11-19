@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
-	import { lockScroll } from './scroll-lock.js';
+	import { ModalDialog } from './modal-dialog.js';
 
 	interface Props {
 		open?: boolean | undefined;
@@ -29,6 +29,10 @@
 		 * keep the dialog open.
 		 */
 		oncancel?: ((event: Event) => void) | undefined;
+		/**
+		 * The user closed the dialog (Escape, close button, backdrop, a `<form method="dialog">`
+		 * button). Not called when the app closes it by setting `open` to false.
+		 */
 		onclose?: (() => void) | undefined;
 		footer?: Snippet | undefined;
 		children?: Snippet | undefined;
@@ -52,79 +56,23 @@
 
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();
-	let release: (() => void) | undefined;
-	/** A close the dialog could not refuse (an uncancelable `cancel`) that has to be undone. */
-	let keepOpen = false;
-	/** Close events still to come for closes `requestClose` already reported. */
-	let skipCloseEvents = 0;
+	const control = new ModalDialog({
+		dismissible: () => dismissible,
+		initialFocus: () => initialFocus,
+		cancel: (event) => oncancel?.(event),
+		closed: () => {
+			open = false;
+			onclose?.();
+		}
+	});
 
 	$effect(() => {
-		if (!dialog) return;
-		if (open && !dialog.open) {
-			dialog.showModal();
-			release ??= lockScroll();
-			focusInitial(dialog);
-		} else if (!open && dialog.open) dialog.close();
+		if (dialog) control.sync(dialog, !!open);
 	});
-	$effect(() => () => {
-		release?.();
-		release = undefined;
-	});
+	$effect(() => () => control.destroy());
 
-	function focusInitial(d: HTMLDialogElement) {
-		if (initialFocus === undefined || initialFocus === '') return;
-		let target: Element | null = typeof initialFocus === 'string' ? null : initialFocus;
-		if (typeof initialFocus === 'string') {
-			try {
-				target = d.querySelector(initialFocus);
-				const root = d.getRootNode();
-				if (!target && root instanceof ShadowRoot) target = root.host.querySelector(initialFocus);
-			} catch {
-				// not a valid selector: keep the browser's choice
-			}
-		}
-		if (target instanceof HTMLElement || target instanceof SVGElement) target.focus();
-	}
-
-	/** A close request by the user; true when the dialog closed. */
-	function requestClose(): boolean {
-		if (!dismissible || !dialog) return false;
-		const event = new Event('cancel', { cancelable: true });
-		oncancel?.(event);
-		if (event.defaultPrevented) return false;
-		dialog.close();
-		// The close event comes a task later; update `open` now so the app can reopen right away.
-		skipCloseEvents++;
-		finish();
-		return true;
-	}
-	function handleCancel(e: Event) {
-		e.preventDefault();
-		// Browsers ignore preventDefault() on a cancel without user activation; reopen after that close.
-		if (!requestClose() && !e.cancelable) keepOpen = true;
-	}
-	function handleClose() {
-		if (keepOpen && dialog) {
-			keepOpen = false;
-			dialog.showModal();
-			return;
-		}
-		if (skipCloseEvents > 0) {
-			skipCloseEvents--;
-			return;
-		}
-		// Reopened before this close event arrived: nothing to report.
-		if (dialog?.open) return;
-		finish();
-	}
-	function finish() {
-		release?.();
-		release = undefined;
-		open = false;
-		onclose?.();
-	}
 	function handleClick(e: MouseEvent) {
-		if (closeOnBackdrop && e.target === dialog) requestClose();
+		if (closeOnBackdrop && e.target === dialog) control.requestClose();
 	}
 </script>
 
@@ -136,15 +84,15 @@
 	closedby={dismissible ? undefined : 'none'}
 	aria-labelledby="{uid}-t"
 	aria-describedby={description ? `${uid}-d` : undefined}
-	oncancel={handleCancel}
-	onclose={handleClose}
+	oncancel={control.oncancel}
+	onclose={control.onclose}
 	onclick={handleClick}
 >
 	<div class="inner">
 		<header>
 			<h2 id="{uid}-t">{title}</h2>
 			{#if dismissible}
-				<button type="button" class="x" aria-label={closeLabel} onclick={requestClose}>
+				<button type="button" class="x" aria-label={closeLabel} onclick={() => control.requestClose()}>
 					<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" /></svg>
 				</button>
 			{/if}

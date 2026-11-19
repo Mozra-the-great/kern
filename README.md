@@ -205,13 +205,15 @@ es meldet das Ende einer Animation.
 - `select`: DropdownMenu, ContextMenu, CommandPalette, TreeView (`detail` = id), DataTable (`detail` =
   gewählte Schlüssel nach `row-key`), Heatmap (`detail` = `{date, value}`)
 - `sort`: DataTable (`detail` = `{key, dir}`)
-- `copy`: CopyButton und Code (`detail` = kopierter Text) · `copy-error`: CopyButton
+- `copy`: CopyButton, Code und CodeBlock (`detail` = kopierter Text) · `copy-error`: CopyButton, CodeBlock
 - `action`: Card mit `clickable` (Klick, Enter oder Leertaste auf den Karten-Button)
 - `change` außerdem: ThemeToggle (Theme-Id), Resizable (Größen in %, `number[]`) · `toggle` außerdem: Collapsible
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
 - `files`: FileDrop (`detail` = `File[]`, auch als `el.files`) · `reject`: FileDrop (abgelehnte Dateien, `File[]`)
-- `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
-- `cancel`: Modal, bevor Escape, ✕ oder Hintergrund ihn schließen; abbrechbar (`preventDefault()` hält ihn offen)
+- `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag. Modal und Drawer
+  melden `close` nur, wenn die Nutzerin schließt (Escape, ✕, Hintergrund), nie für `open = false` aus dem Code
+- `cancel`: Modal und Drawer, bevor Escape, ✕ oder Hintergrund sie schließen; abbrechbar (`preventDefault()` hält sie offen)
+- `navigate`: TabLinks, normaler Klick auf einen Link (`detail` = der Link); abbrechbar für Routing im Client
 - `dismiss`, `undo`, `action`: Toaster, Klick auf ✕, „Rückgängig“ oder die Aktion eines Toasts (`detail` = `{id, key}`)
 
 Toasts: `toast()` aus `@mozra-the-great/kern` und `window.kern.toast()` aus `kern-elements.js` schreiben in
@@ -254,8 +256,12 @@ nur die App über `open`. `initialFocus` (`initial-focus`, CSS-Selektor oder Ele
 was beim Öffnen den Fokus bekommt, etwa die Hauptaktion statt ✕. `alert` setzt
 `role="alertdialog"`. Solange ein Modal offen ist, scrollt die Seite dahinter nicht (auch
 verschachtelt); langer Inhalt scrollt im Dialog. Fokusfalle, inerte Seite und Rückgabe des
-Fokus an den Öffner kommen vom nativen `<dialog>`. `close` feuert auch, wenn die App den Dialog
-über `open` schließt.
+Fokus an den Öffner kommen vom nativen `<dialog>`. `close` (Svelte: `onclose`) meldet nur ein Schließen
+durch die Nutzerin (Escape, ✕, Hintergrund, in Svelte auch ein `<form method="dialog">`); schließt die
+App über `open = false`, kommt kein Ereignis. Ein kontrollierter Wrapper (React `open={x}` plus
+`onclose={() => setX(false)}`) bekommt so genau ein `close` pro Schließen. Der Drawer kann dasselbe:
+`dismissible`, `initialFocus`, `closeOnBackdrop`, abbrechbares `cancel` und dieselbe Scroll-Sperre
+(ein Drawer über einem Modal hält die Seite gesperrt, bis beide zu sind).
 
 Progress: `tone="warn"` (Speicher voll), `valueText` (`value-text`, gesprochen statt der Zahl,
 etwa „3 von 12 Dateien“), `hideLabel` (`hide-label`, Beschriftung nur für Screenreader). Werte
@@ -264,7 +270,7 @@ Streifen (stuffcloud: `steps(4)`, nur `transform`), bei „Bewegung reduzieren�
 Themes stellen `--k-progress-period`, `--k-progress-loop` und `--k-progress-ease` ein. Im
 Kontrastmodus (`forced-colors`) bleibt der Balken in `Highlight` sichtbar.
 
-Slots: Tab-Inhalte sind Kinder mit `data-tab="<id>"`, Folien von `<k-carousel>` sind seine
+Slots: Tab-Inhalte sind Kinder mit `data-tab="<id>"` (ohne Kinder ist `<k-tabs>` nur die Tab-Leiste), Folien von `<k-carousel>` sind seine
 Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` und `badges` (Card), `actions` (Alert,
 EmptyState, Navbar), `icon` (EmptyState), `brand` (Navbar), `trigger` (Popover, nur Inhalt
 des Buttons). Bei `<k-context-menu>` ist der Standard-Slot die Zielfläche.
@@ -536,6 +542,81 @@ höflich, `kind="alert"` für Fehler): von Anfang an leer einbinden und nur `mes
 <StatusMessage message={problem} kind="alert" />
 ```
 
+## Navigation und Inhalt: Abgleich mit stuffcloud und nagellacke
+
+| stuffcloud / nagellacke                   | kern                                                                         |
+| ----------------------------------------- | ---------------------------------------------------------------------------- |
+| `CodeBlock code label copyLabel`          | `CodeBlock` (auf `Code` aufgebaut), Element `<k-code-block>`                 |
+| `TabLinks links label` (`tabs.css`)       | `TabLinks`, Element `<k-tab-links>`, gleiche Optik wie `Tabs`                |
+| `Tabs … panel`                            | `Tabs`; `panel` ist optional (Tab-Leiste ohne Panel)                         |
+| nagellacke `navRow` mit Sync-Fehler-Punkt | `Tabs` ohne `panel`, Eintrag mit `dot`, `badgeLabel`, `badgeTone="danger"`  |
+| `Tile`, `TileGrid`                        | `Tile`, `TileGrid`, Elemente `<k-tile>`, `<k-tile-grid>`                     |
+
+**CodeBlock:** ein Block mit Rahmen in `--k-bg-code`/`--k-fg-code`, Monospace, seitlich scrollbar
+ohne sichtbare Scrollleiste (`hideScrollbar={false}` bzw. `show-scrollbar` zeigt sie). Solange er
+seitlich scrollt, ist er eine benannte, fokussierbare Region (`label`, axe
+`scrollable-region-focusable`); passt der Code, ist er weder Region noch Tab-Stopp. `copyLabel`
+schaltet wie in stuffcloud den Kopieren-Button ein (Text-Button; `showCopyLabel={false}` bzw.
+`copy-icon` nur Symbol), `copy` erzwingt oder unterdrückt ihn. Das Ergebnis wird höflich angesagt
+(`copiedLabel`, `copyErrorLabel`); ohne Clipboard-API oder bei verweigerter Berechtigung greift der
+Rückfall von CopyButton, scheitert auch der, kommt die Fehlermeldung. `oncopy(copied, text)` läuft
+bei jedem Versuch (Element: `copy` mit dem Text, `copy-error`). Unterschied zu stuffcloud: die Ansage
+bleibt bis zum nächsten Klick stehen (CopyButton-Verhalten), nur das Symbol springt nach 2 s
+zurück. `language`, `lineNumbers` und `startLine` wie bei `Code`. Das Element nimmt den Code aus
+`code` oder aus seinem Text (Einrückung entfernt).
+
+```svelte
+<CodeBlock code="stuffcloud deploy ./dist" label="Befehl" copyLabel="Kopieren" copiedLabel="Kopiert" />
+```
+
+**TabLinks:** Seiten-Navigation als Links, die wie Tabs aussehen: `<nav aria-label={label}>`, der
+Link mit `current` bekommt `aria-current="page"`. Keine Tab-Rollen und keine Pfeiltasten, Tab geht
+von Link zu Link. `look` wie bei Tabs (`line`, `pill`). Router im Client: `onnavigate(link, event)`
+(Element: abbrechbares `navigate`) kommt bei einem normalen Klick ohne Zusatztaste;
+`event.preventDefault()` verhindert das Laden der Seite. Links im Shadow DOM sieht ein Router sonst
+nicht.
+
+**Tabs als App-Navigation (nagellacke):** Ohne `panel` (Element: ohne Kinder) rendert Tabs nur die
+Tab-Leiste, kein `tabpanel` und kein `aria-controls`; die App zeigt den Inhalt selbst und kann mit
+`controls` je Eintrag auf ihn verweisen. Einträge können `badge` (Zahl oder kurzer Text), `dot`,
+`badgeLabel` (gesprochen statt des Badges, z. B. „3 neu“ oder „Sync-Fehler“; ein Punkt ohne
+`badgeLabel` bleibt stumm), `badgeTone` (`accent`, `danger`), `disabled` und `hidden` (nicht
+gerendert, z. B. ein Admin-Tab) haben. Der Name des Tabs lautet dann „Mehr Sync-Fehler“. Pfeiltasten
+überspringen gesperrte und versteckte Tabs. Auf schmalen Bildschirmen scrollt die Leiste seitlich;
+die Kante mit verdeckten Tabs blendet aus, der Fokusring liegt innen. Wie bisher kommt `change` nur
+bei Nutzereingaben.
+
+```svelte
+<Tabs
+	tabs={[
+		{ id: 'lacke', label: 'Lacke', badge: 3, badgeLabel: '3 neu' },
+		{ id: 'mehr', label: 'Mehr', dot: syncError, badgeLabel: syncError ? 'Sync-Fehler' : undefined, badgeTone: 'danger' },
+		{ id: 'admin', label: 'Admin', hidden: role !== 'admin' }
+	]}
+	bind:value={page}
+	label="Hauptnavigation"
+	look="pill"
+/>
+{#if page === 'lacke'}<CollectionPage />{:else if page === 'mehr'}<SettingsPage />{/if}
+```
+
+```tsx
+<k-tabs tabs={tabs} value={tab} look="pill" label="Hauptnavigation" onchange={(e) => setTab(e.detail)} />
+```
+
+**Tile und TileGrid:** ein liniertes Raster wie stuffclouds Werkzeugübersicht. `TileGrid` legt so viele
+Spalten von mindestens `min` (Vorgabe 280px) an, wie passen, und zieht die obere Linie; jede `Tile`
+zieht ihre rechte und untere. Mit `href` ist die ganze Zelle ein Link (Hover-Fläche, Fokusring
+innen). Ist das Raster schmaler als 760 px (Container-Query), stehen Symbol und Text nebeneinander.
+`as` wählt das Element (`TileGrid as="ul"` mit `Tile as="li"`; das Element setzt dafür `role="list"`
+bzw. `role="listitem"` auf sich); weitere Attribute gehen an das Wurzelelement.
+
+```svelte
+<TileGrid as="ul" aria-label="Werkzeuge">
+	<Tile as="li" href="/pdf"><PdfIcon /><span>PDF</span></Tile>
+	<Tile as="li"><span>Bald mehr</span></Tile>
+</TileGrid>
+
 ## Texte, Sprache und Barrierefreiheit
 
 ### Standardtexte und Sprache
@@ -677,11 +758,11 @@ Live-Region. Texte: `offlineTitle`, `offlineText`, `onlineText` (`offline-title`
 Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
 Status: Badge, Tag, Avatar, StatusDot, StatusMessage, Spinner, Progress, ProgressRing, Skeleton, Alert, Toaster/`toast()` ·
 Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
-Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel, Code, Kbd, RelativeTime,
+Inhalt: Card, Tile/TileGrid, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel, Code, CodeBlock, Kbd, RelativeTime,
 Collapsible, ScrollArea, Resizable (Paneele mit tastaturbedienbaren Trennern) ·
 Daten: DataTable (Filter, Sortierung, Seiten, Zeilenauswahl), Stat, Sparkline, Heatmap, HistoryBar, Timeline ·
 Overlays: Modal, Drawer, Tooltip, Popover ·
-Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, Accordion/AccordionItem, TreeView ·
+Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, TabLinks, Accordion/AccordionItem, TreeView ·
 Effekte: Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal, Highlight, GridBackground, Terminal ·
 Pixel-Art: Mascot ·
 Text und Barrierefreiheit: Prose, SkipLink, LiveAnnouncer, OnlineStatus

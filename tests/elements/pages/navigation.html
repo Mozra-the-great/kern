@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-theme="stuffcloud">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: navigation and content</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script>
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+				background: var(--k-bg);
+				color: var(--k-fg);
+				font-family: var(--k-font-sans);
+			}
+			body > * + * {
+				margin-top: 24px;
+			}
+			.narrow {
+				max-width: 300px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Navigation and content</h1>
+		<button id="before" type="button">Before</button>
+
+		<!-- App navigation (nagellacke): tab bar without panels, the page below is swapped by the app. -->
+		<k-tabs
+			id="appnav"
+			label="Main"
+			tabs='[{"id":"polishes","label":"Polishes","badge":3,"badgeLabel":"3 new"},{"id":"cart","label":"Cart","disabled":true},{"id":"admin","label":"Admin","hidden":true},{"id":"stats","label":"Stats"},{"id":"more","label":"More","dot":true,"badgeLabel":"Sync error","badgeTone":"danger"}]'
+		></k-tabs>
+		<main id="page">polishes</main>
+
+		<k-tabs id="panels" label="Formats" tabs='[{"id":"json","label":"JSON"},{"id":"yaml","label":"YAML"}]'>
+			<div data-tab="json">JSON panel</div>
+			<div data-tab="yaml">YAML panel</div>
+		</k-tabs>
+
+		<k-tab-links
+			id="links"
+			label="Convert tools"
+			links='[{"href":"#convert","label":"Convert","current":true},{"href":"#base64","label":"Base64"},{"href":"#units","label":"Units","current":false,"badge":2}]'
+		></k-tab-links>
+		<k-tab-links
+			id="pills"
+			label="Views"
+			look="pill"
+			links='[{"href":"#grid","label":"Grid","current":true},{"href":"#list","label":"List"}]'
+		></k-tab-links>
+		<div class="narrow">
+			<k-tabs
+				id="many"
+				label="Many tabs"
+				tabs='[{"id":"a","label":"Alpha"},{"id":"b","label":"Bravo"},{"id":"c","label":"Charlie"},{"id":"d","label":"Delta"},{"id":"e","label":"Echo"},{"id":"f","label":"Foxtrot"}]'
+			></k-tabs>
+		</div>
+
+		<k-code-block id="cb" label="Deploy command" copy-label="Copy" copied-label="Copied" copy-error-label="Copy failed">
+			stuffcloud deploy ./dist --expires 7d --target production --region eu-central --verbose --dry-run
+		</k-code-block>
+		<k-code-block id="cb-plain" code="&lt;b&gt;x&lt;/b&gt;"></k-code-block>
+		<k-code-block id="cb-lines" language="sh" line-numbers copy copy-icon code="npm ci&#10;npm run build"></k-code-block>
+
+		<k-tile-grid id="grid" as="ul" aria-label="Tools">
+			<k-tile as="li" href="#pdf"><strong>PDF</strong><span>Merge and split</span></k-tile>
+			<k-tile as="li" href="#img"><strong>Images</strong><span>Resize and convert</span></k-tile>
+			<k-tile as="li" id="plain-tile"><strong>Soon</strong><span>More tools</span></k-tile>
+		</k-tile-grid>
+	</body>
+</html>

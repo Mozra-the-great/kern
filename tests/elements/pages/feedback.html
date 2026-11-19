@@ -51,6 +51,15 @@
 			<button slot="footer" id="keep" type="button">Keep editing</button>
 		</k-modal>
 
+		<k-drawer id="d-block" title="Choose a plan" dismissible="false" initial-focus="#plan">
+			<p>Pick one to go on.</p>
+			<button slot="footer" id="plan" type="button">Free</button>
+		</k-drawer>
+		<k-drawer id="d-normal" title="Filter" side="left">
+			<p>Body</p>
+			<button slot="footer" id="apply" type="button">Apply</button>
+		</k-drawer>
+
 		<k-toaster id="toaster" undo-label="Rückgängig" dismiss-label="Schließen" label="Benachrichtigungen"></k-toaster>
 	</body>
 </html>

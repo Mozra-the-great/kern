@@ -23,6 +23,7 @@ import KToaster from './KToaster.svelte';
 import KModal from './KModal.svelte';
 import KDrawer from './KDrawer.svelte';
 import KTabs from './KTabs.svelte';
+import KTabLinks from './KTabLinks.svelte';
 import KAccordion from './KAccordion.svelte';
 import KAccordionItem from './KAccordionItem.svelte';
 import KTooltip from './KTooltip.svelte';
@@ -67,6 +68,7 @@ import KHeatmap from './KHeatmap.svelte';
 import KHistoryBar from './KHistoryBar.svelte';
 import KTimeline from './KTimeline.svelte';
 import KCode from './KCode.svelte';
+import KCodeBlock from './KCodeBlock.svelte';
 import KCopyButton from './KCopyButton.svelte';
 import KStatusMessage from './KStatusMessage.svelte';
 import KKbd from './KKbd.svelte';
@@ -77,6 +79,8 @@ import KProgressRing from './KProgressRing.svelte';
 import KCollapsible from './KCollapsible.svelte';
 import KResizable from './KResizable.svelte';
 import KScrollArea from './KScrollArea.svelte';
+import KTile from './KTile.svelte';
+import KTileGrid from './KTileGrid.svelte';
 import KMascot from './KMascot.svelte';
 import KProse from './KProse.svelte';
 import KSkipLink from './KSkipLink.svelte';
@@ -122,6 +126,7 @@ export const elements = {
 	KModal,
 	KDrawer,
 	KTabs,
+	KTabLinks,
 	KAccordion,
 	KAccordionItem,
 	KTooltip,
@@ -166,6 +171,7 @@ export const elements = {
 	KHistoryBar,
 	KTimeline,
 	KCode,
+	KCodeBlock,
 	KCopyButton,
 	KStatusMessage,
 	KKbd,
@@ -176,6 +182,8 @@ export const elements = {
 	KCollapsible,
 	KResizable,
 	KScrollArea,
+	KTile,
+	KTileGrid,
 	KMascot,
 	KProse,
 	KSkipLink,

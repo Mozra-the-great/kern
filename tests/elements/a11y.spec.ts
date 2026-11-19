@@ -2,7 +2,8 @@
  * axe on the element test pages in five themes: no serious or critical violation (#25, #50, #51, #58, #64).
  * The pages cover the parity components (Card list and interactive cards, Button/Link, FileDrop,
  * fields with hint and error, CopyButton, StatusMessage), the feedback components (Progress,
- * Toaster, Modal), a form of every form element, every element with default texts (strings), and the
+ * Toaster, Modal, Drawer), the navigation and content components (Tabs as a tab bar with badges,
+ * TabLinks, CodeBlock, Tile/TileGrid), a form of every form element, every element with default texts (strings), and the
  * skip link, live announcer, online status and prose (primitives). The primitives page is also
  * checked with the skip link focused and while offline, the states in which those parts are visible.
  */
@@ -20,6 +21,7 @@ const cases: Case[] = [
 	{ name: 'parity' },
 	{ name: 'feedback' },
 	{ name: 'form' },
+	{ name: 'navigation' },
 	{ name: 'strings' },
 	{ name: 'primitives' },
 	{

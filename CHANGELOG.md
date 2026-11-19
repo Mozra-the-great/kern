@@ -24,6 +24,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- `CodeBlock` and `<k-code-block>` (#46): stuffcloud's code block on top of `Code` (block mode): text
+  copy button when `copyLabel` is set (or `copy`; `showCopyLabel={false}` / `copy-icon` for an
+  icon-only one), polite announcement of `copiedLabel` / `copyErrorLabel`, `oncopy(copied, text)` for
+  every attempt (element: `copy` with the text, `copy-error`), no visible scrollbar (`hideScrollbar`,
+  element `show-scrollbar`), focusable named region while it scrolls. `Code` gains `copyShowLabel`,
+  `hideScrollbar`, `oncopyerror` and a forced-colors rule.
+- `TabLinks` and `<k-tab-links>` (#47): navigation tabs as links in a named `<nav>`, `aria-current="page"`
+  on the current one, same look as `Tabs` (`look`), sideways scroll with a fade on the hidden side and
+  the focus ring inside. `onnavigate(link, event)` / cancelable `navigate` for client-side routers.
+  Type `TabLinkItem`.
+- `Tabs` as an app tab bar (#48): `panel` is optional; without it (element: without children) there is
+  no tabpanel and no `aria-controls` unless an item names one with `controls`. `TabItem` gains `badge`,
+  `dot`, `badgeLabel`, `badgeTone` (`accent` | `danger`) and `hidden`; the badge is decorative and its
+  meaning is part of the tab's name ("More Sync error"). Arrow keys skip hidden and disabled tabs; a
+  hidden, disabled or unknown `value` leaves Tab focus on the first usable tab. The strip fades its
+  edge while tabs are hidden, and the selected pill draws its focus ring in `--k-on-primary`.
+- `Tile` and `TileGrid`, `<k-tile>` and `<k-tile-grid>` (#49): ruled grid of cells (grid draws the top
+  line, each tile its right and bottom one), `min` column width (default 280px), whole-cell links with
+  `href` (`target`, `rel`), `as` element choice (`ul`/`li`; the elements set `role="list"` /
+  `role="listitem"` on themselves), row layout when the grid is narrower than 760px (container query).
+- `Drawer` parity with `Modal` (#74): `dismissible`, `initialFocus`, `closeOnBackdrop` and a cancelable
+  `oncancel`; the page scroll lock is shared with Modal (one count, nested overlays keep the page
+  locked). `<k-drawer>` gets `dismissible`, `initial-focus`, `close-on-backdrop` and the `cancel` event.
+
+### Changed
+- **BREAKING:** `<k-modal>` and `<k-drawer>` fire `close`, and `Modal`/`Drawer` call `onclose`, only when
+  the user closes them (Escape, close button, backdrop, a `<form method="dialog">` button in Svelte);
+  setting `open` to false from code closes silently (#75). Migration: code that relied on `close` after
+  `open = false` runs its follow-up where it sets `open` instead. A controlled React wrapper
+  (`open={x}` with `onclose={() => setX(false)}`) needs no change and no longer gets a redundant event.
+- `Drawer` locks the page scroll while it is open and sends Escape, the close button and the backdrop
+  through `oncancel` / `cancel` first, like Modal. Without the new props it still closes the same way.
+
 - Default texts as a catalogue (#58): every label, accessible name and announcement a component shows
   when no prop is given is an entry of `KernStrings` (by component and name), English built in. New
   exports `setStrings(...bundles)`, `resetStrings()`, `getStrings()`, `getLang()`,
