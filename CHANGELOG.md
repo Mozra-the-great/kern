@@ -23,8 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [0.7.0] - 2026-11-19
-
 ### Added
 - Code theme source of truth (#37): `src/lib/themes/code.tokens.json`, shipped as
   `@mozra-the-great/kern/themes/code.tokens.json`, lists every token of every Code variant with its value and
@@ -47,6 +45,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Visual regression of the Code theme (#38): Playwright screenshots of those components in `code` and `code-light`
   at 1280, 375 and 320 px (`tests/elements/visual.spec.ts`, in the `build` job); the `stuffcloud` aliases render
   against the same baselines.
+
+### Changed
+- The **Code** theme reproduces stuffcloud's component look (#38): sentence-case Inter 600 15 px buttons with
+  28 px padding and the ghost-style secondary button, JetBrains Mono 15 px fields on a transparent ground with
+  muted labels and mono hints, a pink checkbox, transparent cards with 20 px padding, tabs as a strip of cells
+  (selected cell raised, 600, accent underline, pink on hover), the design's dialog (page background, 32 px title,
+  36/36/32 px padding; 28 px title and stacked actions below 760 px), a `line` progress track, 420 px toasts with
+  green and amber edges, and a transparent drop zone with a mono prompt. The remaining differences are listed in
+  docs/themes.md for approval.
+- Code theme values now follow stuffcloud's `docs/design` where it and the design-system artifact disagreed (#37):
+  `--k-border` (dark) `#6e6e78` → `#6c6c76` (`--field-border`), `--k-backdrop` (dark) `rgba(0,0,0,.6)` →
+  `rgba(16,16,18,.55)` (the delete-site dialog), and the font stacks of `stuff.css` (`'Inter', system-ui, sans-serif`;
+  `'JetBrains Mono', ui-monospace, monospace`; `'Silkscreen', monospace`). Same under the `stuffcloud` aliases.
+
+## [0.7.0] - 2026-11-19
+
+### Added
 - `SortableList` and `<k-sortable-list>` (#68): an ordered list whose items have Up, Down and Remove buttons with the
   item name in their accessible name (`Move {name} up`; it contains the visible text, WCAG 2.5.3, English
   and German in the catalogue). The focus stays on the pressed button after a move, moves to its partner when
@@ -79,17 +94,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   The demo's "Marken-Assets" section shows every brand on its own ground.
 
 ### Changed
-- The **Code** theme reproduces stuffcloud's component look (#38): sentence-case Inter 600 15 px buttons with
-  28 px padding and the ghost-style secondary button, JetBrains Mono 15 px fields on a transparent ground with
-  muted labels and mono hints, a pink checkbox, transparent cards with 20 px padding, tabs as a strip of cells
-  (selected cell raised, 600, accent underline, pink on hover), the design's dialog (page background, 32 px title,
-  36/36/32 px padding; 28 px title and stacked actions below 760 px), a `line` progress track, 420 px toasts with
-  green and amber edges, and a transparent drop zone with a mono prompt. The remaining differences are listed in
-  docs/themes.md for approval.
-- Code theme values now follow stuffcloud's `docs/design` where it and the design-system artifact disagreed (#37):
-  `--k-border` (dark) `#6e6e78` → `#6c6c76` (`--field-border`), `--k-backdrop` (dark) `rgba(0,0,0,.6)` →
-  `rgba(16,16,18,.55)` (the delete-site dialog), and the font stacks of `stuff.css` (`'Inter', system-ui, sans-serif`;
-  `'JetBrains Mono', ui-monospace, monospace`; `'Silkscreen', monospace`). Same under the `stuffcloud` aliases.
 - `npm run assets:check` guards every brand: each folder has a `manifest.json` (size, sha256, plus
   the pixel grid or the `viewBox`), and the check also fails on unsafe SVG constructs (scripts,
   handlers, `<foreignObject>`, `<image>`, external references, `data:` URIs, `<style>`) and on an
