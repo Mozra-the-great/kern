@@ -96,13 +96,15 @@ jobs:
         # Includes the visual regression of the Code theme (tests/elements/visual.spec.ts, Linux baselines).
         run: npm run test:elements
       - name: Upload the actual screenshots of a failed visual test
-        # The way to new Linux baselines: download this artifact (`gh run download <run> -n visual-results`),
-        # review the images, copy them into tests/elements/visual.spec.ts-snapshots/ (docs/themes.md).
+        # The way to new Linux baselines: `gh run download <run> -n visual-results -D <dir>`, then
+        # `node scripts/ci/visual-baselines.mjs <dir>`; review every image before committing (docs/themes.md).
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: visual-results
-          path: tests/elements/test-results/
+          path: |
+            tests/elements/test-results/
+            tests/elements/visual.spec.ts-snapshots/*-linux.png
           if-no-files-found: ignore
           retention-days: 14
       - name: Mascot runtime (Playwright, built k-mascot under a strict CSP)

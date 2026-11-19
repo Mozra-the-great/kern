@@ -9,10 +9,11 @@
  * reduced motion stops the indeterminate Progress, Playwright freezes animations and hides the caret,
  * and nothing on the page depends on time or data. Baselines are per platform
  * (`visual.spec.ts-snapshots/<name>-chromium-<platform>.png`): Linux for CI, win32 for local runs.
- * CI never writes a missing baseline (`updateSnapshots: 'none'`) and never retries this file; a failed
- * run uploads the actual screenshots (artifact `visual-results`). Refresh: docs/themes.md.
+ * A missing baseline is written but fails the test in CI, and this file is never retried; a failed CI
+ * run uploads the new and the actual screenshots (artifact `visual-results`). Refresh: docs/themes.md.
  */
-import { expect, test, type Page } from '@playwright/test';
+import { existsSync } from 'node:fs';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 
 const WIDTHS = [1280, 375, 320] as const;
 /** [data-theme, baseline]: the alias spellings must match the Code baselines exactly. */
@@ -25,6 +26,20 @@ const THEMES = [
 const SHOTS = ['button', 'input', 'select', 'checkbox', 'card', 'tabs', 'progress', 'filedrop'] as const;
 
 test.describe.configure({ retries: 0 });
+
+/**
+ * One screenshot against its baseline. A missing baseline is written (so a CI run produces the Linux
+ * files for the `visual-results` artifact), but in CI the test still fails: a check that has nothing
+ * to compare against must not pass.
+ */
+async function shot(target: Page | Locator, name: string, missing: string[]): Promise<void> {
+	if (!existsSync(test.info().snapshotPath(name, { kind: 'screenshot' }))) missing.push(name);
+	if ('goto' in target) await expect.soft(target).toHaveScreenshot(name);
+	else await expect.soft(target).toHaveScreenshot(name);
+}
+const noneMissing = (missing: string[]): void => {
+	if (process.env.CI) expect(missing, 'baselines missing (written now; see docs/themes.md, Visual regression)').toEqual([]);
+};
 
 async function open(page: Page, theme: string, width: number, overlay = ''): Promise<void> {
 	await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -46,7 +61,9 @@ for (const [theme, base] of THEMES) {
 	for (const width of WIDTHS) {
 		test(`${theme} components at ${width}px`, async ({ page }) => {
 			await open(page, theme, width);
-			for (const shot of SHOTS) await expect(page.locator(`[data-shot="${shot}"]`)).toHaveScreenshot(`${shot}-${base}-${width}.png`);
+			const missing: string[] = [];
+			for (const name of SHOTS) await shot(page.locator(`[data-shot="${name}"]`), `${name}-${base}-${width}.png`, missing);
+			noneMissing(missing);
 		});
 
 		test(`${theme} modal at ${width}px`, async ({ page }) => {
@@ -55,7 +72,9 @@ for (const [theme, base] of THEMES) {
 			await expect(page.getByRole('dialog')).toBeVisible();
 			// focus lands on the first control; take it off so no ring depends on focus heuristics
 			await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-			await expect(page).toHaveScreenshot(`modal-${base}-${width}.png`);
+			const missing: string[] = [];
+			await shot(page, `modal-${base}-${width}.png`, missing);
+			noneMissing(missing);
 		});
 
 		test(`${theme} toasts at ${width}px`, async ({ page }) => {
@@ -68,7 +87,9 @@ for (const [theme, base] of THEMES) {
 				k.toast({ message: 'Link copied.', duration: 0 });
 			});
 			await expect(page.getByText('Link copied.')).toBeVisible();
-			await expect(page).toHaveScreenshot(`toasts-${base}-${width}.png`);
+			const missing: string[] = [];
+			await shot(page, `toasts-${base}-${width}.png`, missing);
+			noneMissing(missing);
 		});
 	}
 }
