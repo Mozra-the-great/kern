@@ -37,6 +37,32 @@ export interface TabItem {
 	id: string;
 	label: string;
 	disabled?: boolean | undefined;
+	/** Not rendered and skipped by the arrow keys, e.g. a page only admins see. */
+	hidden?: boolean | undefined;
+	/** Id of the element the tab controls (`aria-controls`) when there are no panels. Must be in the same root as the tabs (an id in the page does not reach into the element). */
+	controls?: string | undefined;
+	/** Short visible text after the label, e.g. a count. */
+	badge?: string | number | undefined;
+	/** A small dot after the label, e.g. for a sync error. Ignored when `badge` is set. */
+	dot?: boolean | undefined;
+	/** Spoken after the label instead of the badge text, e.g. "3 unread" or "Sync error"; with a `badge` it should start with the badge text. A dot without it is not announced. */
+	badgeLabel?: string | undefined;
+	/** Colour of the badge or dot. Default `accent`. */
+	badgeTone?: 'accent' | 'danger' | undefined;
+}
+export interface TabLinkItem {
+	href: string;
+	label: string;
+	/** The link of the page the visitor is on (`aria-current="page"`). */
+	current?: boolean | undefined;
+	/** Short visible text after the label, e.g. a count. */
+	badge?: string | number | undefined;
+	/** A small dot after the label. Ignored when `badge` is set. */
+	dot?: boolean | undefined;
+	/** Spoken after the label instead of the badge text. A dot without it is not announced. */
+	badgeLabel?: string | undefined;
+	/** Colour of the badge or dot. Default `accent`. */
+	badgeTone?: 'accent' | 'danger' | undefined;
 }
 export interface BreadcrumbItem {
 	label: string;

@@ -21,6 +21,7 @@
 		"src/elements/types.ts",
 		"src/elements/types.check.ts",
 		"src/elements/global.ts",
+		"src/elements/text.ts",
 		"src/lib/**/*.svelte",
 		"src/demo/**/*.ts",
 		"src/demo/**/*.svelte",

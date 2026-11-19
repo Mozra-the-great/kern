@@ -1704,6 +1704,227 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/code-block.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-code-block",
+					"name": "KCodeBlockElement",
+					"description": "Code block (stuffcloud's CodeBlock): the `code` attribute or the element's text (dedented, follows later changes) in a box that scrolls sideways without a visible scrollbar and is focusable while it scrolls. A copy button with visible text appears with `copy-label` or `copy`; the result is announced in a polite live region.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "code",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "code"
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label"
+						},
+						{
+							"kind": "field",
+							"name": "language",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "language"
+						},
+						{
+							"kind": "field",
+							"name": "lineNumbers",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "line-numbers"
+						},
+						{
+							"kind": "field",
+							"name": "startLine",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "start-line"
+						},
+						{
+							"kind": "field",
+							"name": "copy",
+							"type": {
+								"text": "boolean"
+							},
+							"attribute": "copy",
+							"description": "Shows the copy button. Default: on when `copy-label` is set."
+						},
+						{
+							"kind": "field",
+							"name": "copyLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "copy-label"
+						},
+						{
+							"kind": "field",
+							"name": "copiedLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "copied-label"
+						},
+						{
+							"kind": "field",
+							"name": "copyErrorLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "copy-error-label"
+						},
+						{
+							"kind": "field",
+							"name": "copyIcon",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "copy-icon",
+							"description": "Icon-only copy button (`copy-label` becomes its accessible name)."
+						},
+						{
+							"kind": "field",
+							"name": "showScrollbar",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "show-scrollbar",
+							"description": "Keeps the scrollbar visible."
+						}
+					],
+					"attributes": [
+						{
+							"name": "code",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "code"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
+						},
+						{
+							"name": "language",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "language"
+						},
+						{
+							"name": "line-numbers",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "lineNumbers"
+						},
+						{
+							"name": "start-line",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "startLine"
+						},
+						{
+							"name": "copy",
+							"type": {
+								"text": "boolean"
+							},
+							"fieldName": "copy"
+						},
+						{
+							"name": "copy-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "copyLabel"
+						},
+						{
+							"name": "copied-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "copiedLabel"
+						},
+						{
+							"name": "copy-error-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "copyErrorLabel"
+						},
+						{
+							"name": "copy-icon",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "copyIcon"
+						},
+						{
+							"name": "show-scrollbar",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "showScrollbar"
+						}
+					],
+					"events": [
+						{
+							"name": "copy",
+							"type": {
+								"text": "CustomEvent<string>"
+							},
+							"description": "The copied text."
+						},
+						{
+							"name": "copy-error",
+							"type": {
+								"text": "CustomEvent<null>"
+							},
+							"description": "Copying failed (no clipboard, permission denied)."
+						}
+					],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-code-block",
+					"declaration": {
+						"name": "KCodeBlockElement",
+						"module": "dist-elements/elements/code-block.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/collapsible.js",
 			"declarations": [
 				{
@@ -4235,6 +4456,32 @@
 						},
 						{
 							"kind": "field",
+							"name": "closeOnBackdrop",
+							"type": {
+								"text": "boolean"
+							},
+							"attribute": "close-on-backdrop"
+						},
+						{
+							"kind": "field",
+							"name": "dismissible",
+							"type": {
+								"text": "boolean | 'true' | 'false' | undefined"
+							},
+							"attribute": "dismissible",
+							"description": "`false` (property or attribute): Escape, the backdrop and the close button (hidden) do nothing; only setting `open` to false closes it. Default true."
+						},
+						{
+							"kind": "field",
+							"name": "initialFocus",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "initial-focus",
+							"description": "CSS selector of the element that gets focus on open, looked up in the children (light DOM). Default: the browser's choice."
+						},
+						{
+							"kind": "field",
 							"name": "closeLabel",
 							"type": {
 								"text": "string | undefined"
@@ -4267,6 +4514,27 @@
 							"fieldName": "side"
 						},
 						{
+							"name": "close-on-backdrop",
+							"type": {
+								"text": "boolean"
+							},
+							"fieldName": "closeOnBackdrop"
+						},
+						{
+							"name": "dismissible",
+							"type": {
+								"text": "boolean | 'true' | 'false'"
+							},
+							"fieldName": "dismissible"
+						},
+						{
+							"name": "initial-focus",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "initialFocus"
+						},
+						{
 							"name": "close-label",
 							"type": {
 								"text": "string"
@@ -4276,11 +4544,18 @@
 					],
 					"events": [
 						{
+							"name": "cancel",
+							"type": {
+								"text": "CustomEvent<null>"
+							},
+							"description": "The user asked to close (Escape, close button, backdrop); cancelable: `preventDefault()` keeps it open."
+						},
+						{
 							"name": "close",
 							"type": {
 								"text": "CustomEvent<null>"
 							},
-							"description": "The drawer was closed by the user."
+							"description": "The user closed the drawer (Escape, close button, backdrop); not fired when `open` is set to false from code."
 						}
 					],
 					"slots": [
@@ -6828,7 +7103,7 @@
 							"type": {
 								"text": "CustomEvent<null>"
 							},
-							"description": "The modal closed (by the user or by setting `open` to false)."
+							"description": "The user closed the modal (Escape, close button, backdrop); not fired when `open` is set to false from code."
 						}
 					],
 					"slots": [
@@ -11619,6 +11894,95 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/tab-links.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-tab-links",
+					"name": "KTabLinksElement",
+					"description": "Navigation tabs as links (stuffcloud's TabLinks): a `<nav>` landmark named by `label`, links styled like `<k-tabs>`, the current one with `aria-current=\"page\"`. Plain links: Tab moves between them, no arrow keys. Links in a shadow root are invisible to client-side routers; listen to `navigate` and call `preventDefault()` to route yourself.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "links",
+							"type": {
+								"text": "TabLinkItem[]"
+							},
+							"default": "[]",
+							"attribute": "links"
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"default": "''",
+							"attribute": "label"
+						},
+						{
+							"kind": "field",
+							"name": "look",
+							"type": {
+								"text": "'line' | 'pill' | undefined"
+							},
+							"attribute": "look"
+						}
+					],
+					"attributes": [
+						{
+							"name": "links",
+							"type": {
+								"text": "TabLinkItem[] (JSON)"
+							},
+							"default": "[]",
+							"fieldName": "links"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"default": "''",
+							"fieldName": "label"
+						},
+						{
+							"name": "look",
+							"type": {
+								"text": "'line' | 'pill'"
+							},
+							"fieldName": "look"
+						}
+					],
+					"events": [
+						{
+							"name": "navigate",
+							"type": {
+								"text": "CustomEvent<TabLinkItem>"
+							},
+							"description": "The user follows a link with a plain primary click; cancelable: `preventDefault()` stops the page load (client-side routing)."
+						}
+					],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-tab-links",
+					"declaration": {
+						"name": "KTabLinksElement",
+						"module": "dist-elements/elements/tab-links.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/table.js",
 			"declarations": [
 				{
@@ -11755,7 +12119,7 @@
 					"customElement": true,
 					"tagName": "k-tabs",
 					"name": "KTabsElement",
-					"description": "Panels are light-DOM children with data-tab=\"<id>\"; only the active one is shown. \"change\" fires for user input only: never during render, never when value/tabs are set.",
+					"description": "Tabs. Panels are children with `data-tab=\"<id>\"`; only the active one is shown. Without children the element is only the tab bar (app navigation): no tabpanel, the page swaps its content on `change`. Items may carry `badge`, `dot`, `badgeLabel`, `badgeTone`, `hidden` and `disabled`.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -11790,7 +12154,7 @@
 							"kind": "field",
 							"name": "look",
 							"type": {
-								"text": "string | undefined"
+								"text": "'line' | 'pill' | undefined"
 							},
 							"attribute": "look"
 						}
@@ -11821,7 +12185,7 @@
 						{
 							"name": "look",
 							"type": {
-								"text": "string"
+								"text": "'line' | 'pill'"
 							},
 							"fieldName": "look"
 						}
@@ -13102,6 +13466,171 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/tile.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-tile",
+					"name": "KTileElement",
+					"description": "Cell of a `<k-tile-grid>`: draws its right and bottom line. With `href` the whole cell is one link (its text is the link's name). `as=\"li\"` gives the element the role `listitem`.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "href",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "href"
+						},
+						{
+							"kind": "field",
+							"name": "target",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "target"
+						},
+						{
+							"kind": "field",
+							"name": "rel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "rel"
+						},
+						{
+							"kind": "field",
+							"name": "as",
+							"type": {
+								"text": "'div' | 'li' | undefined"
+							},
+							"attribute": "as",
+							"description": "`li` sets `role=\"listitem\"` on the element itself."
+						}
+					],
+					"attributes": [
+						{
+							"name": "href",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "href"
+						},
+						{
+							"name": "target",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "target"
+						},
+						{
+							"name": "rel",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "rel"
+						},
+						{
+							"name": "as",
+							"type": {
+								"text": "'div' | 'li'"
+							},
+							"fieldName": "as"
+						}
+					],
+					"events": [],
+					"slots": [
+						{
+							"name": ""
+						}
+					]
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-tile",
+					"declaration": {
+						"name": "KTileElement",
+						"module": "dist-elements/elements/tile.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "dist-elements/elements/tile-grid.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-tile-grid",
+					"name": "KTileGridElement",
+					"description": "Ruled grid of `<k-tile>` children (stuffcloud's TileGrid): as many columns of at least `min` (default 280px) as fit, one hairline between all cells; narrow grids switch the tiles to rows. `as=\"ul\"` / `as=\"ol\"` give the element the role `list` (use `<k-tile as=\"li\">` inside); name the grid with `aria-label` on the element.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "as",
+							"type": {
+								"text": "'div' | 'ul' | 'ol' | undefined"
+							},
+							"attribute": "as",
+							"description": "`ul`/`ol` set `role=\"list\"` on the element itself."
+						},
+						{
+							"kind": "field",
+							"name": "min",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "min",
+							"description": "Smallest column width (CSS length). Default `280px`."
+						}
+					],
+					"attributes": [
+						{
+							"name": "as",
+							"type": {
+								"text": "'div' | 'ul' | 'ol'"
+							},
+							"fieldName": "as"
+						},
+						{
+							"name": "min",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "min"
+						}
+					],
+					"events": [],
+					"slots": [
+						{
+							"name": ""
+						}
+					]
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-tile-grid",
+					"declaration": {
+						"name": "KTileGridElement",
+						"module": "dist-elements/elements/tile-grid.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/timeline.js",
 			"declarations": [
 				{
@@ -13799,6 +14328,14 @@
 				},
 				{
 					"kind": "custom-element-definition",
+					"name": "k-code-block",
+					"declaration": {
+						"name": "KCodeBlockElement",
+						"module": "dist-elements/elements/code-block.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
 					"name": "k-collapsible",
 					"declaration": {
 						"name": "KCollapsibleElement",
@@ -14215,6 +14752,14 @@
 				},
 				{
 					"kind": "custom-element-definition",
+					"name": "k-tab-links",
+					"declaration": {
+						"name": "KTabLinksElement",
+						"module": "dist-elements/elements/tab-links.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
 					"name": "k-table",
 					"declaration": {
 						"name": "KTableElement",
@@ -14267,6 +14812,22 @@
 					"declaration": {
 						"name": "KThemeToggleElement",
 						"module": "dist-elements/elements/theme-toggle.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-tile",
+					"declaration": {
+						"name": "KTileElement",
+						"module": "dist-elements/elements/tile.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-tile-grid",
+					"declaration": {
+						"name": "KTileGridElement",
+						"module": "dist-elements/elements/tile-grid.js"
 					}
 				},
 				{

@@ -67,6 +67,32 @@
 				<div data-tab="a">Dateien-Inhalt</div>
 				<div data-tab="b">Geteilt-Inhalt</div>
 			</k-tabs>
+			<h2>Navigation und Inhalt</h2>
+			<k-tabs
+				id="appnav"
+				label="Hauptnavigation"
+				look="pill"
+				tabs='[{"id":"lacke","label":"Lacke","badge":3,"badgeLabel":"3 neu"},{"id":"tagebuch","label":"Tagebuch"},{"id":"mehr","label":"Mehr","dot":true,"badgeLabel":"Sync-Fehler","badgeTone":"danger"},{"id":"admin","label":"Admin","hidden":true}]'
+			></k-tabs>
+			<p id="appnav-page">Seite: lacke</p>
+			<k-tab-links
+				id="tablinks"
+				label="Werkzeuge"
+				links='[{"href":"#konvertieren","label":"Konvertieren","current":true},{"href":"#base64","label":"Base64"},{"href":"#einheiten","label":"Einheiten"}]'
+			></k-tab-links>
+			<k-code-block label="Befehl" copy-label="Kopieren" copied-label="Kopiert">
+				stuffcloud deploy ./dist --expires 7d --name urlaub-2026
+			</k-code-block>
+			<k-tile-grid as="ul" aria-label="Werkzeuge">
+				<k-tile as="li" href="#pdf"><strong>PDF</strong>&nbsp;Zusammenfügen und teilen</k-tile>
+				<k-tile as="li" href="#bilder"><strong>Bilder</strong>&nbsp;Größe ändern</k-tile>
+				<k-tile as="li"><strong>Bald</strong>&nbsp;Weitere Werkzeuge</k-tile>
+			</k-tile-grid>
+			<k-button id="open-drawer" variant="secondary">Filter (Drawer)</k-button>
+			<k-drawer id="drawer" title="Filter" initial-focus="#apply-filter">
+				<p>Nur Bilder anzeigen.</p>
+				<k-button slot="footer" id="apply-filter">Anwenden</k-button>
+			</k-drawer>
 			<k-accordion>
 				<k-accordion-item title="Wie lange bleiben Links gültig?" open>Sieben Tage.</k-accordion-item>
 				<k-accordion-item title="Kann ich ein Passwort setzen?">Ja.</k-accordion-item>
@@ -215,6 +241,14 @@
 			$('#theme').addEventListener('change', (e) => (document.documentElement.dataset.theme = e.target.value));
 			$('#hello').addEventListener('click', () => window.kern.toast.ok('Hallo aus <k-toaster>'));
 			$('#open').addEventListener('click', () => ($('#modal').open = true));
+			$('#appnav').addEventListener('change', (e) => ($('#appnav-page').textContent = `Seite: ${e.detail}`));
+			$('#tablinks').addEventListener('navigate', (e) => {
+				e.preventDefault();
+				const el = $('#tablinks');
+				el.links = el.links.map((l) => ({ ...l, current: l.href === e.detail.href }));
+			});
+			$('#open-drawer').addEventListener('click', () => ($('#drawer').open = true));
+			$('#apply-filter').addEventListener('click', () => ($('#drawer').open = false));
 			$('#open-block').addEventListener('click', () => ($('#block').open = true));
 			$('#later').addEventListener('click', () => ($('#block').open = false));
 			$('#adopt').addEventListener('click', () => { $('#block').open = false; window.kern.toast.ok('Übernommen'); });

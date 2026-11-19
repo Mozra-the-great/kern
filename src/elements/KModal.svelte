@@ -20,7 +20,7 @@
 	 * @prop initialFocus {string} CSS selector of the element that gets focus on open, looked up in the children (light DOM). Default: the browser's choice.
 	 * @prop alert {boolean} role="alertdialog", for confirmations that interrupt the user.
 	 * @event cancel The user asked to close (Escape, close button, backdrop); cancelable: `preventDefault()` keeps it open.
-	 * @event close The modal closed (by the user or by setting `open` to false).
+	 * @event close The user closed the modal (Escape, close button, backdrop); not fired when `open` is set to false from code.
 	 */
 	import Modal from '../lib/components/Modal.svelte';
 	import { emit, hasSlot } from './form.js';
