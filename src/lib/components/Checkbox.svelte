@@ -29,7 +29,7 @@
 </div>
 
 <style>
-	.k-check { display: flex; gap: var(--k-space-3); align-items: flex-start; }
+	.k-check { position: relative; display: flex; gap: var(--k-space-3); align-items: flex-start; padding-block: calc(max(0px, var(--k-tap-target) - 24px) / 2); }
 	.box { position: relative; display: grid; flex: none; width: 22px; height: 22px; margin-top: 1px; }
 	input {
 		appearance: none;
@@ -43,7 +43,7 @@
 		cursor: pointer;
 		transition: background-color var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease);
 	}
-	input:hover { border-color: var(--k-fg); }
+	.k-check:hover input:not(:disabled) { border-color: var(--k-fg); }
 	input:checked, input:indeterminate { background: var(--k-primary); border-color: var(--k-primary); }
 	input:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
 	input:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -51,5 +51,7 @@
 	input:checked + svg, input:indeterminate + svg { opacity: 1; }
 	.text { display: grid; gap: 2px; }
 	label { cursor: pointer; line-height: 1.5; }
+	/* The whole row, padded to the tap target, toggles the control through its label. */
+	label::after { content: ''; position: absolute; inset: 0; }
 	.hint { font-size: var(--k-text-sm); color: var(--k-fg-muted); }
 </style>

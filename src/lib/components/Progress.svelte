@@ -34,7 +34,7 @@
 	.head { display: flex; justify-content: space-between; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
 	.val { font-family: var(--k-font-mono); color: var(--k-fg-muted); }
 	.track { height: 8px; overflow: hidden; border-radius: var(--k-radius-badge); background: var(--k-bg-sunken); border: var(--k-border-w) solid var(--k-line); }
-	.bar { height: 100%; background: var(--k-accent); border-radius: inherit; transition: width 300ms var(--k-ease); }
+	.bar { height: 100%; background: var(--k-accent-mark); border-radius: inherit; transition: width 300ms var(--k-ease); }
 	.indeterminate { width: 35%; animation: k-slide 1.2s ease-in-out infinite; }
 	@keyframes k-slide { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
 	@media (prefers-reduced-motion: reduce) { .indeterminate { animation: none; width: 100%; opacity: 0.5; } }

@@ -86,9 +86,9 @@
 	button:disabled { opacity: 0.45; cursor: not-allowed; }
 	button:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
 	[data-look='line'] button { margin-bottom: calc(var(--k-border-w) * -1); box-shadow: inset 0 -2px 0 transparent; }
-	[data-look='line'] button[aria-selected='true'] { color: var(--k-fg); box-shadow: inset 0 -2px 0 var(--k-accent); }
+	[data-look='line'] button[aria-selected='true'] { color: var(--k-fg); box-shadow: inset 0 -2px 0 var(--k-accent-mark); }
 	[data-look='pill'] .list { padding: var(--k-space-1); background: var(--k-bg-sunken); border-radius: var(--k-radius-control); width: fit-content; max-width: 100%; }
-	[data-look='pill'] button { min-height: calc(var(--k-control-h) - 8px); border-radius: var(--k-radius-control); }
+	[data-look='pill'] button { min-height: max(calc(var(--k-control-h) - 8px), var(--k-tap-target)); border-radius: var(--k-radius-control); }
 	[data-look='pill'] button[aria-selected='true'] { color: var(--k-on-primary); background: var(--k-primary); }
 	.panel:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
 </style>

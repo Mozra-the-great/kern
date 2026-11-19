@@ -114,6 +114,7 @@
 	.k-popover { position: relative; display: inline-block; }
 	.trigger {
 		display: inline-flex;
+		box-sizing: border-box;
 		align-items: center;
 		gap: var(--k-space-2);
 		min-height: var(--k-control-h);
@@ -145,7 +146,7 @@
 		max-height: var(--avail-h, 70vh);
 		overflow: auto;
 		padding: var(--k-space-4);
-		border: var(--k-border-w) solid var(--k-line);
+		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: min(var(--k-radius-overlay), 16px);
 		background: var(--k-bg-raised);
 		color: var(--k-fg);

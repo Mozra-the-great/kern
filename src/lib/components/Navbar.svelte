@@ -151,14 +151,14 @@
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
 	a:hover { background: var(--k-bg-sunken); }
-	a[aria-current='page'] { background: var(--k-selected); font-weight: var(--k-weight-heading); box-shadow: inset 4px 0 0 var(--k-accent); }
+	a[aria-current='page'] { background: var(--k-surface-selected); font-weight: var(--k-weight-heading); box-shadow: inset 4px 0 0 var(--k-accent-mark); }
 
 	@container (min-width: 720px) {
 		.brand { flex: none; }
 		.toggle { display: none; }
 		.panel { display: block; position: static; flex: 1; padding: 0; border: 0; background: transparent; box-shadow: none; }
 		ul { display: flex; flex-wrap: wrap; gap: var(--k-space-1); }
-		a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--k-accent); }
+		a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--k-accent-mark); }
 		.actions { margin-left: auto; }
 	}
 </style>

@@ -76,7 +76,7 @@
 	a, .text, .more {
 		display: inline-flex;
 		align-items: center;
-		min-height: 40px;
+		min-height: max(40px, var(--k-tap-target));
 		padding: 0 var(--k-space-2);
 		border-radius: var(--k-radius-badge);
 		font-family: var(--k-label-font);
@@ -90,10 +90,10 @@
 	a:hover { color: var(--k-fg); text-decoration-color: currentColor; }
 	.text { color: var(--k-fg-muted); }
 	[aria-current='page'] { color: var(--k-fg); font-weight: var(--k-weight-heading); }
-	a[aria-current='page'] { text-decoration-color: var(--k-accent); text-decoration-thickness: 2px; }
+	a[aria-current='page'] { text-decoration-color: var(--k-accent-mark); text-decoration-thickness: 2px; }
 	.more {
 		justify-content: center;
-		min-width: 40px;
+		min-width: max(40px, var(--k-tap-target));
 		border: var(--k-border-w) solid var(--k-line);
 		background: transparent;
 		color: var(--k-fg-muted);

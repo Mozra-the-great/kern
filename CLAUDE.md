@@ -15,7 +15,10 @@ No runtime dependencies besides Svelte, no Tailwind.
 ## Structure
 ```
 src/lib/components/   Svelte components (one file each) + anchor.ts, toast.svelte.ts
-src/lib/themes/       base.css (all --k-* tokens) + one CSS file per brand, index.css
+src/lib/themes/       base.css (all --k-* tokens), brands/<brand>.css (theme rules),
+                      <brand>.css (self-contained entry: base + one brand), index.css (all)
+tests/tokens/         Vitest: theme contrast, per-brand entry isolation (npm test)
+tests/targets/        Playwright: touch targets in the built demo (npm run test:targets)
 src/lib/index.ts      public exports (components + types)
 src/elements/         custom-element wrappers K<Name>.svelte, form.ts helpers, index.ts
 src/demo/             demo app (App.svelte + sections/), themes.ts
@@ -29,6 +32,8 @@ npm install
 npm run dev     # demo: /index.html and /elements.html
 npm run check   # svelte-check, must end with 0 errors / 0 warnings
 npm run build   # dist/ (package), dist-elements/kern-elements.js, demo-dist/
+npm test        # Vitest: theme contrast + brand isolation
+npm run test:targets  # Playwright touch targets (after build; npx playwright install chromium)
 ```
 
 Release: bump `version`, move `[Unreleased]` in CHANGELOG.md to a dated section, merge, then
@@ -42,8 +47,10 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
 - Components read only `--k-*` tokens. Every component must look right in
   Stuffcloud (square, hard offset shadows, mono uppercase labels, `steps()` easing)
   and Flower (soft, pills); check both themes, light and dark, desktop and 320 px.
-- A new theme = one CSS file overriding the tokens of `base.css` for
-  `[data-theme^='name']` plus an `@import` in `themes/index.css`. Themes: stuffcloud,
+- A new theme = `themes/brands/<name>.css` overriding the tokens of `base.css` for
+  `[data-theme^='name']`, an entry `themes/<name>.css`, an `@import` in `themes/index.css`
+  and an `exports` entry; it must pass `npm test` (contrast). Interactive parts use
+  `--k-tap-target` (min size or invisible `::after` hit area). Themes: stuffcloud,
   flower, pop (each from its design-system artifact); planned: a Kagi-based theme.
 - `src/elements/` is not in `tsconfig.include`, so `npm run check` does not see
   the wrappers; `npm run build` compiles them. In a wrapper, a `<slot>` inside a

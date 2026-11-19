@@ -1,0 +1,99 @@
+/* Flower-Designs — from the Flower-Designs design system. Soft and calm:
+ * pill controls, large radii, no drop shadows, depth by tone.
+ * Font: Figtree 400/500/600/800 (load it yourself).
+ * ok/warn are additions (leaf-600, bark-700; wald: sage-300 and ochre-500 at 4.5 %
+ * more lightness, #e4b76a, so warning text reaches 4.5:1 on the raised surface).
+ * accent-mark (accent drawn as a non-text mark on the page: progress fill,
+ * current-tab marker, focused border) deviates from coral-600, which reaches
+ * only 2.5–2.9:1 on creme and 2.8:1 on wald's raised surface (WCAG 1.4.11 needs 3:1):
+ * creme uses coral-600 at 6 % less lightness (#d06557, same hue), wald coral-500.
+ * Fills with text on them (accent Button, solid Badge) keep coral-600.
+ * The derived tokens (line-strong, surface-*, fg-hint, …) keep the base
+ * defaults: the design has no separate tones for them. Sizes keep the base
+ * (44px targets on touch); the design defines no target sizes. */
+[data-theme^='flower'] {
+	--k-border-w: 1.5px;
+	--k-radius-control: 9999px;
+	--k-radius-field: 14px;
+	--k-radius-card: 24px;
+	--k-radius-overlay: 24px;
+	--k-radius-badge: 9999px;
+	--k-radius-avatar: 9999px;
+	--k-shadow-raised: none;
+	--k-shadow-overlay: none;
+	--k-font-sans: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+	--k-font-display: var(--k-font-sans);
+	--k-weight-display: 800;
+	--k-weight-heading: 800;
+	--k-weight-label: 600;
+	--k-label-font: var(--k-font-sans);
+	--k-label-size: 15px;
+	--k-label-transform: none;
+	--k-label-tracking: 0;
+	--k-dur: 180ms;
+}
+[data-theme='flower'],
+[data-theme='flower-creme'] {
+	color-scheme: light;
+	--k-bg: #f6f0e0;
+	--k-bg-raised: #fcf9f0;
+	--k-bg-sunken: #edead6;
+	--k-fg: #2c4f38;
+	--k-fg-muted: #496748;
+	--k-line: #d7d6ba;
+	--k-border: #6b7f4b;
+	--k-primary: #2c4f38;
+	--k-on-primary: #f6f0e0;
+	--k-primary-hover: #254538;
+	--k-on-primary-hover: #f6f0e0;
+	--k-accent: #d77b6f;
+	--k-accent-mark: #d06557;
+	--k-on-accent: #1b1f1c;
+	--k-accent-soft: #f3ddd3;
+	--k-accent-text: #9e4538;
+	--k-link: #9e4538;
+	--k-danger: #9e4538;
+	--k-on-danger: #f6f0e0;
+	--k-danger-soft: #f3ddd3;
+	--k-ok: #496748;
+	--k-ok-soft: #edead6;
+	--k-warn: #6c5d49;
+	--k-warn-soft: #edead6;
+	--k-info: #2c4f38;
+	--k-info-soft: #edead6;
+	--k-focus: #2c4f38;
+	--k-backdrop: rgba(37, 69, 56, 0.45);
+	--k-selected: #edead6;
+}
+[data-theme='flower-wald'] {
+	color-scheme: dark;
+	--k-bg: #254538;
+	--k-bg-raised: #2d5446;
+	--k-bg-sunken: #1f3b30;
+	--k-fg: #f6f0e0;
+	--k-fg-muted: #c2c8ab;
+	--k-line: #3d604d;
+	--k-border: #aeb898;
+	--k-primary: #f2e8cf;
+	--k-on-primary: #254538;
+	--k-primary-hover: #fcf9f0;
+	--k-on-primary-hover: #254538;
+	--k-accent: #d77b6f;
+	--k-accent-mark: #dd887a;
+	--k-on-accent: #1b1f1c;
+	--k-accent-soft: #4a3a37;
+	--k-accent-text: #efc2b5;
+	--k-link: #efc2b5;
+	--k-danger: #efc2b5;
+	--k-on-danger: #254538;
+	--k-danger-soft: #4a3a37;
+	--k-ok: #c2c8ab;
+	--k-ok-soft: #1f3b30;
+	--k-warn: #e4b76a;
+	--k-warn-soft: #1f3b30;
+	--k-info: #f2e8cf;
+	--k-info-soft: #1f3b30;
+	--k-focus: #f2e8cf;
+	--k-backdrop: rgba(16, 30, 24, 0.6);
+	--k-selected: #1f3b30;
+}

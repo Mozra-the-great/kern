@@ -267,14 +267,10 @@
 	.handle::before { content: ''; position: absolute; inset: 0; margin: auto; background: var(--k-line); transition: background-color var(--k-dur) var(--k-ease); }
 	.group[data-direction='horizontal'] > .handle::before { width: var(--k-border-w); height: 100%; }
 	.group[data-direction='vertical'] > .handle::before { height: var(--k-border-w); width: 100%; }
-	/* An invisible extension makes the handle at least 40px (44px for touch) wide to hit. */
+	/* An invisible extension makes the handle at least 40px (the tap target where larger) wide to hit. */
 	.handle::after { content: ''; position: absolute; }
-	.group[data-direction='horizontal'] > .handle::after { inset-block: 0; inset-inline: -14px; }
-	.group[data-direction='vertical'] > .handle::after { inset-inline: 0; inset-block: -14px; }
-	@media (pointer: coarse) {
-		.group[data-direction='horizontal'] > .handle::after { inset-inline: -16px; }
-		.group[data-direction='vertical'] > .handle::after { inset-block: -16px; }
-	}
+	.group[data-direction='horizontal'] > .handle::after { inset-block: 0; inset-inline: min(-14px, calc((12px - var(--k-tap-target)) / 2)); }
+	.group[data-direction='vertical'] > .handle::after { inset-inline: 0; inset-block: min(-14px, calc((12px - var(--k-tap-target)) / 2)); }
 	/* The grip stays visible at all times, so the handle never relies on hover or colour. */
 	.grip { position: relative; border-radius: var(--k-radius-badge); background: var(--k-border); transition: background-color var(--k-dur) var(--k-ease); }
 	.group[data-direction='horizontal'] .grip { width: 4px; height: 32px; }

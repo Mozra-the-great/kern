@@ -399,13 +399,14 @@
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
 	.k-color:hover { border-color: var(--k-fg-muted); }
-	.k-color:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.k-color:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.invalid { border-color: var(--k-danger); }
 	.disabled { opacity: 0.55; }
 	input[type='text'] {
 		flex: 1;
 		min-width: 0;
-		min-height: calc(var(--k-control-h) - 2 * var(--k-border-w));
+		min-height: var(--k-control-h);
+		margin-block: calc(var(--k-border-w) * -1);
 		padding: 0;
 		border: 0;
 		outline: 0;
@@ -421,8 +422,8 @@
 		flex: none;
 		display: grid;
 		place-items: center;
-		width: 40px;
-		height: 40px;
+		width: max(40px, var(--k-tap-target));
+		height: max(40px, var(--k-tap-target));
 		padding: 0;
 		border: 0;
 		border-radius: var(--k-radius-control);
@@ -456,7 +457,7 @@
 		max-height: var(--avail-h, 70vh);
 		overflow: auto;
 		padding: var(--k-space-3);
-		border: var(--k-border-w) solid var(--k-line);
+		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: min(var(--k-radius-overlay), 16px);
 		background: var(--k-bg-raised);
 		color: var(--k-fg);
@@ -510,7 +511,7 @@
 		appearance: none;
 		-webkit-appearance: none;
 		width: 100%;
-		height: 40px;
+		height: max(40px, var(--k-tap-target));
 		margin: 0;
 		background: transparent;
 		cursor: pointer;
@@ -558,8 +559,8 @@
 		display: grid;
 		place-items: center;
 		box-sizing: border-box;
-		width: 40px;
-		height: 40px;
+		width: max(40px, var(--k-tap-target));
+		height: max(40px, var(--k-tap-target));
 		padding: 0;
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: min(var(--k-radius-badge), 8px);
@@ -571,8 +572,4 @@
 	.swatch:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
 	.swatch svg { width: 18px; height: 18px; }
 	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
-	@media (pointer: coarse) {
-		.swatch, .swatch-btn { width: 44px; height: 44px; }
-		.range { height: 44px; }
-	}
 </style>

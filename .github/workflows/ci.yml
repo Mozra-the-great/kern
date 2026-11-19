@@ -56,6 +56,12 @@ jobs:
       - name: Build
         # svelte-package (dist/), custom elements (dist-elements/), demo (demo-dist/)
         run: npm run build
+      - name: Unit tests (theme contrast, brand entries)
+        run: npm test
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Touch targets (Playwright, built demo)
+        run: npm run test:targets
 
       # ── Node 24 (current LTS) ─────────────────────────────────────────────────
       # Same job on purpose: the required check `build` then means "green on Node 22
@@ -70,6 +76,8 @@ jobs:
         run: npm run check
       - name: Build (Node 24)
         run: npm run build
+      - name: Unit tests (Node 24)
+        run: npm test
 
       # ── Svelte range: lowest supported and newest 5.x ─────────────────────────
       # peerDependencies.svelte is the lowest version the components compile on

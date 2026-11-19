@@ -39,6 +39,7 @@
 	.k-select { position: relative; display: flex; }
 	select {
 		appearance: none;
+		box-sizing: border-box;
 		width: 100%;
 		min-height: var(--k-control-h);
 		padding: 0 calc(var(--k-space-4) + 24px) 0 var(--k-space-4);
@@ -51,7 +52,7 @@
 		cursor: pointer;
 	}
 	select:hover { border-color: var(--k-fg-muted); }
-	select:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	select:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.invalid select { border-color: var(--k-danger); }
 	svg { position: absolute; right: var(--k-space-4); top: 50%; width: 16px; height: 16px; transform: translateY(-50%); pointer-events: none; color: var(--k-fg-muted); }
 </style>

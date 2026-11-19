@@ -113,7 +113,7 @@
 		border: var(--k-border-w) solid var(--k-line);
 		border-radius: min(var(--k-radius-badge), 6px);
 		background: var(--k-bg-sunken);
-		color: var(--k-fg);
+		color: var(--k-fg-code);
 		font-family: var(--k-font-mono);
 		font-size: 0.9em;
 		font-weight: 400;
@@ -131,8 +131,8 @@
 		overflow: hidden;
 		border: var(--k-border-w) solid var(--k-line);
 		border-radius: min(var(--k-radius-card), 16px);
-		background: var(--k-bg-raised);
-		color: var(--k-fg);
+		background: var(--k-bg-code);
+		color: var(--k-fg-code);
 		box-shadow: var(--k-shadow-raised);
 		font-family: var(--k-font-mono);
 		font-size: var(--k-text-sm);
@@ -177,7 +177,7 @@
 		flex: none;
 		padding: var(--k-space-4) var(--k-space-3) var(--k-space-4) var(--k-space-4);
 		border-right: var(--k-border-w) solid var(--k-line);
-		background: var(--k-bg-raised);
+		background: var(--k-bg-code);
 		color: var(--k-fg-muted);
 		text-align: right;
 		white-space: pre;
