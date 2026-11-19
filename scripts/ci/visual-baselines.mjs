@@ -8,14 +8,14 @@
 // two different actuals for one name are reported, since the aliases must render identically.
 // Look at every copied image before committing it (docs/themes.md, "Visual regression").
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 
 const args = process.argv.slice(2);
 const dir = args[0];
 const at = args.indexOf('--platform');
 const platform = at === -1 ? 'linux' : args[at + 1];
-if (!dir || dir.startsWith('--') || !existsSync(dir) || !['linux', 'win32', 'darwin'].includes(platform ?? '')) {
+if (!dir || dir.startsWith('--') || !['linux', 'win32', 'darwin'].includes(platform ?? '')) {
 	console.error('Usage: node scripts/ci/visual-baselines.mjs <downloaded visual-results dir> [--platform linux|win32|darwin]');
 	process.exit(2);
 }
@@ -23,16 +23,27 @@ const target = resolve(import.meta.dirname, '../../tests/elements/visual.spec.ts
 mkdirSync(target, { recursive: true });
 
 const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
-const sha = (f) => createHash('sha256').update(readFileSync(f)).digest('hex');
+let files;
+try {
+	files = walk(resolve(dir));
+} catch (e) {
+	if (e && e.code === 'ENOENT') {
+		console.error(`${dir} does not exist (where did \`gh run download\` put the artifact?)`);
+		process.exit(2);
+	}
+	throw e;
+}
 const seen = new Map();
 let conflicts = 0;
 // `-actual.png`: a baseline that differs; `-chromium-<platform>.png`: a missing one the run wrote.
-const own = new RegExp(`-chromium-${platform}\\.png$`);
-for (const file of walk(resolve(dir)).filter((f) => f.endsWith('-actual.png') || own.test(f))) {
-	const name = basename(file)
-		.replace(/-actual\.png$/, '')
-		.replace(own, '');
-	const hash = sha(file);
+// Plain suffix comparison: `platform` is one of the three allowed names above and never becomes a pattern.
+const ownSuffix = `-chromium-${platform}.png`;
+for (const file of files.filter((f) => f.endsWith('-actual.png') || f.endsWith(ownSuffix))) {
+	const b = basename(file);
+	const name = b.endsWith('-actual.png') ? b.slice(0, -'-actual.png'.length) : b.slice(0, -ownSuffix.length);
+	// Read once; the copy is written from the same bytes that were hashed.
+	const bytes = readFileSync(file);
+	const hash = createHash('sha256').update(bytes).digest('hex');
 	if (seen.has(name)) {
 		if (seen.get(name) !== hash) {
 			console.error(`${name}: two different actual screenshots (an alias renders differently from code)`);
@@ -41,7 +52,7 @@ for (const file of walk(resolve(dir)).filter((f) => f.endsWith('-actual.png') ||
 		continue;
 	}
 	seen.set(name, hash);
-	copyFileSync(file, join(target, `${name}-chromium-${platform}.png`));
+	writeFileSync(join(target, `${name}-chromium-${platform}.png`), bytes);
 }
 console.log(`Copied ${seen.size} baselines (chromium-${platform}) to tests/elements/visual.spec.ts-snapshots.`);
 process.exitCode = conflicts > 0 ? 1 : 0;

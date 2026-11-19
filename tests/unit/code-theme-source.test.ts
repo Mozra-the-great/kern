@@ -13,6 +13,7 @@ import {
 	norm,
 	parseCss,
 	parseRef,
+	readIfExists,
 	SNAPSHOT_FILE,
 	SOURCE_FILE
 } from '../../scripts/ci/code-theme.mjs';
@@ -102,6 +103,12 @@ describe('code.tokens.json is the source of brands/code.css', () => {
 			expect(css).toContain(`[data-theme='code${v}']`);
 			expect(css).toContain(`[data-theme='stuffcloud${v}']`);
 		}
+	});
+
+	it('reads a file in one step: its text, or null when it is missing (no check-then-read race)', () => {
+		expect(readIfExists(SOURCE_FILE)).toContain('"theme": "code"');
+		expect(readIfExists('tests/unit/does-not-exist.json')).toBeNull();
+		expect(() => readIfExists('tests/unit')).toThrow();
 	});
 
 	it('parses the reference forms and normalises values', () => {
