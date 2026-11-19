@@ -44,6 +44,7 @@
 	const compactFactor = $derived(compactScale === undefined ? factor : normaliseScale(compactScale));
 	// Intrinsic size: reserves the box before any CSS or image arrives (no layout shift).
 	const size = $derived(mascotSize({ cols: width, rows: height }, factor));
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- plain-JS callers may pass null, which keeps the motion
 	const moving = $derived(animated !== false);
 
 	let host: HTMLSpanElement | undefined = $state();

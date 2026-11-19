@@ -6,7 +6,7 @@
 	import { MASCOT_NAMES, MASCOT_SOURCES, artPath, type MascotName } from '../../lib/components/mascots.js';
 	import type { MascotArt } from '../../lib/components/Mascot.svelte';
 
-	const files = import.meta.glob('../../../assets/stuffcloud/*/*.svg', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+	const files = import.meta.glob<string>('../../../assets/stuffcloud/*/*.svg', { eager: true, query: '?url', import: 'default' });
 	function urlOf(name: MascotArt): string | undefined {
 		const path = artPath(name);
 		return path === undefined ? undefined : files[`../../../assets/stuffcloud/${path}.svg`];
