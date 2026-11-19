@@ -1,0 +1,6 @@
+# Commits that only reformat code. `git blame` skips them with
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+# (GitHub reads this file automatically). Keep the SHAs that landed on main.
+
+# style: apply prettier (#22, #23)
+5e196da1cf64b02b1e0a22ca7d48cc8945988b25
