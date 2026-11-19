@@ -23,6 +23,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Accent API (#41, generic part): a custom accent colour on top of any standard theme, with WCAG contrast guaranteed.
+  `accentTokens(hex, { theme | scheme | surfaces, roles })` derives `--k-accent`, `--k-on-accent`, `--k-accent-soft`,
+  `--k-accent-mark`, `--k-accent-text`, `--k-primary`, `--k-on-primary`, `--k-primary-hover`, `--k-on-primary-hover` and
+  `--k-focus` (text 4.5:1, marks and focus 3:1 on bg, raised and sunken, light and dark; a colour that already passes is
+  kept, otherwise only its OKLCH lightness moves) and reports `adjustments`, `checks` and `guaranteed`. `accentCss(hex)`
+  writes one rule per standard theme (aliases included), so a later light/dark switch keeps the contrast;
+  `installAccent` / `removeAccent` put it on the page (`<style id="kern-accent">`, optional `localStorage` copy and
+  `theme-color` meta); `createAccentScript(key)` is the head snippet that paints a stored accent before the first frame;
+  `applyAccent(el, hex)` / `clearAccent(el)` set inline tokens on one element (surfaces read from its computed `--k-bg…`,
+  so a custom theme works). Invalid input returns `{ ok: false, error }` (typed code), changes nothing and never throws;
+  server-side the DOM functions return `no-dom`. Also `ACCENT_GROUNDS` (the surfaces of every `data-theme` value, kept in
+  step with the theme CSS by a test), `ACCENT_TOKENS` and the types. `window.kern.accent` and the new entry
+  `@mozra-the-great/kern/elements/accent` (no tag) expose the same functions in the elements build, typed.
+- `@mozra-the-great/kern/themes/accent.css`: CSS-only accent fill (`data-k-accent` + `--k-accent-color` set `--k-accent` and a
+  black or white `--k-on-accent`, at least 4.58:1 for every sRGB colour); text, mark, primary and focus need the JavaScript API.
+- Demo section "Eigene Akzentfarbe". kern does not build a theme per brand: an app picks a standard theme and sets only the
+  accent (there is no `nagellacke` or `nailvault` theme; docs/themes.md, "Eigene Akzentfarbe").
+
 ## [0.7.0] - 2026-11-19
 
 ### Added

@@ -15,9 +15,12 @@ No runtime dependencies besides Svelte, no Tailwind.
 ## Structure
 ```
 src/lib/components/   Svelte components (one file each) + anchor.ts, toast.svelte.ts, announcer.ts (shared live-region
-                      store), strings.ts / strings.svelte.ts / strings-de.ts (default-text catalogue), prose.ts
+                      store), strings.ts / strings.svelte.ts / strings-de.ts (default-text catalogue), prose.ts,
+                      accent.ts + accent-themes.ts (accent API; ACCENT_GROUNDS mirrors the theme surfaces,
+                      tests/tokens/accent-themes.test.ts fails when a theme changes and the table does not)
 src/lib/themes/       base.css (all --k-* tokens), brands/<brand>.css (theme rules),
-                      <brand>.css (self-contained entry: base + one brand), index.css (all)
+                      <brand>.css (self-contained entry: base + one brand), index.css (all),
+                      accent.css (opt-in CSS-only accent fill, not in index.css)
 tests/tokens/         Vitest: theme contrast, per-brand entry isolation (npm test)
 tests/targets/        Playwright: touch targets in the built demo (npm run test:targets)
 src/lib/index.ts      public exports (components + types)
