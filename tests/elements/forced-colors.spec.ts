@@ -196,13 +196,18 @@ async function open(page: Page, options: { theme?: string; scheme?: 'dark' | 'li
 	await page.setViewportSize({ width: options.width ?? 1280, height: 4000 });
 	await page.addInitScript(installProbe);
 	await page.goto(`${PAGE}?theme=${options.theme ?? 'code'}`);
-	await page.waitForFunction(() =>
-		[...document.querySelectorAll('*')]
-			.filter((el) => el.tagName.startsWith('K-'))
-			.every((el) => customElements.get(el.tagName.toLowerCase()) && el.shadowRoot?.firstElementChild)
+	await page.waitForFunction(
+		() =>
+			[...document.querySelectorAll('*')]
+				.filter((el) => el.tagName.startsWith('K-'))
+				.every((el) => customElements.get(el.tagName.toLowerCase()) && el.shadowRoot?.firstElementChild),
+		undefined,
+		{ polling: 100 }
 	);
 	// the sortable list and the select grid get their items from a module script on the page
-	await page.waitForFunction(() => document.querySelector('#selectgrid')?.shadowRoot?.querySelector('[role=option]'));
+	await page.waitForFunction(() => document.querySelector('#selectgrid')?.shadowRoot?.querySelector('[role=option]'), undefined, {
+		polling: 100
+	});
 	await page.evaluate(() => document.fonts.ready);
 }
 
@@ -404,6 +409,14 @@ const CASES: Record<string, Case> = {
 	},
 	'k-date-picker': { edge: ['#date .k-date', '#date .cal'], focus: [['#date input[type=text]', '#date .k-date'], '#date .cal'] },
 	'k-divider': { exempt: 'a rule drawn by borders, which forced colors keep' },
+	'k-download-button': {
+		edge: ['#download button'],
+		focus: ['#download button'],
+		uses: [
+			['#download svg', 'color', 'ButtonText'],
+			['#download-disabled button', 'color', 'GrayText']
+		]
+	},
 	'k-drawer': { exempt: 'overlay: see the overlay tests' },
 	'k-dropdown-menu': { edge: ['#dropdown .trigger'], focus: ['#dropdown .trigger'] },
 	'k-empty-state': { exempt: 'text; its action is a k-button' },
@@ -636,7 +649,8 @@ const CASES: Record<string, Case> = {
 		},
 		states: [{ name: 'selected vs other row', a: '#tree [data-id=notes] > .row', b: '#tree [data-id=docs] > .row' }]
 	},
-	'k-typewriter': { exempt: 'text' }
+	'k-typewriter': { exempt: 'text' },
+	'k-visually-hidden': { exempt: 'not painted: text for assistive technology only' }
 };
 
 test.describe('every element is covered', () => {

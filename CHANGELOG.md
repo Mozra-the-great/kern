@@ -61,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `Highlight`/`HighlightText`, a shape, a heavier or double edge), disabled parts are `GrayText` at full opacity,
   SVG icons take a system colour, and fills drawn only by `background` or `box-shadow` (Switch, Radio, Slider,
   Progress ring, Heatmap, HistoryBar, Stepper, Timeline, TreeView and DataTable selection, Carousel dots,
-  Highlight, Caret, Skeleton, Resizable, Sparkline, Spinner, Terminal, Toaster dots, overlays) are redrawn in system
+  Highlight, Caret, Skeleton, Resizable, Sparkline, Spinner, Terminal, Toaster dots, DownloadButton icon, overlays) are redrawn in system
   colours. `base.css` sets the edge, focus, accent, shadow and disabled tokens to system colours with `!important`
   inside the media query, so a theme cannot defeat them. ColorPicker keeps the colours of its swatches. Normal
   rendering is unchanged (all rules sit inside the media query; the visual-regression baselines are untouched).

@@ -35,7 +35,8 @@ const EXEMPT: Record<string, string> = {
 	Stat: 'a bordered card of text; the delta has an arrow glyph',
 	StatusDot: 'a glyph whose shape (not its colour) carries the status',
 	TileGrid: 'layout only; the tiles carry the rules',
-	Typewriter: 'text'
+	Typewriter: 'text',
+	VisuallyHidden: 'not painted at all: text for assistive technology only'
 };
 
 const files = readdirSync(COMPONENTS).filter((f) => f.endsWith('.svelte'));

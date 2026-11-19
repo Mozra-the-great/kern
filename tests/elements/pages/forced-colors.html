@@ -70,6 +70,8 @@
 					<k-icon-button id="ib-disabled" label="Search disabled" disabled><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2" /><path d="M16 16l5 5" stroke="currentColor" stroke-width="2" /></svg></k-icon-button>
 					<k-copy-button id="copy" value="npm i kern" label="Copy install command"></k-copy-button>
 					<k-copy-button id="copy-disabled" value="x" label="Copy disabled" disabled></k-copy-button>
+					<k-download-button id="download" text="hello" name="hello.txt" label="Download" show-label variant="secondary"></k-download-button>
+					<k-download-button id="download-disabled" text="x" name="x.txt" label="Download disabled" disabled></k-download-button>
 					<k-link id="link" href="#target">Plain link</k-link>
 					<k-link id="link-ext" href="https://example.com" external>External link</k-link>
 					<k-theme-toggle id="theme-toggle" target="#tbox" label="Theme"></k-theme-toggle>
@@ -255,6 +257,7 @@
 			<p id="target">Link target</p>
 		</main>
 		<k-live-announcer id="announcer"></k-live-announcer>
+		<k-visually-hidden id="vh">Text for assistive technology</k-visually-hidden>
 		<k-modal id="modal" title="Delete folder?" description="214 files go to the bin.">
 			<p>You can undo this for 30 days.</p>
 			<div slot="footer" class="row"><k-button variant="secondary" id="cancel">Cancel</k-button><k-button variant="danger" id="confirm">Delete</k-button></div>
