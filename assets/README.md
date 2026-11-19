@@ -2,16 +2,32 @@
 
 Optional artwork per brand, shipped with the package as plain files
 (`@mozra-the-great/kern/assets/<brand>/<group>/<file>.svg`). The components never load them;
-use them in your own pages, for example as an `EmptyState` icon or seasonal decoration, or
-draw them with the `Mascot` component (`<k-mascot>`), which takes any file below by name
-(`stuffy`, `tool-stickers/sticker-qr`) and the URL you serve it from (README, "Mascot").
+use them in your own pages, for example as an `EmptyState` icon or seasonal decoration. The
+stuffcloud pixel art can also be drawn with the `Mascot` component (`<k-mascot>`), which takes any
+file of `stuffcloud/` by name (`stuffy`, `tool-stickers/sticker-qr`) and the URL you serve it from
+(README, "Mascot"). The pop, line and flower art is vector art: show it with a plain `<img>` at any
+size (README, "Mascot", last part).
+
+Rules for every brand:
+
+- **Decorative by default.** Give the `<img>` an empty `alt=""`. When a picture carries meaning (a
+  mascot that says "done", an empty state), describe it in `alt` or in the surrounding text.
+- **Never in the way.** Art sits beside or behind content: it never covers text or controls, never
+  takes focus, is never the only carrier of a state and stands still under `prefers-reduced-motion`.
+- **Fixed colours.** No file follows the theme: none uses `currentColor`, a CSS variable or a
+  `<style>` element. Each brand's art is drawn for a ground (named below); dark twins exist where the
+  source has them. Do not recolour, crop or mirror the art.
+- **Safe files.** Only SVG, each with `xmlns` and `viewBox`, without scripts, event handlers,
+  `<foreignObject>`, `<image>`, external `href`/`url()` or `data:` URIs (`npm run assets:check`).
+- **Same-origin files.** Serve them as files (`img-src 'self'`), not as `data:` URIs (README,
+  "Mascot", CSP). The largest flower files are 60 to 135 kB: load them with `loading="lazy"`.
 
 ## stuffcloud
 
 Pixel art from the stuffcloud moodboards, also recorded in the Stuffcloud design
 system. One square per pixel, `shape-rendering="crispEdges"`: show each file through
 `<img>` at whole-number scales (`image-rendering: pixelated`) so it stays sharp.
-The colours are fixed and do not follow the theme.
+The colours are fixed and do not follow the theme; the art is drawn for stuffcloud's dark panel.
 
 | Group | Files | Use |
 | --- | --- | --- |
@@ -25,15 +41,77 @@ The colours are fixed and do not follow the theme.
 `docs/design/prototypes` (generated there from ASCII sources by `docs/design/tools/mascots.py`
 and `stickers.py`).
 
-Decorative use: give the `<img>` an empty `alt=""`. When a picture carries meaning
-(a mascot that says "done"), describe it in `alt` or in the surrounding text.
+## pop
+
+Vector art from the Pop design system: chubby cartoon mascots with an even `#151714` outline, for
+Pop's light (`#F3F4F1`) or near-black (`#0E100D`) ground. The outline of the standing mascots
+disappears into the dark ground; the source intends that. Mascots, outfits and accessories share one
+square 316-unit grid (`viewBox="-16 -6 316 316"`), so a dressed-up Stuffy swaps with the plain one
+without a layout change.
+
+| Group | Files | Use |
+| --- | --- | --- |
+| `logo/` | 1 | The green cloud mark (40 × 28). Set the word "stuffcloud" next to it; not on a green surface. |
+| `mascots/` | 11 | Stuffy (axolotl, main mascot), Cumulo (cloud), Hop (frog), Boo (ghost), Mochi (cat), Bun (bunny), Bloop (jellyfish), Waddle (penguin), Ember (fox). `cumulo-dark.svg` and `boo-dark.svg` are the twins of the two floaters with a shadow for a dark ground: the plain file in light, the twin in dark. One mascot per view. |
+| `outfits/` | 18 | Stuffy dressed up for each seasonal set (`stuffy-<set>.svg`: new-year, winter, valentine, carnival, womens-day, easter, earth-day, europe-day, pride, autumn, unity-day, harvest, halloween, advent, christmas, st-nicholas, human-rights-day) plus `stuffy-pdf.svg` (Stuffy holding a PDF stack). Use the active set's file wherever plain Stuffy would stand. |
+| `accessories/` | 5 | What the other mascots wear in a set: Santa hat, witch hat, bunny ears, headband (for Bun, who has ears) and rainbow. Drawn where they sit on Stuffy, on the same grid; move and scale them onto another mascot's head. |
+| `tool-icons/` | 31 | One icon per tool, named `<category>-<tool>` (pdf, images, convert, time, network, text, dev, hosting), 40 × 40, `#151714` ink at stroke 3, white fills, one accent. Made for a pastel tile, not for the dark ground. |
+| `seasonal/` | 22 | `badge-<set>.svg`: one round badge per seasonal set (20 × 20, show it larger); `advent-wreath-1` to `-4`: the Advent wreath with one to four candles lit; `christmas-tree.svg`: the small tree of the Christmas footer. One set at a time. |
+
+Sources: the claude.ai artifact **"Pop-Designsystem"** (logo, mascots, outfits, accessories, tool
+icons; for the first four groups kern ships the drawings in their original serialisation from the
+moodboard, which the design system holds re-serialised) and the moodboard **"stuffcloud Design
+Explorations (ENTE Trys)"**, page "Pop (neu)", for the art the design system does not have
+(`seasonal/`: badges and wreaths from "Pop 61 · Seasonal decorations", the tree from "Pop 65 · All
+tools in Christmas"). One stroke of `badge-autumn.svg` lost a page class whose rule only applied to
+the dark page; its own stroke colour is unchanged.
+
+## line
+
+Line art from the Line design system: `#18181A` ink, white paper fills and one accent each, with a
+white rim round every figure so it reads on Line's dark ground and on colour.
+
+| Group | Files | Use |
+| --- | --- | --- |
+| `logo/` | 2 | The cloud mark: `mark-ink.svg` on a light ground, `mark-white.svg` on a dark one. |
+| `mascots/` | 9 | The gang (Stuffy, Cumulo, Hop, Boo, Mochi, Bun, Bloop, Waddle, Ember), each on a floor line (the floaters over two short dashes). One figure per view. |
+| `outfits/` | 17 | Stuffy dressed up for each seasonal set, the same names as in pop (`stuffy-<set>.svg`), all in one frame (`viewBox="0 -14 468 418"`). |
+| `tool-icons/` | 8 | One tile per tool category (pdf, images, convert, network, text, dev-extras, hosting, account): a rounded colour square with a line glyph, 64 × 64. Beside a visible name it is decoration. |
+| `seasonal/` | 6 | `advent-wreath-1` to `-4` (one to four candles lit) and the header garlands `garland-christmas.svg` and `garland-halloween.svg` (1200 × 88, along the top edge of a page). One set at a time. |
+| `illustrations/` | 6 | Spot illustrations: `stuffy-folder` (Stuffy next to a folder), `host-site` (a small site in a browser window with Cumulo), `site-live` (a published site), `burn-letter` (Ember with a sealed letter), `build-page` (Bun and a page of blocks), `gang-row` (Hop, Stuffy and Mochi in a row). |
+
+Sources: the claude.ai artifact **"Line-Designsystem"** (logo, mascots, outfits, tool icons; byte for
+byte its uploaded files, which keep their `width`, `height`, `role="img"` and `aria-label`; an `<img>`
+ignores the last two, so set `alt` yourself) and the **stuffcloud Line design canvas** for the art the
+design system does not have (`seasonal/` from "line-seasons" and the Christmas and Halloween tool
+pages, `illustrations/` from "line-home" and "line-live"). The `class` attributes left in the files
+(`hl` for the rim, `pt-*` for particles) only drive the canvas' animations; in a file they do nothing
+and the art shows its still pose.
+
+## flower
+
+Botanical motifs from the Flower designs, drawn after the "Mozra-the-great" banner: soft flat
+shapes in fixed colours, made for Flower's cream ground (`#F6F0E0`).
+
+| Group | Files | Use |
+| --- | --- | --- |
+| `blossoms/` | 16 | Single blossoms (pink, red, purple, ochre, white), blossoms on a stem, buds, lavender, a pink panicle and `bouquet.svg` (a main motif on its own). The white ones need their foliage or a darker ground for contrast. |
+| `leaves/` | 20 | Ten single leaves (olive, green, dark) and ten branches, tendrils and plants. Dark leaves not on a dark green ground. |
+| `trees/` | 10 | Trees and bushes on an oval ground shadow (`viewBox="0 0 300 360"`): round dark tree, olive tree, conifer, blossom tree, cypress, fruit tree, young tree, bush with white blossoms, shrub with buds, and `hill-with-trees.svg`, a finished small scene (not mixed with single trees). |
+
+Sources: the claude.ai artifact **"Flower-Designs"** (design system); its 46 SVGs are byte-identical
+to the motifs on the canvas **"Mozra Botanik-Bausteine"**. The file names translate the German
+originals (`rosa-bluete.svg` → `blossoms/pink-blossom.svg`, `olivbaum.svg` → `trees/olive-tree.svg`, …).
 
 ## Drift check and refresh
 
-`manifest.json` lists every file with its size, sha256 and pixel grid. It is the contract with
-stuffcloud: CI cannot reach the stuffcloud repository, so the `build` job runs
-`npm run assets:check`, which fails on a missing, extra or changed file, and checks that
-`src/lib/components/stuffcloud-art.ts` (the grid catalogue behind `Mascot`) matches the SVGs.
+Each brand folder has a `manifest.json` that lists every file with its size and sha256, plus the
+pixel grid (stuffcloud) or the `viewBox` (pop, line, flower). It is the contract with the art's
+source: CI cannot reach the stuffcloud repository or the claude.ai artifacts, so the `build` job runs
+`npm run assets:check`. It fails on a missing, extra or changed file, on an SVG without `xmlns` or
+`viewBox`, on an unsafe construct (list above) and on a brand folder it does not know, and it checks
+that `src/lib/components/stuffcloud-art.ts` (the grid catalogue behind `Mascot`) matches the
+stuffcloud SVGs.
 
 When stuffcloud's art changes:
 
@@ -41,10 +119,16 @@ When stuffcloud's art changes:
    (`axo`/`mascot-*` → `mascots/`, `sticker-*` → `tool-stickers/`, `deco-*` → `seasonal/`,
    `logo` → `logo/`, other marks → `marks/`). Check each new file first: only `<svg>` and `<path>`,
    no `<script>`, `on*=` handlers, `href`/`url()` or `<foreignObject>`.
-2. `npm run assets:manifest` rewrites `manifest.json` and the catalogue.
+2. `npm run assets:manifest` rewrites the manifests and the catalogue.
 3. `node scripts/ci/assets-drift.mjs --against <stuffcloud>/docs/design/prototypes` compares names
    and bytes with that checkout and must report the same set. stuffcloud's CI can run the same
    command against a kern checkout to catch drift from its side.
 4. Commit the files, the manifest and the catalogue together.
+
+When pop, line or flower art changes in its artifact: take the changed file from the artifact's
+assets, or extract the inline `<svg>` from the canvas page (add `xmlns`, keep the `viewBox`, drop only
+presentation attributes of the root such as `class`, `width` or `aria-hidden`), keep the kern file
+name, run `npm run assets:manifest` and commit file and manifest together. New art comes from the
+sources only; kern does not draw its own.
 
 Licence: same as the project (GPL-3.0-or-later), see `NOTICE`.

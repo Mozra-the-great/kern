@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -6 316 316" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<defs><path id="hb" d="M84 262C46 262 30 232 38 204C44 182 56 170 64 160C56 146 56 124 70 112C86 98 108 100 120 114C134 108 152 106 166 110C176 94 200 90 214 104C228 118 226 140 216 152C232 170 248 196 246 222C244 252 220 266 186 266C150 268 118 268 84 262Z"/><clipPath id="hbc"><use href="#hb"/></clipPath></defs>
+<path d="M62 258C44 262 38 274 50 278C60 281 72 276 80 280C92 284 116 280 118 268C120 258 100 254 86 256Z" fill="#6CC646" stroke="#151714" stroke-width="5.5"/>
+<path d="M178 260C168 270 176 280 196 280C210 280 222 276 234 280C246 282 252 270 242 262C232 256 206 254 190 256Z" fill="#6CC646" stroke="#151714" stroke-width="5.5"/>
+<use href="#hb" fill="#9BE15D"/>
+<g clip-path="url(#hbc)">
+<path d="M56 272C52 222 84 192 132 190C180 188 210 226 204 272Z" fill="#E4F7C6"/>
+<path d="M196 84C236 120 244 176 232 214C226 236 230 254 220 280L320 280L320 84Z" fill="#6CC646"/>
+<path d="M72 196C69 204 69 212 71 218" stroke="#fff" stroke-width="7"/>
+<circle cx="74" cy="230" r="4" fill="#fff"/></g>
+<use href="#hb" stroke="#151714" stroke-width="7"/>
+<path d="M82 130C85 117 99 117 102 129" stroke="#151714" stroke-width="7.5"/><path d="M182.8 123.68C185.56 111.72 198.44 111.72 201.2 122.76" stroke="#151714" stroke-width="6.94"/>
+<path d="M106 160C122 176 164 176 184 154" stroke="#151714" stroke-width="6"/>
+<ellipse cx="82" cy="154" rx="12" ry="7" fill="#FF8DB5" opacity="0.7" transform="rotate(-8 82 154)"/><ellipse cx="204" cy="146" rx="9" ry="6" fill="#FF8DB5" opacity="0.65" transform="rotate(-8 204 146)"/>
+<g transform="rotate(-8 146 218)">
+<path d="M104 192C104 184 110 178 118 178L174 178C182 178 188 184 188 192L188 240C188 248 182 254 174 254L118 254C110 254 104 248 104 240Z" fill="#fff" stroke="#151714" stroke-width="6"/>
+<path d="M124 218L140 234L170 198" stroke="#10A916" stroke-width="10"/>
+</g>
+<path d="M112 196C96 192 80 202 80 216C80 230 96 236 108 228C116 222 120 212 118 202Z" fill="#9BE15D" stroke="#151714" stroke-width="6"/>
+<path d="M184 186C200 180 216 190 216 204C216 218 200 224 188 216C180 210 176 200 178 192Z" fill="#9BE15D" stroke="#151714" stroke-width="6"/>
+</svg>

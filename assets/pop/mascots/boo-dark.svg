@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -6 316 316" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<defs><path id="gb" d="M86 226C70 206 64 170 66 134C68 84 100 52 146 52C194 52 224 86 222 136C220 170 226 196 244 216C252 226 244 236 232 232C224 230 220 224 212 228C204 238 190 242 178 232C168 244 150 246 138 236C126 246 108 244 100 234C94 238 88 234 86 226Z"/><clipPath id="gbc"><use href="#gb"/></clipPath></defs>
+<defs><radialGradient id="bsh"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".2"/><stop offset=".55" stop-color="#FFFFFF" stop-opacity=".1"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient></defs><ellipse cx="164" cy="280" rx="60" ry="11" fill="url(#bsh)"/>
+<path d="M74 156C50 146 30 126 28 104C27 90 44 84 52 96C60 112 70 124 84 130Z" fill="#fff" stroke="#151714" stroke-width="6"/>
+<path d="M216 152C240 140 258 118 258 96C258 82 240 80 236 92C230 108 222 120 210 128Z" fill="#fff" stroke="#151714" stroke-width="6"/>
+<use href="#gb" fill="#FFFFFF"/>
+<g clip-path="url(#gbc)">
+<path d="M174 50C204 84 208 140 204 180C202 204 212 222 234 236L320 240L320 46Z" fill="#DCD5F8"/>
+
+<path d="M80 128C76 142 76 156 78 168" stroke="#EEEAFD" stroke-width="9"/>
+<path d="M116 80C126 74 138 72 148 73" stroke="#EEEAFD" stroke-width="7"/></g>
+<use href="#gb" stroke="#151714" stroke-width="7"/>
+<path d="M104 128C104 118 110 110 118 110C126 110 130 118 130 128C130 138 124 146 117 146C110 146 104 138 104 128Z" fill="#151714"/>
+<path d="M152 124C152 115 157 108 164 108C171 108 175 115 175 124C175 133 170 140 164 140C157 140 152 133 152 124Z" fill="#151714"/>
+<circle cx="121" cy="120" r="4" fill="#fff"/><circle cx="167" cy="116" r="3.5" fill="#fff"/>
+<path d="M136 156C136 150 140 146 145 146C150 146 153 150 153 156C153 162 149 166 144 166C139 166 136 162 136 156Z" fill="#3A2A6B" stroke="#151714" stroke-width="4.5"/>
+<ellipse cx="102" cy="154" rx="11" ry="6.5" fill="#FF8DB5" opacity="0.7" transform="rotate(-8 102 154)"/><ellipse cx="186" cy="148" rx="8" ry="5.5" fill="#FF8DB5" opacity="0.65" transform="rotate(-8 186 148)"/>
+</svg>
