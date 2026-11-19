@@ -4,6 +4,7 @@
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { withDefaults } from './data-utils.js';
 
 	interface Props {
 		/** `ok` = circle with check, `warn` = triangle, `down` = square with cross, `idle` = empty ring, `busy` = ring with dot. */
@@ -13,7 +14,7 @@
 		/** Hide the text visually. It stays available to assistive technology. */
 		labelHidden?: boolean | undefined;
 		/** Names of the five states, for translation. */
-		statusLabels?: Partial<Record<DotStatus, string>> | undefined;
+		statusLabels?: { [K in DotStatus]?: string | undefined } | undefined;
 		size?: 'sm' | 'md' | undefined;
 		/** Pulse while `busy`. Stops when the user asks for less motion. */
 		pulse?: boolean | undefined;
@@ -24,14 +25,18 @@
 	let { status, label, labelHidden = false, statusLabels, size = 'md', pulse = true, class: cls = '', children }: Props = $props();
 	const uid = $props.id();
 
-	const names = $derived<Record<DotStatus, string>>({
-		ok: 'OK',
-		warn: 'Degraded',
-		down: 'Down',
-		idle: 'Idle',
-		busy: 'Busy',
-		...statusLabels
-	});
+	const names = $derived(
+		withDefaults<Record<DotStatus, string>>(
+			{
+				ok: 'OK',
+				warn: 'Degraded',
+				down: 'Down',
+				idle: 'Idle',
+				busy: 'Busy'
+			},
+			statusLabels
+		)
+	);
 	const name = $derived(names[status] ?? status);
 	const custom = $derived(!!children || (label !== undefined && label !== ''));
 	/* A custom text may not say what the state is; the shape and the colour say it only to the eye. */

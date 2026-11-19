@@ -14,14 +14,14 @@
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { dateFormat } from './data-utils.js';
+	import { dateFormat, withDefaults } from './data-utils.js';
 
 	interface Props {
 		items: TimelineItem[];
 		/** Accessible name of the list. */
 		label?: string | undefined;
 		/** Spoken status before each title. */
-		statusLabels?: Partial<Record<TimelineStatus, string>> | undefined;
+		statusLabels?: { [K in TimelineStatus]?: string | undefined } | undefined;
 		/** Locale of the dates. */
 		locale?: string | undefined;
 		/** Custom body of an entry, replacing title, time and description. */
@@ -30,13 +30,17 @@
 	}
 	let { items, label, statusLabels, locale, item, class: cls = '' }: Props = $props();
 
-	const names = $derived<Record<TimelineStatus, string>>({
-		done: 'Done',
-		current: 'Current',
-		upcoming: 'Upcoming',
-		error: 'Failed',
-		...statusLabels
-	});
+	const names = $derived(
+		withDefaults<Record<TimelineStatus, string>>(
+			{
+				done: 'Done',
+				current: 'Current',
+				upcoming: 'Upcoming',
+				error: 'Failed'
+			},
+			statusLabels
+		)
+	);
 
 	const ISO = /^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/;
 	interface Stamp {

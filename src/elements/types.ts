@@ -154,7 +154,15 @@ export interface ToastItem {
 	duration: number;
 	action?: { label: string; onclick: () => void } | undefined;
 }
-export type ToastInput = Partial<Omit<ToastItem, 'id' | 'message'>> & { message: string };
+export interface ToastInput {
+	message: string;
+	title?: string | undefined;
+	/** Default `info`. */
+	tone?: ToastTone | undefined;
+	/** Milliseconds; 0 keeps it until dismissed. Default 5000. */
+	duration?: number | undefined;
+	action?: ToastItem['action'];
+}
 /** `toast('Saved')`, `toast({ message, tone, … })`, `toast.ok/warn/danger(message, options)`. Returns the id. */
 export interface ToastFunction {
 	(input: string | ToastInput): number;

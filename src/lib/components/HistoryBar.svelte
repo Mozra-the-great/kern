@@ -12,7 +12,7 @@
 
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { fill, numberFormat, tipAnchor } from './data-utils.js';
+	import { fill, numberFormat, tipAnchor, withDefaults } from './data-utils.js';
 
 	interface Props {
 		items: HistoryItem[];
@@ -23,7 +23,7 @@
 		/** Summary when no period has data. */
 		noDataLabel?: string | undefined;
 		/** Status names for tooltip, speech and legend. */
-		statusLabels?: Partial<Record<HistoryStatus, string>> | undefined;
+		statusLabels?: { [K in HistoryStatus]?: string | undefined } | undefined;
 		/** Show the legend that names the four bar shapes. */
 		legend?: boolean | undefined;
 		/** Text under the first and the last bar, e.g. "90 days ago" and "Today". */
@@ -47,13 +47,17 @@
 	}: Props = $props();
 	const uid = $props.id();
 
-	const names = $derived<Record<HistoryStatus, string>>({
-		ok: 'OK',
-		warn: 'Degraded',
-		down: 'Down',
-		none: 'No data',
-		...statusLabels
-	});
+	const names = $derived(
+		withDefaults<Record<HistoryStatus, string>>(
+			{
+				ok: 'OK',
+				warn: 'Degraded',
+				down: 'Down',
+				none: 'No data'
+			},
+			statusLabels
+		)
+	);
 	const order: HistoryStatus[] = ['ok', 'warn', 'down', 'none'];
 
 	const summary = $derived.by((): string => {

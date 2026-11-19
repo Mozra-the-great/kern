@@ -10,7 +10,15 @@ export interface ToastItem {
 	action?: { label: string; onclick: () => void } | undefined;
 }
 
-export type ToastInput = Partial<Omit<ToastItem, 'id' | 'message'>> & { message: string };
+export interface ToastInput {
+	message: string;
+	title?: string | undefined;
+	/** Default `info`. */
+	tone?: ToastTone | undefined;
+	/** Milliseconds; 0 keeps it until dismissed. Default 5000. */
+	duration?: number | undefined;
+	action?: ToastItem['action'];
+}
 
 /*
  * The Svelte package (dist/) and the custom-elements bundle each compile their own copy
@@ -36,7 +44,7 @@ function createStore(): ToastStore {
 		version: 1,
 		items: [],
 		add(input) {
-			const item: ToastItem = { id: next++, tone: 'info', duration: 5000, ...input };
+			const item: ToastItem = { id: next++, ...input, tone: input.tone ?? 'info', duration: input.duration ?? 5000 };
 			store.items = [...store.items, item];
 			if (item.duration > 0)
 				timers.set(
@@ -90,9 +98,21 @@ export function dismissToast(id: number) {
 	store.dismiss(id);
 }
 
+/**
+ * `input` without the keys whose value is `undefined`, so they keep the store's defaults. Done here
+ * rather than only in `add()` because the shared store may come from another (older) kern copy.
+ */
+function definedOnly(input: ToastInput): ToastInput {
+	const out = { ...input };
+	for (const key of Object.keys(out)) {
+		if (out[key as keyof ToastInput] === undefined) Reflect.deleteProperty(out, key);
+	}
+	return out;
+}
+
 /** Show a toast. Returns its id. `toast('Saved')` or `toast({ message, tone, ... })`. */
 export function toast(input: string | ToastInput): number {
-	return store.add(typeof input === 'string' ? { message: input } : input);
+	return store.add(typeof input === 'string' ? { message: input } : definedOnly(input));
 }
 
 toast.ok = (message: string, o: Partial<ToastInput> = {}) => toast({ ...o, message, tone: 'ok' });
