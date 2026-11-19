@@ -157,6 +157,7 @@
 			border-color: Highlight;
 		}
 		input:disabled {
+			opacity: 1;
 			border-color: GrayText;
 		}
 		input:disabled::after {

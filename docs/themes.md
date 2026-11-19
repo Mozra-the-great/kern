@@ -186,6 +186,25 @@ is never retried. New baselines after an intended change:
    alias that rendered differently from `code`).
 3. Look at every changed image before committing it.
 
+The same spec also takes the forced-colors shots (`fc-<shot>-<dark|light>-<width>`, #27): Button, Input, Checkbox,
+Tabs, Progress, FileDrop, a controls board (Switch, RadioGroup, Slider, SegmentedControl, Rating), a status board
+(Alert, Badge, Tag, Pagination, Stepper), Modal and the toasts, under `forcedColors: 'active'` in the dark palette
+(`code`) and the light palette (`code-light`) at 1280 and 375 px. They are refreshed the same way.
+
+## Forced colors (#27)
+
+Under `@media (forced-colors: active)` the browser paints every colour from the user's system palette and drops
+box-shadows, so a theme cannot decide colour there, and must not try. What a theme can still break is covered by
+the block at the end of `base.css`: it sets the edge tokens (`--k-border`, `--k-line`, `--k-line-strong`,
+`--k-line-dashed`), the focus ring and accent (`--k-focus`, `--k-accent-mark`) to system colours, the dimming of
+disabled parts (`--k-disabled-opacity`, `--k-field-disabled-opacity`, `--k-check-disabled-opacity`) to 1,
+`--k-fg-disabled` to `GrayText`, the shadows to `none` and the Progress track to `Canvas`, all with `!important`
+(a theme's own `[data-theme^=…]` rule has the same specificity and loads later). The rest is per component
+(`@media (forced-colors: active)` in each `.svelte` file); `tests/unit/forced-colors.test.ts` fails for a component with
+styles but neither such a rule nor an entry in its exemption list, and `tests/elements/forced-colors.spec.ts` for a
+custom element without an entry in its table. A theme needs no forced-colors rules; a component token that paints a
+shape with a *background* (a fill, a stripe, a dot) must have a forced-colors counterpart in the component.
+
 ## Choices for Flower and Pop
 
 - `--k-accent-mark`: Flower creme `#d06557` (coral-600 with 6 % less lightness), Flower wald
