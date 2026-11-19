@@ -1,42 +1,199 @@
 <script lang="ts">
-	import { toasts, dismissToast } from './toast.svelte.js';
+	import { tick } from 'svelte';
+	import { sharedToastQueue, type ToastItem, type ToastQueue } from './toast-queue.js';
 
 	interface Props {
-		position?: 'bottom-right' | 'bottom-center' | 'top-right' | 'top-center' | undefined;
+		/** Corner or edge of the viewport. Default `bottom-right`. */
+		position?: 'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'top-left' | 'top-center' | undefined;
 		dismissLabel?: string | undefined;
+		/** Label of the undo button of toasts with `onundo`. */
+		undoLabel?: string | undefined;
 		/** Accessible name of the notification region. */
 		label?: string | undefined;
+		/** Most toasts open at once; sets the queue's limit (default 5). The oldest closes first. */
+		max?: number | undefined;
+		/** Queue to render. Default: the page-wide queue behind `toast()`. */
+		queue?: ToastQueue | undefined;
+		/** The user pressed a toast's dismiss button. */
+		ondismiss?: ((item: ToastItem) => void) | undefined;
+		/** The user pressed a toast's undo button. */
+		onundo?: ((item: ToastItem) => void) | undefined;
+		/** The user pressed a toast's action button. */
+		onaction?: ((item: ToastItem) => void) | undefined;
 	}
-	let { position = 'bottom-right', dismissLabel = 'Dismiss', label = 'Notifications' }: Props = $props();
+	let {
+		position = 'bottom-right',
+		dismissLabel = 'Dismiss',
+		undoLabel = 'Undo',
+		label = 'Notifications',
+		max,
+		queue,
+		ondismiss,
+		onundo,
+		onaction
+	}: Props = $props();
+
+	const q = $derived(queue ?? sharedToastQueue());
+	let items: readonly ToastItem[] = $state.raw([]);
+	let region: HTMLElement | undefined = $state();
+	/** Where focus came from when it entered the region: it goes back there when the last toast closes. */
+	let returnTo: HTMLElement | null = null;
+
+	$effect(() =>
+		q.subscribe((list) => {
+			items = list;
+		})
+	);
+	$effect(() => {
+		if (max !== undefined) q.max = max;
+	});
+
+	const polite = $derived(items.filter((t) => t.tone !== 'danger'));
+	const assertive = $derived(items.filter((t) => t.tone === 'danger'));
+
+	/** Pauses the toast's countdown while it is hovered, holds focus or the tab is hidden. */
+	function hold(node: HTMLElement, id: number) {
+		const owner = q;
+		let hovered = false;
+		let focused = false;
+		let hidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
+		let held = false;
+		const sync = () => {
+			const want = hovered || focused || hidden;
+			if (want === held) return;
+			held = want;
+			if (want) owner.pause(id);
+			else owner.resume(id);
+		};
+		const enter = () => {
+			hovered = true;
+			sync();
+		};
+		const leave = () => {
+			hovered = false;
+			sync();
+		};
+		const focusin = () => {
+			focused = true;
+			sync();
+		};
+		const focusout = (e: FocusEvent) => {
+			if (e.relatedTarget instanceof Node && node.contains(e.relatedTarget)) return;
+			focused = false;
+			sync();
+		};
+		const visibility = () => {
+			hidden = document.visibilityState === 'hidden';
+			sync();
+		};
+		node.addEventListener('mouseenter', enter);
+		node.addEventListener('mouseleave', leave);
+		node.addEventListener('focusin', focusin);
+		node.addEventListener('focusout', focusout);
+		document.addEventListener('visibilitychange', visibility);
+		sync();
+		return {
+			destroy() {
+				node.removeEventListener('mouseenter', enter);
+				node.removeEventListener('mouseleave', leave);
+				node.removeEventListener('focusin', focusin);
+				node.removeEventListener('focusout', focusout);
+				document.removeEventListener('visibilitychange', visibility);
+				if (held) owner.resume(id);
+			}
+		};
+	}
+
+	function trackEntry(e: FocusEvent) {
+		const from = e.relatedTarget;
+		if (from instanceof HTMLElement && from.isConnected && region && !region.contains(from)) returnTo = from;
+	}
+
+	/**
+	 * Runs `close` for the toast of the pressed button. After a keyboard activation focus moves to
+	 * the next toast (or the previous one), else back to where it came from, instead of the page start.
+	 */
+	async function closeFrom(e: MouseEvent, close: () => void) {
+		const toast = (e.currentTarget as HTMLElement).closest('.toast');
+		const keyboard = e.detail === 0;
+		let target: Element | null | undefined;
+		if (keyboard && region && toast) {
+			const all = [...region.querySelectorAll('.toast')];
+			const at = all.indexOf(toast);
+			target = all[at + 1] ?? all[at - 1];
+		}
+		close();
+		if (!keyboard) return;
+		await tick();
+		const button = target?.isConnected ? target.querySelector('button') : null;
+		if (button) {
+			button.focus();
+			return;
+		}
+		if (returnTo?.isConnected) returnTo.focus();
+		returnTo = null;
+	}
 </script>
 
-<section class="k-toaster" data-pos={position} aria-label={label}>
-	<ol>
-		{#each toasts as t (t.id)}
-			<li class="toast" data-tone={t.tone} role={t.tone === 'danger' ? 'alert' : 'status'}>
-				<span class="dot" aria-hidden="true"></span>
-				<div class="content">
-					{#if t.title}<p class="title">{t.title}</p>{/if}
-					<p class="msg">{t.message}</p>
-				</div>
-				{#if t.action}
-					<button
-						type="button"
-						class="act"
-						onclick={() => {
-							t.action?.onclick();
-							dismissToast(t.id);
-						}}
-					>
-						{t.action.label}
-					</button>
-				{/if}
-				<button type="button" class="x" aria-label={dismissLabel} onclick={() => dismissToast(t.id)}>
-					<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" /></svg>
-				</button>
-			</li>
-		{/each}
-	</ol>
+{#snippet card(t: ToastItem)}
+	<div class="toast" data-tone={t.tone} use:hold={t.id}>
+		<span class="dot" aria-hidden="true"></span>
+		<div class="content">
+			{#if t.title}<p class="title">{t.title}</p>{/if}
+			<p class="msg">{t.message}</p>
+		</div>
+		{#if t.onundo}
+			<button
+				type="button"
+				class="act"
+				onclick={(e) =>
+					closeFrom(e, () => {
+						q.undo(t.id);
+						onundo?.(t);
+					})}
+			>
+				{undoLabel}
+			</button>
+		{/if}
+		{#if t.action}
+			<button
+				type="button"
+				class="act"
+				onclick={(e) =>
+					closeFrom(e, () => {
+						q.runAction(t.id);
+						onaction?.(t);
+					})}
+			>
+				{t.action.label}
+			</button>
+		{/if}
+		<button
+			type="button"
+			class="x"
+			aria-label={dismissLabel}
+			onclick={(e) =>
+				closeFrom(e, () => {
+					q.dismiss(t.id);
+					ondismiss?.(t);
+				})}
+		>
+			<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" /></svg>
+		</button>
+	</div>
+{/snippet}
+
+<!-- Both live regions exist from the start, so screen readers announce what is added to them:
+     danger interrupts (alert), everything else waits its turn (status). -->
+<section bind:this={region} class="k-toaster" data-pos={position} aria-label={label} onfocusin={trackEntry}>
+	{#key q}
+		<div class="list" role="status" aria-atomic="false">
+			{#each polite as t (t.id)}{@render card(t)}{/each}
+		</div>
+		<div class="list" role="alert" aria-atomic="false">
+			{#each assertive as t (t.id)}{@render card(t)}{/each}
+		</div>
+	{/key}
 </section>
 
 <style>
@@ -44,7 +201,7 @@
 		position: fixed;
 		z-index: 1000;
 		pointer-events: none;
-		padding: var(--k-space-4);
+		padding: var(--k-toaster-offset);
 		width: min(400px, 100vw);
 		box-sizing: border-box;
 	}
@@ -52,8 +209,16 @@
 		right: 0;
 		bottom: 0;
 	}
+	[data-pos='bottom-left'] {
+		left: 0;
+		bottom: 0;
+	}
 	[data-pos='top-right'] {
 		right: 0;
+		top: 0;
+	}
+	[data-pos='top-left'] {
+		left: 0;
 		top: 0;
 	}
 	[data-pos='bottom-center'] {
@@ -66,16 +231,21 @@
 		top: 0;
 		transform: translateX(-50%);
 	}
-	ol {
+	@media (max-width: 760px) {
+		[data-pos^='bottom'] {
+			padding-bottom: var(--k-toaster-offset-mobile);
+		}
+	}
+	.list {
 		display: flex;
 		flex-direction: column;
 		gap: var(--k-space-2);
-		margin: 0;
-		padding: 0;
-		list-style: none;
 	}
-	[data-pos^='bottom'] ol {
+	[data-pos^='bottom'] .list {
 		flex-direction: column-reverse;
+	}
+	.list:has(> .toast) + .list:has(> .toast) {
+		margin-top: var(--k-space-2);
 	}
 	.toast {
 		--c: var(--k-info);
@@ -115,6 +285,7 @@
 		flex: 1;
 		min-width: 0;
 		padding-top: 2px;
+		overflow-wrap: anywhere;
 	}
 	.title {
 		margin: 0;
@@ -177,6 +348,19 @@
 		from {
 			opacity: 0;
 			transform: translateY(8px);
+		}
+	}
+	/* Windows high contrast: a visible edge per toast and a tone dot that keeps its shape. */
+	@media (forced-colors: active) {
+		.toast {
+			border: 1px solid CanvasText;
+		}
+		[data-tone='danger'] {
+			border-width: 3px;
+		}
+		.dot {
+			forced-color-adjust: none;
+			background: CanvasText;
 		}
 	}
 </style>

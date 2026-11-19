@@ -77,7 +77,8 @@
 		Toaster,
 		Tooltip,
 		TreeView,
-		Typewriter
+		Typewriter,
+		createToastQueue
 	} from '@mozra-the-great/kern';
 	import type {
 		AccordionEntry,
@@ -101,7 +102,9 @@
 		TerminalLine,
 		ThemeOption,
 		TimelineItem,
-		TreeNode
+		TreeNode,
+		ToastItem,
+		ToastQueue
 	} from '@mozra-the-great/kern';
 
 	interface Props {
@@ -113,6 +116,8 @@
 
 	// Bindable props bound to state that starts out undefined.
 	let open: boolean | undefined = $state();
+	let focusTarget: HTMLElement | undefined = $state();
+	const queue: ToastQueue = createToastQueue({ max: undefined });
 	let checked: boolean | undefined = $state();
 	let text: string | undefined = $state();
 	let num: number | undefined = $state();
@@ -224,14 +229,39 @@
 	label={maybeString}
 	class={maybeString}
 />
-<Modal bind:open title="Modal" description={maybeString} size={undefined} closeOnBackdrop={maybeBoolean}>Modal</Modal>
+<Modal
+	bind:open
+	title="Modal"
+	description={maybeString}
+	size={undefined}
+	closeOnBackdrop={maybeBoolean}
+	dismissible={maybeBoolean}
+	initialFocus={maybeString}
+	alert={maybeBoolean}
+	closeLabel={maybeString}
+	oncancel={(e: Event) => e.preventDefault()}
+	onclose={undefined}
+>
+	Modal
+</Modal>
+<Modal title="Focus" initialFocus={focusTarget} dismissible={false}><button type="button" bind:this={focusTarget}>Go</button></Modal>
 <Navbar items={nav} label={maybeString} menuLabel={maybeString} />
 <NumberInput bind:value={nullableNum} min={maybeNumber} max={maybeNumber} step={maybeNumber} format={undefined} />
 <Odometer value={1} duration={maybeNumber} locale={maybeString} />
 <Pagination bind:page={num} pageCount={5} siblings={maybeNumber} onchange={undefined} />
 <PinInput bind:value={text} length={maybeNumber} type={undefined} mask={maybeBoolean} />
 <Popover bind:open label="Popover" placement={undefined} triggerVariant={undefined}>Popover</Popover>
-<Progress label="Progress" value={maybeNumber} max={maybeNumber} showValue={maybeBoolean} />
+<Progress
+	label="Progress"
+	value={maybeNumber}
+	max={maybeNumber}
+	showValue={maybeBoolean}
+	hideLabel={maybeBoolean}
+	tone={undefined}
+	valueText={maybeString}
+	class={maybeString}
+/>
+<Progress label="Indeterminate" value={null} tone="warn" />
 <ProgressRing label="Ring" value={maybeNumber} size={maybeNumber} format={undefined} />
 <RadioGroup label="Radio" options={radios} bind:value={text} inline={maybeBoolean} error={maybeString} />
 <Rating bind:value={num} max={maybeNumber} readonly={maybeBoolean} />
@@ -262,7 +292,18 @@
 <Textarea bind:value={text} label={maybeString} autosize={maybeBoolean} />
 <ThemeToggle {themes} bind:value={text} target={undefined} persist={maybeString} followSystem={maybeBoolean} />
 <Timeline items={timeline} label={maybeString} statusLabels={{ done: maybeString }} locale={maybeString} />
-<Toaster position={undefined} dismissLabel={maybeString} label={maybeString} />
+<Toaster
+	position={undefined}
+	dismissLabel={maybeString}
+	undoLabel={maybeString}
+	label={maybeString}
+	max={maybeNumber}
+	queue={undefined}
+	ondismiss={undefined}
+	onundo={(item: ToastItem) => item.id}
+	onaction={undefined}
+/>
+<Toaster position="bottom-left" {queue} />
 <Tooltip text="Tip" placement={undefined}><button type="button">Hover</button></Tooltip>
 <TreeView nodes={tree} bind:selected={text} bind:expanded={list} label={maybeString} />
 <Typewriter text={['a', 'b']} speed={maybeNumber} loop={maybeBoolean} caretShape={undefined} />
