@@ -123,7 +123,7 @@ export const STUFFCLOUD_ART = {
 	'tool-stickers/sticker-useragent': { cols: 12, rows: 10 },
 	'tool-stickers/sticker-uuid': { cols: 12, rows: 9 },
 	'tool-stickers/sticker-xml': { cols: 12, rows: 7 },
-	'tool-stickers/sticker-yaml': { cols: 10, rows: 7 },
+	'tool-stickers/sticker-yaml': { cols: 10, rows: 7 }
 } as const satisfies Readonly<Record<string, PixelGrid>>;
 
 /** Path of a shipped stuffcloud SVG under `assets/stuffcloud/`, without `.svg`, e.g. `mascots/axo`. */

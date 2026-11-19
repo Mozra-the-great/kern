@@ -84,7 +84,14 @@ test.describe('markup', () => {
 	test('draws the svg file decoratively, without text, at an integer scale', async ({ page }) => {
 		await open(page);
 		const s = await snap(page, 'main');
-		expect(s).toMatchObject({ mascot: 'stuffy', src: '/assets/stuffcloud/mascots/axo.svg', alt: '', hidden: 'true', draggable: 'false', text: '' });
+		expect(s).toMatchObject({
+			mascot: 'stuffy',
+			src: '/assets/stuffcloud/mascots/axo.svg',
+			alt: '',
+			hidden: 'true',
+			draggable: 'false',
+			text: ''
+		});
 		// stuffy is 16 x 11 art pixels; scale 16 → 256 x 176, reserved by attributes and CSS.
 		expect([s.imgWidth, s.imgHeight, s.width, s.height]).toEqual(['256', '176', 256, 176]);
 		const far = await snap(page, 'far');
@@ -211,10 +218,12 @@ test.describe('motion', () => {
 		});
 		const s = await snap(page, await add(page, { name: 'stuffy', base: '/assets/stuffcloud', animated: 'false' }));
 		expect([s.motion, s.animations.length]).toEqual(['still', 0]);
-		expect(await page.evaluate(() => {
-			const w = window as unknown as { observed: number; listeners: number };
-			return [w.observed, w.listeners];
-		})).toEqual(before);
+		expect(
+			await page.evaluate(() => {
+				const w = window as unknown as { observed: number; listeners: number };
+				return [w.observed, w.listeners];
+			})
+		).toEqual(before);
 	});
 });
 
@@ -327,7 +336,10 @@ test('reserves its box: the image arriving moves nothing', async ({ page }) => {
 	});
 	const after = await page.evaluate(async () => {
 		await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-		return { after: document.getElementById('after')?.getBoundingClientRect().top, shifts: (window as unknown as { shifts: number }).shifts };
+		return {
+			after: document.getElementById('after')?.getBoundingClientRect().top,
+			shifts: (window as unknown as { shifts: number }).shifts
+		};
 	});
 	expect(after.after).toBe(before.after);
 	expect(after.shifts).toBe(0);

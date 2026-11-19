@@ -116,25 +116,33 @@ if (write && gridless.length > 0) {
 	} catch (e) {
 		problems.push(`cannot read ${relative(root, manifestFile)}: ${e.message}`);
 	}
-	for (const rel of Object.keys(expected)) if (!(rel in files)) problems.push(`missing: ${rel} (listed in the manifest, not in assets/stuffcloud)`);
+	for (const rel of Object.keys(expected))
+		if (!(rel in files)) problems.push(`missing: ${rel} (listed in the manifest, not in assets/stuffcloud)`);
 	for (const [rel, f] of Object.entries(files)) {
 		const want = expected[rel];
 		if (!want) problems.push(`extra: ${rel} (in assets/stuffcloud, not in the manifest)`);
-		else if (want.sha256 !== f.sha256 || want.bytes !== f.bytes) problems.push(`changed: ${rel} (${f.bytes} bytes, sha256 ${f.sha256.slice(0, 12)}…; manifest: ${want.bytes} bytes, ${String(want.sha256).slice(0, 12)}…)`);
+		else if (want.sha256 !== f.sha256 || want.bytes !== f.bytes)
+			problems.push(
+				`changed: ${rel} (${f.bytes} bytes, sha256 ${f.sha256.slice(0, 12)}…; manifest: ${want.bytes} bytes, ${String(want.sha256).slice(0, 12)}…)`
+			);
 		else if (want.cols !== f.cols || want.rows !== f.rows) problems.push(`changed grid: ${rel}`);
 	}
 	// 2. Catalogue (src/lib/components/stuffcloud-art.ts) against the tree. Parsed loosely, so a
 	// formatter may restyle the generated file without failing the check.
 	const catalogue = existsSync(catalogueFile) ? readFileSync(catalogueFile, 'utf8') : '';
 	const listed = new Map(
-		[...catalogue.matchAll(/['"]([\w/-]+)['"]\s*:\s*\{\s*cols:\s*(\d+),\s*rows:\s*(\d+)\s*,?\s*\}/g)].map((m) => [m[1], { cols: Number(m[2]), rows: Number(m[3]) }])
+		[...catalogue.matchAll(/['"]([\w/-]+)['"]\s*:\s*\{\s*cols:\s*(\d+),\s*rows:\s*(\d+)\s*,?\s*\}/g)].map((m) => [
+			m[1],
+			{ cols: Number(m[2]), rows: Number(m[3]) }
+		])
 	);
 	const svgs = Object.entries(files).filter(([rel]) => rel.endsWith('.svg'));
 	for (const [rel, f] of svgs) {
 		const key = rel.replace(/\.svg$/, '');
 		const got = listed.get(key);
 		if (!got) problems.push(`catalogue: ${key} is missing in ${relative(root, catalogueFile)}`);
-		else if (got.cols !== f.cols || got.rows !== f.rows) problems.push(`catalogue: ${key} is ${got.cols}x${got.rows}, the SVG is ${f.cols}x${f.rows}`);
+		else if (got.cols !== f.cols || got.rows !== f.rows)
+			problems.push(`catalogue: ${key} is ${got.cols}x${got.rows}, the SVG is ${f.cols}x${f.rows}`);
 	}
 	const keys = new Set(svgs.map(([rel]) => rel.replace(/\.svg$/, '')));
 	for (const key of listed.keys()) if (!keys.has(key)) problems.push(`catalogue: ${key} has no SVG`);
@@ -146,7 +154,11 @@ if (against !== undefined) {
 	if (!existsSync(dir) || !statSync(dir).isDirectory()) {
 		problems.push(`--against: ${dir} is not a directory`);
 	} else {
-		const theirs = new Map(readdirSync(dir).filter((f) => f.endsWith('.svg')).map((f) => [f, join(dir, f)]));
+		const theirs = new Map(
+			readdirSync(dir)
+				.filter((f) => f.endsWith('.svg'))
+				.map((f) => [f, join(dir, f)])
+		);
 		const ours = new Map();
 		for (const rel of Object.keys(files).filter((r) => r.endsWith('.svg'))) {
 			const name = basename(rel);
@@ -165,7 +177,9 @@ if (against !== undefined) {
 
 if (problems.length > 0) {
 	console.error(`Pixel-art drift (${problems.length}):\n  ${problems.join('\n  ')}`);
-	console.error('If the art changed on purpose: copy the files from stuffcloud, run `npm run assets:manifest`, commit (see assets/README.md).');
+	console.error(
+		'If the art changed on purpose: copy the files from stuffcloud, run `npm run assets:manifest`, commit (see assets/README.md).'
+	);
 	process.exit(1);
 }
 if (!write) console.log(`assets/stuffcloud matches its manifest and the catalogue (${Object.keys(files).length} files).`);

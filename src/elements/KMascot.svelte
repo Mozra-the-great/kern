@@ -1,4 +1,19 @@
-<svelte:options customElement={{ props: { name: { type: 'String' }, src: { type: 'String' }, base: { type: 'String' }, cols: { type: 'Number' }, rows: { type: 'Number' }, scale: { type: 'Number' }, compactScale: { type: 'Number', attribute: 'compact-scale' }, animated: { type: 'String' }, label: { type: 'String' } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			name: { type: 'String' },
+			src: { type: 'String' },
+			base: { type: 'String' },
+			cols: { type: 'Number' },
+			rows: { type: 'Number' },
+			scale: { type: 'Number' },
+			compactScale: { type: 'Number', attribute: 'compact-scale' },
+			animated: { type: 'String' },
+			label: { type: 'String' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * Stuffcloud pixel art (a mascot or any shipped SVG) through <img>, at whole-number scales,
@@ -18,7 +33,23 @@
 	const art = $derived((name || undefined) as MascotArt | undefined);
 	const moving = $derived(animated === undefined || animated === null || (animated !== false && animated !== 'false'));
 </script>
-<Mascot name={art} src={src || undefined} base={base || undefined} cols={cols ?? undefined} rows={rows ?? undefined} scale={scale ?? undefined} compactScale={compactScale ?? undefined} animated={moving} label={label ?? undefined} />
+
+<Mascot
+	name={art}
+	src={src || undefined}
+	base={base || undefined}
+	cols={cols ?? undefined}
+	rows={rows ?? undefined}
+	scale={scale ?? undefined}
+	compactScale={compactScale ?? undefined}
+	animated={moving}
+	label={label ?? undefined}
+/>
+
 <style>
-	:host { display: inline-block; line-height: 0; vertical-align: bottom; }
+	:host {
+		display: inline-block;
+		line-height: 0;
+		vertical-align: bottom;
+	}
 </style>
