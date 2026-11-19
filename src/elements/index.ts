@@ -64,6 +64,16 @@ import KSparkline from './KSparkline.svelte';
 import KHeatmap from './KHeatmap.svelte';
 import KHistoryBar from './KHistoryBar.svelte';
 import KTimeline from './KTimeline.svelte';
+import KCode from './KCode.svelte';
+import KCopyButton from './KCopyButton.svelte';
+import KKbd from './KKbd.svelte';
+import KRelativeTime from './KRelativeTime.svelte';
+import KStatusDot from './KStatusDot.svelte';
+import KThemeToggle from './KThemeToggle.svelte';
+import KProgressRing from './KProgressRing.svelte';
+import KCollapsible from './KCollapsible.svelte';
+import KResizable from './KResizable.svelte';
+import KScrollArea from './KScrollArea.svelte';
 import { toast, dismissToast } from '../lib/components/toast.svelte.js';
 
 export const elements = {
@@ -74,7 +84,8 @@ export const elements = {
 	KPopover, KCombobox, KContextMenu, KCommandPalette, KTreeView, KDatePicker,
 	KTypewriter, KCaret, KScramble, KCountUp, KOdometer, KMarquee, KReveal, KHighlight, KGridBackground, KTerminal,
 	KLabel, KNumberInput, KPinInput, KRating, KSegmentedControl, KStepper, KTagInput, KColorPicker,
-	KDataTable, KStat, KSparkline, KHeatmap, KHistoryBar, KTimeline
+	KDataTable, KStat, KSparkline, KHeatmap, KHistoryBar, KTimeline,
+	KCode, KCopyButton, KKbd, KRelativeTime, KStatusDot, KThemeToggle, KProgressRing, KCollapsible, KResizable, KScrollArea
 };
 export { toast, dismissToast };
 

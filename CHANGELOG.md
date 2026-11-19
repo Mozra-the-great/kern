@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Repository scaffold from `repo-template-public`: CI (`build`, `workflow-lint`,
   `gitleaks`), Dependabot for GitHub Actions and npm, issue/PR templates.
 
+- 10 primitives and layout helpers: Code, CopyButton, Kbd, RelativeTime, StatusDot,
+  ThemeToggle (+ `createThemeScript` against a theme flash), ProgressRing, Collapsible,
+  Resizable (APG window splitter), ScrollArea. kern now covers the cock feature set (75 components).
 - Brand assets: 77 stuffcloud pixel-art SVGs from the moodboards (logo, mascots,
   tool stickers, marks, seasonal decoration) under `kern-ui/assets/stuffcloud/`,
   shown in a demo gallery.
@@ -36,5 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - License is GPL-3.0-or-later (was MIT in the first local import).
 
 ### Fixed
+- Reduced motion: themes set `--k-dur` on `[data-theme^=…]`, which overrode the
+  `prefers-reduced-motion` rule in base.css; the rule now wins for every theme.
 - `Field` no longer stretches inside grid rows (`align-content: start`).
 - `package-lock.json` matches `package.json` again, so `npm ci` works.
