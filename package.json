@@ -29,6 +29,7 @@
 		"./themes/stuffcloud.css": "./dist/themes/stuffcloud.css",
 		"./themes/flower.css": "./dist/themes/flower.css",
 		"./themes/pop.css": "./dist/themes/pop.css",
+		"./themes/line.css": "./dist/themes/line.css",
 		"./themes/*": "./dist/themes/*",
 		"./elements": {
 			"types": "./dist-elements/kern-elements.d.ts",

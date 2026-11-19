@@ -65,7 +65,7 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
   `[data-theme^='name']`, an entry `themes/<name>.css`, an `@import` in `themes/index.css`
   and an `exports` entry; it must pass `npm test` (contrast). Interactive parts use
   `--k-tap-target` (min size or invisible `::after` hit area). Themes: stuffcloud,
-  flower, pop (each from its design-system artifact); planned: a Kagi-based theme.
+  flower, pop, line (each from its design-system artifact; line is the Kagi-based one).
 - The `K*.svelte` wrappers are not in `tsconfig.include`, so `npm run check` does not see
   them; `npm run build` compiles them. Every `emit()` in a wrapper needs an `@event`
   comment with the detail type, otherwise the manifest generator fails. Elements fire

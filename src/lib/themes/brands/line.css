@@ -1,0 +1,162 @@
+/* Line — from the Line-Designsystem (the Kagi-based direction for stuffcloud). Quiet
+ * and friendly: near-black ground, pill controls, 1.5px borders, no shadows, no
+ * gradients, one `sun` main action per view. Dark is the first theme and the fallback
+ * (`line` = `line-dark`), light is a full second theme, not an inversion.
+ * Fonts: Outfit 400–700, Inter 400–600 and JetBrains Mono 400/500 (load them yourself).
+ *
+ * Mapping (design token -> kern token, dark / light):
+ * - bg / surface / bg2 = bg / bg-raised / bg-sunken. surface2 = `selected` (hover and
+ *   active items) and the dark `info-soft` base; `line` = line (hairlines, panel edges).
+ * - ink = fg, ink2 = fg-soft, mut = fg-muted and fg-hint, solid / on-solid / solid-h =
+ *   primary / on-primary / primary-hover, link = link and info, focus = focus,
+ *   sel-bg = surface-selected, ok / warn = ok / warn.
+ * - accent = `sun`, text on it is `art` (on-accent). accent-text is `sun` in dark and
+ *   `warn` in light (sun on a light ground is only 1.5:1).
+ *
+ * Deviations, where kern's contrast contract (npm test) needs more than the design:
+ * - border: the design's `line` (1.6:1 dark, 1.3:1 light) and `line2` (2.3-2.7:1 dark,
+ *   2.2-2.7:1 light) are below the 3:1 a control edge needs on bg, bg-raised and
+ *   bg-sunken. border is `line2` moved towards `mut` until the worst of the three
+ *   grounds reaches 3:1: dark #70707a (3.2:1 on bg-raised), light #7e7e88 (3.2:1 on
+ *   bg-sunken). `line` stays for dividers and panel edges (line-strong = line).
+ * - accent-mark (sun drawn as a non-text mark: progress fill, current-tab marker,
+ *   focused border): dark keeps `sun`; light is `sun` darkened to 65 % (#a67812, 3.2:1
+ *   on bg-sunken, 3.5:1 on bg), since `sun` reaches only 1.4-1.7:1 on a light ground.
+ *   Fills with text keep `sun` + `art`.
+ * - danger: kern has one token for error text and the destructive fill. Dark uses the
+ *   design's text value `danger` (#ff8a7a) with `art` text on it (7.7:1) instead of
+ *   `danger-bg` + `paper`, which is only 3.4:1 as text on bg. Light uses `danger`
+ *   (#b92f26) with `paper` text (6.0:1) rather than `danger-bg` (#c9372c, 4.6:1 as
+ *   text on bg and 4.2:1 on bg-sunken, so it would fail error text there).
+ * - ok-soft, warn-soft, danger-soft, info-soft, accent-soft: the design has no state
+ *   surfaces. Each is its status colour at 12 % (dark, over bg-raised) or 10 % (light,
+ *   over white); the status text keeps >= 4.5:1 on it. Light accent-soft is `sel-bg`.
+ * - bg-code: the design's terminal `term` is dark in both themes, but kern also sets
+ *   `fg-muted` (line numbers) on bg-code, and light `mut` (#5f5f69) reads only 2.8:1 on
+ *   it. Dark uses `term` + `term-ink`; light uses bg-sunken + `ink`.
+ * - `lav`, `green`, `orange`, `sky`, `pink`, `peach`, `teal`, `fog`, `alert`, `hot` and
+ *   `term-*` are illustration and tile colours that kern has no role for: not used.
+ * - Inter's contextual alternates are off in the design ("3x9" stays "3x9"); kern has
+ *   no token for font features, so that is left to the page.
+ *
+ * Shape and size: pill controls and badges, card and overlay 22px (`radius-lg`). Field
+ * is 27px, not 999px: exactly a pill at the 54px field height, but a sane radius for
+ * the multi-line parts that share the token (Alert, FileDrop, Collapsible; the design's
+ * drop zone is 26px). `size-touch` 44px is the smallest target for every pointer,
+ * `size-button` 52px the button, `size-field` 54px the large control. */
+[data-theme^='line'] {
+	--k-border-w: 1.5px;
+	--k-radius-control: 999px;
+	--k-radius-field: 27px;
+	--k-radius-card: 22px;
+	--k-radius-overlay: 22px;
+	--k-radius-badge: 999px;
+	--k-radius-avatar: 999px;
+	--k-shadow-raised: none;
+	--k-shadow-overlay: none;
+	--k-shadow-sm: none;
+	--k-font-sans: 'Inter', system-ui, sans-serif;
+	--k-font-display: 'Outfit', ui-rounded, system-ui, sans-serif;
+	--k-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+	--k-weight-display: 600;
+	--k-weight-heading: 600;
+	--k-weight-label: 500;
+	--k-label-font: var(--k-font-sans);
+	--k-label-size: 15px;
+	--k-label-transform: none;
+	--k-label-tracking: 0;
+	--k-text-xs: 14px;
+	--k-text-sm: 15px;
+	--k-text-md: 17px;
+	--k-text-lg: 20px;
+	--k-text-xl: 30px;
+	--k-text-2xl: 68px;
+	--k-control-h: 52px;
+	--k-control-h-sm: 44px;
+	--k-control-h-lg: 54px;
+	--k-tap-icon: 44px;
+	--k-tap-target: var(--k-tap-min);
+	--k-focus-w: 2.5px;
+	--k-focus-offset: 3px;
+	--k-dur: 150ms;
+}
+/* the design's phone sizes: section title 26px, page headline 44px */
+@media (max-width: 760px) {
+	[data-theme^='line'] {
+		--k-text-xl: 26px;
+		--k-text-2xl: 44px;
+	}
+}
+[data-theme='line'],
+[data-theme='line-dark'] {
+	color-scheme: dark;
+	--k-bg: #19191c;
+	--k-bg-raised: #232327;
+	--k-bg-sunken: #121214;
+	--k-fg: #ffffff;
+	--k-fg-muted: #a4a4af;
+	--k-line: #3b3b42;
+	--k-border: #70707a;
+	--k-primary: #f2f2f3;
+	--k-on-primary: #18181a;
+	--k-primary-hover: #ffffff;
+	--k-on-primary-hover: #18181a;
+	--k-accent: #ffb81c;
+	--k-accent-mark: #ffb81c;
+	--k-on-accent: #18181a;
+	--k-accent-soft: #3d3526;
+	--k-accent-text: #ffb81c;
+	--k-link: #c5bdff;
+	--k-danger: #ff8a7a;
+	--k-on-danger: #18181a;
+	--k-danger-soft: #3d2f31;
+	--k-ok: #8fd86b;
+	--k-ok-soft: #30392f;
+	--k-warn: #ffb81c;
+	--k-warn-soft: #3d3526;
+	--k-info: #c5bdff;
+	--k-info-soft: #363541;
+	--k-focus: #ffb81c;
+	--k-backdrop: rgba(0, 0, 0, 0.6);
+	--k-selected: #2d2d32;
+	--k-surface-selected: #232327;
+	--k-bg-code: #101012;
+	--k-fg-code: #ededf0;
+	--k-fg-soft: #d6d6dc;
+}
+[data-theme='line-light'] {
+	color-scheme: light;
+	--k-bg: #f2f2f3;
+	--k-bg-raised: #ffffff;
+	--k-bg-sunken: #e6e6e9;
+	--k-fg: #18181a;
+	--k-fg-muted: #5f5f69;
+	--k-line: #d4d4da;
+	--k-border: #7e7e88;
+	--k-primary: #18181a;
+	--k-on-primary: #ffffff;
+	--k-primary-hover: #000000;
+	--k-on-primary-hover: #ffffff;
+	--k-accent: #ffb81c;
+	--k-accent-mark: #a67812;
+	--k-on-accent: #18181a;
+	--k-accent-soft: #fff1c9;
+	--k-accent-text: #8a5a00;
+	--k-link: #4b3bd1;
+	--k-danger: #b92f26;
+	--k-on-danger: #ffffff;
+	--k-danger-soft: #f8eae9;
+	--k-ok: #2b7a1c;
+	--k-ok-soft: #eaf2e8;
+	--k-warn: #8a5a00;
+	--k-warn-soft: #f3efe6;
+	--k-info: #4b3bd1;
+	--k-info-soft: #edebfa;
+	--k-focus: #4b3bd1;
+	--k-backdrop: rgba(24, 24, 26, 0.45);
+	--k-selected: #f0f0f2;
+	--k-surface-selected: #fff1c9;
+	--k-bg-code: #e6e6e9;
+	--k-fg-code: #18181a;
+	--k-fg-soft: #3a3a41;
+}

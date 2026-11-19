@@ -1,6 +1,6 @@
 /*
  * Theme helpers shared by ThemeToggle and the before-paint script. A kern "family"
- * is the part of a theme id before the first dash (`stuffcloud`, `flower`, `pop`);
+ * is the part of a theme id before the first dash (`stuffcloud`, `flower`, `pop`, `line`);
  * each family has one light and one dark theme that a two-state toggle switches between.
  * Nothing here touches `window` at module level, so it stays SSR-safe.
  */
@@ -16,13 +16,21 @@ export interface ThemeOption {
 export const THEME_FAMILIES: Readonly<Record<string, { light: string; dark: string }>> = {
 	stuffcloud: { light: 'stuffcloud-light', dark: 'stuffcloud' },
 	flower: { light: 'flower', dark: 'flower-wald' },
-	pop: { light: 'pop', dark: 'pop-dark' }
+	pop: { light: 'pop', dark: 'pop-dark' },
+	line: { light: 'line-light', dark: 'line' }
 };
 
 /** Family used when the current theme is unknown or not a built-in one. */
 const FALLBACK_FAMILY = 'stuffcloud';
 
-const DARK_THEMES: ReadonlySet<string> = new Set(['stuffcloud', 'stuffcloud-dark', 'stuffcloud-contrast', 'flower-wald', 'pop-dark']);
+const DARK_THEMES: ReadonlySet<string> = new Set([
+	'stuffcloud',
+	'stuffcloud-dark',
+	'stuffcloud-contrast',
+	'flower-wald',
+	'pop-dark',
+	'line'
+]);
 
 /** `stuffcloud-light` → `stuffcloud`. Empty for a missing id. */
 export function themeFamily(id: string | null | undefined): string {

@@ -10,7 +10,7 @@ import { build, type Rollup } from 'vite';
 import { describe, expect, it } from 'vitest';
 
 const THEMES = resolve('src/lib/themes');
-const BRANDS = ['stuffcloud', 'flower', 'pop'] as const;
+const BRANDS = ['stuffcloud', 'flower', 'pop', 'line'] as const;
 
 /** Bundles `import '<entry>'` and returns the CSS Vite emits for it. */
 async function bundleCss(entry: string): Promise<string> {

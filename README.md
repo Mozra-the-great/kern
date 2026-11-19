@@ -27,10 +27,10 @@ Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 | `stuffcloud` (= `stuffcloud-dark`), `stuffcloud-light`, `stuffcloud-paper`, `stuffcloud-contrast` | Stuffcloud-Designsystem |
 | `flower` (= `flower-creme`), `flower-wald` | Flower-Designs |
 | `pop` (= `pop-light`), `pop-dark` | Pop-Designsystem (Look von stuffcloud) |
-| Kagi-basiert | geplant |
+| `line` (= `line-dark`), `line-light` | Line-Designsystem (Kagi-basierte Richtung) |
 
 Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono und
-Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono (siehe `index.html`).
+Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono, Line Outfit 400–700, Inter und JetBrains Mono (siehe `index.html`).
 
 Zu Stuffcloud gehört Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen,
 Saison-Deko, 115 Dateien) unter `@mozra-the-great/kern/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
@@ -47,7 +47,7 @@ Laufzeit wechseln). Eine App mit einer Marke importiert stattdessen deren Einsti
 Basis-Tokens mit und sonst nichts:
 
 ```js
-import '@mozra-the-great/kern/themes/stuffcloud.css'; // oder flower.css, pop.css
+import '@mozra-the-great/kern/themes/stuffcloud.css'; // oder flower.css, pop.css, line.css
 ```
 
 Für Custom Elements ohne Bundler dasselbe als `<link rel="stylesheet" href="…/dist/themes/stuffcloud.css">`
