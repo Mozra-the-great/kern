@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-theme="stuffcloud">
+	<head>
+		<meta charset="utf-8" />
+		<title>kern elements: forms and content parity</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+	</head>
+	<body>
+		<main>
+			<h1>Parity</h1>
+			<section aria-label="Buttons">
+				<k-button id="go" href="#target">Go</k-button>
+				<k-button id="off" href="#target" disabled>Gone</k-button>
+				<k-button id="wide" wide>Next <span aria-hidden="true">→</span></k-button>
+				<k-button id="icon" size="icon" label="Add">+</k-button>
+			</section>
+
+			<ul id="cards" aria-label="Polishes">
+				<k-card id="c1" as="li" title="Ruby Red" description="Glossy" clickable action-label="Edit Ruby Red" action-haspopup="dialog">
+					<span slot="badges">2×</span>
+					<p>In stock.</p>
+					<div slot="footer">
+						<k-button id="toggle" variant="secondary" size="sm">Show photo</k-button>
+						<k-button id="delete" variant="danger" size="sm">Delete</k-button>
+					</div>
+				</k-card>
+				<k-card id="c2" as="li" title="Sea Green" muted>
+					<span slot="badges">Empty</span>
+				</k-card>
+			</ul>
+
+			<k-file-drop id="drop" label="Images" accept=".pdf,image/*" multiple max-size="100"></k-file-drop>
+			<k-file-drop id="tool" label="Tool input" mode="dispatch" accept=".json" button-label="Choose file" drop-label="Drop a JSON file" no-reject-messages></k-file-drop>
+			<k-file-drop id="one" label="One" mode="dispatch" button-label="Choose"></k-file-drop>
+			<k-file-drop id="locked" label="Locked" disabled></k-file-drop>
+
+			<k-input id="pw" label="Password" hint="At least 8 characters." keep-hint></k-input>
+			<k-select id="sel" label="Size" hint="Pick one" options='[{"value":"s","label":"Small"}]'></k-select>
+			<k-textarea id="note" label="Note" hint="Short."></k-textarea>
+
+			<k-copy-button id="copy" text="#FF00AA" label="Copy HEX" show-label copied-label="Copied" reset-after="200"></k-copy-button>
+			<k-status-message id="status"></k-status-message>
+			<k-status-message id="problem" kind="alert"></k-status-message>
+			<p id="target">Target</p>
+		</main>
+	</body>
+</html>

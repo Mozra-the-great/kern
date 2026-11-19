@@ -57,6 +57,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Demo section "Rückmeldung" and element demos for the above; Vitest tests of the progress
   normalisation and the toast queue (`tests/unit`), Playwright tests of the elements
   (`tests/elements/feedback.spec.ts`).
+- `Button`: `wide` (full width, label at the start and the last child at the end, as stuffcloud's
+  `wide`), `size="icon"` (a `--k-tap-icon` square for an icon with `aria-label`) and the typed link
+  props `target`, `rel`, `download`, `hreflang`, `referrerpolicy`. `<k-button>` gets `wide`, `target`,
+  `rel`, `download` and `label` (accessible name for icon-only content) (#52).
+- Token `--k-disabled-opacity` (0.5; stuffcloud 0.4), used by Button, IconButton and CopyButton, and a
+  forced-colours state (GrayText) for them (#52).
+- `Card`: `as` (`article` | `section` | `div` | `li`) and pass-through of `id`, `aria-*`, `data-*` and
+  event attributes to the root (#50). `onclick` makes the title a `<button>` whose hit area covers the
+  card, while footer, badge and content controls stay separate (no nested interactive elements);
+  `actionLabel`, `actionHaspopup`, a `badges` snippet and `muted` (#51). `<k-card>`: `as` (`li` sets
+  `role="listitem"` on the element), `clickable` with the event `action`, `action-label`,
+  `action-haspopup`, `muted` and the slot `badges`.
+- `FileDrop`: `mode="dispatch"` (no list; each pick or drop goes to `onfiles`; the same file can be
+  picked again), `onreject(files)`, `rejectMessages`, `buttonLabel` (a separate picker button) and an
+  exported `reset()`; refused files are reported before accepted ones. `<k-file-drop>`: `mode`,
+  `button-label`, `no-reject-messages`, the event `reject`, a writable `files` property and `reset()`
+  (#53).
+- `matchesAccept()`, `splitFiles()` (the `<input accept>` grammar) and the type `SplitFiles` are
+  exported (#53).
+- `Field`: `keepHint` (hint and error together, the error referenced first), `announce`, `labelId`,
+  and `required` in the snippet argument (type `FieldControlProps`, exported). `Input`, `Select` and
+  `Textarea` take `keepHint`, their elements `keep-hint` (#54).
+- `CopyButton`: `text` (alias of `value`) and `showLabel` (a visible label that is the accessible
+  name); `<k-copy-button>`: `text`, `show-label` (#72).
+- `StatusMessage` component and `<k-status-message>` element: a visible `role="status"` or
+  `role="alert"` paragraph that is present and empty from the first paint (#72).
+- The Custom Elements Manifest and typings describe element methods (`@method` tag) and writable
+  properties.
+- Tests: Vitest renders the components with `svelte/server` (`tests/components`), Playwright checks
+  the parity behaviour of the elements (`tests/elements/parity.spec.ts`); both run in the existing CI
+  steps.
 
 ### Changed
 - **BREAKING:** default toast durations follow stuffcloud: info and ok 6000ms (was 5000), warn
@@ -77,6 +108,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   width transition follows `--k-dur` (off under reduced motion) instead of a fixed 300ms.
 - `<k-modal>` documents that `close` also fires when the app closes it through `open` (unchanged
   behaviour).
+- **BREAKING:** `Button` with `href` and `disabled` (or `loading`) stays an `<a>`, without `href`,
+  with `role="link"` and `aria-disabled="true"`, instead of turning into a disabled `<button>` (#52).
+  Migration: style or query a disabled link as `a[aria-disabled="true"]`; code that looked for a
+  `<button disabled>` there must look for the link.
+- **BREAKING:** the error paragraph of `Field` (and of every component built on it) has
+  `role="alert"`, so an error that appears is announced (#54). Migration: nothing to do for most
+  forms; pass `announce={false}` to `Field` where the control announces the error itself.
+- `Input`, `Select` and `Textarea` merge a consumer's `aria-describedby` with their own ids instead of
+  dropping it; the generated description ids are now `<id>-error` and `<id>-hint` (#54).
+- `CopyButton` sets its message fresh on every click (cleared, then set after a short pause, so the
+  same result is announced again) and keeps it until the next click; only the icon resets after
+  `resetAfter`. The success and error colours apply to the icon only (#72).
 
 ## [0.4.0] - 2026-11-19
 

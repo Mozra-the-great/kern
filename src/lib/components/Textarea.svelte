@@ -1,21 +1,37 @@
 <script lang="ts">
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import Field from './Field.svelte';
+	import { joinIds } from './data-utils.js';
 
 	interface Props extends Omit<HTMLTextareaAttributes, 'value'> {
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Show the hint under the error instead of hiding it (both are referenced, the error first). */
+		keepHint?: boolean | undefined;
 		value?: string | null | undefined;
 		/** Grow with the content (CSS field-sizing where supported). */
 		autosize?: boolean | undefined;
 	}
-	let { label, hint, error, value = $bindable(), id, required, rows = 4, autosize = false, class: cls = '', ...rest }: Props = $props();
+	let {
+		label,
+		hint,
+		error,
+		keepHint,
+		value = $bindable(),
+		id,
+		required,
+		rows = 4,
+		autosize = false,
+		class: cls = '',
+		'aria-describedby': ownDescribedby,
+		...rest
+	}: Props = $props();
 	const uid = $props.id();
 	const areaId = $derived(id ?? `${uid}-area`);
 </script>
 
-<Field {label} {hint} {error} {required} for={areaId} class={cls}>
+<Field {label} {hint} {error} {keepHint} {required} for={areaId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<textarea
 			class="k-textarea"
@@ -26,8 +42,8 @@
 			{rows}
 			{required}
 			aria-invalid={invalid || undefined}
-			aria-describedby={describedby}
-			{...rest}></textarea>
+			{...rest}
+			aria-describedby={joinIds(describedby, ownDescribedby)}></textarea>
 	{/snippet}
 </Field>
 

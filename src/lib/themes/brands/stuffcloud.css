@@ -37,6 +37,7 @@
 	--k-control-h-lg: 56px;
 	--k-tap-icon: 48px;
 	--k-tap-target: var(--k-tap-min);
+	--k-disabled-opacity: 0.4;
 	--k-shadow-sm: 4px 4px 0 rgba(0, 0, 0, 0.4);
 	--k-dur: 120ms;
 	--k-ease: steps(2, end);

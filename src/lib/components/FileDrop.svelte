@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import Field from './Field.svelte';
+	import Button from './Button.svelte';
+	import { matchesAccept } from './accept.js';
+	import { joinIds } from './data-utils.js';
 
 	interface Props {
 		label?: string | undefined;
@@ -12,17 +15,39 @@
 		multiple?: boolean | undefined;
 		/** Largest allowed file in bytes. */
 		maxSize?: number | undefined;
-		/** The chosen files. */
+		/**
+		 * `field` (default): a form field that keeps the chosen files in a list (remove buttons, `files`,
+		 * form value) and adds new ones to it. `dispatch`: hands every pick or drop to `onfiles` and
+		 * forgets it (no list, `files` stays empty, no form value, the same file can be picked again),
+		 * for tools that process files at once.
+		 */
+		mode?: 'field' | 'dispatch' | undefined;
+		/** The chosen files (`field` mode). */
 		files?: File[] | undefined;
-		/** Called with the full list of chosen files after every change. */
+		/** `field`: the full list of chosen files after every change. `dispatch`: the files of this pick or drop. */
 		onfiles?: ((files: File[]) => void) | undefined;
-		/** Form field name; the files are submitted with the form. */
+		/**
+		 * Called with the refused files of a pick or drop: type not in `accept`, larger than `maxSize`, or
+		 * more than one without `multiple` (all but the first).
+		 */
+		onreject?: ((files: File[]) => void) | undefined;
+		/**
+		 * Show and announce a message for refused files (`typeError`, `sizeError`, `countError`). Turn off
+		 * when the host reports them itself from `onreject`.
+		 */
+		rejectMessages?: boolean | undefined;
+		/** Form field name; the files are submitted with the form (`field` mode). */
 		name?: string | undefined;
 		disabled?: boolean | undefined;
 		required?: boolean | undefined;
 		id?: string | undefined;
 		/** Text in the drop zone. */
 		dropLabel?: string | undefined;
+		/**
+		 * Label of a separate button that opens the file picker. Without it the whole zone is the button;
+		 * with it the zone is a group (named by `label` and the drop text) that holds this button.
+		 */
+		buttonLabel?: string | undefined;
 		/** Prefix of the remove buttons' accessible names: "Remove report.pdf". */
 		removeLabel?: string | undefined;
 		/** Accessible name of the list of chosen files. */
@@ -44,13 +69,17 @@
 		accept,
 		multiple = false,
 		maxSize,
+		mode = 'field',
 		files = $bindable(),
 		onfiles,
+		onreject,
+		rejectMessages = true,
 		name,
 		disabled = false,
 		required = false,
 		id,
 		dropLabel,
+		buttonLabel,
 		removeLabel = 'Remove',
 		listLabel = 'Selected files',
 		sizeError = '{name} is larger than {max}.',
@@ -61,13 +90,24 @@
 	}: Props = $props();
 	const uid = $props.id();
 	const zoneId = $derived(id ?? `${uid}-zone`);
-	const promptId = $derived(`${uid}-prompt`);
+	const promptId = `${uid}-prompt`;
+	const labelId = `${uid}-label`;
+	const dispatch = $derived(mode === 'dispatch');
 	// `files` has no fallback, so binding `undefined` behaves like leaving the prop out.
-	const fileList = $derived(files ?? []);
-	const prompt = $derived(dropLabel ?? (multiple ? 'Drop files here or click to choose' : 'Drop a file here or click to choose'));
+	const fileList = $derived(dispatch ? [] : (files ?? []));
+	const prompt = $derived(
+		dropLabel ??
+			(buttonLabel
+				? multiple
+					? 'Drop files here'
+					: 'Drop a file here'
+				: multiple
+					? 'Drop files here or click to choose'
+					: 'Drop a file here or click to choose')
+	);
 
 	let input: HTMLInputElement | undefined = $state();
-	let zone: HTMLButtonElement | undefined = $state();
+	let wrap: HTMLDivElement | undefined = $state();
 	let listEl: HTMLUListElement | undefined = $state();
 	let dragging = $state(false);
 	let dragDepth = 0;
@@ -88,18 +128,10 @@
 		return `${u === 0 || v >= 10 ? Math.round(v) : v.toFixed(1)} ${units[u]}`;
 	}
 
-	function accepted(file: File): boolean {
-		const tokens = (accept ?? '')
-			.split(',')
-			.map((t) => t.trim().toLowerCase())
-			.filter(Boolean);
-		if (!tokens.length) return true;
-		const fileName = file.name.toLowerCase();
-		const type = file.type.toLowerCase();
-		return tokens.some((t) => (t.startsWith('.') ? fileName.endsWith(t) : t.endsWith('/*') ? type.startsWith(t.slice(0, -1)) : type === t));
-	}
-
 	const sameFile = (a: File, b: File): boolean => a.name === b.name && a.size === b.size && a.lastModified === b.lastModified;
+
+	/** The control that opens the picker: the zone, or the separate button. */
+	const pickControl = (): HTMLButtonElement | null => wrap?.querySelector<HTMLButtonElement>('[data-pick]') ?? null;
 
 	/** Mirrors `files` into the native input so the form submits them. */
 	function syncInput() {
@@ -109,7 +141,7 @@
 		input.files = dt.files;
 	}
 	$effect(() => {
-		void files;
+		void fileList;
 		void input;
 		syncInput();
 	});
@@ -119,33 +151,61 @@
 		onfiles?.(next);
 	}
 
+	/** Looks at name, type and size only; the content of a file is never read. */
 	function add(list: File[]) {
 		if (disabled || list.length === 0) return;
 		const msgs: string[] = [];
+		const refused: File[] = [];
 		let ok: File[] = [];
 		for (const f of list) {
-			if (!accepted(f)) msgs.push(fill(typeError, { name: f.name }));
-			else if (maxSize !== undefined && f.size > maxSize) msgs.push(fill(sizeError, { name: f.name, max: formatSize(maxSize) }));
-			else ok.push(f);
+			if (!matchesAccept(f, accept)) {
+				refused.push(f);
+				msgs.push(fill(typeError, { name: f.name }));
+			} else if (maxSize !== undefined && f.size > maxSize) {
+				refused.push(f);
+				msgs.push(fill(sizeError, { name: f.name, max: formatSize(maxSize) }));
+			} else ok.push(f);
 		}
 		if (!multiple && ok.length > 1) {
+			refused.push(...ok.slice(1));
 			msgs.push(countError);
 			ok = ok.slice(0, 1);
 		}
-		problems = msgs;
+		// Without rejectMessages the host reports refused files (from onreject).
+		const own = rejectMessages ? msgs : [];
+		problems = own;
+		// Like stuffcloud's dropzone: the refused files are reported first, then the accepted ones.
+		if (refused.length) onreject?.(refused);
 		if (ok.length === 0) {
-			status = msgs.join(' ');
-			return;
+			status = own.join(' ');
+		} else if (dispatch) {
+			status = [fill(statusLabel, { count: String(ok.length) }), ...own].join(' ');
+			onfiles?.(ok);
+		} else {
+			const next = multiple ? [...fileList, ...ok.filter((f) => !fileList.some((g) => sameFile(f, g)))] : ok;
+			status = own.length ? own.join(' ') : fill(statusLabel, { count: String(next.length) });
+			commit(next);
 		}
-		const next = multiple ? [...fileList, ...ok.filter((f) => !fileList.some((g) => sameFile(f, g)))] : ok;
-		status = msgs.length ? msgs.join(' ') : fill(statusLabel, { count: String(next.length) });
-		commit(next);
 	}
 
 	function onpick() {
 		add(Array.from(input?.files ?? []));
-		// Cancelling the picker clears the native input in some browsers.
+		// Cancelling the picker clears the native input in some browsers. In dispatch mode this empties
+		// it, so picking the same file again fires again.
 		syncInput();
+	}
+
+	/**
+	 * Clears the chosen files, the messages and the native input, e.g. after the files were uploaded.
+	 * Does not call `onfiles`: that reports user input only.
+	 */
+	export function reset(): void {
+		files = [];
+		problems = [];
+		status = '';
+		dragDepth = 0;
+		dragging = false;
+		if (input) input.value = '';
 	}
 
 	async function remove(i: number) {
@@ -155,7 +215,7 @@
 		commit(next);
 		await tick();
 		const buttons = listEl?.querySelectorAll<HTMLButtonElement>('button.rm');
-		(buttons && buttons.length ? buttons[Math.min(i, buttons.length - 1)] : zone)?.focus();
+		(buttons && buttons.length ? buttons[Math.min(i, buttons.length - 1)] : pickControl())?.focus();
 	}
 
 	function dragenter(e: DragEvent) {
@@ -166,6 +226,7 @@
 	function dragover(e: DragEvent) {
 		e.preventDefault();
 		if (e.dataTransfer) e.dataTransfer.dropEffect = disabled ? 'none' : 'copy';
+		if (!disabled) dragging = true;
 	}
 	function dragleave() {
 		dragDepth = Math.max(0, dragDepth - 1);
@@ -179,40 +240,69 @@
 	}
 </script>
 
-<Field {label} {hint} error={shownError} {required} for={zoneId} class={cls}>
+<Field
+	{label}
+	{hint}
+	error={shownError}
+	announce={!!error}
+	{required}
+	for={buttonLabel ? undefined : zoneId}
+	labelId={buttonLabel && label ? labelId : undefined}
+	class={cls}
+>
 	{#snippet children({ describedby, invalid })}
-		<div class="k-filedrop">
-			<div class="drop" role="presentation" ondragenter={dragenter} ondragover={dragover} ondragleave={dragleave} ondrop={drop}>
-				<button
-					type="button"
-					bind:this={zone}
-					id={zoneId}
-					class="zone"
+		<div class="k-filedrop" data-mode={mode} bind:this={wrap}>
+			{#if buttonLabel}
+				<div
+					class="drop zone split"
 					class:dragging
 					class:invalid
-					{disabled}
-					aria-describedby={[label ? promptId : undefined, describedby].filter(Boolean).join(' ') || undefined}
-					onclick={() => input?.click()}
+					class:disabled
+					role="group"
+					aria-labelledby={joinIds(label ? labelId : undefined, promptId)}
+					ondragenter={dragenter}
+					ondragover={dragover}
+					ondragleave={dragleave}
+					ondrop={drop}
 				>
 					<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
 						<path d="M12 16V4M7 9l5-5 5 5M4 15v4h16v-4" fill="none" stroke="currentColor" stroke-width="2" />
 					</svg>
 					<span class="prompt" id={promptId}>{prompt}</span>
-				</button>
-				<input
-					bind:this={input}
-					type="file"
-					class="native"
-					{accept}
-					{multiple}
-					{name}
-					{disabled}
-					{required}
-					tabindex="-1"
-					aria-hidden="true"
-					onchange={onpick}
-				/>
-			</div>
+					<Button
+						id={zoneId}
+						variant="secondary"
+						size="sm"
+						data-pick=""
+						{disabled}
+						aria-describedby={describedby}
+						onclick={() => input?.click()}
+					>
+						{buttonLabel}
+					</Button>
+					{@render native()}
+				</div>
+			{:else}
+				<div class="drop" role="presentation" ondragenter={dragenter} ondragover={dragover} ondragleave={dragleave} ondrop={drop}>
+					<button
+						type="button"
+						id={zoneId}
+						class="zone"
+						class:dragging
+						class:invalid
+						data-pick=""
+						{disabled}
+						aria-describedby={joinIds(label ? promptId : undefined, describedby)}
+						onclick={() => input?.click()}
+					>
+						<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M12 16V4M7 9l5-5 5 5M4 15v4h16v-4" fill="none" stroke="currentColor" stroke-width="2" />
+						</svg>
+						<span class="prompt" id={promptId}>{prompt}</span>
+					</button>
+					{@render native()}
+				</div>
+			{/if}
 			{#if fileList.length}
 				<ul class="files" aria-label={listLabel} bind:this={listEl}>
 					{#each fileList as f, i (i)}
@@ -231,6 +321,22 @@
 	{/snippet}
 </Field>
 
+{#snippet native()}
+	<input
+		bind:this={input}
+		type="file"
+		class="native"
+		{accept}
+		{multiple}
+		name={dispatch ? undefined : name}
+		{disabled}
+		required={!dispatch && required}
+		tabindex="-1"
+		aria-hidden="true"
+		onchange={onpick}
+	/>
+{/snippet}
+
 <style>
 	.k-filedrop {
 		position: relative;
@@ -247,6 +353,7 @@
 		align-content: center;
 		gap: var(--k-space-2);
 		width: 100%;
+		box-sizing: border-box;
 		min-height: 140px;
 		padding: var(--k-space-6) var(--k-space-4);
 		border: var(--k-border-w) dashed var(--k-line-dashed);
@@ -261,10 +368,10 @@
 			border-color var(--k-dur) var(--k-ease),
 			box-shadow var(--k-dur) var(--k-ease);
 	}
-	.zone > * {
+	button.zone > * {
 		pointer-events: none;
 	}
-	.zone:hover:not(:disabled) {
+	button.zone:hover:not(:disabled) {
 		border-color: var(--k-fg);
 	}
 	.zone:focus-visible {
@@ -284,6 +391,26 @@
 		border-color: var(--k-accent-mark);
 		background: var(--k-surface-selected);
 		box-shadow: inset 0 0 0 var(--k-border-w) var(--k-accent-mark);
+	}
+	/* Separate picker button: the zone is a group with the drop text and the button. */
+	.split {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--k-space-3) var(--k-space-4);
+		min-height: 0;
+		text-align: start;
+		cursor: default;
+	}
+	.split .icon {
+		flex: none;
+	}
+	.split .prompt {
+		flex: 1 1 10em;
+	}
+	.split.disabled {
+		opacity: 0.55;
 	}
 	.icon {
 		width: 28px;
@@ -380,5 +507,13 @@
 		clip-path: inset(50%);
 		white-space: nowrap;
 		border: 0;
+	}
+	@media (forced-colors: active) {
+		.zone {
+			border-color: CanvasText;
+		}
+		.zone.dragging {
+			border-color: Highlight;
+		}
 	}
 </style>

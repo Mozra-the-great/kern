@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			keepHint: { type: 'Boolean', attribute: 'keep-hint' },
 			value: { type: 'String', reflect: true },
 			name: { type: 'String' },
 			placeholder: { type: 'String' },
@@ -29,6 +30,7 @@
 		label,
 		hint,
 		error,
+		keepHint = false,
 		value = $bindable(''),
 		name,
 		placeholder,
@@ -54,6 +56,7 @@
 	{label}
 	{hint}
 	{error}
+	{keepHint}
 	bind:value
 	{name}
 	{placeholder}

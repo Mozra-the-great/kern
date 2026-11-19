@@ -474,6 +474,7 @@
 					"customElement": true,
 					"tagName": "k-button",
 					"name": "KButtonElement",
+					"description": "Button, or a link with `href` (also `target`, `rel`, `download`). A disabled or loading link stays a link without href and with `aria-disabled=\"true\"`. `size=\"icon\"` is a square for an icon: give it a `label`.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -505,6 +506,15 @@
 						},
 						{
 							"kind": "field",
+							"name": "wide",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "wide"
+						},
+						{
+							"kind": "field",
 							"name": "loading",
 							"type": {
 								"text": "boolean"
@@ -531,12 +541,45 @@
 						},
 						{
 							"kind": "field",
+							"name": "target",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "target"
+						},
+						{
+							"kind": "field",
+							"name": "rel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "rel"
+						},
+						{
+							"kind": "field",
+							"name": "download",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "download"
+						},
+						{
+							"kind": "field",
 							"name": "type",
 							"type": {
 								"text": "string"
 							},
 							"default": "'button'",
 							"attribute": "type"
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label",
+							"description": "Accessible name of the inner button or link, for content that is only an icon."
 						},
 						{
 							"kind": "field",
@@ -637,6 +680,14 @@
 							"fieldName": "block"
 						},
 						{
+							"name": "wide",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "wide"
+						},
+						{
 							"name": "loading",
 							"type": {
 								"text": "boolean"
@@ -660,12 +711,40 @@
 							"fieldName": "href"
 						},
 						{
+							"name": "target",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "target"
+						},
+						{
+							"name": "rel",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "rel"
+						},
+						{
+							"name": "download",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "download"
+						},
+						{
 							"name": "type",
 							"type": {
 								"text": "string"
 							},
 							"default": "'button'",
 							"fieldName": "type"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
 						},
 						{
 							"name": "autofocus",
@@ -710,6 +789,7 @@
 					"customElement": true,
 					"tagName": "k-card",
 					"name": "KCardElement",
+					"description": "Card. `clickable` turns the title into a button that covers the card and fires `action`; controls in the `footer` and `badges` slots and in the content stay separate and clickable. `as=\"li\"` gives the element the role `listitem`, for cards directly inside a `<ul>`.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -748,11 +828,55 @@
 						},
 						{
 							"kind": "field",
+							"name": "as",
+							"type": {
+								"text": "'article' | 'section' | 'div' | 'li' | undefined"
+							},
+							"attribute": "as",
+							"description": "Root element; `li` sets `role=\"listitem\"` on the element itself."
+						},
+						{
+							"kind": "field",
 							"name": "href",
 							"type": {
 								"text": "string | undefined"
 							},
 							"attribute": "href"
+						},
+						{
+							"kind": "field",
+							"name": "clickable",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "clickable",
+							"description": "The card opens something: fires `action` on click, Enter or Space."
+						},
+						{
+							"kind": "field",
+							"name": "actionLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "action-label"
+						},
+						{
+							"kind": "field",
+							"name": "actionHaspopup",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "action-haspopup"
+						},
+						{
+							"kind": "field",
+							"name": "muted",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "muted"
 						}
 					],
 					"attributes": [
@@ -785,17 +909,65 @@
 							"fieldName": "look"
 						},
 						{
+							"name": "as",
+							"type": {
+								"text": "'article' | 'section' | 'div' | 'li'"
+							},
+							"fieldName": "as"
+						},
+						{
 							"name": "href",
 							"type": {
 								"text": "string"
 							},
 							"fieldName": "href"
+						},
+						{
+							"name": "clickable",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "clickable"
+						},
+						{
+							"name": "action-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "actionLabel"
+						},
+						{
+							"name": "action-haspopup",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "actionHaspopup"
+						},
+						{
+							"name": "muted",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "muted"
 						}
 					],
-					"events": [],
+					"events": [
+						{
+							"name": "action",
+							"type": {
+								"text": "CustomEvent<null>"
+							},
+							"description": "The user activated the card's button or link (`clickable`)."
+						}
+					],
 					"slots": [
 						{
 							"name": ""
+						},
+						{
+							"name": "badges"
 						},
 						{
 							"name": "footer"
@@ -2659,11 +2831,19 @@
 					"customElement": true,
 					"tagName": "k-copy-button",
 					"name": "KCopyButtonElement",
-					"description": "Fires `copy` (detail = the copied text) and `copy-error`.",
+					"description": "Copies `text` (or `value`) to the clipboard and announces the result in a polite live region, once per click; the message stays until the next click. `show-label` shows `label` as visible text.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
 					"members": [
+						{
+							"kind": "field",
+							"name": "text",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "text"
+						},
 						{
 							"kind": "field",
 							"name": "value",
@@ -2680,6 +2860,15 @@
 								"text": "string | undefined"
 							},
 							"attribute": "label"
+						},
+						{
+							"kind": "field",
+							"name": "showLabel",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "show-label"
 						},
 						{
 							"kind": "field",
@@ -2733,6 +2922,13 @@
 					],
 					"attributes": [
 						{
+							"name": "text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "text"
+						},
+						{
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -2746,6 +2942,14 @@
 								"text": "string"
 							},
 							"fieldName": "label"
+						},
+						{
+							"name": "show-label",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "showLabel"
 						},
 						{
 							"name": "copied-label",
@@ -4299,7 +4503,7 @@
 					"customElement": true,
 					"tagName": "k-file-drop",
 					"name": "KFileDropElement",
-					"description": "Drop zone and file picker. The chosen files are the read-only property `el.files`; `required` needs at least one file.",
+					"description": "Drop zone and file picker. The chosen files are the property `el.files`; setting it (e.g. to `[]` after an upload) replaces them without an event, `el.reset()` also clears the messages. `required` needs at least one file. `mode=\"dispatch\"` keeps no list: every pick or drop fires `files` with just those files. Only name, type and size of a file are read, never its content.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -4355,6 +4559,15 @@
 						},
 						{
 							"kind": "field",
+							"name": "mode",
+							"type": {
+								"text": "'field' | 'dispatch' | undefined"
+							},
+							"attribute": "mode",
+							"description": "`field` keeps a list of chosen files (form value); `dispatch` fires `files` per pick or drop and keeps nothing."
+						},
+						{
+							"kind": "field",
 							"name": "name",
 							"type": {
 								"text": "string | undefined"
@@ -4386,6 +4599,14 @@
 								"text": "string | undefined"
 							},
 							"attribute": "drop-label"
+						},
+						{
+							"kind": "field",
+							"name": "buttonLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "button-label"
 						},
 						{
 							"kind": "field",
@@ -4437,12 +4658,21 @@
 						},
 						{
 							"kind": "field",
+							"name": "noRejectMessages",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-reject-messages",
+							"description": "No message of its own for refused files; the page reports them from `reject`."
+						},
+						{
+							"kind": "field",
 							"name": "files",
 							"type": {
-								"text": "readonly File[]"
+								"text": "File[]"
 							},
-							"readonly": true,
-							"description": "The chosen files."
+							"description": "The chosen files. Setting it (e.g. to `[]`) replaces them without an event."
 						},
 						{
 							"kind": "field",
@@ -4479,6 +4709,16 @@
 							},
 							"readonly": true,
 							"description": "Whether the element takes part in constraint validation."
+						},
+						{
+							"kind": "method",
+							"name": "reset",
+							"description": "Clears the files, the messages and the native input; fires no event.",
+							"return": {
+								"type": {
+									"text": "void"
+								}
+							}
 						},
 						{
 							"kind": "method",
@@ -4564,6 +4804,13 @@
 							"fieldName": "maxSize"
 						},
 						{
+							"name": "mode",
+							"type": {
+								"text": "'field' | 'dispatch'"
+							},
+							"fieldName": "mode"
+						},
+						{
 							"name": "name",
 							"type": {
 								"text": "string"
@@ -4592,6 +4839,13 @@
 								"text": "string"
 							},
 							"fieldName": "dropLabel"
+						},
+						{
+							"name": "button-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "buttonLabel"
 						},
 						{
 							"name": "remove-label",
@@ -4636,6 +4890,14 @@
 							"fieldName": "statusLabel"
 						},
 						{
+							"name": "no-reject-messages",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noRejectMessages"
+						},
+						{
 							"name": "autofocus",
 							"type": {
 								"text": "boolean"
@@ -4656,7 +4918,14 @@
 							"type": {
 								"text": "CustomEvent<File[]>"
 							},
-							"description": "All chosen files after every change."
+							"description": "All chosen files after every change (`dispatch`: the files of this pick or drop)."
+						},
+						{
+							"name": "reject",
+							"type": {
+								"text": "CustomEvent<File[]>"
+							},
+							"description": "Refused files of a pick or drop: wrong type, too large, or more than one without `multiple`."
 						}
 					],
 					"slots": []
@@ -5373,6 +5642,15 @@
 						},
 						{
 							"kind": "field",
+							"name": "keepHint",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "keep-hint"
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -5536,6 +5814,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "keep-hint",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "keepHint"
 						},
 						{
 							"name": "value",
@@ -9472,6 +9758,15 @@
 						},
 						{
 							"kind": "field",
+							"name": "keepHint",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "keep-hint"
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -9619,6 +9914,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "keep-hint",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "keepHint"
 						},
 						{
 							"name": "value",
@@ -10775,6 +11078,85 @@
 					"declaration": {
 						"name": "KStatusDotElement",
 						"module": "dist-elements/elements/status-dot.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "dist-elements/elements/status-message.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-status-message",
+					"name": "KStatusMessageElement",
+					"description": "Visible live region for the result of an action: put the element on the page empty and set `message` later (a region that arrives with its text is not announced by every screen reader). `kind=\"status\"` is polite, `kind=\"alert\"` assertive (errors). One line of height is kept while it is empty; `reserve=\"false\"` turns that off.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "message",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "message"
+						},
+						{
+							"kind": "field",
+							"name": "kind",
+							"type": {
+								"text": "'status' | 'alert' | undefined"
+							},
+							"attribute": "kind",
+							"description": "`status` (polite) for results, `alert` (assertive) for errors."
+						},
+						{
+							"kind": "field",
+							"name": "reserve",
+							"type": {
+								"text": "boolean | 'false' | undefined"
+							},
+							"attribute": "reserve",
+							"description": "Keep one line of height while empty (default on)."
+						}
+					],
+					"attributes": [
+						{
+							"name": "message",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "message"
+						},
+						{
+							"name": "kind",
+							"type": {
+								"text": "'status' | 'alert'"
+							},
+							"fieldName": "kind"
+						},
+						{
+							"name": "reserve",
+							"type": {
+								"text": "boolean | 'false'"
+							},
+							"fieldName": "reserve"
+						}
+					],
+					"events": [],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-status-message",
+					"declaration": {
+						"name": "KStatusMessageElement",
+						"module": "dist-elements/elements/status-message.js"
 					}
 				}
 			]
@@ -12237,6 +12619,15 @@
 						},
 						{
 							"kind": "field",
+							"name": "keepHint",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "keep-hint"
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -12392,6 +12783,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "keep-hint",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "keepHint"
 						},
 						{
 							"name": "value",
@@ -13788,6 +14187,14 @@
 					"declaration": {
 						"name": "KStatusDotElement",
 						"module": "dist-elements/elements/status-dot.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-status-message",
+					"declaration": {
+						"name": "KStatusMessageElement",
+						"module": "dist-elements/elements/status-message.js"
 					}
 				},
 				{
