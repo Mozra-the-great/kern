@@ -56,6 +56,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `npm run test:types` also type-checks the app. New devDependencies: `react`, `react-dom`, `@types/react-dom`.
 - README: "React 19" section with a tested example and the rules for properties, attributes, events and forms.
 
+### Changed
+- CI review (#102): the tiered `claude-review` runs two more reviewers in parallel, `review-security` (opus, after
+  Anthropic's `/security-review`, confidence ≥ 8/10) and `review-docs` (sonnet, documentation the change makes wrong);
+  every review agent gets a working-environment note (single `gh pr diff` / `gh pr view` calls only), the validator
+  rules for security and docs findings, and security findings are posted as `**Security (<severity>):**`. Files taken
+  unchanged from Mozra-the-great/StressMySite `main` (identical in nagellacke and stuffcloud); job name and the
+  `claude-code-action` pin (v1.0.283) are unchanged.
+
 ### Fixed
 - `<k-button type="submit">` and `type="reset"` failed with `TypeError: form.reset is not a function` when a control in
   the form had the id or name `reset` or `submit` (the control shadows the form's method). They now call the
