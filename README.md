@@ -32,9 +32,12 @@ Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono und
 Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono, Line Outfit 400–700, Inter und JetBrains Mono (siehe `index.html`).
 
-Zu Stuffcloud gehört Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen,
-Saison-Deko, 115 Dateien) unter `@mozra-the-great/kern/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
-Nur `Mascot` zeigt sie, und nur von einer URL, die du übergibst (siehe [Mascot](#mascot-pixel-art)).
+Zu jeder Marke gehören Grafiken unter `@mozra-the-great/kern/assets/<marke>/…`, siehe [`assets/README.md`](assets/README.md):
+Stuffcloud Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen, Saison-Deko, 115 Dateien),
+Pop Vektor-Maskottchen, Outfits, Accessoires, Tool-Icons und Saison-Abzeichen (88), Line Strich-Maskottchen,
+Outfits, Tool-Icons, Saison-Deko und Illustrationen (48), Flower Blüten, Blätter und Bäume (46). Die Komponenten
+laden keine davon; du bindest sie per `<img alt="">` ein. Die Stuffcloud-Pixel-Art zeigt auch `Mascot`
+(siehe [Mascot](#mascot-pixel-art)).
 
 Gegen das Aufblitzen des falschen Themes beim Laden liefert `createThemeScript('kern-theme', { followSystem: true })`
 ein kleines Inline-Script für `<head>` (Schlüssel = `persist` des ThemeToggle; unter strenger CSP mit Nonce).
@@ -468,6 +471,24 @@ Weitere Exporte: `MASCOT_NAMES`, `artPath`, `artUrl(base, name)`, `normaliseScal
 `COMPACT_MAX_WIDTH_PX`. Stuffclouds Benchmark (`bench/`) bleibt in stuffcloud; kern prüft dasselbe
 Verhalten mit Playwright (`tests/mascot/`).
 
+**Maskottchen der anderen Marken** (Pop, Line) sind Vektorgrafiken, keine Pixel-Art. `Mascot` ist für
+ganzzahlige Pixelraster gebaut (`scale` = CSS-Pixel pro Art-Pixel, Wippen in `steps(1)`), deshalb gibt es
+dafür keinen `brand`-Schalter. Zeig sie als normales Bild in der Größe, die du brauchst:
+
+```svelte
+<script>
+  import stuffy from '@mozra-the-great/kern/assets/pop/mascots/stuffy.svg?url';
+  import cumulo from '@mozra-the-great/kern/assets/line/mascots/cumulo.svg?url';
+</script>
+
+<img src={stuffy} alt="" width="160" height="160" loading="lazy" />
+<img src={cumulo} alt="Cumulo, eine kleine Wolke" width="180" height="135" />
+```
+
+`width`/`height` im Seitenverhältnis des `viewBox` (steht in `assets/<marke>/manifest.json`) reservieren
+die Box. Wer trotzdem `<k-mascot>` nimmt (`src` plus `cols`/`rows` = `viewBox`-Breite/-Höhe, `scale={1}`),
+bekommt die Grafik in ihrer `viewBox`-Größe; andere Größen gehen damit nicht.
+
 ## Formulare und Inhalt: Abgleich mit stuffcloud und nagellacke
 
 **Button / LinkButton (stuffcloud → kern):**
@@ -792,7 +813,7 @@ npm run check:dts                 # kein `any` in den veröffentlichten .d.ts (n
 npm run check:html                # kein {@html}/innerHTML in src/lib und src/elements
 npm run size                      # Größenbudget der Custom Elements
 npm run test:mascot               # Playwright: <k-mascot> unter strenger CSP (nach npm run build)
-npm run assets:check              # Pixel-Art gegen assets/stuffcloud/manifest.json (Drift-Check)
+npm run assets:check              # Marken-Grafiken gegen assets/*/manifest.json (Drift- und SVG-Check)
 ```
 
 `npm ci` baut über `prepare` bereits `dist/` und `dist-elements/`. Release: `version` in
