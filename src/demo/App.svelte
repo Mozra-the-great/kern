@@ -37,6 +37,7 @@
 	import FormsMore from './sections/FormsMore.svelte';
 	import FormsContent from './sections/FormsContent.svelte';
 	import NavContent from './sections/NavContent.svelte';
+	import Reorder from './sections/Reorder.svelte';
 	import Effects from './sections/Effects.svelte';
 	import Primitives from './sections/Primitives.svelte';
 	import Layout from './sections/Layout.svelte';
@@ -309,6 +310,7 @@
 	<FormsMore />
 	<FormsContent />
 	<NavContent />
+	<Reorder />
 	<Data />
 	<Primitives />
 	<Layout />

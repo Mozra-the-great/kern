@@ -3,7 +3,7 @@
  * The pages cover the parity components (Card list and interactive cards, Button/Link, FileDrop,
  * fields with hint and error, CopyButton, StatusMessage), the feedback components (Progress,
  * Toaster, Modal, Drawer), the navigation and content components (Tabs as a tab bar with badges,
- * TabLinks, CodeBlock, Tile/TileGrid), a form of every form element, every element with default texts (strings), and the
+ * TabLinks, CodeBlock, Tile/TileGrid), the sortable list and select grid (reorder, also with a selection and a focus ring), a form of every form element, every element with default texts (strings), and the
  * skip link, live announcer, online status and prose (primitives). The primitives page is also
  * checked with the skip link focused and while offline, the states in which those parts are visible.
  */
@@ -22,6 +22,22 @@ const cases: Case[] = [
 	{ name: 'feedback' },
 	{ name: 'form' },
 	{ name: 'navigation' },
+	{
+		name: 'reorder',
+		prepare: async (page) => {
+			await expect(page.locator('#grid').getByRole('option')).toHaveCount(11);
+			await expect(page.locator('#list').getByRole('listitem')).toHaveCount(4);
+		}
+	},
+	{
+		name: 'reorder',
+		label: 'reorder page with a selection and a focused item',
+		prepare: async (page) => {
+			await page.locator('#grid').getByRole('option', { name: 'Page 2', exact: true }).click();
+			await page.locator('#plain').getByRole('option', { name: 'Page 5', exact: true }).focus();
+			await page.locator('#list').getByRole('button', { name: 'Move Invoice.pdf down' }).focus();
+		}
+	},
 	{ name: 'strings' },
 	{ name: 'primitives' },
 	{
