@@ -55,6 +55,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   console error or warning. They run in `npm run test:elements` (which builds the app first, `npm run build:react-app`);
   `npm run test:types` also type-checks the app. New devDependencies: `react`, `react-dom`, `@types/react-dom`.
 - README: "React 19" section with a tested example and the rules for properties, attributes, events and forms.
+- Component behaviour tests (#24, stage 1): a second Vitest project (`dom`, jsdom with
+  `@testing-library/svelte` and `user-event`) next to the node tests. A smoke test renders every
+  component exported from `src/lib/index.ts` (and fails when a new export has no entry); behaviour suites
+  cover Button, IconButton, Link, Card, Tile, Field, Input, Textarea, Select, Checkbox, Switch, RadioGroup,
+  Tabs, TabLinks, Modal, Drawer, FileDrop, Progress, ProgressRing, Toaster, Code, CodeBlock, CopyButton and
+  Mascot. `docs/testing.md` maps each stuffcloud test file to its kern counterpart.
+- `npm run test:coverage`: v8 coverage over `src/lib` (text report, `coverage/lcov.info`), uploaded as a CI
+  artifact, with a ratchet at the current numbers rounded down (raised to 95 % in stage 2).
 
 ### Changed
 - CI review (#102): the tiered `claude-review` runs two more reviewers in parallel, `review-security` (opus, after

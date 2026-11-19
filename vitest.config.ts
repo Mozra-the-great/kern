@@ -1,20 +1,54 @@
-import { defineConfig } from 'vitest/config';
+import { svelteTesting } from '@testing-library/svelte/vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { defineConfig } from 'vitest/config';
 
-// Node-side unit tests. The browser tests under tests/targets/, tests/elements/ and tests/mascot/
-// run with Playwright, not here. tests/components/ renders the Svelte components with
-// `svelte/server` (markup and attributes); their behaviour in a browser is covered by the element
-// tests, which run the same components inside the custom elements.
+// Two Vitest projects:
+//  - `node`: pure logic and server-rendered markup (tests/tokens, tests/unit, tests/components, tests/mascot/*.test.ts).
+//    The browser tests under tests/targets/, tests/elements/ and tests/mascot/ run with Playwright, not here.
+//  - `dom`: component behaviour in jsdom with @testing-library/svelte (tests/dom): props, bindable values, callbacks,
+//    keyboard, focus and ARIA. Svelte's client runtime is resolved via the `browser` condition (svelteTesting()).
+//    Rendering that needs real layout (overlay position, scroll, touch targets) stays with the Playwright suites.
+// `npm run test:coverage` measures both over src/lib (see docs/testing.md).
 export default defineConfig({
-	plugins: [svelte()],
 	test: {
-		include: [
-			'tests/tokens/**/*.test.ts',
-			'tests/mascot/**/*.test.ts',
-			'tests/unit/**/*.test.ts',
-			'tests/components/**/*.test.ts',
-			'src/**/*.test.ts'
-		],
-		environment: 'node'
+		coverage: {
+			provider: 'v8',
+			include: ['src/lib/**/*.{ts,svelte}'],
+			// The themes are CSS; everything else under src/lib is measured.
+			exclude: ['src/lib/themes/**', 'src/lib/**/*.d.ts'],
+			reporter: ['text-summary', 'text', 'json-summary', 'lcov'],
+			reportsDirectory: 'coverage',
+			// Ratchet, not the goal: the floor is the coverage of stage 1 rounded down, so CI fails when it drops.
+			// The goal is 95 % on all four metrics ("raised to 95 % in stage 2", #24). Raise these numbers
+			// whenever the coverage grows; never lower them to get green.
+			thresholds: { statements: 65, branches: 48, functions: 67, lines: 63 }
+		},
+		projects: [
+			{
+				extends: true,
+				plugins: [svelte()],
+				test: {
+					name: 'node',
+					include: [
+						'tests/tokens/**/*.test.ts',
+						'tests/mascot/**/*.test.ts',
+						'tests/unit/**/*.test.ts',
+						'tests/components/**/*.test.ts',
+						'src/**/*.test.ts'
+					],
+					environment: 'node'
+				}
+			},
+			{
+				extends: true,
+				plugins: [svelte(), svelteTesting()],
+				test: {
+					name: 'dom',
+					include: ['tests/dom/**/*.test.ts'],
+					environment: 'jsdom',
+					setupFiles: ['tests/dom/setup.ts']
+				}
+			}
+		]
 	}
 });

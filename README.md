@@ -1173,7 +1173,8 @@ npm run check      # svelte-check
 npm run lint       # ESLint (typescript-eslint strict, eslint-plugin-svelte) + Prettier --check
 npm run format     # Prettier --write + eslint --fix
 npm run build      # dist/, dist-elements/ (+ Typen, custom-elements.json), demo-dist/
-npm test           # Vitest: Theme-Kontrast, Marken-Einstiege, Pixel-Art-Katalog, Komponenten-Markup
+npm test           # Vitest: Theme-Kontrast, Marken-Einstiege, Pixel-Art-Katalog, Komponenten-Markup, Komponentenverhalten (jsdom)
+npm run test:coverage             # wie npm test, mit v8-Coverage über src/lib (Mindestwerte: vitest.config.ts, docs/testing.md)
 npx playwright install chromium   # einmalig
 npm run test:targets              # Playwright: Touch-Ziele in der gebauten Demo (nach npm run build)
 npm run test:elements             # Playwright: gebaute Custom Elements (nach npm run build)
