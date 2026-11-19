@@ -58,6 +58,50 @@ export function App() {
 			<k-tabs tabs={tabs} value={tab} onchange={onTab}>
 				<div data-tab="a">A</div>
 			</k-tabs>
+			{/* App navigation: no child panels, the app swaps the page on change. */}
+			<k-tabs
+				tabs={[
+					{ id: 'a', label: 'Polishes', badge: 3, badgeLabel: '3 new' },
+					{ id: 'b', label: 'More', dot: true, badgeLabel: 'Sync error', badgeTone: 'danger' },
+					{ id: 'c', label: 'Admin', hidden: true }
+				]}
+				value={tab}
+				look="pill"
+				onchange={onTab}
+			/>
+			<k-tab-links
+				label="Sections"
+				links={[{ href: '#/a', label: 'A', current: true }]}
+				onnavigate={(e) => {
+					e.preventDefault();
+					setTab(e.detail.href);
+				}}
+			/>
+			<k-code-block
+				code="npm ci"
+				copy-label="Copy"
+				copied-label="Copied"
+				oncopy={(e) => console.log(e.detail.length)}
+				oncopy-error={() => undefined}
+			/>
+			<k-tile-grid as="ul" min="240px" aria-label="Tools">
+				<k-tile as="li" href="/pdf">
+					PDF
+				</k-tile>
+			</k-tile-grid>
+			<k-drawer
+				open={open}
+				title="Filter"
+				dismissible="false"
+				close-on-backdrop={false}
+				initial-focus="#apply"
+				oncancel={(e) => e.preventDefault()}
+				onclose={() => setOpen(false)}
+			>
+				<button id="apply" type="button">
+					Apply
+				</button>
+			</k-drawer>
 			<k-select options={[{ value: 's', label: 'Small' }]} onchange={(e) => setName(e.detail)} />
 			<k-number-input value={null} min={0} onchange={(e) => console.log(e.detail?.toFixed(2))} />
 			<k-tree-view nodes={[{ id: 'root', label: 'Root' }]} ontoggle={(e) => console.log(e.detail.id, e.detail.expanded)} />
@@ -86,6 +130,10 @@ export function App() {
 			<k-input onchange={(e) => e.detail.toFixed()} />
 			{/* @ts-expect-error kern's change event is `onchange`; React's `onChange` would not get it */}
 			<k-input onChange={() => undefined} />
+			{/* @ts-expect-error a tab link needs an href */}
+			<k-tab-links label="x" links={[{ label: 'No href' }]} />
+			{/* @ts-expect-error badgeTone is 'accent' | 'danger' */}
+			<k-tabs tabs={[{ id: 'a', label: 'A', badgeTone: 'loud' }]} />
 			{/* @ts-expect-error tone is 'default' | 'warn' */}
 			<k-progress label="x" tone="loud" />
 			{/* @ts-expect-error unknown prop */}
