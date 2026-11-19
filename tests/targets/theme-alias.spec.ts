@@ -1,8 +1,11 @@
 /**
  * Deprecated `stuffcloud` theme names (#85, removed in 1.0) in the built demo: the page must look
- * pixel for pixel the same under `data-theme="stuffcloud…"` as under `data-theme="code…"`, dark
- * and light, on a desktop and on a phone. The demo opens in the new name; the old one is set on
- * `<html>` afterwards, as a consumer's markup would have it.
+ * the same under `data-theme="stuffcloud…"` as under `data-theme="code…"`, dark and light, on a
+ * desktop and on a phone. The demo opens in the new name; the old one is set on `<html>`
+ * afterwards, as a consumer's markup would have it. Compared: every `--k-*` token and the
+ * theme-driven computed styles of every element of the page (light DOM and shadow roots).
+ * Screenshots are not compared byte for byte: lazy images, the marquee and running counters change
+ * between two captures regardless of the theme, which made such a check flaky in CI.
  */
 import { expect, test, type Page } from '@playwright/test';
 
@@ -34,8 +37,8 @@ async function setTheme(page: Page, theme: string): Promise<void> {
 	});
 }
 
-/** The custom properties of `<html>` and the screenshot of the top of the page (and the whole page). */
-async function capture(page: Page): Promise<{ tokens: Record<string, string>; top: Buffer; full: Buffer }> {
+/** The custom properties of `<html>` and the themed styles of every element. */
+async function capture(page: Page): Promise<{ tokens: Record<string, string>; styles: string[] }> {
 	const tokens = await page.evaluate(() => {
 		const names = new Set<string>();
 		const walk = (rules: CSSRuleList): void => {
@@ -54,9 +57,35 @@ async function capture(page: Page): Promise<{ tokens: Record<string, string>; to
 		const style = getComputedStyle(document.documentElement);
 		return Object.fromEntries([...names].sort().map((n) => [n, style.getPropertyValue(n).trim()]));
 	});
-	const top = await page.screenshot({ animations: 'disabled', caret: 'hide' });
-	const full = await page.screenshot({ animations: 'disabled', caret: 'hide', fullPage: true });
-	return { tokens, top, full };
+	const styles = await page.evaluate(() => {
+		// The properties a theme sets through the tokens; geometry and animation state are left out.
+		const props = [
+			'color',
+			'background-color',
+			'background-image',
+			'border-top-color',
+			'border-top-width',
+			'border-top-left-radius',
+			'box-shadow',
+			'outline-color',
+			'font-family',
+			'font-size',
+			'font-weight',
+			'letter-spacing',
+			'text-transform'
+		];
+		const out: string[] = [];
+		const visit = (root: Document | ShadowRoot, path: string): void => {
+			for (const [i, el] of Array.from(root.querySelectorAll('*')).entries()) {
+				const style = getComputedStyle(el);
+				out.push(`${path}${el.tagName}#${String(i)} ${props.map((p) => style.getPropertyValue(p)).join(' | ')}`);
+				if (el.shadowRoot) visit(el.shadowRoot, `${path}${el.tagName}#${String(i)}>`);
+			}
+		};
+		visit(document, '');
+		return out;
+	});
+	return { tokens, styles };
 }
 
 for (const [width, height, label] of [
@@ -78,8 +107,8 @@ for (const [width, height, label] of [
 				const b = await capture(page);
 
 				expect(b.tokens).toEqual(a.tokens);
-				expect(b.top.equals(a.top), 'viewport screenshot differs').toBe(true);
-				expect(b.full.equals(a.full), 'full-page screenshot differs').toBe(true);
+				expect(a.styles.length).toBeGreaterThan(500);
+				expect(b.styles).toEqual(a.styles);
 			});
 		}
 	});
