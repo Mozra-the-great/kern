@@ -165,7 +165,7 @@ if (r.ok) {
 	r.guaranteed; // true: jedes Paar in checks besteht
 	r.style; // '--k-accent:#ffc8e6;--k-on-accent:#2c4f38;…' als style-Attribut
 } else {
-	r.error; // { code: 'invalid-color' | 'unknown-theme' | 'invalid-ground' | 'invalid-selector' | 'no-dom', message }
+	r.error; // { code: 'invalid-color' | 'unknown-theme' | 'invalid-ground' | 'invalid-selector' | 'invalid-element' | 'no-dom', message }
 }
 ```
 
@@ -183,9 +183,9 @@ Fast-Weiß, Fast-Schwarz, reines Weiß und Schwarz, Blau, Rot, Grün) in jedem T
 | ----------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | `accentTokens(hex, options)`                                      | die Token-Tabelle für ein Theme oder Schema (rein, ohne DOM)               |
 | `accentCss(hex, { selector, roles })`                             | ein Stylesheet mit einer Regel je Standard-Theme (rein, SSR-sicher)        |
-| `installAccent(hex, { storageKey, themeColor, roles, selector })` | setzt den Akzent seitenweit: `<style id="kern-accent">` im `<head>`        |
+| `installAccent(hex, { storageKey, themeColor, nonce, roles, selector })` | setzt den Akzent seitenweit: `<style id="kern-accent">` im `<head>`        |
 | `removeAccent({ storageKey })`                                    | nimmt ihn zurück (Style, gespeicherte Kopie, `theme-color`)                |
-| `createAccentScript(storageKey)`                                  | Inline-Script gegen das Aufblitzen (unten)                                 |
+| `createAccentScript(storageKey, { nonce })`                       | Inline-Script gegen das Aufblitzen (unten)                                 |
 | `applyAccent(el, hex, options)` / `clearAccent(el)`               | Inline-Tokens auf einem Element, für das Theme, das es gerade zeigt        |
 
 Ungültige Eingabe (`''`, `'pink'`, `'#12'`, `null`, ein Alpha-Hex, ein unbekanntes Theme ohne `scheme`) liefert
@@ -225,8 +225,12 @@ Wer den Akzent erst nach dem Laden setzt, zeigt bis dahin das Theme. Zwei Wege d
    genau diesen Style.
 2. **Nur der Client kennt sie** (ab dem zweiten Besuch): `installAccent(hex, { storageKey })` legt das Stylesheet
    in `localStorage`, `createAccentScript(key)` liefert das Inline-Script, das es beim nächsten Laden vor dem ersten
-   Frame wieder einsetzt. Es nimmt nur ein schlichtes Stylesheet von der Form, die `accentCss` schreibt (kein `url(`,
-   `import`, `@`, `<`, `\`, keine Kommentare, höchstens 20 000 Zeichen).
+   Frame wieder einsetzt. Das Script prüft den gespeicherten Text gegen die Grammatik von `accentCss` und nimmt **nur
+   diese** Form an: Regeln, deren Selektor aus einfachen Selektorzeichen besteht (keine `{ } < @ \ /`, kein Zeilenumbruch) und
+   deren Block ausschließlich `--k-…: #rrggbb`-Zeilen der Akzent-Tokens enthält, höchstens 20 000 Zeichen. Alles andere
+   (`url()`, `image-set()`, `content`, `display`, `@`-Regeln, Kommentare, fremde Properties) wird verworfen. Ein
+   Schreibzugriff auf `localStorage` kann den Akzent also umfärben, aber nichts laden, ausblenden oder hinzufügen. Pro
+   Instanz (Origin) der App gilt **ein** Storage-Schlüssel.
 
 ```html
 <head>
@@ -237,9 +241,15 @@ Wer den Akzent erst nach dem Laden setzt, zeigt bis dahin das Theme. Zwei Wege d
 </head>
 ```
 
-Beide Scripts erzeugt man beim Build oder auf dem Server und fügt sie als Text ein. Unter strenger CSP brauchen
-das Script **und** der Style, den es anlegt, ein Nonce oder einen Hash. Ohne `localStorage` (privater Modus,
-gesperrt) tut das Script nichts, und die Seite zeigt das Theme, bis der Code läuft.
+Beide Scripts erzeugt man beim Build oder auf dem Server und fügt sie als Text ein. Ohne `localStorage` (privater
+Modus, gesperrt) tut das Script nichts, und die Seite zeigt das Theme, bis der Code läuft.
+
+**Strenge CSP.** Das Inline-Script braucht ein Nonce oder einen Hash (`script-src`). Der `<style>`, den Script und
+`installAccent` anlegen, braucht das Nonce der Seite in `style-src`: `createAccentScript(key, { nonce })` und
+`installAccent(hex, { nonce })` setzen es auf das Element (nur base64-artige Werte werden angenommen), und ein
+serverseitig gerendertes `<style id="kern-accent" nonce="…">` trägt das Nonce der Seite selbst. `applyAccent` /
+`clearAccent` setzen Inline-Tokens über das CSSOM (`style.setProperty`), das `style-src` nicht blockiert: dort ist
+kein Nonce nötig.
 
 ### `theme-color`
 
@@ -264,7 +274,9 @@ Mehr ist in CSS allein nicht sicher: `--k-primary`, `--k-accent-text`, `--k-acce
 `--k-focus` brauchen 4,5:1 oder 3:1 auf einem Grund, den ein Stylesheet nicht messen kann (die Helligkeit muss
 gesucht werden, je nach Theme in die andere Richtung). Dafür gilt `accentCss` / `installAccent`. Die Datei braucht
 `color(from …)` und `round()` (Chrome 125, Safari 16.4, Firefox 128); ohne sie bleibt der Akzent des Themes.
-`data-k-accent` nur zusammen mit `--k-accent-color` setzen.
+`data-k-accent` nur zusammen mit `--k-accent-color` setzen. Kommt der Wert vom Server oder aus Eingaben, vor dem
+Schreiben in ein `style`-Attribut prüfen (`accentTokens(value).ok`, nur dann `value` verwenden): sonst landet fremder Text
+im Attribut.
 
 ### Custom Elements
 

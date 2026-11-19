@@ -165,6 +165,7 @@ export type {
 	AccentResult,
 	AccentRole,
 	AccentScheme,
+	AccentScriptOptions,
 	AccentSurfacesInput,
 	ApplyAccentOptions,
 	InstallAccentOptions,

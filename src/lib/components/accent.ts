@@ -24,7 +24,7 @@ export type { AccentGround, AccentScheme };
 /** Which groups of tokens an accent sets. */
 export type AccentRole = 'primary' | 'accent' | 'focus';
 
-export type AccentErrorCode = 'invalid-color' | 'invalid-ground' | 'unknown-theme' | 'invalid-selector' | 'no-dom';
+export type AccentErrorCode = 'invalid-color' | 'invalid-ground' | 'unknown-theme' | 'invalid-selector' | 'invalid-element' | 'no-dom';
 
 export interface AccentError {
 	code: AccentErrorCode;
@@ -130,6 +130,13 @@ export interface InstallAccentOptions extends AccentCssOptions {
 	themeColor?: 'accent' | false | undefined;
 	/** The document to change; default `document`. */
 	document?: Document | undefined;
+	/** CSP nonce for the `<style>` element (`style-src 'nonce-…'`); needed under a strict CSP. */
+	nonce?: string | undefined;
+}
+
+export interface AccentScriptOptions {
+	/** CSP nonce the head script puts on the `<style>` it adds: the page's `style-src 'nonce-…'` value. */
+	nonce?: string | undefined;
 }
 
 export interface RemoveAccentOptions {
@@ -357,8 +364,26 @@ function fail(code: AccentErrorCode, message: string): AccentFailure {
 	return { ok: false, error: { code, message } };
 }
 
+/** A value for an error message: quoted, cut at 64 characters, never throws (a hostile `toString` included). */
+function show(value: unknown): string {
+	try {
+		return JSON.stringify(String(value).slice(0, 64));
+	} catch {
+		return '"?"';
+	}
+}
+
+/** Options from untyped callers: anything but an object counts as "no options". */
+function opts<T extends object>(value: T | null | undefined): T {
+	return typeof value === 'object' && value !== null ? value : ({} as T);
+}
+
 function resolveContext(options: AccentOptions): Context | AccentFailure {
-	const given = options.surfaces;
+	const raw: unknown = options.surfaces;
+	if (raw !== undefined && raw !== null && (typeof raw !== 'object' || Array.isArray(raw))) {
+		return fail('invalid-ground', 'surfaces must be an object with colours');
+	}
+	const given = raw === null ? undefined : options.surfaces;
 	if (given !== undefined) {
 		const bg = parseHex(given.bg);
 		const raised = given.raised === undefined ? bg : parseHex(given.raised);
@@ -381,7 +406,7 @@ function resolveContext(options: AccentOptions): Context | AccentFailure {
 		const ground = accentGround(theme);
 		if (ground) return contextOf(ground);
 		if (options.scheme === undefined) {
-			return fail('unknown-theme', `"${theme}" is not a standard kern theme; pass scheme or surfaces`);
+			return fail('unknown-theme', `${show(theme)} is not a standard kern theme; pass scheme or surfaces`);
 		}
 	}
 	if (options.scheme === 'light' || options.scheme === 'dark') return contextOfScheme(options.scheme);
@@ -404,13 +429,14 @@ function explain(token: string, kind: 'text' | 'ui', from: string, to: string): 
  *   `--k-on-primary-hover` follow.
  * A colour that already passes is used unchanged; `adjustments` lists the ones that were moved.
  */
-export function accentTokens(accent: string, options: AccentOptions = {}): AccentResult {
+export function accentTokens(accent: string, optionsIn: AccentOptions = {}): AccentResult {
 	const rgb = parseHex(accent);
-	if (!rgb) return fail('invalid-color', `"${typeof accent === 'string' ? accent : typeof accent}" is not a #rgb or #rrggbb colour`);
+	if (!rgb) return fail('invalid-color', `${typeof accent === 'string' ? show(accent) : typeof accent} is not a #rgb or #rrggbb colour`);
 	const raw = toHex(rgb);
+	const options = opts(optionsIn);
 	const context = resolveContext(options);
 	if ('ok' in context) return context;
-	const roles = options.roles ?? ALL_ROLES;
+	const roles: readonly unknown[] = Array.isArray(options.roles) ? (options.roles as readonly unknown[]) : ALL_ROLES;
 	const { scheme, surfaces, softBases, inks, fgs } = context;
 
 	const tokens: Record<string, string> = {};
@@ -490,7 +516,23 @@ export function accentTokens(accent: string, options: AccentOptions = {}): Accen
 // ---------------------------------------------------------------- stylesheet
 
 /** A selector that cannot leave the rule or the `<style>` element. */
-const SAFE_SELECTOR = /^[\w\s.#:>+~*[\]="'^$|(),-]+$/;
+const SAFE_SELECTOR = /^[\w .#:>+~*[\]="'^$|()-]+$/;
+
+/** Brackets and parentheses close in order and quotes come in pairs, so the selector cannot swallow the rest of the rule. */
+function balanced(selector: string): boolean {
+	const open: string[] = [];
+	let quote = '';
+	for (const ch of selector) {
+		if (quote !== '') {
+			if (ch === quote) quote = '';
+		} else if (ch === '"' || ch === "'") quote = ch;
+		else if (ch === '[' || ch === '(') open.push(ch);
+		else if (ch === ']' || ch === ')') {
+			if (open.pop() !== (ch === ']' ? '[' : '(')) return false;
+		}
+	}
+	return quote === '' && open.length === 0;
+}
 
 /**
  * The accent for every standard theme as CSS: one rule per `data-theme` value (the `stuffcloud*`
@@ -499,9 +541,13 @@ const SAFE_SELECTOR = /^[\w\s.#:>+~*[\]="'^$|(),-]+$/;
  * of the new theme, so the contrast holds without running any code. Put it in `<head>` (SSR) or
  * hand it to `installAccent`.
  */
-export function accentCss(accent: string, options: AccentCssOptions = {}): AccentCssResult {
-	const selector = (options.selector ?? ':root').trim();
-	if (selector === '' || !SAFE_SELECTOR.test(selector)) return fail('invalid-selector', `"${selector}" is not a usable selector`);
+export function accentCss(accent: string, optionsIn: AccentCssOptions = {}): AccentCssResult {
+	const options = opts(optionsIn);
+	const given: unknown = options.selector ?? ':root';
+	const selector = typeof given === 'string' ? given.trim() : '';
+	if (selector === '' || !SAFE_SELECTOR.test(selector) || !balanced(selector)) {
+		return fail('invalid-selector', `${show(given)} is not a usable selector`);
+	}
 	const themes: Record<string, AccentOk> = {};
 	const groups = new Map<string, string[]>();
 	const add = (head: string, result: AccentOk): void => {
@@ -525,6 +571,16 @@ export function accentCss(accent: string, options: AccentCssOptions = {}): Accen
 // ---------------------------------------------------------------- DOM
 
 const isBrowser = (): boolean => typeof document !== 'undefined';
+
+/** The given document, else the global one; undefined on the server or for something that is not a document. */
+function documentOf(given: Document | undefined): Document | undefined {
+	const candidate: Document | undefined = given ?? (typeof document === 'undefined' ? undefined : document);
+	return typeof candidate?.getElementById === 'function' && candidate.head ? candidate : undefined;
+}
+
+/** Nonces are base64-ish tokens; anything else is not put on an element. */
+const NONCE = /^[A-Za-z0-9+/_=-]{1,200}$/;
+const validNonce = (nonce: unknown): nonce is string => typeof nonce === 'string' && NONCE.test(nonce);
 
 const savedThemeColors = new WeakMap<Document, { metas: Map<HTMLMetaElement, string | null>; created: HTMLMetaElement | null }>();
 
@@ -571,8 +627,9 @@ function storage(): Storage | undefined {
  * from the first frame. Invalid input returns the failure and leaves the page as it was.
  * Not available during SSR (`no-dom` failure): render `accentCss(…).css` into the HTML there.
  */
-export function installAccent(accent: string, options: InstallAccentOptions = {}): AccentCssResult {
-	const doc = options.document ?? (typeof document === 'undefined' ? undefined : document);
+export function installAccent(accent: string, optionsIn: InstallAccentOptions = {}): AccentCssResult {
+	const options = opts(optionsIn);
+	const doc = documentOf(options.document);
 	if (doc === undefined) return fail('no-dom', 'installAccent needs a document; use accentCss on the server');
 	const result = accentCss(accent, options);
 	if (!result.ok) return result;
@@ -582,6 +639,7 @@ export function installAccent(accent: string, options: InstallAccentOptions = {}
 		style.id = THEME_STYLE_ID;
 		doc.head.append(style);
 	}
+	if (validNonce(options.nonce)) style.nonce = options.nonce;
 	style.textContent = result.css;
 	if (options.storageKey) {
 		try {
@@ -596,8 +654,9 @@ export function installAccent(accent: string, options: InstallAccentOptions = {}
 }
 
 /** Undoes `installAccent`: removes the style, the stored copy and a changed `theme-color`. */
-export function removeAccent(options: RemoveAccentOptions = {}): void {
-	const doc = options.document ?? (typeof document === 'undefined' ? undefined : document);
+export function removeAccent(optionsIn: RemoveAccentOptions = {}): void {
+	const options = opts(optionsIn);
+	const doc = documentOf(options.document);
 	if (doc !== undefined) {
 		doc.getElementById(THEME_STYLE_ID)?.remove();
 		restoreThemeColor(doc);
@@ -616,7 +675,7 @@ function cssColor(value: string): string | null {
 	const v = value.trim();
 	const hex = parseHex(v);
 	if (hex) return toHex(hex);
-	const m = /^rgba?\(\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)\s*(?:[,/]\s*(\d*\.?\d+%?)\s*)?\)$/i.exec(v);
+	const m = /^rgba?\(\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)\s*(?:[,/]\s*(\d+(?:\.\d+)?%?|\.\d+%?)\s*)?\)$/i.exec(v);
 	if (!m) return null;
 	if (m[4] !== undefined && parseFloat(m[4]) / (m[4].endsWith('%') ? 100 : 1) < 1) return null;
 	return toHex({ r: Number(m[1]), g: Number(m[2]), b: Number(m[3]) });
@@ -640,8 +699,10 @@ function computedSurfaces(el: Element): AccentSurfacesInput | undefined {
  * `options`. The tokens do not follow a later theme switch: call it again, or use `installAccent`
  * for a page that switches themes. Returns the result; invalid input changes nothing.
  */
-export function applyAccent(el: Element & ElementCSSInlineStyle, accent: string, options: ApplyAccentOptions = {}): AccentResult {
+export function applyAccent(el: Element & ElementCSSInlineStyle, accent: string, optionsIn: ApplyAccentOptions = {}): AccentResult {
 	if (!isBrowser()) return fail('no-dom', 'applyAccent needs a browser; use accentCss on the server');
+	if (!hasInlineStyle(el)) return fail('invalid-element', 'applyAccent needs an element with a style');
+	const options = opts(optionsIn);
 	const theme = options.theme ?? el.closest('[data-theme]')?.getAttribute('data-theme') ?? undefined;
 	const surfaces = options.surfaces ?? (options.computed === false ? undefined : computedSurfaces(el));
 	const result = accentTokens(accent, { theme, scheme: options.scheme, surfaces, roles: options.roles });
@@ -651,23 +712,39 @@ export function applyAccent(el: Element & ElementCSSInlineStyle, accent: string,
 	return result;
 }
 
+function hasInlineStyle(el: unknown): el is Element & ElementCSSInlineStyle {
+	return typeof el === 'object' && el !== null && typeof (el as Element).closest === 'function' && 'style' in el;
+}
+
 /** Removes every token `applyAccent` set on `el`. */
 export function clearAccent(el: ElementCSSInlineStyle): void {
+	if (!hasInlineStyle(el)) return;
 	for (const name of ACCENT_TOKENS) el.style.removeProperty(name);
 }
 
 /**
  * Inline script for `<head>` that applies the accent stored by `installAccent({ storageKey })` before
- * the first paint (like `createThemeScript` does for the theme). It accepts only a plain
- * stylesheet of the shape `accentCss` writes. Under a strict CSP the inline script and the style it
- * adds need a nonce or a hash.
+ * the first paint (like `createThemeScript` does for the theme). It accepts nothing but what
+ * `accentCss` writes: rules whose selector uses plain selector characters and whose blocks hold only
+ * `--k-…: #rrggbb` declarations of the accent tokens, at most 20 000 characters. Anything else in the
+ * storage (a `url()`, `content`, `display`, an `@` rule, a comment) is ignored, so a write to
+ * `localStorage` can recolour the accent but not load, hide or add anything. Use one storage key per
+ * instance (origin) of the app. Under a strict CSP the inline script needs a nonce or a hash, and
+ * `options.nonce` is put on the `<style>` it adds (the page's `style-src 'nonce-…'` value).
  */
-export function createAccentScript(storageKey: string): string {
-	// `<` is escaped so a key can never close the surrounding <script> element.
-	const key = JSON.stringify(storageKey).replace(/</g, '\\u003c');
+export function createAccentScript(storageKey: string, optionsIn: AccentScriptOptions = {}): string {
+	// `<` is escaped so a value can never close the surrounding <script> element.
+	const js = (value: unknown): string => (JSON.stringify(value) ?? 'null').replace(/</g, '\\u003c');
+	const nonce = opts(optionsIn).nonce;
+	const rawKey: unknown = storageKey;
+	const storageName = typeof rawKey === 'string' ? rawKey : String(rawKey);
+	const names = ACCENT_TOKENS.map((t) => t.slice('--k-'.length)).join('|');
+	const rule = `[\\w .#:>+~*\\[\\]="'^$|(),-]+\\{(?:--k-(?:${names}):#[0-9a-f]{6};?)+\\}\\n?`;
 	return (
-		`(function(){try{var c=localStorage.getItem(${key});` +
-		`if(!c||c.length>${MAX_STORED_CSS}||!/^[\\w\\s.#:;,%'"()\\[\\]{}=>*^$|~+-]+$/.test(c)||/url\\s*\\(|import|expression/i.test(c))return;` +
-		`var s=document.createElement("style");s.id=${JSON.stringify(THEME_STYLE_ID)};s.textContent=c;document.head.appendChild(s)}catch(e){}})();`
+		`(function(){try{var c=localStorage.getItem(${js(storageName)});` +
+		`if(!c||c.length>${MAX_STORED_CSS}||!/^(?:${rule})+$/.test(c))return;` +
+		`var s=document.createElement("style");s.id=${js(THEME_STYLE_ID)};` +
+		(validNonce(nonce) ? `s.nonce=${js(nonce)};` : '') +
+		`s.textContent=c;document.head.appendChild(s)}catch(e){}})();`
 	);
 }

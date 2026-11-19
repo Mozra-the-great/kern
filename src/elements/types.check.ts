@@ -82,6 +82,7 @@ export type Checks = [
 	Assert<Same<E.AccentCssOk, A.AccentCssOk>>,
 	Assert<Same<E.AccentCssResult, A.AccentCssResult>>,
 	Assert<Same<E.InstallAccentOptions, A.InstallAccentOptions>>,
+	Assert<Same<E.AccentScriptOptions, A.AccentScriptOptions>>,
 	Assert<Same<E.RemoveAccentOptions, A.RemoveAccentOptions>>,
 	Assert<Same<E.ApplyAccentOptions, A.ApplyAccentOptions>>,
 	Assert<Same<E.KernAccentApi['tokens'], typeof A.accentTokens>>,

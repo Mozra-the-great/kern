@@ -31,7 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   kept, otherwise only its OKLCH lightness moves) and reports `adjustments`, `checks` and `guaranteed`. `accentCss(hex)`
   writes one rule per standard theme (aliases included), so a later light/dark switch keeps the contrast;
   `installAccent` / `removeAccent` put it on the page (`<style id="kern-accent">`, optional `localStorage` copy and
-  `theme-color` meta); `createAccentScript(key)` is the head snippet that paints a stored accent before the first frame;
+  `theme-color` meta); `createAccentScript(key, { nonce })` is the head snippet that paints a stored accent before the first frame (it accepts only
+  the exact shape `accentCss` writes: `--k-…: #rrggbb` declarations of the accent tokens, no `url()`, `content`, `display` or `@` rules);
+  `installAccent` takes a CSP `nonce` too;
   `applyAccent(el, hex)` / `clearAccent(el)` set inline tokens on one element (surfaces read from its computed `--k-bg…`,
   so a custom theme works). Invalid input returns `{ ok: false, error }` (typed code), changes nothing and never throws;
   server-side the DOM functions return `no-dom`. Also `ACCENT_GROUNDS` (the surfaces of every `data-theme` value, kept in

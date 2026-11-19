@@ -285,7 +285,7 @@ export interface KernStringsApi {
 export type AccentScheme = 'light' | 'dark';
 /** Which groups of tokens an accent sets. */
 export type AccentRole = 'primary' | 'accent' | 'focus';
-export type AccentErrorCode = 'invalid-color' | 'invalid-ground' | 'unknown-theme' | 'invalid-selector' | 'no-dom';
+export type AccentErrorCode = 'invalid-color' | 'invalid-ground' | 'unknown-theme' | 'invalid-selector' | 'invalid-element' | 'no-dom';
 export interface AccentError {
 	code: AccentErrorCode;
 	message: string;
@@ -369,6 +369,12 @@ export interface InstallAccentOptions extends AccentCssOptions {
 	/** `accent`: paint the browser UI (`<meta name="theme-color">`) in the accent. */
 	themeColor?: 'accent' | false | undefined;
 	document?: Document | undefined;
+	/** CSP nonce for the `<style>` element (`style-src 'nonce-…'`). */
+	nonce?: string | undefined;
+}
+export interface AccentScriptOptions {
+	/** CSP nonce the head script puts on the `<style>` it adds. */
+	nonce?: string | undefined;
 }
 export interface RemoveAccentOptions {
 	storageKey?: string | undefined;
@@ -393,7 +399,7 @@ export interface KernAccentApi {
 	/** Removes what `apply` set. */
 	clear(el: ElementCSSInlineStyle): void;
 	/** Inline `<head>` script that applies the stored accent before the first paint. */
-	script(storageKey: string): string;
+	script(storageKey: string, options?: AccentScriptOptions): string;
 	/** The surfaces of every standard `data-theme` value. */
 	readonly grounds: Readonly<Record<string, AccentGround>>;
 	/** The tokens an accent can set. */
