@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-19
+
 ### Added
 - `Mascot` component and `<k-mascot>` element: the pixel-art runtime moves from stuffcloud into kern
   (#55, stuffcloud ADR 0008). Draws any shipped stuffcloud SVG (by mascot name or
