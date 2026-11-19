@@ -13,6 +13,9 @@ interface TestWindow {
 	errors: string[];
 }
 
+/** Lets pending dialog close events (they come a task after close()) arrive. */
+const settle = (page: Page) => page.evaluate(() => new Promise((r) => setTimeout(r, 100)));
+
 async function ready(page: Page) {
 	await page.waitForFunction(
 		() => customElements.get('k-toaster') && document.querySelector('#toaster')?.shadowRoot?.querySelector('section')
@@ -310,12 +313,14 @@ test.describe('Modal (#45)', () => {
 		expect(reached).toContain('adopt');
 		expect(reached).toContain('later');
 		expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('hidden');
-		// Only the app closes it; focus returns to the opener and the page scrolls again.
+		// Only the app closes it; focus returns to the opener and the page scrolls again;
+		// a close by the app fires no event (#75).
 		await setOpen(page, 'block', false);
 		await expect(dialog).toBeHidden();
 		await expect(page.locator('#opener')).toBeFocused();
 		await expect.poll(() => page.evaluate(() => document.documentElement.style.overflow)).toBe('');
-		await expect.poll(() => page.evaluate(() => (window as unknown as TestWindow).log)).toEqual(['block close']);
+		await settle(page);
+		expect(await page.evaluate(() => (window as unknown as TestWindow).log)).toEqual([]);
 	});
 
 	test('dismissible works as a property too (React sets properties)', async ({ page }) => {
@@ -403,5 +408,174 @@ test.describe('Modal (#45)', () => {
 		expect(m.rect.bottom).toBeLessThanOrEqual(480);
 		await dlg.evaluate((d) => d.scrollTo(0, d.scrollHeight));
 		await expect(page.locator('#cancel-btn')).toBeInViewport();
+	});
+});
+
+const setProp = (page: Page, id: string, props: Record<string, unknown>) =>
+	page.evaluate(([id, props]) => Object.assign(document.getElementById(id as string) as HTMLElement, props), [id, props] as const);
+
+test.describe('close events are for user input only (#75)', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/tests/elements/pages/feedback.html');
+		await ready(page);
+		await page.evaluate(() => {
+			const w = window as unknown as TestWindow;
+			w.log = [];
+			for (const id of ['normal', 'd-normal', 'd-block'])
+				for (const type of ['cancel', 'close']) document.getElementById(id)?.addEventListener(type, () => w.log.push(`${id} ${type}`));
+		});
+	});
+	const log = (page: Page) => page.evaluate(() => (window as unknown as TestWindow).log);
+
+	for (const id of ['normal', 'd-normal']) {
+		test(`${id}: open=false from code closes silently, also right after opening`, async ({ page }) => {
+			await setProp(page, id, { open: true });
+			await expect(page.locator(`#${id} dialog`)).toBeVisible();
+			await setProp(page, id, { open: false });
+			await expect(page.locator(`#${id} dialog`)).toBeHidden();
+			// Open and close in the same task: the dialog never reports a close either.
+			await page.evaluate((id) => {
+				const el = document.getElementById(id) as HTMLElement & { open: boolean };
+				el.open = true;
+				queueMicrotask(() => (el.open = false));
+			}, id);
+			await settle(page);
+			await expect(page.locator(`#${id} dialog`)).toBeHidden();
+			expect(await log(page)).toEqual([]);
+			await expect.poll(() => page.evaluate(() => document.documentElement.style.overflow)).toBe('');
+			// The user path still reports: Escape gives cancel, then close.
+			await setProp(page, id, { open: true });
+			await page.keyboard.press('Escape');
+			await expect(page.locator(`#${id} dialog`)).toBeHidden();
+			await settle(page);
+			expect(await log(page)).toEqual([`${id} cancel`, `${id} close`]);
+			expect(await page.evaluate((id) => (document.getElementById(id) as HTMLElement & { open: boolean }).open, id)).toBe(false);
+		});
+	}
+
+	test('a close of the native dialog itself (as by <form method="dialog"> in Svelte) is a user close: close without cancel', async ({
+		page
+	}) => {
+		await setProp(page, 'normal', { open: true });
+		await page.locator('#normal dialog').evaluate((d) => (d as HTMLDialogElement).close());
+		await expect(page.locator('#normal dialog')).toBeHidden();
+		await settle(page);
+		expect(await log(page)).toEqual(['normal close']);
+		expect(await page.evaluate(() => (document.getElementById('normal') as HTMLElement & { open: boolean }).open)).toBe(false);
+		await expect.poll(() => page.evaluate(() => document.documentElement.style.overflow)).toBe('');
+	});
+
+	test('a controlled wrapper (open + onclose) gets exactly one close per user close', async ({ page }) => {
+		// Like React: open={state}, onclose={() => setState(false)}, which sets open=false again.
+		await page.evaluate(() => {
+			const el = document.getElementById('normal') as HTMLElement & { open: boolean };
+			el.addEventListener('close', () => (el.open = false));
+		});
+		await setProp(page, 'normal', { open: true });
+		await page.getByRole('dialog', { name: 'Delete folder?' }).getByRole('button', { name: 'Close' }).click();
+		await settle(page);
+		expect(await log(page)).toEqual(['normal cancel', 'normal close']);
+	});
+});
+
+test.describe('Drawer parity with Modal (#74)', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/tests/elements/pages/feedback.html');
+		await ready(page);
+		await page.evaluate(() => {
+			const w = window as unknown as TestWindow;
+			w.log = [];
+			for (const id of ['d-block', 'd-normal', 'block'])
+				for (const type of ['cancel', 'close']) document.getElementById(id)?.addEventListener(type, () => w.log.push(`${id} ${type}`));
+		});
+	});
+	const overflow = (page: Page) => page.evaluate(() => document.documentElement.style.overflow);
+
+	test('dismissible="false": Escape and backdrop do nothing, no close button, initial focus, scroll lock', async ({ page }) => {
+		await page.locator('#opener').focus();
+		await setProp(page, 'd-block', { open: true });
+		const drawer = page.getByRole('dialog', { name: 'Choose a plan' });
+		await expect(drawer).toBeVisible();
+		await expect(page.locator('#plan')).toBeFocused();
+		await expect(drawer.getByRole('button', { name: 'Close' })).toHaveCount(0);
+		for (let i = 0; i < 3; i++) await page.keyboard.press('Escape');
+		await page.mouse.click(3, 3);
+		await expect(drawer).toBeVisible();
+		expect(await overflow(page)).toBe('hidden');
+		await setProp(page, 'd-block', { open: false });
+		await expect(drawer).toBeHidden();
+		await expect(page.locator('#opener')).toBeFocused();
+		await expect.poll(() => overflow(page)).toBe('');
+		await settle(page);
+		expect(await page.evaluate(() => (window as unknown as TestWindow).log)).toEqual([]);
+	});
+
+	test('dismissible works as a property too', async ({ page }) => {
+		await setProp(page, 'd-normal', { dismissible: false, open: true });
+		const drawer = page.getByRole('dialog', { name: 'Filter' });
+		await expect(drawer.getByRole('button', { name: 'Close' })).toHaveCount(0);
+		await page.keyboard.press('Escape');
+		await expect(drawer).toBeVisible();
+		await setProp(page, 'd-normal', { dismissible: true });
+		await page.keyboard.press('Escape');
+		await expect(drawer).toBeHidden();
+	});
+
+	test('the cancel event is cancelable and keeps the drawer open', async ({ page }) => {
+		await page.evaluate(() => document.getElementById('d-normal')?.addEventListener('cancel', (e) => e.preventDefault()));
+		await setProp(page, 'd-normal', { open: true });
+		const drawer = page.getByRole('dialog', { name: 'Filter' });
+		await page.keyboard.press('Escape');
+		await page.keyboard.press('Escape');
+		await drawer.getByRole('button', { name: 'Close' }).click();
+		await page.mouse.click(1270, 400);
+		await expect(drawer).toBeVisible();
+		expect(await page.evaluate(() => (window as unknown as TestWindow).log)).toEqual([
+			'd-normal cancel',
+			'd-normal cancel',
+			'd-normal cancel',
+			'd-normal cancel'
+		]);
+	});
+
+	test('closes by Escape, close button and backdrop, firing cancel then close; close-on-backdrop=false keeps it', async ({ page }) => {
+		await page.locator('#opener2').focus();
+		const drawer = page.getByRole('dialog', { name: 'Filter' });
+		await setProp(page, 'd-normal', { open: true });
+		await page.keyboard.press('Escape');
+		await expect(drawer).toBeHidden();
+		await expect(page.locator('#opener2')).toBeFocused();
+		await setProp(page, 'd-normal', { open: true });
+		await drawer.getByRole('button', { name: 'Close' }).click();
+		await expect(drawer).toBeHidden();
+		await setProp(page, 'd-normal', { open: true });
+		// The drawer sits on the left; the right side of the viewport is backdrop.
+		await page.mouse.click(1270, 400);
+		await expect(drawer).toBeHidden();
+		await setProp(page, 'd-normal', { closeOnBackdrop: false, open: true });
+		await page.mouse.click(1270, 400);
+		await expect(drawer).toBeVisible();
+		await settle(page);
+		expect(await page.evaluate(() => (window as unknown as TestWindow).log)).toEqual([
+			'd-normal cancel',
+			'd-normal close',
+			'd-normal cancel',
+			'd-normal close',
+			'd-normal cancel',
+			'd-normal close'
+		]);
+	});
+
+	test('a drawer over a modal shares the scroll lock: the page stays locked until both are closed', async ({ page }) => {
+		await setProp(page, 'block', { open: true });
+		await setProp(page, 'd-normal', { open: true });
+		await expect(page.getByRole('dialog', { name: 'Filter' })).toBeVisible();
+		expect(await page.evaluate(() => document.documentElement.getAttribute('data-k-scroll-lock'))).toBe('2');
+		await page.keyboard.press('Escape');
+		await expect(page.getByRole('dialog', { name: 'Filter' })).toBeHidden();
+		expect(await overflow(page)).toBe('hidden');
+		await setProp(page, 'block', { open: false });
+		await expect.poll(() => overflow(page)).toBe('');
+		expect(await page.evaluate(() => document.documentElement.hasAttribute('data-k-scroll-lock'))).toBe(false);
 	});
 });

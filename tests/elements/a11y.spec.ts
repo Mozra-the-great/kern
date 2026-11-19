@@ -1,14 +1,15 @@
 /**
- * axe on the element test pages in four themes: no serious or critical violation (#25, #50, #51).
+ * axe on the element test pages in five themes: no serious or critical violation (#25, #50, #51).
  * The pages cover the parity components (Card list and interactive cards, Button/Link, FileDrop,
  * fields with hint and error, CopyButton, StatusMessage), the feedback components (Progress,
- * Toaster, Modal) and a form of every form element.
+ * Toaster, Modal, Drawer), the navigation and content components (Tabs as a tab bar with badges,
+ * TabLinks, CodeBlock, Tile/TileGrid) and a form of every form element.
  */
 import { expect, test } from '@playwright/test';
 import { axeViolations } from './axe.js';
 
-const pages = ['parity', 'feedback', 'form'];
-const themes = ['stuffcloud', 'stuffcloud-light', 'flower', 'pop-dark'];
+const pages = ['parity', 'feedback', 'form', 'navigation'];
+const themes = ['stuffcloud', 'stuffcloud-light', 'flower', 'pop-dark', 'line'];
 
 for (const name of pages) {
 	for (const theme of themes) {

@@ -1,11 +1,25 @@
-<script lang="ts">
-	import type { Snippet } from 'svelte';
+<script lang="ts" module>
+	import type { TabBadgeFields } from './TabBadge.svelte';
 
-	export interface TabItem {
+	export interface TabItem extends TabBadgeFields {
 		id: string;
 		label: string;
 		disabled?: boolean | undefined;
+		/** Not rendered and skipped by the arrow keys, e.g. a page only admins see. */
+		hidden?: boolean | undefined;
+		/**
+		 * Id of the element this tab controls (`aria-controls`) when Tabs renders no `panel`, e.g. the
+		 * `<main>` the app swaps. Ignored with a `panel`, which gets its own id.
+		 */
+		controls?: string | undefined;
 	}
+</script>
+
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import TabBadge, { tabName } from './TabBadge.svelte';
+	import { watchScrollFade, type ScrollFade } from './scroll-fade.js';
+
 	interface Props {
 		tabs: TabItem[];
 		/** Id of the active tab. */
@@ -14,58 +28,90 @@
 		label?: string | undefined;
 		/** `line` = underline marker, `pill` = filled segment. */
 		look?: 'line' | 'pill' | undefined;
-		/** Renders the panel of the given tab id. */
-		panel: Snippet<[string]>;
+		/**
+		 * Renders the panel of the given tab id. Without it Tabs is only the tab bar (app navigation):
+		 * the page renders the content itself, and `controls` of an item names it.
+		 */
+		panel?: Snippet<[string]> | undefined;
 		/** Called when the user picks another tab (click or arrow keys), not when `value` is set from outside. */
 		onchange?: ((id: string) => void) | undefined;
 		class?: string | undefined;
 	}
 	let { tabs, value = $bindable(), label, look = 'line', panel, onchange, class: cls = '' }: Props = $props();
 	const uid = $props.id();
-	const active = $derived(value ?? tabs.find((t) => !t.disabled)?.id ?? '');
+	const shown = $derived(tabs.filter((t) => !t.hidden));
+	const enabled = $derived(shown.filter((t) => !t.disabled));
+	const active = $derived(value ?? enabled[0]?.id ?? '');
+	/** The tab that takes Tab focus: the active one, or the first usable one when the active one is hidden or disabled. */
+	const focusable = $derived(enabled.some((t) => t.id === active) ? active : enabled[0]?.id);
 	let list: HTMLElement | undefined = $state();
+	let fade: ScrollFade = $state({ start: false, end: false });
+	$effect(() => {
+		if (list) return watchScrollFade(list, (next) => (fade = next));
+	});
+
+	const tabId = (id: string): string => `${uid}-tab-${id}`;
+	const panelId = (id: string): string => `${uid}-panel-${id}`;
 
 	function select(id: string, focus = false) {
 		const changed = id !== active;
 		value = id;
 		if (changed) onchange?.(id);
-		if (focus) list?.querySelector<HTMLElement>(`#${CSS.escape(`${uid}-tab-${id}`)}`)?.focus();
+		if (focus) list?.querySelector<HTMLElement>(`#${CSS.escape(tabId(id))}`)?.focus();
 	}
 	function onkeydown(e: KeyboardEvent) {
-		const enabled = tabs.filter((t) => !t.disabled);
-		const i = enabled.findIndex((t) => t.id === active);
+		const from = (e.target instanceof Element ? e.target.closest('[role="tab"]')?.getAttribute('data-id') : undefined) ?? active;
+		const count = enabled.length;
+		if (count === 0) return;
+		const i = enabled.findIndex((t) => t.id === from);
 		let n = -1;
-		if (e.key === 'ArrowRight') n = (i + 1) % enabled.length;
-		else if (e.key === 'ArrowLeft') n = (i - 1 + enabled.length) % enabled.length;
+		if (e.key === 'ArrowRight') n = i < 0 ? 0 : (i + 1) % count;
+		else if (e.key === 'ArrowLeft') n = i < 0 ? count - 1 : (i - 1 + count) % count;
 		else if (e.key === 'Home') n = 0;
-		else if (e.key === 'End') n = enabled.length - 1;
-		if (n >= 0) {
+		else if (e.key === 'End') n = count - 1;
+		const next = enabled[n];
+		if (next) {
 			e.preventDefault();
-			select(enabled[n].id, true);
+			select(next.id, true);
 		}
 	}
 </script>
 
 <div class="k-tabs {cls}" data-look={look}>
-	<div class="list" role="tablist" aria-label={label} bind:this={list} tabindex="-1" {onkeydown}>
-		{#each tabs as t (t.id)}
+	<div
+		class="list"
+		role="tablist"
+		aria-label={label}
+		bind:this={list}
+		tabindex="-1"
+		{onkeydown}
+		data-fade-start={fade.start ? '' : undefined}
+		data-fade-end={fade.end ? '' : undefined}
+	>
+		{#each shown as t (t.id)}
 			<button
 				type="button"
 				role="tab"
-				id="{uid}-tab-{t.id}"
+				id={tabId(t.id)}
+				data-id={t.id}
 				aria-selected={t.id === active}
-				aria-controls="{uid}-panel-{t.id}"
-				tabindex={t.id === active ? 0 : -1}
+				aria-controls={panel ? panelId(t.id) : t.controls || undefined}
+				aria-label={tabName(t.label, t)}
+				tabindex={t.id === focusable ? 0 : -1}
 				disabled={t.disabled}
 				onclick={() => select(t.id)}
 			>
-				{t.label}
+				<!-- The space keeps label and badge apart in the text (axe: label in name). -->
+				<span class="text">{t.label}</span>
+				<TabBadge item={t} />
 			</button>
 		{/each}
 	</div>
-	<div class="panel" role="tabpanel" id="{uid}-panel-{active}" aria-labelledby="{uid}-tab-{active}" tabindex="0">
-		{@render panel(active)}
-	</div>
+	{#if panel}
+		<div class="panel" role="tabpanel" id={panelId(active)} aria-labelledby={tabId(active)} tabindex="0">
+			{@render panel(active)}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -81,11 +127,35 @@
 		scrollbar-width: thin;
 		outline: none;
 	}
+	/* Hidden tabs on either side: fade that edge as a hint that the strip scrolls. */
+	.list[data-fade-end] {
+		mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
+	}
+	.list[data-fade-start] {
+		mask-image: linear-gradient(90deg, transparent, #000 36px);
+	}
+	.list[data-fade-start][data-fade-end] {
+		mask-image: linear-gradient(90deg, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+	}
+	.list:dir(rtl)[data-fade-end] {
+		mask-image: linear-gradient(270deg, #000 calc(100% - 36px), transparent);
+	}
+	.list:dir(rtl)[data-fade-start] {
+		mask-image: linear-gradient(270deg, transparent, #000 36px);
+	}
+	.list:dir(rtl)[data-fade-start][data-fade-end] {
+		mask-image: linear-gradient(270deg, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+	}
 	[data-look='line'] .list {
 		border-bottom: var(--k-border-w) solid var(--k-line);
 	}
 	button {
+		position: relative;
 		flex: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--k-space-2);
 		min-height: var(--k-control-h);
 		padding: 0 var(--k-space-4);
 		border: 0;
@@ -96,6 +166,7 @@
 		font-weight: var(--k-weight-label);
 		text-transform: var(--k-label-transform);
 		letter-spacing: var(--k-label-tracking);
+		white-space: nowrap;
 		cursor: pointer;
 		transition:
 			color var(--k-dur) var(--k-ease),
@@ -109,6 +180,7 @@
 		opacity: 0.45;
 		cursor: not-allowed;
 	}
+	/* The strip scrolls and would clip an outer ring: draw it inside. */
 	button:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: calc(var(--k-focus-w) * -1);
@@ -127,6 +199,7 @@
 		border-radius: var(--k-radius-control);
 		width: fit-content;
 		max-width: 100%;
+		box-sizing: border-box;
 	}
 	[data-look='pill'] button {
 		min-height: max(calc(var(--k-control-h) - 8px), var(--k-tap-target));
@@ -136,8 +209,28 @@
 		color: var(--k-on-primary);
 		background: var(--k-primary);
 	}
+	/* The focus ring sits on the filled pill: keep a gap of the pill colour between ring and text. */
+	[data-look='pill'] button[aria-selected='true']:focus-visible {
+		outline-offset: calc(var(--k-focus-w) * -2);
+		outline-color: var(--k-on-primary);
+	}
+	/* An accent badge or dot would vanish on a filled pill of the same colour: invert it there. */
+	[data-look='pill'] button[aria-selected='true'] :global(.k-tab-badge[data-tone='accent']) {
+		background: var(--k-on-primary);
+		color: var(--k-primary);
+	}
+	[data-look='pill'] button[aria-selected='true'] :global(.k-tab-dot[data-tone='accent']) {
+		background: var(--k-on-primary);
+	}
 	.panel:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
+	}
+	@media (forced-colors: active) {
+		[data-look='line'] button[aria-selected='true'],
+		[data-look='pill'] button[aria-selected='true'] {
+			box-shadow: none;
+			border-bottom: 2px solid Highlight;
+		}
 	}
 </style>

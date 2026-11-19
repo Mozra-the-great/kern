@@ -20,8 +20,14 @@
 		copyErrorLabel?: string | undefined;
 		/** Accessible name of the block when it can scroll. Defaults to "<language> code" or "Code". */
 		label?: string | undefined;
+		/** Block only: shows `copyLabel` as text on the copy button instead of an icon-only button. */
+		copyShowLabel?: boolean | undefined;
+		/** Block only: no visible scrollbar (the block still scrolls by keyboard, wheel and touch). */
+		hideScrollbar?: boolean | undefined;
 		/** Called with the code after it was copied. */
 		oncopy?: ((text: string) => void) | undefined;
+		/** Called when copying failed (no clipboard, permission denied). */
+		oncopyerror?: ((error: unknown) => void) | undefined;
 		class?: string | undefined;
 		children?: Snippet | undefined;
 	}
@@ -36,7 +42,10 @@
 		copiedLabel = 'Copied',
 		copyErrorLabel = 'Copy failed',
 		label,
+		copyShowLabel = false,
+		hideScrollbar = false,
 		oncopy,
+		oncopyerror,
 		class: cls = '',
 		children
 	}: Props = $props();
@@ -84,7 +93,17 @@
 			<div class="head">
 				{#if language}<span class="lang">{language}</span>{/if}
 				{#if copy}
-					<CopyButton getValue={read} size="sm" label={copyLabel} {copiedLabel} errorLabel={copyErrorLabel} {oncopy} class="copy" />
+					<CopyButton
+						getValue={read}
+						size="sm"
+						label={copyLabel}
+						showLabel={copyShowLabel}
+						{copiedLabel}
+						errorLabel={copyErrorLabel}
+						{oncopy}
+						onerror={oncopyerror}
+						class="copy"
+					/>
 				{/if}
 			</div>
 		{/if}
@@ -92,6 +111,7 @@
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div
 			class="scroll"
+			class:no-bar={hideScrollbar}
 			bind:this={scroller}
 			tabindex={scrollable ? 0 : undefined}
 			role={scrollable ? 'region' : undefined}
@@ -176,6 +196,12 @@
 		overflow-y: hidden;
 		overscroll-behavior-x: contain;
 	}
+	.scroll.no-bar {
+		scrollbar-width: none;
+	}
+	.scroll.no-bar::-webkit-scrollbar {
+		display: none;
+	}
 	.scroll:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: calc(var(--k-focus-w) * -1);
@@ -213,5 +239,16 @@
 	}
 	.gutter + pre {
 		padding-left: var(--k-space-4);
+	}
+	@media (forced-colors: active) {
+		.k-code.inline,
+		.k-code-block,
+		.head,
+		.gutter {
+			border-color: CanvasText;
+		}
+		.scroll:focus-visible {
+			outline-color: Highlight;
+		}
 	}
 </style>
