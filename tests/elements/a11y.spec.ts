@@ -1,7 +1,7 @@
 /**
  * axe on the element test pages in five themes: no serious or critical violation (#25, #50, #51, #58, #64).
  * The pages cover the parity components (Card list and interactive cards, Button/Link, FileDrop,
- * fields with hint and error, CopyButton, StatusMessage), the feedback components (Progress,
+ * fields with hint and error, CopyButton, DownloadButton, StatusMessage), the feedback components (Progress,
  * Toaster, Modal, Drawer), the navigation and content components (Tabs as a tab bar with badges,
  * TabLinks, CodeBlock, Tile/TileGrid), the sortable list and select grid (reorder, also with a selection and a focus ring), a form of every form element, every element with default texts (strings), and the
  * skip link, live announcer, online status and prose (primitives). The primitives page is also
@@ -36,6 +36,17 @@ const cases: Case[] = [
 			await page.locator('#grid').getByRole('option', { name: 'Page 2', exact: true }).click();
 			await page.locator('#plain').getByRole('option', { name: 'Page 5', exact: true }).focus();
 			await page.locator('#list').getByRole('button', { name: 'Move Invoice.pdf down' }).focus();
+		}
+	},
+	{ name: 'download' },
+	{
+		name: 'download',
+		label: 'download page with a visible error and a spoken result',
+		prepare: async (page) => {
+			await page.locator('#boom button').click();
+			await expect(page.locator('#boom [role="alert"]')).toHaveText('Could not make the file');
+			await page.locator('#icon button').click();
+			await expect(page.locator('#icon [role="status"]')).toHaveText('Download started');
 		}
 	},
 	{ name: 'strings' },

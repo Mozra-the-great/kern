@@ -86,6 +86,15 @@ const catalogue = {
 		/** The letters of the date pattern shown as the placeholder ("dd.mm.yyyy") for day, month and year. */
 		pattern: { day: 'dd', month: 'mm', year: 'yyyy' }
 	},
+	downloadButton: {
+		label: 'Download',
+		/** Spoken when the download was handed to the browser (the browser may still ask where to save it). */
+		startedLabel: 'Download started',
+		/** Spoken and shown when the content could not be produced or the browser refused. */
+		errorLabel: 'Download failed',
+		/** File name (and of `saveBlob` / `saveText`) when the given one is empty after cleaning. */
+		fallbackName: 'download'
+	},
 	drawer: { closeLabel: 'Close' },
 	fileDrop: {
 		removeLabel: 'Remove',

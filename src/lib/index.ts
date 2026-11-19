@@ -69,6 +69,7 @@ export { default as Timeline } from './components/Timeline.svelte';
 export { default as Code } from './components/Code.svelte';
 export { default as CodeBlock } from './components/CodeBlock.svelte';
 export { default as CopyButton } from './components/CopyButton.svelte';
+export { default as DownloadButton } from './components/DownloadButton.svelte';
 export { default as StatusMessage } from './components/StatusMessage.svelte';
 export { default as Kbd } from './components/Kbd.svelte';
 export { default as RelativeTime } from './components/RelativeTime.svelte';
@@ -173,6 +174,9 @@ export type {
 } from './components/accent.js';
 export type { ResizablePanel } from './components/Resizable.svelte';
 export type { CopyStatus } from './components/CopyButton.svelte';
+export type { DownloadContent, DownloadStatus } from './components/DownloadButton.svelte';
+export { REVOKE_DELAY_MS, sanitizeFileName, saveBlob, saveText, textMimeType } from './components/download.js';
+export type { DownloadError, DownloadErrorCode, DownloadFailure, DownloadOk, DownloadResult, SaveOptions } from './components/download.js';
 export { matchesAccept, splitFiles } from './components/accept.js';
 export type { SplitFiles } from './components/accept.js';
 export type { FieldControlProps } from './components/Field.svelte';

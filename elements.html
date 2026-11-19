@@ -175,6 +175,9 @@
 			</k-code>
 			<div class="row">
 				<k-copy-button id="cb" value="npm i @mozra-the-great/kern" label="Installationsbefehl kopieren" copied-label="Kopiert" error-label="Kopieren fehlgeschlagen"></k-copy-button>
+				<k-download-button id="dl-text" text="npm i @mozra-the-great/kern" name="installation.txt" label="Installationsbefehl herunterladen" started-label="Download gestartet"></k-download-button>
+				<k-download-button id="dl-report" name="lacke.csv" type="text/csv" label="Bericht herunterladen" show-label show-status started-label="Bericht wird heruntergeladen"></k-download-button>
+				<k-download-button id="dl-fail" label="Fehlschlag simulieren" show-label error-label="Der Bericht konnte nicht erstellt werden"></k-download-button>
 				<k-relative-time value="2026-11-19T11:55:00Z" locale="de"></k-relative-time>
 				<k-relative-time value="1700000000000" now="1700000300000" locale="en" format-style="short"></k-relative-time>
 			</div>
@@ -336,6 +339,10 @@
 			$('k-context-menu').addEventListener('select', (e) => window.kern.toast('Kontextmenü: ' + e.detail));
 			$('k-tree-view').addEventListener('select', (e) => window.kern.toast('Ordner: ' + e.detail));
 			$('#cb').addEventListener('copy', (e) => window.kern.toast.ok('Kopiert: ' + e.detail));
+			$('#dl-report').getContent = async () => { await new Promise((r) => setTimeout(r, 700)); return 'Lack;Marke;Anzahl\nRubinrot;Essie;2\nMeeresgrün;OPI;1\n'; };
+			$('#dl-fail').getContent = () => Promise.reject(new Error('Quelle nicht erreichbar'));
+			$('#dl-text').addEventListener('download', (e) => window.kern.toast.ok('Gespeichert: ' + e.detail.name));
+			$('#dl-fail').addEventListener('download-error', (e) => window.kern.toast.warn('Fehler: ' + e.detail.code));
 			$('#code').addEventListener('copy', (e) => window.kern.toast.ok(e.detail.split('\n').length + ' Zeilen kopiert'));
 			$('#tt').addEventListener('change', (e) => window.kern.toast('Theme: ' + e.detail));
 			$('#tm').addEventListener('change', (e) => window.kern.toast('Theme: ' + e.detail));
