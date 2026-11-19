@@ -149,6 +149,8 @@
 		try {
 			content = typeof getContent === 'function' ? getContent() : (blob ?? text);
 			if (isPromise(content)) {
+				// A reset timer from the previous click must not end this busy state early.
+				clearTimeout(timer);
 				status = 'busy';
 				content = await content;
 			}

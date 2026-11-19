@@ -114,6 +114,31 @@ test('async producer: busy state, one download for two clicks, focus comes back,
 	expect(downloads).toBe(1);
 });
 
+test('the reset timer of an earlier click does not end a later busy state', async ({ page }) => {
+	// Regression (claude-review on #98): the reset timer of click 1 used to set the status to idle while
+	// the slow producer of click 2 was still pending, re-enabling the button mid-download.
+	await page.evaluate(() => {
+		const late = document.getElementById('late') as HTMLElement & { getContent: () => Promise<string> };
+		late.setAttribute('reset-after', '300');
+		late.getContent = () => new Promise((resolve) => setTimeout(() => resolve('slow'), 700));
+	});
+	const button = page.locator('#late button');
+	const first = page.waitForEvent('download');
+	await button.click();
+	await first;
+	await expect(button).not.toHaveAttribute('aria-busy');
+	// Click 2 starts before the 300 ms reset timer of click 1 has fired.
+	const second = page.waitForEvent('download');
+	await button.click();
+	await expect(button).toHaveAttribute('aria-busy', 'true');
+	// Past the moment the old timer would have fired, the producer of click 2 is still pending.
+	await page.waitForTimeout(450);
+	await expect(button).toHaveAttribute('aria-busy', 'true');
+	await expect(button).toBeDisabled();
+	await second;
+	await expect(button).not.toHaveAttribute('aria-busy');
+});
+
 test('keyboard: Enter and Space start the download', async ({ page }) => {
 	const button = page.locator('#text button');
 	await button.focus();
