@@ -77,7 +77,7 @@ Vite und prüft, dass kein Selektor und keine Farbe einer anderen Marke darin la
 werden einzeln importiert (`import { Button } from '@mozra-the-great/kern'`): ein Svelte-Bundler
 kompiliert nur die benutzten. Die Pixel-Art unter `assets/code/` bleibt im Paket als einzelne
 Dateien: keine Komponente importiert sie, sie landet also nur in einem Bundle, wenn du sie selbst
-importierst (Entscheidung in #39, neu bewerten mit der Theme-Quelle in #37).
+importierst (Entscheidung in #39, mit der Theme-Quelle in #37 bestätigt: die Pixel-Art ist kein Token, ihr Vertrag bleibt `assets/code/manifest.json`).
 
 **Touch-Ziele.** Jedes bedienbare Teil ist mindestens `--k-tap-target` groß, sichtbar oder über eine
 unsichtbare Trefferfläche: 44 px (`--k-tap-min`) bei grobem Zeiger (`pointer: coarse`), bei der Maus 0,
@@ -92,6 +92,31 @@ Menüs), `--k-line-dashed` (Ablagefläche), `--k-surface-info|ok|warn|danger|sel
 Statusflächen), `--k-bg-code`/`--k-fg-code`, `--k-fg-hint`, `--k-fg-soft`, `--k-fg-disabled`,
 `--k-shadow-sm` und die Zwischenabstände `--k-space-2-5|3-5|6-5` (10/14/28 px). Welche
 Stuffcloud-Variable welchem Token entspricht, steht in [`docs/themes.md`](docs/themes.md).
+
+**Quelle des Code-Themes (#37).** kern besitzt das Theme `code`; gezeichnet ist es nach stuffclouds
+`docs/design` (`stuff.css` und Mockups), und wo die Quellen sich widersprechen, gilt `docs/design`. Die
+eine maschinenlesbare Quelle ist `src/lib/themes/code.tokens.json` (im Paket als
+`@mozra-the-great/kern/themes/code.tokens.json`): jeder Token mit Wert und Herkunft im Design.
+`brands/code.css` wird daraus erzeugt (`npm run tokens:code`). Ein eingecheckter Schnappschuss der
+Designwerte (`scripts/ci/code-theme-snapshot.json`) ist der Vertrag mit stuffcloud; `npm run tokens:check`
+läuft in CI und schlägt fehl, wenn CSS, Quelle und Schnappschuss auseinanderlaufen oder das Design einen
+Token bekommt, über den das Theme nicht entschieden hat. Gegen einen stuffcloud-Checkout (auch aus
+stuffclouds CI mit einem kern-Checkout): `node scripts/ci/code-theme.mjs --against <stuffcloud>`.
+Die Varianten `code-light`, `-paper` und `-contrast` gehören **nicht** zu stuffclouds Design (das ist nur
+dunkel); kern behält sie für andere Nutzer, mit den Werten des Designsystem-Artefakts.
+`npm run neutrality:check` stellt sicher, dass Themes und Marken-Grafiken keine betreiberspezifischen Werte
+enthalten (Domains, Namen, E-Mail, Hostnamen; eigene Liste über das Actions-Secret `KERN_FORBIDDEN_TERMS`).
+Ablauf zum Auffrischen und alle Details: [`docs/themes.md`](docs/themes.md#code-theme-source-37).
+
+**Komponenten-Look je Theme (#38).** Button, Input, Select, Field, Checkbox, Card, Tabs, Modal, Progress,
+Toaster und FileDrop lesen eigene Tokens (`--k-button-font`, `--k-field-font`, `--k-tab-divider-w`,
+`--k-modal-title-size`, ...). Ihre Standardwerte sind genau das bisherige Aussehen; Flower, Pop und Line
+sehen unverändert aus. Code setzt sie so, dass die Komponenten wie stuffclouds eigene aussehen:
+Buttons in Inter 600 15 px ohne Versalien, Felder in JetBrains Mono 15 px auf transparentem Grund,
+Tabs als Zellenleiste, der Dialog wie im Design (32-px-Titel, unter 760 px gestapelte Aktionen). Die
+Tabelle der Tokens und die Liste der bewusst verbleibenden Unterschiede steht in
+[`docs/themes.md`](docs/themes.md#component-tokens-38). Screenshot-Tests (`tests/elements/visual.spec.ts`)
+prüfen Code hell und dunkel bei 1280, 375 und 320 px, auch unter den alten `stuffcloud`-Namen.
 
 **Neues Theme.** Eine CSS-Datei `src/lib/themes/brands/<name>.css`, die die Variablen aus
 `src/lib/themes/base.css` für `[data-theme^='<name>']` (Form, Schrift, Größe) und

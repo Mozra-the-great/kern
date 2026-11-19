@@ -68,15 +68,20 @@ test.describe('Progress (#42)', () => {
 				),
 				timing: cs.animationTimingFunction,
 				image: cs.backgroundImage,
-				widthVsTrack: bar.getBoundingClientRect().width - (bar.parentElement?.getBoundingClientRect().width ?? 0)
+				widthVsTrack: bar.getBoundingClientRect().width - (bar.parentElement?.getBoundingClientRect().width ?? 0),
+				trackBorders: bar.parentElement
+					? parseFloat(getComputedStyle(bar.parentElement).borderLeftWidth) +
+						parseFloat(getComputedStyle(bar.parentElement).borderRightWidth)
+					: 0
 			};
 		});
 		expect(info.count).toBe(1);
 		expect(new Set(info.properties)).toEqual(new Set(['transform']));
 		expect(info.timing).toBe('steps(4)');
 		expect(info.image).toContain('repeating-linear-gradient');
-		// One period (32px) wider than the track (minus the track's two 1px borders).
-		expect(Math.round(info.widthVsTrack)).toBe(30);
+		// One period (32px) wider than the track's padding box (Code draws the track without an edge, #38).
+		expect(info.trackBorders).toBe(0);
+		expect(Math.round(info.widthVsTrack + info.trackBorders)).toBe(32);
 	});
 
 	test('no animation or transition runs under prefers-reduced-motion', async ({ page }) => {

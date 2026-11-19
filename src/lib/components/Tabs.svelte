@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import { tick, type Snippet } from 'svelte';
 	import TabBadge, { tabName } from './TabBadge.svelte';
 	import { watchScrollFade, type ScrollFade } from './scroll-fade.js';
 
@@ -57,7 +57,12 @@
 		const changed = id !== active;
 		value = id;
 		if (changed) onchange?.(id);
-		if (focus) list?.querySelector<HTMLElement>(`#${CSS.escape(tabId(id))}`)?.focus();
+		if (!focus) return;
+		const tab = list?.querySelector<HTMLElement>(`#${CSS.escape(tabId(id))}`);
+		tab?.focus();
+		// A theme may set the selected tab heavier (--k-tab-selected-weight), so it grows once the
+		// selection renders: scroll it fully into view after that, or the strip stops short of its end.
+		void tick().then(() => tab?.scrollIntoView({ block: 'nearest', inline: 'nearest' }));
 	}
 	function onkeydown(e: KeyboardEvent) {
 		const from = (e.target instanceof Element ? e.target.closest('[role="tab"]')?.getAttribute('data-id') : undefined) ?? active;
@@ -122,9 +127,9 @@
 	}
 	.list {
 		display: flex;
-		gap: var(--k-space-1);
+		gap: var(--k-tabs-gap);
 		overflow-x: auto;
-		scrollbar-width: thin;
+		scrollbar-width: var(--k-tabs-scrollbar);
 		outline: none;
 	}
 	/* Hidden tabs on either side: fade that edge as a hint that the strip scrolls. */
@@ -156,16 +161,16 @@
 		align-items: center;
 		justify-content: center;
 		gap: var(--k-space-2);
-		min-height: var(--k-control-h);
-		padding: 0 var(--k-space-4);
+		min-height: var(--k-tab-h);
+		padding: 0 var(--k-tab-pad-x);
 		border: 0;
 		background: transparent;
-		color: var(--k-fg-muted);
-		font-family: var(--k-label-font);
-		font-size: var(--k-label-size);
-		font-weight: var(--k-weight-label);
-		text-transform: var(--k-label-transform);
-		letter-spacing: var(--k-label-tracking);
+		color: var(--k-tab-fg);
+		font-family: var(--k-tab-font);
+		font-size: var(--k-tab-size);
+		font-weight: var(--k-tab-weight);
+		text-transform: var(--k-tab-transform);
+		letter-spacing: var(--k-tab-tracking);
 		white-space: nowrap;
 		cursor: pointer;
 		transition:
@@ -174,7 +179,7 @@
 			box-shadow var(--k-dur) var(--k-ease);
 	}
 	button:hover:not(:disabled) {
-		color: var(--k-fg);
+		color: var(--k-tab-hover-fg);
 	}
 	button:disabled {
 		opacity: 0.45;
@@ -187,10 +192,13 @@
 	}
 	[data-look='line'] button {
 		margin-bottom: calc(var(--k-border-w) * -1);
+		border-inline-end: var(--k-tab-divider-w) solid var(--k-line);
 		box-shadow: inset 0 -2px 0 transparent;
 	}
 	[data-look='line'] button[aria-selected='true'] {
 		color: var(--k-fg);
+		background: var(--k-tab-selected-bg);
+		font-weight: var(--k-tab-selected-weight);
 		box-shadow: inset 0 -2px 0 var(--k-accent-mark);
 	}
 	[data-look='pill'] .list {

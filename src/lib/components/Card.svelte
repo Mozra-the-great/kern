@@ -99,11 +99,11 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		gap: var(--k-space-4);
-		padding: var(--k-space-6);
+		gap: var(--k-card-gap);
+		padding: var(--k-card-pad);
 		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: var(--k-radius-card);
-		background: var(--k-bg-raised);
+		background: var(--k-card-bg);
 		color: var(--k-fg);
 		box-shadow: var(--k-shadow-raised);
 		min-width: 0;
@@ -120,7 +120,7 @@
 		box-shadow: none;
 	}
 	.media {
-		margin: calc(var(--k-space-6) * -1) calc(var(--k-space-6) * -1) 0;
+		margin: calc(var(--k-card-pad) * -1) calc(var(--k-card-pad) * -1) 0;
 		overflow: hidden;
 		border-radius: var(--k-radius-card) var(--k-radius-card) 0 0;
 	}

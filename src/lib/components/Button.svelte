@@ -106,17 +106,17 @@
 		box-sizing: border-box;
 		align-items: center;
 		justify-content: center;
-		gap: var(--k-space-2);
+		gap: var(--k-button-gap);
 		min-height: var(--k-control-h);
 		min-width: var(--k-tap-target);
-		padding: 0 var(--k-space-5);
+		padding: 0 var(--k-button-pad-x);
 		border: var(--k-border-w) solid transparent;
 		border-radius: var(--k-radius-control);
-		font-family: var(--k-label-font);
-		font-size: var(--k-label-size);
-		font-weight: var(--k-weight-label);
-		text-transform: var(--k-label-transform);
-		letter-spacing: var(--k-label-tracking);
+		font-family: var(--k-button-font);
+		font-size: var(--k-button-size);
+		font-weight: var(--k-button-weight);
+		text-transform: var(--k-button-transform);
+		letter-spacing: var(--k-button-tracking);
 		line-height: 1.2;
 		text-decoration: none;
 		cursor: pointer;
@@ -181,10 +181,11 @@
 	[data-variant='secondary'] {
 		background: transparent;
 		color: var(--k-fg);
-		border-color: var(--k-border);
+		border-color: var(--k-button-secondary-border);
+		font-weight: var(--k-button-secondary-weight);
 	}
 	[data-variant='secondary']:hover:not(:disabled, [aria-disabled='true']) {
-		background: var(--k-bg-sunken);
+		background: var(--k-button-secondary-hover-bg);
 		border-color: var(--k-fg);
 	}
 

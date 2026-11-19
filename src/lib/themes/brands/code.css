@@ -1,19 +1,18 @@
-/* Code — from the stuffcloud design system (the app that first used it). Grid look: square corners,
+/* Code — from the stuffcloud design (the app that first used it). Grid look: square corners,
  * hard offset shadows, ink-filled buttons that turn accent on hover.
  * Fonts: Inter, JetBrains Mono, Silkscreen (load them yourself).
  *
- * Sizes follow the design's size tokens: target-min 44px for every target (mouse
- * too), target-icon 48px for icon-only buttons, target-field 52px for fields and
- * buttons, 56px below the 760px breakpoint (the app's theme.css).
- * The dark variant's line-strong, surface-*, fg-code/hint/soft/disabled,
- * line-dashed and shadow-sm come from the app (docs/design/prototypes/stuff.css:
- * --line2, --bg-error, --bg-warn, --bg-selected, --fg-*, --line-drop, --shadow);
- * the design system defines no such tokens for light, paper and contrast, so
- * those keep the base defaults except a derived line-strong.
- * bg-code is the design's surface-code in every variant.
+ * GENERATED from src/lib/themes/code.tokens.json by `npm run tokens:code`: change that file,
+ * never this one (docs/themes.md, 'Code theme source'). Every value there names its source in
+ * stuffcloud's docs/design (or the app, or the design-system artifact for light, paper and contrast).
+ *
+ * Sizes: target-min 44px for every target (mouse too), 48px for icon-only buttons, 52px for
+ * fields and buttons, 56px below the 760px breakpoint. The component tokens (--k-button-*,
+ * --k-field-*, --k-tab-*, --k-modal-*, ...) reproduce the look of stuffcloud's components (#38).
  *
  * Renamed from "stuffcloud" (#85): every rule also answers to the old data-theme values
- * (stuffcloud, stuffcloud-dark, -light, -paper, -contrast) as deprecated aliases until 1.0. */
+ * (stuffcloud, stuffcloud-dark, -light, -paper, -contrast) as deprecated aliases until 1.0.
+ */
 [data-theme^='code'],
 [data-theme^='stuffcloud'] {
 	--k-border-w: 1px;
@@ -25,9 +24,9 @@
 	--k-radius-avatar: 999px;
 	--k-shadow-raised: none;
 	--k-shadow-overlay: 8px 8px 0 rgba(16, 16, 18, 0.6);
-	--k-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-	--k-font-display: 'Silkscreen', 'Press Start 2P', ui-monospace, monospace;
-	--k-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--k-font-sans: 'Inter', system-ui, sans-serif;
+	--k-font-display: 'Silkscreen', monospace;
+	--k-font-mono: 'JetBrains Mono', ui-monospace, monospace;
 	--k-weight-display: 700;
 	--k-weight-heading: 500;
 	--k-weight-label: 400;
@@ -43,20 +42,94 @@
 	--k-tap-target: var(--k-tap-min);
 	--k-disabled-opacity: 0.4;
 	--k-shadow-sm: 4px 4px 0 rgba(0, 0, 0, 0.4);
+	/* the design system's '120ms colour changes'; docs/design has no transition */
 	--k-dur: 120ms;
+	/* stepped like the two-step bob of the mascot (design README, Motion) */
 	--k-ease: steps(2, end);
 	/* pixel stripes that step along (the app's Progress) */
 	--k-progress-period: 32px;
 	--k-progress-loop: 0.8s;
 	--k-progress-ease: steps(4);
-	/* the app's toast region: 16px, 76px above the tab bar on phones */
 	--k-toaster-offset: 16px;
+	/* the app's toast region: 76px above the tab bar on phones */
 	--k-toaster-offset-mobile: 76px;
+	--k-button-font: var(--k-font-sans);
+	--k-button-size: 15px;
+	--k-button-weight: 600;
+	--k-button-transform: none;
+	--k-button-tracking: 0;
+	--k-button-pad-x: var(--k-space-6-5);
+	--k-button-gap: var(--k-space-2-5);
+	/* kern's secondary button is the design's ghost button */
+	--k-button-secondary-border: var(--k-line-strong);
+	--k-button-secondary-weight: 500;
+	--k-button-secondary-hover-bg: transparent;
+	--k-field-font: var(--k-font-mono);
+	--k-field-size: 15px;
+	--k-field-bg: transparent;
+	--k-select-bg: var(--k-bg);
+	--k-field-pad-x: var(--k-space-3-5);
+	--k-field-disabled-opacity: var(--k-disabled-opacity);
+	--k-field-label-color: var(--k-fg-muted);
+	--k-field-hint-font: var(--k-font-mono);
+	--k-field-hint-size: 13px;
+	--k-field-hint-color: var(--k-fg-muted);
+	--k-check-gap: var(--k-space-3-5);
+	--k-check-checked: var(--k-accent);
+	/* the design draws a native checkbox with accent-color pink, whose tick the browser paints dark on it */
+	--k-check-mark: var(--k-on-accent);
+	--k-check-label-size: 15px;
+	--k-card-bg: transparent;
+	--k-card-pad: var(--k-space-5);
+	--k-card-gap: var(--k-space-2-5);
+	--k-tabs-gap: 0;
+	--k-tabs-scrollbar: none;
+	--k-tab-h: 52px;
+	--k-tab-pad-x: 22px;
+	/* inherits the page's Inter */
+	--k-tab-font: var(--k-font-sans);
+	--k-tab-size: 15px;
+	--k-tab-weight: 400;
+	--k-tab-selected-weight: 600;
+	--k-tab-transform: none;
+	--k-tab-tracking: 0;
+	--k-tab-fg: var(--k-fg);
+	--k-tab-hover-fg: var(--k-accent-text);
+	--k-tab-selected-bg: var(--k-bg-raised);
+	--k-tab-divider-w: 1px;
+	/* the delete-site dialog (S), the one dialog of the design */
+	--k-modal-bg: var(--k-bg);
+	--k-modal-pad: 36px 36px 32px;
+	--k-modal-gap: var(--k-space-6);
+	--k-modal-title-size: 32px;
+	--k-modal-title-tracking: -0.8px;
+	--k-modal-title-leading: 1.1;
+	--k-progress-track: var(--k-line);
+	--k-progress-track-border-w: 0px;
+	/* 420px of toasts plus the 16px offset on both sides */
+	--k-toaster-width: 452px;
+	--k-toast-pad: var(--k-space-2) var(--k-space-2) var(--k-space-2) var(--k-space-4);
+	--k-toast-msg-size: 15px;
+	--k-toast-ok-border: var(--k-ok);
+	--k-toast-warn-border: var(--k-warn);
+	--k-filedrop-bg: transparent;
+	--k-filedrop-pad: var(--k-space-6) var(--k-space-6-5);
+	--k-filedrop-prompt-font: var(--k-font-mono);
+	--k-filedrop-prompt-size: 14px;
+	--k-filedrop-prompt-weight: 400;
+	--k-filedrop-prompt-transform: none;
+	--k-filedrop-prompt-tracking: 0;
 }
 @media (max-width: 760px) {
 	[data-theme^='code'],
 	[data-theme^='stuffcloud'] {
 		--k-control-h: 56px;
+		--k-modal-pad: 28px 16px 24px;
+		--k-modal-gap: var(--k-space-5);
+		--k-modal-title-size: 28px;
+		--k-modal-title-tracking: -0.7px;
+		/* stacked, the main action on top (the footer lists it last, as on desktop) */
+		--k-modal-actions-direction: column-reverse;
 	}
 }
 [data-theme='code'],
@@ -70,27 +143,35 @@
 	--k-fg: #f4f4f0;
 	--k-fg-muted: #a2a2ab;
 	--k-line: #26262b;
-	--k-border: #6e6e78;
+	/* the design-system artifact says #6e6e78; docs/design wins (#37) */
+	--k-border: #6c6c76;
 	--k-primary: #f4f4f0;
 	--k-on-primary: #101012;
 	--k-primary-hover: #ff79b0;
 	--k-on-primary-hover: #101012;
 	--k-accent: #ff79b0;
 	--k-on-accent: #101012;
+	/* no tinted badge ground in the design: the raised surface */
 	--k-accent-soft: #17171a;
 	--k-accent-text: #ff79b0;
 	--k-link: #c78bff;
 	--k-danger: #ff4f8b;
 	--k-on-danger: #101012;
+	/* no tinted badge ground in the design: the raised surface */
 	--k-danger-soft: #17171a;
 	--k-ok: #3ddc84;
+	/* no tinted badge ground in the design: the raised surface */
 	--k-ok-soft: #17171a;
 	--k-warn: #ffb000;
+	/* no tinted badge ground in the design: the raised surface */
 	--k-warn-soft: #17171a;
+	/* the design has no info colour: lilac, as for links */
 	--k-info: #c78bff;
+	/* no tinted badge ground in the design: the raised surface */
 	--k-info-soft: #17171a;
 	--k-focus: #f4f4f0;
-	--k-backdrop: rgba(0, 0, 0, 0.6);
+	/* the dim layer behind the delete-site dialog */
+	--k-backdrop: rgba(16, 16, 18, 0.55);
 	--k-selected: #17171a;
 	--k-bg-code: #0c0c0e;
 	--k-line-strong: #3a3a42;
@@ -103,6 +184,7 @@
 	--k-fg-soft: #d8d8de;
 	--k-fg-disabled: #6a6a74;
 }
+/* light, paper and contrast exist only in the design-system artifact (docs/design is dark only) */
 [data-theme='code-light'],
 [data-theme='stuffcloud-light'] {
 	color-scheme: light;
@@ -132,10 +214,12 @@
 	--k-info: #5b2fc9;
 	--k-info-soft: #ffffff;
 	--k-focus: #16141a;
+	/* kern's: the design system has no backdrop */
 	--k-backdrop: rgba(16, 16, 18, 0.4);
 	--k-selected: #ffffff;
 	--k-bg-code: #f1f0ee;
-	--k-line-strong: #bdbbc3; /* derived: 30 % from line toward border, like the dark pair */
+	/* derived: 30 % from line toward border, like the dark pair */
+	--k-line-strong: #bdbbc3;
 }
 [data-theme='code-paper'],
 [data-theme='stuffcloud-paper'] {
@@ -166,10 +250,12 @@
 	--k-info: #4a22a8;
 	--k-info-soft: #f4f3f1;
 	--k-focus: #111111;
+	/* kern's: the design system has no backdrop */
 	--k-backdrop: rgba(0, 0, 0, 0.35);
 	--k-selected: #f4f3f1;
 	--k-bg-code: #f4f3f1;
-	--k-line-strong: #b5b5b5; /* derived: 30 % from line toward border, like the dark pair */
+	/* derived: 30 % from line toward border, like the dark pair */
+	--k-line-strong: #b5b5b5;
 }
 [data-theme='code-contrast'],
 [data-theme='stuffcloud-contrast'] {
@@ -200,6 +286,7 @@
 	--k-info: #d9b8ff;
 	--k-info-soft: #0a0a0a;
 	--k-focus: #ffffff;
+	/* kern's: the design system has no backdrop */
 	--k-backdrop: rgba(0, 0, 0, 0.75);
 	--k-selected: #0a0a0a;
 	--k-bg-code: #000000;

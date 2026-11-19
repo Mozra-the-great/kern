@@ -61,6 +61,15 @@ jobs:
       - name: Brand-art drift (assets/* against their manifests, the Code catalogue and the SVG rules)
         # The manifests are the contract with the art sources; refresh: assets/README.md.
         run: npm run assets:check
+      - name: Code theme source (brands/code.css generated from code.tokens.json, values against the design snapshot)
+        # The snapshot is the contract with stuffcloud's docs/design; refresh: docs/themes.md, "Code theme source".
+        run: npm run tokens:check
+      - name: Instance neutrality (no operator domains, names or addresses in themes and brand art)
+        # Generic patterns always; KERN_FORBIDDEN_TERMS (Actions secret or variable, never in the repo) adds the
+        # operator's own list. Forks and Dependabot get no secrets: then only the generic check runs.
+        env:
+          KERN_FORBIDDEN_TERMS: ${{ secrets.KERN_FORBIDDEN_TERMS || vars.KERN_FORBIDDEN_TERMS }}
+        run: npm run neutrality:check
       - name: Build
         # svelte-package (dist/), custom elements (dist-elements/ + typings), demo (demo-dist/)
         run: npm run build
@@ -84,7 +93,20 @@ jobs:
       - name: Touch targets (Playwright, built demo)
         run: npm run test:targets
       - name: Element tests (Playwright, built dist-elements/)
+        # Includes the visual regression of the Code theme (tests/elements/visual.spec.ts, Linux baselines).
         run: npm run test:elements
+      - name: Upload the actual screenshots of a failed visual test
+        # The way to new Linux baselines: `gh run download <run> -n visual-results -D <dir>`, then
+        # `node scripts/ci/visual-baselines.mjs <dir>`; review every image before committing (docs/themes.md).
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: visual-results
+          path: |
+            tests/elements/test-results/
+            tests/elements/visual.spec.ts-snapshots/*-linux.png
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Mascot runtime (Playwright, built k-mascot under a strict CSP)
         run: npm run test:mascot
 

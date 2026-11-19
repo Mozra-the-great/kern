@@ -38,7 +38,7 @@
 		text-transform: var(--k-label-transform);
 		letter-spacing: var(--k-label-tracking);
 		line-height: 1.5;
-		color: var(--k-fg);
+		color: var(--k-field-label-color);
 	}
 	.req {
 		color: var(--k-danger);

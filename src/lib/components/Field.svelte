@@ -93,15 +93,16 @@
 		font-weight: var(--k-weight-label);
 		text-transform: var(--k-label-transform);
 		letter-spacing: var(--k-label-tracking);
-		color: var(--k-fg);
+		color: var(--k-field-label-color);
 	}
 	.req {
 		color: var(--k-danger);
 	}
 	.desc {
 		margin: 0;
-		font-size: var(--k-text-sm);
-		color: var(--k-fg-hint);
+		font-family: var(--k-field-hint-font);
+		font-size: var(--k-field-hint-size);
+		color: var(--k-field-hint-color);
 		line-height: 1.4;
 	}
 	.error {

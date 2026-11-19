@@ -58,10 +58,10 @@
 		align-items: center;
 		gap: var(--k-space-2);
 		min-height: var(--k-control-h);
-		padding: 0 var(--k-space-4);
+		padding: 0 var(--k-field-pad-x);
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: var(--k-radius-field);
-		background: var(--k-bg-raised);
+		background: var(--k-field-bg);
 		color: var(--k-fg);
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
@@ -88,7 +88,8 @@
 		background: transparent;
 		color: inherit;
 		font: inherit;
-		font-size: var(--k-text-md);
+		font-family: var(--k-field-font);
+		font-size: var(--k-field-size);
 	}
 	input::placeholder {
 		color: var(--k-fg-muted);
@@ -98,7 +99,7 @@
 		cursor: not-allowed;
 	}
 	.k-input:has(input:disabled) {
-		opacity: 0.55;
+		opacity: var(--k-field-disabled-opacity);
 	}
 	.adorn {
 		display: inline-flex;

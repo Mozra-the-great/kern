@@ -65,9 +65,9 @@
 	}
 	.list {
 		display: flex;
-		gap: var(--k-space-1);
+		gap: var(--k-tabs-gap);
 		overflow-x: auto;
-		scrollbar-width: thin;
+		scrollbar-width: var(--k-tabs-scrollbar);
 	}
 	.list[data-fade-end] {
 		mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
@@ -98,16 +98,16 @@
 		justify-content: center;
 		gap: var(--k-space-2);
 		box-sizing: border-box;
-		min-height: var(--k-control-h);
-		padding: 0 var(--k-space-4);
+		min-height: var(--k-tab-h);
+		padding: 0 var(--k-tab-pad-x);
 		border: 0;
 		background: transparent;
-		color: var(--k-fg-muted);
-		font-family: var(--k-label-font);
-		font-size: var(--k-label-size);
-		font-weight: var(--k-weight-label);
-		text-transform: var(--k-label-transform);
-		letter-spacing: var(--k-label-tracking);
+		color: var(--k-tab-fg);
+		font-family: var(--k-tab-font);
+		font-size: var(--k-tab-size);
+		font-weight: var(--k-tab-weight);
+		text-transform: var(--k-tab-transform);
+		letter-spacing: var(--k-tab-tracking);
 		line-height: normal;
 		text-decoration: none;
 		white-space: nowrap;
@@ -118,7 +118,7 @@
 			box-shadow var(--k-dur) var(--k-ease);
 	}
 	a:hover {
-		color: var(--k-fg);
+		color: var(--k-tab-hover-fg);
 	}
 	/* The strip scrolls and would clip an outer ring: draw it inside. */
 	a:focus-visible {
@@ -127,10 +127,13 @@
 	}
 	[data-look='line'] a {
 		margin-bottom: calc(var(--k-border-w) * -1);
+		border-inline-end: var(--k-tab-divider-w) solid var(--k-line);
 		box-shadow: inset 0 -2px 0 transparent;
 	}
 	[data-look='line'] a[aria-current='page'] {
 		color: var(--k-fg);
+		background: var(--k-tab-selected-bg);
+		font-weight: var(--k-tab-selected-weight);
 		box-shadow: inset 0 -2px 0 var(--k-accent-mark);
 	}
 	[data-look='pill'] .list {

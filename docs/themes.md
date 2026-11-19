@@ -7,10 +7,11 @@ another token by default, so a theme only sets them when its design has its own 
 
 ## stuffcloud variables and their kern tokens (theme `code`)
 
-Source: stuffcloud's `web/apps/web/src/styles/tokens.css` + `theme.css` (dark theme, from
-`docs/design/prototypes/stuff.css`) and the stuffcloud design system (`tokens.json`). The design is the kern theme `code` (called
-`stuffcloud` until #85; the old `data-theme` values stay as aliases until 1.0). Values are for
-`data-theme="code"` (= `code-dark`).
+Source: stuffcloud's `docs/design/prototypes/stuff.css` and mockups, the app's `web/apps/web/src/styles/theme.css`
+(named literals of the mockups) and, for light, paper and contrast, the stuffcloud design system artifact
+(`tokens.json`). The design is the kern theme `code` (called `stuffcloud` until #85; the old `data-theme` values
+stay as aliases until 1.0). Values are for `data-theme="code"` (= `code-dark`). The complete, machine-readable
+list with the source of every value is `src/lib/themes/code.tokens.json` (next section).
 
 | stuffcloud | value | kern token | kern value | note |
 | --- | --- | --- | --- | --- |
@@ -25,7 +26,7 @@ Source: stuffcloud's `web/apps/web/src/styles/tokens.css` + `theme.css` (dark th
 | `--fg-disabled` | `#6a6a74` | `--k-fg-disabled` | `#6a6a74` | disabled menu items and options |
 | line | `#26262b` | `--k-line` | `#26262b` | dividers |
 | `--line2` | `#3a3a42` | `--k-line-strong` | `#3a3a42` | Card, Modal, Drawer, Toast, Popover, menus |
-| border-control | `#6e6e78` | `--k-border` | `#6e6e78` | the app's `--field-border` is `#6c6c76`; kern follows the design system (decided in #37) |
+| `--field-border` | `#6c6c76` | `--k-border` | `#6c6c76` | the design-system artifact's border-control is `#6e6e78`; docs/design wins (#37) |
 | `--line-drop` | `#6b5a8f` | `--k-line-dashed` | `#6b5a8f` | FileDrop edge |
 | accent | `#ff79b0` | `--k-accent`, `--k-accent-mark`, `--k-accent-text`, `--k-primary-hover` | `#ff79b0` | |
 | on-accent | `#101012` | `--k-on-accent`, `--k-on-primary` | `#101012` | |
@@ -37,6 +38,8 @@ Source: stuffcloud's `web/apps/web/src/styles/tokens.css` + `theme.css` (dark th
 | `--violet` / panel | `#8b5cf6` | not used | | decorative panel behind the mascot |
 | `--gray` | `#5a5a64` | not used | | |
 | shadow-pixel | `8px 8px 0 rgba(16,16,18,.6)` | `--k-shadow-overlay` | same | dialogs, popovers |
+| delete-site dialog scrim | `rgba(16,16,18,.55)` | `--k-backdrop` | same | was `rgba(0,0,0,.6)`, no design source (#37) |
+| `--sans` / `--mono` / `--pix` | `'Inter',system-ui,sans-serif` / `'JetBrains Mono',ui-monospace,monospace` / `'Silkscreen',monospace` | `--k-font-sans` / `--k-font-mono` / `--k-font-display` | same | the artifact's longer fallback stacks gave way to docs/design (#37) |
 | shadow-pixel-sm / toast `--shadow` | `4px 4px 0 rgba(0,0,0,.4)` | `--k-shadow-sm` | same | Toast |
 | target-min | 44px | `--k-tap-min`, `--k-tap-target`, `--k-control-h-sm` | 44px | every pointer |
 | target-icon | 48px | `--k-tap-icon` | 48px | IconButton, CopyButton, dialog close |
@@ -47,6 +50,141 @@ Source: stuffcloud's `web/apps/web/src/styles/tokens.css` + `theme.css` (dark th
 The light, paper and contrast variants exist only in the design system; it has no tinted
 state surfaces, code/hint colours or drop line for them, so they keep the base defaults.
 `--k-line-strong` there is derived (30 % from `line` toward `border`, the ratio of the dark pair).
+
+**The extra variants** (`code-light`, `code-paper`, `code-contrast`) are **not part of stuffcloud's
+design**: docs/design is dark only (stuffcloud ADR 0008, "the UI is dark only"). kern keeps them for
+other consumers, with the values of the design-system artifact; stuffcloud uses `code` (= `code-dark`).
+
+## Code theme source (#37)
+
+**Decision: kern owns the Code theme** (option a of #37); stuffcloud's `docs/design` stays the design it
+is drawn from. The theme has one machine-readable source:
+
+| File | What |
+| --- | --- |
+| `src/lib/themes/code.tokens.json` | Every token of every variant with its value and its source (`from`). Shipped as `@mozra-the-great/kern/themes/code.tokens.json`, so stuffcloud can read the kit's values. |
+| `src/lib/themes/brands/code.css` | **Generated** from the JSON (`npm run tokens:code`); never edited by hand. |
+| `scripts/ci/code-theme-snapshot.json` | The design values the theme uses, read from a stuffcloud checkout and the artifact: the contract, because CI reaches neither. Records the stuffcloud commit and its `docs/design/pdf-source.sha256`. |
+| `scripts/ci/code-theme.mjs` | Generator and drift check. |
+
+A `from` names the place a value comes from:
+
+- `design:stuff.css|.btn{font}` a declaration in `docs/design/prototypes/stuff.css` (`design:stuff.css|@media (max-width:760px)|.btn{min-height}` inside the media rule),
+- `design:S.dc.html#<text>` a literal in a mockup (the delete-site dialog has no class, so its style text is the source),
+- `app:ui/field.css|.sc-fld__hint{color}` stuffcloud's `web/apps/web/src` where docs/design has no value (the hint and error text of fields, the toast region, the drop zone, Progress, the named colours of `theme.css`),
+- `ds:surface@light` a colour of the design-system artifact for a variant, `ds:target-min` another of its tokens.
+
+`design` records the source value when the kern value is derived from it (a `font` shorthand split into
+family and size, `0 28px` mapped onto `--k-space-6-5`); a token without a source carries a `note` that
+says why (`--k-dur`, `--k-ease`, the light backdrops). `unused` lists the design's root tokens the theme
+does not take, with the reason.
+
+**Where the sources disagree, docs/design wins** (Moritz' rule): `--k-border` is `#6c6c76`
+(`--field-border`; the artifact has `#6e6e78`), the font stacks are those of `stuff.css`, the backdrop is
+the scrim behind the delete-site dialog (`rgba(16,16,18,.55)`; it was `rgba(0,0,0,.6)` without a source),
+and the Modal follows the design's one dialog (S/T: 520 px, 32 px heading, page background) rather than
+the app's `Dialog.svelte` (480 px, 22 px).
+
+**The drift check.** `npm run tokens:check` runs in the `build` job: it fails when `brands/code.css` is
+not the generated file, when a recorded value disagrees with the snapshot, when the snapshot lacks a
+reference, when a mockup literal is gone, or when the design has a root token (`stuff.css :root`, the
+app's `theme.css :root`) that the theme neither uses nor lists in `unused`. Against stuffcloud itself:
+
+```sh
+node scripts/ci/code-theme.mjs --against <stuffcloud checkout>            # docs/design and the app
+node scripts/ci/code-theme.mjs --against <stuffcloud> --design-system tokens.json   # plus the artifact
+```
+
+It reads every snapshot value again and fails on any change, a new root token or a removed one, so
+stuffcloud's CI can run it with a checkout of kern at the pinned tag (`actions/checkout` of
+`Mozra-the-great/kern`, then `node kern/scripts/ci/code-theme.mjs --against .`): a design token that
+changes without the kit theme changing fails there. When only unrelated parts of docs/design changed
+(the PDF fingerprint moved, no used value did) it passes with a note.
+
+**Refresh when the design changes:**
+
+1. `node scripts/ci/code-theme.mjs --against <stuffcloud>` shows what changed. For light, paper and
+   contrast, save the artifact's `project/tokens.json` ("Stuffcloud - Designsystem") and add
+   `--design-system <file>`.
+2. `node scripts/ci/code-theme.mjs --refresh <stuffcloud> [--design-system <file>]` rewrites the snapshot
+   (without `--design-system` the artifact values stay as they were).
+3. `npm run tokens:check` now lists every token whose recorded source value is stale: update its `value`
+   (and `design`) in `code.tokens.json`, or add a new design token to a block or to `unused`.
+4. `npm run tokens:code`, `npm test` (contrast: a value the contract forces stays and gets a `note`),
+   and new visual baselines (below). Commit the JSON, the CSS and the snapshot together.
+
+**Instance neutrality.** `npm run neutrality:check` (also in `build`) fails on an e-mail address, a URL,
+a domain name or an IPv4 address in `src/lib/themes/**`, the snapshot or `assets/**` (contents and file
+names). Allowed: the SVG namespace, `claude.ai` (the artifacts named in the asset manifests) and the
+documentation names of RFC 2606/6761 (`example.com`, `*.test`, ...). The operator's own names and
+domains cannot be listed in a public repository: set them as the Actions secret or variable
+`KERN_FORBIDDEN_TERMS` (one per line or comma separated, `#` comments); findings name the entry number,
+never the term. Without it (forks, Dependabot) only the generic patterns run.
+
+## Component tokens (#38)
+
+A theme draws components through tokens, not through component CSS (custom elements have shadow roots
+that page CSS does not reach). Each token's default in `base.css` is exactly what the component read
+before, so a theme that sets none of them looks as it did; `npm test` checks that for every variant of
+Flower, Pop and Line.
+
+| Component | Tokens | Code value |
+| --- | --- | --- |
+| Button | `--k-button-font`, `-size`, `-weight`, `-transform`, `-tracking` (default: the label tokens), `-pad-x`, `-gap`, `--k-button-secondary-border`, `-weight`, `-hover-bg` | Inter 600 15 px sentence case, 28 px padding, 10 px gap; secondary = the design's ghost button (`line2` edge, 500, no fill on hover) |
+| Input, Select | `--k-field-font` (`initial` = inherit), `--k-field-size`, `--k-field-bg`, `--k-select-bg`, `--k-field-pad-x`, `--k-field-disabled-opacity` | JetBrains Mono 15 px, transparent (select on `--k-bg`), 14 px padding, 0.4 |
+| Field, Label | `--k-field-label-color`, `--k-field-hint-font`, `--k-field-hint-size`, `--k-field-hint-color` | muted label (mono 12 px caps), hint and error mono 13 px, hint muted |
+| Checkbox | `--k-check-gap`, `--k-check-checked`, `--k-check-mark`, `--k-check-label-size` (`initial` = inherit), `--k-check-disabled-opacity` | 14 px gap, pink box with dark tick, 15 px label |
+| Card | `--k-card-bg`, `--k-card-pad` (one length), `--k-card-gap` | transparent, 20 px, 10 px |
+| Tabs | `--k-tabs-gap`, `--k-tabs-scrollbar`, `--k-tab-h`, `--k-tab-pad-x`, `--k-tab-font`, `-size`, `-weight`, `-selected-weight`, `-transform`, `-tracking`, `--k-tab-fg`, `-hover-fg`, `-selected-bg`, `--k-tab-divider-w` | a strip of cells (1 px `line` after each tab, `look="line"`), 52 px, Inter 15 px, selected 600 on the raised surface with the 2 px accent underline, pink on hover, no scrollbar |
+| Modal | `--k-modal-bg`, `-pad`, `-gap`, `-title-size`, `-title-tracking`, `-title-leading`, `--k-modal-actions-direction` | page background, 36/36/32 px, 24 px gap, 32 px/-0.8 px title; below 760 px 28/16/24 px, 28 px title, stacked actions (main action on top) |
+| Progress | `--k-progress-track`, `--k-progress-track-border-w` | `line` track without an edge |
+| Toaster | `--k-toaster-width` (includes the offset on both sides), `--k-toast-pad`, `--k-toast-msg-size`, `--k-toast-ok-border`, `--k-toast-warn-border` | 420 px of toasts, 8/8/8/16 px, 15 px, green and amber edges |
+| FileDrop | `--k-filedrop-bg`, `--k-filedrop-pad`, `--k-filedrop-prompt-font`, `-size`, `-weight`, `-transform`, `-tracking` | transparent, 24/28 px, mono 14 px sentence case |
+
+**Phone breakpoint.** A custom property cannot be used in a media query, so a theme switches tokens in
+its own `@media` rule at its breakpoint (Code: `max-width: 760px`, the design system's `breakpoint`):
+`--k-control-h`, the Modal tokens and `--k-toaster-offset-mobile` change there.
+
+**Approved differences** to stuffcloud's components (side by side with `web/apps/web/src/ui`); each needs
+Moritz' approval in stuffcloud's ADR (stuffcloud#121), or a follow-up that removes it:
+
+- Button: kern moves pressed buttons 1 px down; a danger button darkens on hover, while `.btn:hover` in
+  `stuff.css` also turns it pink; `line-height: 1.2` instead of `normal` (same 52/56 px height).
+- Input, Select: kern adds the accent border on focus and a muted border on hover to the design's focus
+  ring; Select draws its own chevron instead of the native arrow; an error carries an icon.
+- Checkbox: kern draws a 22 px box with a tick (native `accent-color` boxes differ per browser); the row
+  is 44 px (`--k-tap-target`), the design's `.toggle` 48 px; disabled fades the box instead of greying
+  the label.
+- Tabs: the edge fade shows whenever tabs are hidden on that side, at any width; the design fades the
+  right edge on phones only.
+- Modal: follows docs/design (S/T), not the app's `Dialog.svelte` (480 px, 22 px heading, 20 px padding);
+  it keeps a close button and its open animation (none under reduced motion); on phones it stays a
+  centred dialog, not T's full-width sheet. In custom elements, `<k-button>` hosts in a stacked footer
+  keep their own width (the Svelte `Button` stretches).
+- Progress: kern shows the label row above the bar.
+- Toaster: each toast keeps its tone dot; the dismiss button is 32 px with a 44 px hit area (the app: a
+  48 px ghost icon button); the default position is bottom right (pass `position="bottom-left"` as the
+  app does); text aligns to the top.
+- FileDrop: kern shows an upload icon and an inset ring while dragging; with a button the zone wraps the
+  button under the prompt when narrow.
+
+**Visual regression.** `tests/elements/visual.spec.ts` (part of `npm run test:elements`, so of the
+`build` job) screenshots Button, Input, Select, Checkbox, Card, Tabs, Progress, FileDrop, Modal and the
+toasts in `code` and `code-light` at 1280, 375 and 320 px on `tests/elements/pages/visual.html`, with
+the real fonts (`tests/elements/pages/fonts`, OFL), reduced motion and frozen animations. `stuffcloud`
+and `stuffcloud-light` render against the same baselines. Baselines are per platform in
+`tests/elements/visual.spec.ts-snapshots/` (`-chromium-linux.png` for CI, `-chromium-win32.png` for
+local runs on Windows); fonts rasterise differently on the two, so each has its own. A missing
+baseline is written, but in CI the test still fails (nothing to compare is never a pass), and the file
+is never retried. New baselines after an intended change:
+
+1. Windows: `npm run build`, then
+   `npx playwright test -c tests/elements/playwright.config.ts visual.spec.ts --update-snapshots`.
+2. Linux: push; the failed `build` job uploads the artifact `visual-results` (the actual screenshots of
+   changed baselines and the files it wrote for missing ones). `gh run download <run id> -n visual-results -D <dir>`,
+   then `node scripts/ci/visual-baselines.mjs <dir>` copies each to its Linux baseline (and reports an
+   alias that rendered differently from `code`).
+3. Look at every changed image before committing it.
 
 ## Choices for Flower and Pop
 

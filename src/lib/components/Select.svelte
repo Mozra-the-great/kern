@@ -68,13 +68,14 @@
 		box-sizing: border-box;
 		width: 100%;
 		min-height: var(--k-control-h);
-		padding: 0 calc(var(--k-space-4) + 24px) 0 var(--k-space-4);
+		padding: 0 calc(var(--k-field-pad-x) + 24px) 0 var(--k-field-pad-x);
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: var(--k-radius-field);
-		background: var(--k-bg-raised);
+		background: var(--k-select-bg);
 		color: var(--k-fg);
 		font: inherit;
-		font-size: var(--k-text-md);
+		font-family: var(--k-field-font);
+		font-size: var(--k-field-size);
 		cursor: pointer;
 	}
 	select:hover {
@@ -90,7 +91,7 @@
 	}
 	svg {
 		position: absolute;
-		right: var(--k-space-4);
+		right: var(--k-field-pad-x);
 		top: 50%;
 		width: 16px;
 		height: 16px;
