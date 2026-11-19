@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-19
+
 ### Added
 - Code theme source of truth (#37): `src/lib/themes/code.tokens.json`, shipped as
   `@mozra-the-great/kern/themes/code.tokens.json`, lists every token of every Code variant with its value and
