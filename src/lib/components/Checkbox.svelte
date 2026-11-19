@@ -56,7 +56,9 @@
 		flex: none;
 		width: 22px;
 		height: 22px;
-		margin-top: 1px;
+		/* 1px above and below: the row is at least 24px even with a smaller label (Code: 15px), so the
+		 * padding below still pads it to the full tap target */
+		margin-block: 1px;
 	}
 	input {
 		appearance: none;
