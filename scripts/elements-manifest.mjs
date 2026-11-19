@@ -286,6 +286,8 @@ const ENTRY_EXPORTS = {
 };
 /** What `elements/strings` and the all-in-one bundle export besides the tags. */
 const STRINGS_EXPORTS = ['setStrings', 'resetStrings', 'getStrings', 'getLang', 'registerStrings', 'setLocale', 'followLang', 'en', 'de'];
+/** What `elements/accent` and the all-in-one bundle export besides the tags. */
+const ACCENT_EXPORTS = ['accentTokens', 'accentCss', 'installAccent', 'removeAccent', 'applyAccent', 'clearAccent', 'createAccentScript'];
 const typeObj = (text) => ({ text });
 const manifest = {
 	schemaVersion: '2.1.0',
@@ -372,6 +374,12 @@ const manifest = {
 		},
 		{
 			kind: 'javascript-module',
+			path: 'dist-elements/elements/accent.js',
+			declarations: [],
+			exports: ACCENT_EXPORTS.map((name) => ({ kind: 'js', name, declaration: { name, module: 'src/lib/components/accent.ts' } }))
+		},
+		{
+			kind: 'javascript-module',
 			path: 'dist-elements/kern-elements.js',
 			declarations: [],
 			exports: [
@@ -380,7 +388,7 @@ const manifest = {
 					name: el.tag,
 					declaration: { name: el.className, module: `dist-elements/elements/${el.name}.js` }
 				})),
-				...['toast', 'dismissToast', 'announce', ...STRINGS_EXPORTS, 'elements'].map((n) => ({
+				...['toast', 'dismissToast', 'announce', ...STRINGS_EXPORTS, ...ACCENT_EXPORTS, 'elements'].map((n) => ({
 					kind: 'js',
 					name: n,
 					declaration: { name: n, module: 'src/elements/index.ts' }
@@ -488,11 +496,18 @@ export declare const setLocale: KernStringsApi['setLocale'];
 export declare const followLang: KernStringsApi['followLang'];
 export declare const en: KernBundle;
 export declare const de: KernBundle;
+export declare const accentTokens: KernAccentApi['tokens'];
+export declare const accentCss: KernAccentApi['css'];
+export declare const installAccent: KernAccentApi['install'];
+export declare const removeAccent: KernAccentApi['remove'];
+export declare const applyAccent: KernAccentApi['apply'];
+export declare const clearAccent: KernAccentApi['clear'];
+export declare const createAccentScript: KernAccentApi['script'];
 
 declare global {
 	interface HTMLElementTagNameMap extends KernElements {}
 	interface Window {
-		/** Set by kern-elements.js and the entries of the toaster, the live announcer and the strings. */
+		/** Set by kern-elements.js and the entries of the toaster, the live announcer, the strings and the accent. */
 		kern?: KernGlobal;
 	}
 }
@@ -549,5 +564,11 @@ for (const el of elements) {
 writeFileSync(
 	join(out, 'elements', 'strings.d.ts'),
 	`// Sets the default texts of every element and registers the built-in bundles \`en\` and \`de\`. Generated; do not edit.\nexport { ${STRINGS_EXPORTS.join(', ')} } from '../kern-elements.js';\n`
+);
+writeFileSync(
+	join(out, 'elements', 'accent.d.ts'),
+	`// A custom accent colour on top of any standard theme (window.kern.accent), with WCAG contrast guaranteed. Generated; do not edit.
+export { ${ACCENT_EXPORTS.join(', ')} } from '../kern-elements.js';
+`
 );
 console.log(`typings: dist-elements/kern-elements.d.ts, react.d.ts, ${elements.length + 1} entry .d.ts`);

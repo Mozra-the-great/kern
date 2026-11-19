@@ -1,0 +1,32 @@
+/* Accent, CSS only (opt-in, not part of themes.css): a custom accent fill on top of any kern theme
+ * without JavaScript. Set the colour on any element, `<html>` or a subtree:
+ *
+ *   <html data-theme="flower" data-k-accent style="--k-accent-color: #e91e8c">
+ *
+ * It sets the two fill tokens: `--k-accent` and `--k-on-accent` (black or white, whichever reads
+ * better: at least 4.5:1 on the accent for every colour). The Button, Badge and TabBadge variants
+ * with the accent fill use exactly these.
+ *
+ * It does NOT touch `--k-primary`, `--k-accent-text`, `--k-accent-mark`, `--k-accent-soft` or
+ * `--k-focus`: they have to reach 4.5:1 (text) or 3:1 (marks) on the page, which depends on a
+ * surface a stylesheet cannot measure, so a raw colour would fail on a light or a dark ground.
+ * Use `accentCss` / `installAccent` (JavaScript, `@mozra-the-great/kern`) for those;
+ * docs/themes.md, "Eigene Akzentfarbe".
+ *
+ * Needs relative colours and `round()` (Chrome 125, Safari 16.4, Firefox 118 and 128). Without it
+ * the block is skipped and the theme's own accent stays. Set `data-k-accent` only together with
+ * `--k-accent-color`, otherwise `--k-accent` has no value. The doubled attribute selector wins
+ * over a theme's `[data-theme='…']` rule whatever the load order. */
+@supports (color: color(from red xyz-d65 x y z)) and (width: round(up, 1.5px, 1px)) {
+	[data-k-accent][data-k-accent] {
+		--k-accent: var(--k-accent-color);
+		/* White ink on a colour darker than the relative luminance where black and white reach the same contrast
+		 * (Y = 0.1791), black ink on a lighter one. Y is read in XYZ; `round(up)` and the clamp make the factor exactly 1 or 0 (no grey in between) and
+		 * (0.95046, 1, 1.08906) is D65 white. 4.58:1 at worst for any colour; swept over the sRGB cube in
+		 * tests/elements/accent.spec.ts. */
+		--k-on-accent: color(
+			from var(--k-accent-color) xyz-d65 calc(0.95046 * clamp(0, round(up, (0.1791 - y) * 1000, 1), 1))
+				clamp(0, round(up, (0.1791 - y) * 1000, 1), 1) calc(1.08906 * clamp(0, round(up, (0.1791 - y) * 1000, 1), 1))
+		);
+	}
+}

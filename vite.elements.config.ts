@@ -33,8 +33,13 @@ const extras: Record<string, string> = {
 	toaster: `import { installGlobal } from ${JSON.stringify(dir + 'global.ts')};\ninstallGlobal();\nexport { toast, dismissToast } from ${JSON.stringify(dir + 'global.ts')};\n`,
 	'live-announcer': `import { installGlobal } from ${JSON.stringify(dir + 'global.ts')};\ninstallGlobal();\nexport { announce } from ${JSON.stringify(dir + 'global.ts')};\n`
 };
-/** Entries without a tag: `elements/strings` sets the default texts (window.kern.strings) and registers the built-in bundles. */
+/** Entries without a tag: `elements/strings` sets the default texts (window.kern.strings) and registers the built-in bundles, `elements/accent` brings window.kern.accent. */
+const accentNames = 'accentTokens, accentCss, installAccent, removeAccent, applyAccent, clearAccent, createAccentScript';
 const plain: Record<string, string> = {
+	accent: `import { installGlobal } from ${JSON.stringify(dir + 'global.ts')};
+installGlobal();
+export { ${accentNames} } from ${JSON.stringify(dir + 'global.ts')};
+`,
 	strings: `import { installGlobal, registerLocales } from ${JSON.stringify(dir + 'global.ts')};\ninstallGlobal();\nregisterLocales();\nexport { setStrings, resetStrings, getStrings, getLang, registerStrings, setLocale, followLang, en, de } from ${JSON.stringify(dir + 'global.ts')};\n`
 };
 
