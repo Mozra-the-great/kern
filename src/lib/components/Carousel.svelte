@@ -221,15 +221,7 @@
 	<!-- The track scrolls, so it must be reachable by keyboard whenever it can overflow
 	     (WCAG 2.1.1, axe scrollable-region-focusable); its keys move between slides. -->
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions -->
-	<div
-		class="track"
-		role="group"
-		aria-label={label}
-		bind:this={track}
-		{onscroll}
-		onkeydown={onTrackKey}
-		tabindex={total > 1 ? 0 : -1}
-	>
+	<div class="track" role="group" aria-label={label} bind:this={track} {onscroll} onkeydown={onTrackKey} tabindex={total > 1 ? 0 : -1}>
 		{#if items && slide}
 			{#each items as item, i (i)}
 				<div id="{uid}-slide-{i}">{@render slide(item, i)}</div>
@@ -241,8 +233,16 @@
 	<div class="sr" aria-live="polite" aria-atomic="true">{announcement}</div>
 	{#if total > 1}
 		<div class="controls">
-			<button type="button" class="nav" aria-label={prevLabel} aria-disabled={current <= 0} onclick={() => current > 0 && goTo(current - 1)}>
-				<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+			<button
+				type="button"
+				class="nav"
+				aria-label={prevLabel}
+				aria-disabled={current <= 0}
+				onclick={() => current > 0 && goTo(current - 1)}
+			>
+				<svg class="chev" viewBox="0 0 16 16" aria-hidden="true">
+					<path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" />
+				</svg>
 			</button>
 			<div class="dots" role="tablist" aria-label={dotsLabel} tabindex="-1" bind:this={tablist} onkeydown={onTabKey}>
 				{#each dots as i (i)}
@@ -255,18 +255,33 @@
 						aria-controls={items ? `${uid}-slide-${i}` : undefined}
 						tabindex={i === current ? 0 : -1}
 						onclick={() => goTo(i)}
-					><span class="dot"></span></button>
+					>
+						<span class="dot"></span>
+					</button>
 				{/each}
 			</div>
-			<button type="button" class="nav" aria-label={nextLabel} aria-disabled={current >= total - 1} onclick={() => current < total - 1 && goTo(current + 1)}>
-				<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+			<button
+				type="button"
+				class="nav"
+				aria-label={nextLabel}
+				aria-disabled={current >= total - 1}
+				onclick={() => current < total - 1 && goTo(current + 1)}
+			>
+				<svg class="chev" viewBox="0 0 16 16" aria-hidden="true">
+					<path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" />
+				</svg>
 			</button>
 		</div>
 	{/if}
 </section>
 
 <style>
-	.k-carousel { position: relative; display: grid; gap: var(--k-space-3); min-width: 0; }
+	.k-carousel {
+		position: relative;
+		display: grid;
+		gap: var(--k-space-3);
+		min-width: 0;
+	}
 	.track {
 		display: flex;
 		overflow-x: auto;
@@ -276,9 +291,24 @@
 		outline: none;
 		border-radius: var(--k-radius-card);
 	}
-	.track::-webkit-scrollbar { display: none; }
-	.track:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+	.track::-webkit-scrollbar {
+		display: none;
+	}
+	.track:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
 	.track > :global(*) {
 		flex: 0 0 100%;
 		min-width: 0;
@@ -293,7 +323,12 @@
 		scroll-snap-align: start;
 		scroll-snap-stop: always;
 	}
-	.controls { display: flex; align-items: center; justify-content: space-between; gap: var(--k-space-2); }
+	.controls {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--k-space-2);
+	}
 	.nav {
 		display: inline-grid;
 		place-items: center;
@@ -308,11 +343,29 @@
 		cursor: pointer;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	.nav:hover:not([aria-disabled='true']) { background: var(--k-bg-sunken); }
-	.nav[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
-	.chev { width: 16px; height: 16px; }
-	.k-carousel:dir(rtl) .chev { transform: scaleX(-1); }
-	.dots { display: flex; flex: 1; flex-wrap: wrap; align-items: center; justify-content: center; min-width: 0; outline: none; }
+	.nav:hover:not([aria-disabled='true']) {
+		background: var(--k-bg-sunken);
+	}
+	.nav[aria-disabled='true'] {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.chev {
+		width: 16px;
+		height: 16px;
+	}
+	.k-carousel:dir(rtl) .chev {
+		transform: scaleX(-1);
+	}
+	.dots {
+		display: flex;
+		flex: 1;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		min-width: 0;
+		outline: none;
+	}
 	.tab {
 		display: inline-grid;
 		place-items: center;
@@ -331,9 +384,22 @@
 		border: var(--k-border-w) solid var(--k-fg-muted);
 		border-radius: var(--k-radius-badge);
 		background: transparent;
-		transition: width var(--k-dur) var(--k-ease), background-color var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease);
+		transition:
+			width var(--k-dur) var(--k-ease),
+			background-color var(--k-dur) var(--k-ease),
+			border-color var(--k-dur) var(--k-ease);
 	}
-	.tab:hover .dot { border-color: var(--k-fg); }
-	.tab[aria-selected='true'] .dot { width: 24px; border-color: var(--k-primary); background: var(--k-primary); }
-	.nav:focus-visible, .tab:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.tab:hover .dot {
+		border-color: var(--k-fg);
+	}
+	.tab[aria-selected='true'] .dot {
+		width: 24px;
+		border-color: var(--k-primary);
+		background: var(--k-primary);
+	}
+	.nav:focus-visible,
+	.tab:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 </style>

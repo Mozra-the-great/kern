@@ -78,9 +78,15 @@
 		color: inherit;
 		transition: background-size calc(var(--k-dur) * 6) var(--k-ease);
 	}
-	[data-drawn='false'] { background-size: 0% 0.62em; }
+	[data-drawn='false'] {
+		background-size: 0% 0.62em;
+	}
 	@media (prefers-reduced-motion: reduce) {
-		.k-highlight { transition: none; }
-		[data-drawn='false'] { background-size: 100% 0.62em; }
+		.k-highlight {
+			transition: none;
+		}
+		[data-drawn='false'] {
+			background-size: 100% 0.62em;
+		}
 	}
 </style>

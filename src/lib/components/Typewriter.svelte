@@ -110,17 +110,37 @@
 	<span class="sr">{spoken}</span>
 	<!-- Every string, invisible, in the same grid cell: the box keeps the size of the longest one. -->
 	{#each list as item, i (i)}
-		<span class="size" aria-hidden="true">{item}{#if caret}<span class="gap" data-shape={caretShape}></span>{/if}</span>
+		<span class="size" aria-hidden="true">
+			{item}{#if caret}<span class="gap" data-shape={caretShape}></span>{/if}
+		</span>
 	{/each}
-	<span class="live" aria-hidden="true">{visible}{#if caret}<Caret shape={caretShape} blink={!busy} />{/if}</span>
+	<span class="live" aria-hidden="true">
+		{visible}{#if caret}<Caret shape={caretShape} blink={!busy} />{/if}
+	</span>
 </span>
 
 <style>
-	.k-typewriter { display: inline-grid; max-width: 100%; vertical-align: bottom; }
-	.size, .live { grid-area: 1 / 1; white-space: pre-wrap; overflow-wrap: anywhere; }
-	.size { visibility: hidden; }
-	.gap { display: inline-block; width: 0.6em; }
-	.gap[data-shape='bar'] { width: max(2px, 0.1em); }
+	.k-typewriter {
+		display: inline-grid;
+		max-width: 100%;
+		vertical-align: bottom;
+	}
+	.size,
+	.live {
+		grid-area: 1 / 1;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+	.size {
+		visibility: hidden;
+	}
+	.gap {
+		display: inline-block;
+		width: 0.6em;
+	}
+	.gap[data-shape='bar'] {
+		width: max(2px, 0.1em);
+	}
 	.sr {
 		position: absolute;
 		width: 1px;

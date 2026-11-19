@@ -119,7 +119,7 @@
 		syncedKey = key;
 		const hex = normalizeHex(value ?? '', alpha);
 		if (hex) load(hex);
-		text = hex ?? (value ?? '');
+		text = hex ?? value ?? '';
 		invalidInput = false;
 		committed = hex ?? '';
 	});
@@ -226,15 +226,32 @@
 		const big = e.shiftKey ? 0.1 : 0.01;
 		let { s, v } = hsv;
 		switch (e.key) {
-			case 'ArrowLeft': s -= big; break;
-			case 'ArrowRight': s += big; break;
-			case 'ArrowUp': v += big; break;
-			case 'ArrowDown': v -= big; break;
-			case 'PageUp': v += 0.1; break;
-			case 'PageDown': v -= 0.1; break;
-			case 'Home': s = 0; break;
-			case 'End': s = 1; break;
-			default: return;
+			case 'ArrowLeft':
+				s -= big;
+				break;
+			case 'ArrowRight':
+				s += big;
+				break;
+			case 'ArrowUp':
+				v += big;
+				break;
+			case 'ArrowDown':
+				v -= big;
+				break;
+			case 'PageUp':
+				v += 0.1;
+				break;
+			case 'PageDown':
+				v -= 0.1;
+				break;
+			case 'Home':
+				s = 0;
+				break;
+			case 'End':
+				s = 1;
+				break;
+			default:
+				return;
 		}
 		e.preventDefault();
 		const round = (n: number) => Math.round(Math.min(1, Math.max(0, n)) * 100) / 100;
@@ -279,7 +296,9 @@
 				onclick={() => (expanded ? closePanel(true) : openPanel())}
 			>
 				<span class="chip" class:empty={!current} style:--chip={current ?? 'transparent'}>
-					{#if !current}<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16L16 4" stroke="currentColor" stroke-width="1.6" /></svg>{/if}
+					{#if !current}<svg viewBox="0 0 20 20" aria-hidden="true">
+							<path d="M4 16L16 4" stroke="currentColor" stroke-width="1.6" />
+						</svg>{/if}
 				</span>
 			</button>
 			<input
@@ -296,7 +315,9 @@
 				{required}
 				{disabled}
 				onchange={commitText}
-				onkeydown={(e) => { if (e.key === 'Enter') commitText(); }}
+				onkeydown={(e) => {
+					if (e.key === 'Enter') commitText();
+				}}
 			/>
 			{#if name}<input type="hidden" {name} value={current ?? ''} />{/if}
 		</div>
@@ -373,7 +394,9 @@
 								style:--ink={ink(s.hex)}
 								onclick={() => pickSwatch(s.hex)}
 							>
-								{#if s.hex === current}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" /></svg>{/if}
+								{#if s.hex === current}<svg viewBox="0 0 16 16" aria-hidden="true">
+										<path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" />
+									</svg>{/if}
 							</button>
 						{/each}
 					</div>
@@ -385,7 +408,8 @@
 
 <style>
 	.k-color {
-		--checker: conic-gradient(var(--k-bg-sunken) 25%, var(--k-bg-raised) 0 50%, var(--k-bg-sunken) 0 75%, var(--k-bg-raised) 0) 0 0 / 10px 10px;
+		--checker: conic-gradient(var(--k-bg-sunken) 25%, var(--k-bg-raised) 0 50%, var(--k-bg-sunken) 0 75%, var(--k-bg-raised) 0) 0 0 / 10px
+			10px;
 		display: flex;
 		align-items: center;
 		gap: var(--k-space-2);
@@ -398,10 +422,20 @@
 		color: var(--k-fg);
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
-	.k-color:hover { border-color: var(--k-fg-muted); }
-	.k-color:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.invalid { border-color: var(--k-danger); }
-	.disabled { opacity: 0.55; }
+	.k-color:hover {
+		border-color: var(--k-fg-muted);
+	}
+	.k-color:has(input:focus-visible) {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
+	.disabled {
+		opacity: 0.55;
+	}
 	input[type='text'] {
 		flex: 1;
 		min-width: 0;
@@ -416,8 +450,13 @@
 		font-size: var(--k-text-md);
 		text-transform: lowercase;
 	}
-	input[type='text']::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	input[type='text']:disabled { cursor: not-allowed; }
+	input[type='text']::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	input[type='text']:disabled {
+		cursor: not-allowed;
+	}
 	.swatch-btn {
 		flex: none;
 		display: grid;
@@ -430,9 +469,16 @@
 		background: transparent;
 		cursor: pointer;
 	}
-	.swatch-btn:hover:not(:disabled) { background: var(--k-bg-sunken); }
-	.swatch-btn:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	.swatch-btn:disabled { cursor: not-allowed; }
+	.swatch-btn:hover:not(:disabled) {
+		background: var(--k-bg-sunken);
+	}
+	.swatch-btn:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	.swatch-btn:disabled {
+		cursor: not-allowed;
+	}
 	.chip {
 		display: grid;
 		place-items: center;
@@ -444,10 +490,14 @@
 		background: linear-gradient(var(--chip), var(--chip)), var(--checker);
 		color: var(--k-fg-muted);
 	}
-	.chip svg { width: 20px; height: 20px; }
+	.chip svg {
+		width: 20px;
+		height: 20px;
+	}
 
 	.panel {
-		--checker: conic-gradient(var(--k-bg-sunken) 25%, var(--k-bg-raised) 0 50%, var(--k-bg-sunken) 0 75%, var(--k-bg-raised) 0) 0 0 / 10px 10px;
+		--checker: conic-gradient(var(--k-bg-sunken) 25%, var(--k-bg-raised) 0 50%, var(--k-bg-sunken) 0 75%, var(--k-bg-raised) 0) 0 0 / 10px
+			10px;
 		position: fixed;
 		z-index: 950;
 		box-sizing: border-box;
@@ -465,7 +515,10 @@
 		font-family: var(--k-font-sans);
 		animation: k-drop var(--k-dur) var(--k-ease);
 	}
-	.panel:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.panel:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 	.area {
 		position: relative;
 		height: 160px;
@@ -486,7 +539,9 @@
 		border: 2px solid #fff;
 		border-radius: 50%;
 		background: var(--c);
-		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+		box-shadow:
+			0 0 0 1px rgba(0, 0, 0, 0.7),
+			inset 0 0 0 1px rgba(0, 0, 0, 0.3);
 		pointer-events: none;
 	}
 	.area:focus-visible .thumb {
@@ -496,7 +551,10 @@
 		height: 24px;
 		margin: -12px 0 0 -12px;
 	}
-	.row { display: grid; gap: var(--k-space-1); }
+	.row {
+		display: grid;
+		gap: var(--k-space-1);
+	}
 	.lbl {
 		font-family: var(--k-label-font);
 		font-size: var(--k-text-xs);
@@ -516,9 +574,17 @@
 		background: transparent;
 		cursor: pointer;
 	}
-	.range:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-radius: var(--k-radius-badge); }
-	.hue { --bg: linear-gradient(to right, #f00, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00); }
-	.alpha { --bg: linear-gradient(to right, transparent, var(--c)), var(--checker); }
+	.range:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-radius: var(--k-radius-badge);
+	}
+	.hue {
+		--bg: linear-gradient(to right, #f00, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);
+	}
+	.alpha {
+		--bg: linear-gradient(to right, transparent, var(--c)), var(--checker);
+	}
 	.range::-webkit-slider-runnable-track {
 		box-sizing: border-box;
 		height: var(--track);
@@ -554,7 +620,11 @@
 		background: transparent;
 		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7);
 	}
-	.swatches { display: flex; flex-wrap: wrap; gap: var(--k-space-1); }
+	.swatches {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--k-space-1);
+	}
 	.swatch {
 		display: grid;
 		place-items: center;
@@ -568,8 +638,22 @@
 		color: var(--ink);
 		cursor: pointer;
 	}
-	.swatch[aria-pressed='true'] { box-shadow: inset 0 0 0 2px var(--k-bg-raised); border: 2px solid var(--k-fg); }
-	.swatch:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.swatch svg { width: 18px; height: 18px; }
-	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
+	.swatch[aria-pressed='true'] {
+		box-shadow: inset 0 0 0 2px var(--k-bg-raised);
+		border: 2px solid var(--k-fg);
+	}
+	.swatch:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.swatch svg {
+		width: 18px;
+		height: 18px;
+	}
+	@keyframes k-drop {
+		from {
+			opacity: 0;
+			transform: translateY(-4px);
+		}
+	}
 </style>

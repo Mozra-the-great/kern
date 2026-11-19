@@ -32,7 +32,9 @@ export function parseHex(input: string): Rgba | null {
 }
 
 function byte(n: number): string {
-	return Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0');
+	return Math.max(0, Math.min(255, Math.round(n)))
+		.toString(16)
+		.padStart(2, '0');
 }
 
 /** Lower-case #rrggbb, or #rrggbbaa when `withAlpha` and the colour is not opaque. */
@@ -96,8 +98,15 @@ export function prefersDarkInk(r: number, g: number, b: number): boolean {
 }
 
 const HUES: [number, string][] = [
-	[15, 'red'], [45, 'orange'], [70, 'yellow'], [160, 'green'], [195, 'cyan'],
-	[255, 'blue'], [290, 'purple'], [335, 'pink'], [360, 'red']
+	[15, 'red'],
+	[45, 'orange'],
+	[70, 'yellow'],
+	[160, 'green'],
+	[195, 'cyan'],
+	[255, 'blue'],
+	[290, 'purple'],
+	[335, 'pink'],
+	[360, 'red']
 ];
 
 /** A short English name such as "dark blue", "light pink" or "grey". */
@@ -107,7 +116,10 @@ export function describeColor(hsv: Hsv): string {
 	if (s < 0.12) return v > 0.92 ? 'white' : v > 0.65 ? 'light grey' : v > 0.35 ? 'grey' : 'dark grey';
 	let name = 'red';
 	for (const [end, n] of HUES) {
-		if (h < end) { name = n; break; }
+		if (h < end) {
+			name = n;
+			break;
+		}
 	}
 	if (name === 'orange' && v < 0.65) name = 'brown';
 	const tone = v < 0.45 ? 'dark ' : s < 0.45 && v > 0.8 ? 'light ' : s < 0.45 ? 'muted ' : '';

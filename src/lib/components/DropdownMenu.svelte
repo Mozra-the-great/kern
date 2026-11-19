@@ -2,7 +2,16 @@
 	import type { Snippet } from 'svelte';
 
 	export type MenuEntry =
-		| { type?: 'item' | undefined; id: string; label: string; onselect?: (() => void) | undefined; href?: string | undefined; danger?: boolean | undefined; disabled?: boolean | undefined; shortcut?: string | undefined }
+		| {
+				type?: 'item' | undefined;
+				id: string;
+				label: string;
+				onselect?: (() => void) | undefined;
+				href?: string | undefined;
+				danger?: boolean | undefined;
+				disabled?: boolean | undefined;
+				shortcut?: string | undefined;
+		  }
 		| { type: 'separator' }
 		| { type: 'label'; label: string };
 
@@ -36,18 +45,33 @@
 		if (refocus) btn?.focus();
 	}
 	function onTriggerKey(e: KeyboardEvent) {
-		if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMenu('first'); }
-		else if (e.key === 'ArrowUp') { e.preventDefault(); openMenu('last'); }
+		if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			openMenu('first');
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			openMenu('last');
+		}
 	}
 	function onMenuKey(e: KeyboardEvent) {
 		const list = entries();
 		const i = list.indexOf(document.activeElement as HTMLElement);
-		if (e.key === 'ArrowDown') { e.preventDefault(); list[(i + 1) % list.length]?.focus(); }
-		else if (e.key === 'ArrowUp') { e.preventDefault(); list[(i - 1 + list.length) % list.length]?.focus(); }
-		else if (e.key === 'Home') { e.preventDefault(); list[0]?.focus(); }
-		else if (e.key === 'End') { e.preventDefault(); list[list.length - 1]?.focus(); }
-		else if (e.key === 'Escape') { e.preventDefault(); close(); }
-		else if (e.key === 'Tab') close(false);
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			list[(i + 1) % list.length]?.focus();
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			list[(i - 1 + list.length) % list.length]?.focus();
+		} else if (e.key === 'Home') {
+			e.preventDefault();
+			list[0]?.focus();
+		} else if (e.key === 'End') {
+			e.preventDefault();
+			list[list.length - 1]?.focus();
+		} else if (e.key === 'Escape') {
+			e.preventDefault();
+			close();
+		} else if (e.key === 'Tab') close(false);
 		else if (e.key.length === 1) {
 			const k = e.key.toLowerCase();
 			const hit = [...list.slice(i + 1), ...list.slice(0, i + 1)].find((el) => el.textContent?.trim().toLowerCase().startsWith(k));
@@ -79,21 +103,46 @@
 		onclick={() => (open ? close() : openMenu())}
 		onkeydown={onTriggerKey}
 	>
-		{#if trigger}{@render trigger()}{:else}{label}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg>{/if}
+		{#if trigger}{@render trigger()}{:else}{label}<svg viewBox="0 0 16 16" aria-hidden="true">
+				<path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" />
+			</svg>{/if}
 	</button>
 	{#if open}
-		<div class="menu" role="menu" id="{uid}-menu" tabindex="-1" aria-label={label} data-align={align} bind:this={menu} onkeydown={onMenuKey}>
+		<div
+			class="menu"
+			role="menu"
+			id="{uid}-menu"
+			tabindex="-1"
+			aria-label={label}
+			data-align={align}
+			bind:this={menu}
+			onkeydown={onMenuKey}
+		>
 			{#each items as item, i (i)}
 				{#if item.type === 'separator'}
 					<div class="sep" role="separator"></div>
 				{:else if item.type === 'label'}
 					<div class="group-label" role="presentation">{item.label}</div>
 				{:else if item.href}
-					<a role="menuitem" tabindex="-1" href={item.href} class:danger={item.danger} aria-disabled={item.disabled || undefined} onclick={() => close(false)}>
+					<a
+						role="menuitem"
+						tabindex="-1"
+						href={item.href}
+						class:danger={item.danger}
+						aria-disabled={item.disabled || undefined}
+						onclick={() => close(false)}
+					>
 						<span>{item.label}</span>{#if item.shortcut}<kbd>{item.shortcut}</kbd>{/if}
 					</a>
 				{:else}
-					<button type="button" role="menuitem" tabindex="-1" class:danger={item.danger} aria-disabled={item.disabled || undefined} onclick={() => choose(item)}>
+					<button
+						type="button"
+						role="menuitem"
+						tabindex="-1"
+						class:danger={item.danger}
+						aria-disabled={item.disabled || undefined}
+						onclick={() => choose(item)}
+					>
 						<span>{item.label}</span>{#if item.shortcut}<kbd>{item.shortcut}</kbd>{/if}
 					</button>
 				{/if}
@@ -103,7 +152,10 @@
 </div>
 
 <style>
-	.k-dropdown { position: relative; display: inline-block; }
+	.k-dropdown {
+		position: relative;
+		display: inline-block;
+	}
 	.trigger {
 		display: inline-flex;
 		box-sizing: border-box;
@@ -122,10 +174,21 @@
 		letter-spacing: var(--k-label-tracking);
 		cursor: pointer;
 	}
-	.trigger[data-variant='ghost'] { border-color: transparent; }
-	.trigger:hover, .trigger[aria-expanded='true'] { background: var(--k-bg-sunken); }
-	.trigger:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.trigger svg { width: 14px; height: 14px; }
+	.trigger[data-variant='ghost'] {
+		border-color: transparent;
+	}
+	.trigger:hover,
+	.trigger[aria-expanded='true'] {
+		background: var(--k-bg-sunken);
+	}
+	.trigger:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.trigger svg {
+		width: 14px;
+		height: 14px;
+	}
 	.menu {
 		position: absolute;
 		z-index: 950;
@@ -138,8 +201,12 @@
 		box-shadow: var(--k-shadow-overlay);
 		animation: k-drop var(--k-dur) var(--k-ease);
 	}
-	[data-align='start'] { left: 0; }
-	[data-align='end'] { right: 0; }
+	[data-align='start'] {
+		left: 0;
+	}
+	[data-align='end'] {
+		right: 0;
+	}
 	[role='menuitem'] {
 		display: flex;
 		width: 100%;
@@ -159,12 +226,44 @@
 		text-decoration: none;
 		cursor: pointer;
 	}
-	[role='menuitem']:hover, [role='menuitem']:focus { background: var(--k-selected); outline: none; }
-	[role='menuitem']:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	[aria-disabled='true'] { color: var(--k-fg-disabled); cursor: not-allowed; }
-	.danger { color: var(--k-danger); }
-	kbd { font-family: var(--k-font-mono); font-size: var(--k-text-xs); color: var(--k-fg-muted); }
-	.sep { height: 0; margin: var(--k-space-1) 0; border-top: var(--k-border-w) solid var(--k-line); }
-	.group-label { padding: var(--k-space-2) var(--k-space-3) var(--k-space-1); font-family: var(--k-label-font); font-size: var(--k-text-xs); color: var(--k-fg-muted); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
-	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
+	[role='menuitem']:hover,
+	[role='menuitem']:focus {
+		background: var(--k-selected);
+		outline: none;
+	}
+	[role='menuitem']:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	[aria-disabled='true'] {
+		color: var(--k-fg-disabled);
+		cursor: not-allowed;
+	}
+	.danger {
+		color: var(--k-danger);
+	}
+	kbd {
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-xs);
+		color: var(--k-fg-muted);
+	}
+	.sep {
+		height: 0;
+		margin: var(--k-space-1) 0;
+		border-top: var(--k-border-w) solid var(--k-line);
+	}
+	.group-label {
+		padding: var(--k-space-2) var(--k-space-3) var(--k-space-1);
+		font-family: var(--k-label-font);
+		font-size: var(--k-text-xs);
+		color: var(--k-fg-muted);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+	}
+	@keyframes k-drop {
+		from {
+			opacity: 0;
+			transform: translateY(-4px);
+		}
+	}
 </style>

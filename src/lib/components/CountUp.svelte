@@ -96,9 +96,19 @@
 </span>
 
 <style>
-	.k-countup { display: inline-grid; font-variant-numeric: tabular-nums; vertical-align: bottom; }
-	.size, .live { grid-area: 1 / 1; white-space: nowrap; }
-	.size { visibility: hidden; }
+	.k-countup {
+		display: inline-grid;
+		font-variant-numeric: tabular-nums;
+		vertical-align: bottom;
+	}
+	.size,
+	.live {
+		grid-area: 1 / 1;
+		white-space: nowrap;
+	}
+	.size {
+		visibility: hidden;
+	}
 	.sr {
 		position: absolute;
 		width: 1px;

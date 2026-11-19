@@ -19,7 +19,13 @@ function speichern(): void {
 		'curl -fsSL https://example.com/install.sh | sh -s -- --prefix /usr/local --with-completions --without-telemetry --channel stable --verbose';
 
 	const statuses: DotStatus[] = ['ok', 'warn', 'down', 'idle', 'busy'];
-	const germanLabels: Record<DotStatus, string> = { ok: 'In Ordnung', warn: 'Eingeschränkt', down: 'Ausfall', idle: 'Inaktiv', busy: 'Beschäftigt' };
+	const germanLabels: Record<DotStatus, string> = {
+		ok: 'In Ordnung',
+		warn: 'Eingeschränkt',
+		down: 'Ausfall',
+		idle: 'Inaktiv',
+		busy: 'Beschäftigt'
+	};
 
 	const base = Date.now();
 	const second = 1000;
@@ -48,13 +54,31 @@ function speichern(): void {
 <section>
 	<h2>Code</h2>
 	<p class="m0">
-		Mit <Code>npm i @mozra-the-great/kern</Code> installierst du das Paket, <Code>--save-dev</Code> ist nicht nötig. Ein sehr langer Ausdruck im Fließtext wie
+		Mit <Code>npm i @mozra-the-great/kern</Code> installierst du das Paket, <Code>--save-dev</Code> ist nicht nötig. Ein sehr langer Ausdruck
+		im Fließtext wie
 		<Code>document.querySelector('[data-theme]').getAttribute('data-theme-variant-with-a-long-name')</Code> bricht um.
 	</p>
 	<div class="grid2">
-		<Code block language="TypeScript" lineNumbers copy code={snippet} copyLabel="Kopieren" copiedLabel="Kopiert" copyErrorLabel="Kopieren fehlgeschlagen" />
+		<Code
+			block
+			language="TypeScript"
+			lineNumbers
+			copy
+			code={snippet}
+			copyLabel="Kopieren"
+			copiedLabel="Kopiert"
+			copyErrorLabel="Kopieren fehlgeschlagen"
+		/>
 		<div class="stack">
-			<Code block language="bash" copy code={longLine} copyLabel="Kopieren" copiedLabel="Kopiert" copyErrorLabel="Kopieren fehlgeschlagen" />
+			<Code
+				block
+				language="bash"
+				copy
+				code={longLine}
+				copyLabel="Kopieren"
+				copiedLabel="Kopiert"
+				copyErrorLabel="Kopieren fehlgeschlagen"
+			/>
 			<Code block code="<k-button>Speichern</k-button>" />
 			<Code block lineNumbers startLine={42} code={'const a = 1;\nconst b = 2;\nconsole.log(a + b);'} label="Beispiel ab Zeile 42" />
 		</div>
@@ -64,10 +88,26 @@ function speichern(): void {
 <section>
 	<h2>CopyButton</h2>
 	<div class="row">
-		<CopyButton value="npm i @mozra-the-great/kern" label="Installationsbefehl kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
-		<CopyButton value="@mozra-the-great/kern" variant="secondary" label="Paketnamen kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
+		<CopyButton
+			value="npm i @mozra-the-great/kern"
+			label="Installationsbefehl kopieren"
+			copiedLabel="Kopiert"
+			oncopy={(t) => (lastCopied = t)}
+		/>
+		<CopyButton
+			value="@mozra-the-great/kern"
+			variant="secondary"
+			label="Paketnamen kopieren"
+			copiedLabel="Kopiert"
+			oncopy={(t) => (lastCopied = t)}
+		/>
 		<CopyButton value="@mozra-the-great/kern" variant="secondary" size="sm" label="Paketnamen kopieren, klein" copiedLabel="Kopiert" />
-		<CopyButton getValue={() => new Date().toISOString()} label="Zeitstempel kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
+		<CopyButton
+			getValue={() => new Date().toISOString()}
+			label="Zeitstempel kopieren"
+			copiedLabel="Kopiert"
+			oncopy={(t) => (lastCopied = t)}
+		/>
 		<CopyButton getValue={fail} label="Fehlschlag simulieren" errorLabel="Kopieren fehlgeschlagen" variant="secondary" />
 		<CopyButton value="gesperrt" label="Kopieren" disabled />
 	</div>
@@ -102,7 +142,10 @@ function speichern(): void {
 			<li><span class="muted">Englisch, kurz</span> <RelativeTime value={base - 3 * minute} locale="en" style="short" /></li>
 			<li><span class="muted">Englisch, immer Zahl</span> <RelativeTime value={base - day} locale="en" numeric="always" /></li>
 			<li><span class="muted">Französisch, knapp</span> <RelativeTime value={base + 3 * hour} locale="fr" style="narrow" /></li>
-			<li><span class="muted">Fester Zeitpunkt (<code>now</code>)</span> <RelativeTime value="2026-11-19T11:55:00Z" now={fixedNow} locale="de" /></li>
+			<li>
+				<span class="muted">Fester Zeitpunkt (<code>now</code>)</span>
+				<RelativeTime value="2026-11-19T11:55:00Z" now={fixedNow} locale="de" />
+			</li>
 			<li><span class="muted">Ungültig</span> <RelativeTime value="kein Datum" fallback="unbekannt" /></li>
 		</ul>
 	</div>
@@ -140,16 +183,60 @@ function speichern(): void {
 </section>
 
 <style>
-	section { display: grid; gap: var(--k-space-5); padding: var(--k-space-8) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	h2 { margin: 0; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); color: var(--k-fg-muted); }
-	.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-3) var(--k-space-5); }
-	.stack { display: grid; gap: var(--k-space-4); align-content: start; min-width: 0; }
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--k-space-5); }
-	.m0 { margin: 0; line-height: 1.9; }
-	.muted { color: var(--k-fg-muted); }
-	.list { display: grid; gap: var(--k-space-3); margin: 0; padding: 0; list-style: none; }
-	.inline { display: inline-flex; align-items: center; gap: var(--k-space-2); }
+	section {
+		display: grid;
+		gap: var(--k-space-5);
+		padding: var(--k-space-8) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		color: var(--k-fg-muted);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--k-space-3) var(--k-space-5);
+	}
+	.stack {
+		display: grid;
+		gap: var(--k-space-4);
+		align-content: start;
+		min-width: 0;
+	}
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--k-space-5);
+	}
+	.m0 {
+		margin: 0;
+		line-height: 1.9;
+	}
+	.muted {
+		color: var(--k-fg-muted);
+	}
+	.list {
+		display: grid;
+		gap: var(--k-space-3);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.inline {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--k-space-2);
+	}
 	@media (max-width: 760px) {
-		.grid2 { grid-template-columns: 1fr; }
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

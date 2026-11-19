@@ -48,7 +48,22 @@ async function scan(page: Page, root: string): Promise<Miss[]> {
 				'summary',
 				'[contenteditable="true"]',
 				'[tabindex]:not([tabindex="-1"])',
-				...['button', 'link', 'tab', 'option', 'menuitem', 'menuitemcheckbox', 'menuitemradio', 'checkbox', 'radio', 'switch', 'slider', 'spinbutton', 'treeitem', 'gridcell'].map((r) => `[role="${r}"]`),
+				...[
+					'button',
+					'link',
+					'tab',
+					'option',
+					'menuitem',
+					'menuitemcheckbox',
+					'menuitemradio',
+					'checkbox',
+					'radio',
+					'switch',
+					'slider',
+					'spinbutton',
+					'treeitem',
+					'gridcell'
+				].map((r) => `[role="${r}"]`),
 				'[role="separator"][tabindex]'
 			].join(',');
 			const CONTROL = SELECTOR.replace('[tabindex]:not([tabindex="-1"]),', '');
@@ -68,7 +83,13 @@ async function scan(page: Page, root: string): Promise<Miss[]> {
 
 			const describe = (el: Element): string => {
 				const label = el.getAttribute('aria-label') ?? (el as HTMLElement).innerText?.trim().slice(0, 30) ?? '';
-				const cls = typeof el.className === 'string' ? el.className.split(/\s+/).filter((c) => c && !c.startsWith('svelte-')).join('.') : '';
+				const cls =
+					typeof el.className === 'string'
+						? el.className
+								.split(/\s+/)
+								.filter((c) => c && !c.startsWith('svelte-'))
+								.join('.')
+						: '';
 				return `<${el.tagName.toLowerCase()}${cls ? '.' + cls : ''}${el.getAttribute('role') ? ` role=${el.getAttribute('role')}` : ''}> ${JSON.stringify(label)}`;
 			};
 			const section = (el: Element): string => {
@@ -111,7 +132,12 @@ async function scan(page: Page, root: string): Promise<Miss[]> {
 				}
 				if (rect.width === 0 || rect.height === 0) continue;
 				// Text links are exempt (WCAG 2.5.5 "Inline"): an anchor without padding is as tall as its line.
-				if (el.tagName === 'A' && parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) === 0 && style.backgroundColor === 'rgba(0, 0, 0, 0)') continue;
+				if (
+					el.tagName === 'A' &&
+					parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) === 0 &&
+					style.backgroundColor === 'rgba(0, 0, 0, 0)'
+				)
+					continue;
 				if (seen.has(el)) continue;
 				seen.add(el);
 
@@ -121,7 +147,8 @@ async function scan(page: Page, root: string): Promise<Miss[]> {
 				if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio') && el.labels) {
 					for (const l of el.labels) {
 						const r = l.getBoundingClientRect();
-						const left = Math.min(rect.left, r.left), top = Math.min(rect.top, r.top);
+						const left = Math.min(rect.left, r.left),
+							top = Math.min(rect.top, r.top);
 						rect = new DOMRect(left, top, Math.max(rect.right, r.right) - left, Math.max(rect.bottom, r.bottom) - top);
 					}
 				}

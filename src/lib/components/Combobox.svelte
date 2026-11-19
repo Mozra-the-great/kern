@@ -144,7 +144,10 @@
 		let i = active;
 		for (let k = 0; k < n; k++) {
 			i = i < 0 ? (step === 1 ? 0 : n - 1) : (i + step + n) % n;
-			if (!filtered[i].disabled) { active = i; return; }
+			if (!filtered[i].disabled) {
+				active = i;
+				return;
+			}
 		}
 	}
 	function edge(which: 'first' | 'last') {
@@ -214,8 +217,14 @@
 		const el = popup;
 		if (!el) return;
 		const down = (e: MouseEvent) => e.preventDefault();
-		const click = (e: MouseEvent) => { const o = optionAt(e); if (o) choose(o); };
-		const hover = (e: PointerEvent) => { const o = optionAt(e); if (o && !o.disabled) active = filtered.indexOf(o); };
+		const click = (e: MouseEvent) => {
+			const o = optionAt(e);
+			if (o) choose(o);
+		};
+		const hover = (e: PointerEvent) => {
+			const o = optionAt(e);
+			if (o && !o.disabled) active = filtered.indexOf(o);
+		};
 		el.addEventListener('mousedown', down);
 		el.addEventListener('click', click);
 		el.addEventListener('pointermove', hover);
@@ -283,13 +292,7 @@
 			{#if name}<input type="hidden" {name} value={currentValue} />{/if}
 		</div>
 		<div class="popup" hidden={!expanded} bind:this={popup}>
-			<ul
-				class="list"
-				role="listbox"
-				id={listId}
-				aria-label={label}
-				bind:this={list}
-			>
+			<ul class="list" role="listbox" id={listId} aria-label={label} bind:this={list}>
 				{#if expanded}
 					{#each filtered as o, i (o.value)}
 						<li
@@ -302,7 +305,9 @@
 						>
 							<span>{o.label}</span>
 							{#if o.value === currentValue}
-								<svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+								<svg class="check" viewBox="0 0 16 16" aria-hidden="true">
+									<path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" />
+								</svg>
 							{/if}
 						</li>
 					{/each}
@@ -328,10 +333,20 @@
 		color: var(--k-fg);
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
-	.k-combobox:hover { border-color: var(--k-fg-muted); }
-	.k-combobox:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.invalid { border-color: var(--k-danger); }
-	.disabled { opacity: 0.55; }
+	.k-combobox:hover {
+		border-color: var(--k-fg-muted);
+	}
+	.k-combobox:focus-within {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
+	.disabled {
+		opacity: 0.55;
+	}
 	input {
 		flex: 1;
 		min-width: 0;
@@ -345,8 +360,13 @@
 		font: inherit;
 		font-size: var(--k-text-md);
 	}
-	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	input:disabled { cursor: not-allowed; }
+	input::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	input:disabled {
+		cursor: not-allowed;
+	}
 	.toggle {
 		position: relative;
 		flex: none;
@@ -361,11 +381,26 @@
 		color: var(--k-fg-muted);
 		cursor: pointer;
 	}
-	.toggle::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
-	.toggle:hover:not(:disabled) { color: var(--k-fg); background: var(--k-bg-sunken); }
-	.toggle:disabled { cursor: not-allowed; }
-	.toggle svg { width: 16px; height: 16px; transition: transform var(--k-dur) var(--k-ease); }
-	.toggle[aria-expanded='true'] svg { transform: rotate(180deg); }
+	.toggle::after {
+		content: '';
+		position: absolute;
+		inset: min(0px, calc((100% - var(--k-tap-target)) / 2));
+	}
+	.toggle:hover:not(:disabled) {
+		color: var(--k-fg);
+		background: var(--k-bg-sunken);
+	}
+	.toggle:disabled {
+		cursor: not-allowed;
+	}
+	.toggle svg {
+		width: 16px;
+		height: 16px;
+		transition: transform var(--k-dur) var(--k-ease);
+	}
+	.toggle[aria-expanded='true'] svg {
+		transform: rotate(180deg);
+	}
 	.popup {
 		position: fixed;
 		z-index: 950;
@@ -382,8 +417,18 @@
 		font-family: var(--k-font-sans);
 		animation: k-drop var(--k-dur) var(--k-ease);
 	}
-	.popup[hidden] { display: none; }
-	.list { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0; padding: 0; list-style: none; overscroll-behavior: contain; }
+	.popup[hidden] {
+		display: none;
+	}
+	.list {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: auto;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		overscroll-behavior: contain;
+	}
 	[role='option'] {
 		display: flex;
 		align-items: center;
@@ -401,9 +446,37 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: calc(var(--k-focus-w) * -1);
 	}
-	[role='option'][aria-disabled='true'] { color: var(--k-fg-disabled); cursor: not-allowed; }
-	.check { flex: none; width: 16px; height: 16px; color: var(--k-accent-text); }
-	.empty { margin: 0; padding: var(--k-space-2) var(--k-space-3); color: var(--k-fg-muted); font-size: var(--k-text-sm); }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
+	[role='option'][aria-disabled='true'] {
+		color: var(--k-fg-disabled);
+		cursor: not-allowed;
+	}
+	.check {
+		flex: none;
+		width: 16px;
+		height: 16px;
+		color: var(--k-accent-text);
+	}
+	.empty {
+		margin: 0;
+		padding: var(--k-space-2) var(--k-space-3);
+		color: var(--k-fg-muted);
+		font-size: var(--k-text-sm);
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+		border: 0;
+	}
+	@keyframes k-drop {
+		from {
+			opacity: 0;
+			transform: translateY(-4px);
+		}
+	}
 </style>

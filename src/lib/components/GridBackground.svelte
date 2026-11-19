@@ -23,7 +23,11 @@
 
 <style>
 	/* Pattern colour: --k-line, or --k-grid-color to override it. */
-	.k-grid-bg { position: relative; isolation: isolate; min-width: 0; }
+	.k-grid-bg {
+		position: relative;
+		isolation: isolate;
+		min-width: 0;
+	}
 	.pattern {
 		position: absolute;
 		inset: 0;

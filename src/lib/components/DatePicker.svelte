@@ -98,7 +98,9 @@
 	}
 
 	/* ---------- locale ---------- */
-	interface WeekInfo { firstDay: number }
+	interface WeekInfo {
+		firstDay: number;
+	}
 	type LocaleWithWeek = Intl.Locale & { getWeekInfo?: (() => WeekInfo) | undefined; weekInfo?: WeekInfo | undefined };
 
 	const loc = $derived.by(() => {
@@ -159,7 +161,12 @@
 			// 8 digits without separators, in locale order.
 			const g = groups[0];
 			let at = 0;
-			groups = order.map((t) => { const len = t === 'year' ? 4 : 2; const part = g.slice(at, at + len); at += len; return part; });
+			groups = order.map((t) => {
+				const len = t === 'year' ? 4 : 2;
+				const part = g.slice(at, at + len);
+				at += len;
+				return part;
+			});
 		}
 		if (groups.length !== 3 || order.length !== 3) return null;
 		const parts: Record<'day' | 'month' | 'year', string> = { day: '', month: '', year: '' };
@@ -284,14 +291,30 @@
 		const dow = (d.getUTCDay() - firstDay + 7) % 7;
 		let next: Date;
 		switch (e.key) {
-			case 'ArrowLeft': next = addDays(d, -1); break;
-			case 'ArrowRight': next = addDays(d, 1); break;
-			case 'ArrowUp': next = addDays(d, -7); break;
-			case 'ArrowDown': next = addDays(d, 7); break;
-			case 'Home': next = addDays(d, -dow); break;
-			case 'End': next = addDays(d, 6 - dow); break;
-			case 'PageUp': next = addMonths(d, e.shiftKey ? -12 : -1); break;
-			case 'PageDown': next = addMonths(d, e.shiftKey ? 12 : 1); break;
+			case 'ArrowLeft':
+				next = addDays(d, -1);
+				break;
+			case 'ArrowRight':
+				next = addDays(d, 1);
+				break;
+			case 'ArrowUp':
+				next = addDays(d, -7);
+				break;
+			case 'ArrowDown':
+				next = addDays(d, 7);
+				break;
+			case 'Home':
+				next = addDays(d, -dow);
+				break;
+			case 'End':
+				next = addDays(d, 6 - dow);
+				break;
+			case 'PageUp':
+				next = addMonths(d, e.shiftKey ? -12 : -1);
+				break;
+			case 'PageDown':
+				next = addMonths(d, e.shiftKey ? 12 : 1);
+				break;
 			case 'Enter':
 			case ' ':
 				e.preventDefault();
@@ -362,7 +385,9 @@
 				{disabled}
 				onclick={() => (expanded ? closeCalendar(true) : openCalendar())}
 			>
-				<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="1.5" /><path d="M3 8.5h14M7 2.5v4M13 2.5v4" /></svg>
+				<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+					<rect x="3" y="4.5" width="14" height="12.5" rx="1.5" /><path d="M3 8.5h14M7 2.5v4M13 2.5v4" />
+				</svg>
 			</button>
 			{#if name}<input type="hidden" {name} value={value ?? ''} />{/if}
 		</div>
@@ -378,11 +403,25 @@
 				onkeydown={onDialogKey}
 			>
 				<div class="head">
-					<button bind:this={prevBtn} type="button" class="nav" aria-label={prevMonthLabel} disabled={!canPrev} onclick={() => showMonth(-1)}>
+					<button
+						bind:this={prevBtn}
+						type="button"
+						class="nav"
+						aria-label={prevMonthLabel}
+						disabled={!canPrev}
+						onclick={() => showMonth(-1)}
+					>
 						<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4l-4 4 4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg>
 					</button>
 					<h2 id="{uid}-month" aria-live="polite">{monthFmt.format(utc(viewYear, viewMonth, 1))}</h2>
-					<button bind:this={nextBtn} type="button" class="nav" aria-label={nextMonthLabel} disabled={!canNext} onclick={() => showMonth(1)}>
+					<button
+						bind:this={nextBtn}
+						type="button"
+						class="nav"
+						aria-label={nextMonthLabel}
+						disabled={!canNext}
+						onclick={() => showMonth(1)}
+					>
 						<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg>
 					</button>
 				</div>
@@ -405,9 +444,14 @@
 											aria-selected={sameDay(day, selectedDate) || undefined}
 											aria-disabled={off || undefined}
 											aria-current={sameDay(day, todayDate) ? 'date' : undefined}
-											onclick={() => { focusDate = day; pick(day); }}
+											onclick={() => {
+												focusDate = day;
+												pick(day);
+											}}
 											onkeydown={onGridKey}
-										>{day.getUTCDate()}</td>
+										>
+											{day.getUTCDate()}
+										</td>
 									{:else}
 										<td class="blank"></td>
 									{/if}
@@ -435,10 +479,20 @@
 		color: var(--k-fg);
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
-	.k-date:hover { border-color: var(--k-fg-muted); }
-	.k-date:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.invalid { border-color: var(--k-danger); }
-	.disabled { opacity: 0.55; }
+	.k-date:hover {
+		border-color: var(--k-fg-muted);
+	}
+	.k-date:has(input:focus-visible) {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
+	.disabled {
+		opacity: 0.55;
+	}
 	input {
 		flex: 1;
 		min-width: 0;
@@ -453,8 +507,13 @@
 		font-size: var(--k-text-md);
 		font-variant-numeric: tabular-nums;
 	}
-	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	input:disabled { cursor: not-allowed; }
+	input::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	input:disabled {
+		cursor: not-allowed;
+	}
 	button {
 		position: relative;
 		flex: none;
@@ -469,12 +528,31 @@
 		color: var(--k-fg-muted);
 		cursor: pointer;
 	}
-	button::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
-	button:hover:not(:disabled) { color: var(--k-fg); background: var(--k-bg-sunken); }
-	button:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	button:disabled { opacity: 0.4; cursor: not-allowed; }
-	.cal svg { width: 20px; height: 20px; }
-	.nav svg { width: 16px; height: 16px; }
+	button::after {
+		content: '';
+		position: absolute;
+		inset: min(0px, calc((100% - var(--k-tap-target)) / 2));
+	}
+	button:hover:not(:disabled) {
+		color: var(--k-fg);
+		background: var(--k-bg-sunken);
+	}
+	button:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	button:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+	.cal svg {
+		width: 20px;
+		height: 20px;
+	}
+	.nav svg {
+		width: 16px;
+		height: 16px;
+	}
 	.dialog {
 		position: fixed;
 		z-index: 950;
@@ -491,8 +569,17 @@
 		font-family: var(--k-font-sans);
 		animation: k-drop var(--k-dur) var(--k-ease);
 	}
-	.dialog:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.head { display: flex; align-items: center; justify-content: space-between; gap: var(--k-space-2); margin-bottom: var(--k-space-1); }
+	.dialog:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--k-space-2);
+		margin-bottom: var(--k-space-1);
+	}
 	h2 {
 		flex: 1;
 		margin: 0;
@@ -503,7 +590,11 @@
 		text-transform: var(--k-label-transform);
 		letter-spacing: var(--k-label-tracking);
 	}
-	table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+	table {
+		width: 100%;
+		table-layout: fixed;
+		border-collapse: collapse;
+	}
 	th {
 		height: 32px;
 		padding: 0;
@@ -517,7 +608,11 @@
 		text-overflow: clip;
 		white-space: nowrap;
 	}
-	td { height: 40px; padding: 0; text-align: center; }
+	td {
+		height: 40px;
+		padding: 0;
+		text-align: center;
+	}
 	[role='gridcell'] {
 		position: relative;
 		border-radius: min(var(--k-radius-control), 10px);
@@ -527,11 +622,37 @@
 		outline: none;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	[role='gridcell']:hover { background: var(--k-bg-sunken); }
-	[role='gridcell']:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	[role='gridcell'][aria-current='date'] { font-weight: var(--k-weight-heading); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
-	[role='gridcell'][aria-selected='true'] { background: var(--k-primary); color: var(--k-on-primary); font-weight: var(--k-weight-heading); }
-	[role='gridcell'][aria-disabled='true'] { color: var(--k-fg-muted); opacity: 0.5; text-decoration-line: line-through; cursor: not-allowed; }
-	[role='gridcell'][aria-disabled='true']:hover { background: transparent; }
-	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
+	[role='gridcell']:hover {
+		background: var(--k-bg-sunken);
+	}
+	[role='gridcell']:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	[role='gridcell'][aria-current='date'] {
+		font-weight: var(--k-weight-heading);
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+		text-underline-offset: 4px;
+	}
+	[role='gridcell'][aria-selected='true'] {
+		background: var(--k-primary);
+		color: var(--k-on-primary);
+		font-weight: var(--k-weight-heading);
+	}
+	[role='gridcell'][aria-disabled='true'] {
+		color: var(--k-fg-muted);
+		opacity: 0.5;
+		text-decoration-line: line-through;
+		cursor: not-allowed;
+	}
+	[role='gridcell'][aria-disabled='true']:hover {
+		background: transparent;
+	}
+	@keyframes k-drop {
+		from {
+			opacity: 0;
+			transform: translateY(-4px);
+		}
+	}
 </style>

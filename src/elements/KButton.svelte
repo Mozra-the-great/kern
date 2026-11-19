@@ -1,4 +1,18 @@
-<svelte:options customElement={{ props: { variant: { type: 'String' }, size: { type: 'String' }, block: { type: 'Boolean' }, loading: { type: 'Boolean' }, disabled: { type: 'Boolean' }, href: { type: 'String' }, type: { type: 'String' } }, extend: formAssociated }} />
+<svelte:options
+	customElement={{
+		props: {
+			variant: { type: 'String' },
+			size: { type: 'String' },
+			block: { type: 'Boolean' },
+			loading: { type: 'Boolean' },
+			disabled: { type: 'Boolean' },
+			href: { type: 'String' },
+			type: { type: 'String' }
+		},
+		extend: formAssociated
+	}}
+/>
+
 <script lang="ts">
 	import Button from '../lib/components/Button.svelte';
 	import { formAssociated, type FormHost } from './form.js';
@@ -12,4 +26,5 @@
 		else if (type === 'reset') form.reset();
 	}
 </script>
+
 <Button {variant} {size} {block} {loading} {disabled} {href} type="button" {onclick}><slot /></Button>

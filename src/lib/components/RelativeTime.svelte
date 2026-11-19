@@ -114,10 +114,18 @@
 {/if}
 
 <style>
-	.k-relative-time { font-variant-numeric: tabular-nums; }
-	time { position: relative; }
+	.k-relative-time {
+		font-variant-numeric: tabular-nums;
+	}
+	time {
+		position: relative;
+	}
 	@media (hover: hover) {
-		time { text-decoration: underline dotted; text-decoration-color: var(--k-border); text-underline-offset: 0.2em; }
+		time {
+			text-decoration: underline dotted;
+			text-decoration-color: var(--k-border);
+			text-underline-offset: 0.2em;
+		}
 	}
 	.sr {
 		position: absolute;

@@ -16,8 +16,15 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 // (KDatePicker.svelte → date-picker → k-date-picker).
 
 const dir = fileURLToPath(new URL('./src/elements/', import.meta.url)).replaceAll('\\', '/');
-const wrappers = readdirSync(dir).filter((f) => /^K[A-Za-z]+\.svelte$/.test(f)).sort();
-const nameOf = (file: string) => file.replace(/\.svelte$/, '').replace(/^K/, '').replace(/(?<!^)[A-Z]/g, (c) => `-${c}`).toLowerCase();
+const wrappers = readdirSync(dir)
+	.filter((f) => /^K[A-Za-z]+\.svelte$/.test(f))
+	.sort();
+const nameOf = (file: string) =>
+	file
+		.replace(/\.svelte$/, '')
+		.replace(/^K/, '')
+		.replace(/(?<!^)[A-Z]/g, (c) => `-${c}`)
+		.toLowerCase();
 
 /** Tags an entry registers besides its own: items are useless without their container. */
 const companions: Record<string, string[]> = { accordion: ['accordion-item'] };

@@ -1,4 +1,9 @@
-<svelte:options customElement={{ props: { open: { type: 'Boolean', reflect: true }, label: { type: 'String' }, disabled: { type: 'Boolean' }, look: { type: 'String' } } }} />
+<svelte:options
+	customElement={{
+		props: { open: { type: 'Boolean', reflect: true }, label: { type: 'String' }, disabled: { type: 'Boolean' }, look: { type: 'String' } }
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @event toggle {boolean} Open state after the user toggled it.
@@ -10,8 +15,22 @@
 	const host = $host();
 	const trigger = hasSlot(host, 'trigger');
 </script>
+
 {#snippet triggerS()}{#if trigger}<slot name="trigger" />{/if}{/snippet}
-<Collapsible bind:open {label} {disabled} {look} ontoggle={(o: boolean) => emit(host, 'toggle', o)} trigger={trigger ? triggerS : undefined}><slot /></Collapsible>
+<Collapsible
+	bind:open
+	{label}
+	{disabled}
+	{look}
+	ontoggle={(o: boolean) => emit(host, 'toggle', o)}
+	trigger={trigger ? triggerS : undefined}
+>
+	<slot />
+</Collapsible>
+
 <style>
-	:host { display: block; min-width: 0; }
+	:host {
+		display: block;
+		min-width: 0;
+	}
 </style>

@@ -1,4 +1,14 @@
-<svelte:options customElement={{ props: { open: { type: 'Boolean', reflect: true }, label: { type: "String" }, placement: { type: "String" }, triggerVariant: { type: 'String', attribute: 'trigger-variant' } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			open: { type: 'Boolean', reflect: true },
+			label: { type: 'String' },
+			placement: { type: 'String' },
+			triggerVariant: { type: 'String', attribute: 'trigger-variant' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @event toggle {boolean} Open state after the user opened or closed it.
@@ -15,5 +25,6 @@
 		if (!o) emit(host, 'close');
 	}
 </script>
+
 {#snippet triggerS()}{#if trigger}<slot name="trigger" />{/if}{/snippet}
 <Popover bind:open {label} {placement} {triggerVariant} trigger={trigger ? triggerS : undefined} ontoggle={toggled}><slot /></Popover>

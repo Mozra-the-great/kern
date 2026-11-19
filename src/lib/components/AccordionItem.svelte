@@ -21,7 +21,9 @@
 </details>
 
 <style>
-	details { border-bottom: var(--k-border-w) solid var(--k-line); }
+	details {
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
 	summary {
 		display: flex;
 		align-items: center;
@@ -33,12 +35,33 @@
 		cursor: pointer;
 		list-style: none;
 	}
-	summary::-webkit-details-marker { display: none; }
-	summary:hover { background: var(--k-bg-sunken); }
-	summary:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	svg { flex: none; width: 16px; height: 16px; color: var(--k-fg-muted); transition: transform var(--k-dur) var(--k-ease); }
-	details[open] svg { transform: rotate(180deg); }
-	.content { padding: 0 var(--k-space-2) var(--k-space-5); }
-	.content :global(p) { margin: 0 0 var(--k-space-3); }
-	.content :global(p:last-child) { margin-bottom: 0; }
+	summary::-webkit-details-marker {
+		display: none;
+	}
+	summary:hover {
+		background: var(--k-bg-sunken);
+	}
+	summary:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	svg {
+		flex: none;
+		width: 16px;
+		height: 16px;
+		color: var(--k-fg-muted);
+		transition: transform var(--k-dur) var(--k-ease);
+	}
+	details[open] svg {
+		transform: rotate(180deg);
+	}
+	.content {
+		padding: 0 var(--k-space-2) var(--k-space-5);
+	}
+	.content :global(p) {
+		margin: 0 0 var(--k-space-3);
+	}
+	.content :global(p:last-child) {
+		margin-bottom: 0;
+	}
 </style>

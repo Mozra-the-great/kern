@@ -67,7 +67,9 @@
 						{/if}
 					</span>
 					<span class="text">
-						<span class="name">{s.label}{#if st === 'complete'}<span class="sr">, {completeLabel}</span>{/if}</span>
+						<span class="name">
+							{s.label}{#if st === 'complete'}<span class="sr">, {completeLabel}</span>{/if}
+						</span>
 						{#if s.description}<span class="desc">{s.description}</span>{/if}
 					</span>
 				{/snippet}
@@ -95,9 +97,21 @@
 </nav>
 
 <style>
-	.k-stepper { container-type: inline-size; min-width: 0; }
-	.list { display: flex; margin: 0; padding: 0; list-style: none; }
-	.step { position: relative; flex: 1 1 0; min-width: 0; }
+	.k-stepper {
+		container-type: inline-size;
+		min-width: 0;
+	}
+	.list {
+		display: flex;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.step {
+		position: relative;
+		flex: 1 1 0;
+		min-width: 0;
+	}
 	.body {
 		display: flex;
 		gap: var(--k-space-3);
@@ -113,10 +127,22 @@
 		font: inherit;
 		text-align: start;
 	}
-	.link { min-height: max(40px, var(--k-tap-target)); cursor: pointer; transition: background-color var(--k-dur) var(--k-ease); }
-	.link:hover { background: var(--k-bg-sunken); }
-	.link:hover .name { text-decoration: underline; text-underline-offset: 3px; }
-	.link:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.link {
+		min-height: max(40px, var(--k-tap-target));
+		cursor: pointer;
+		transition: background-color var(--k-dur) var(--k-ease);
+	}
+	.link:hover {
+		background: var(--k-bg-sunken);
+	}
+	.link:hover .name {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.link:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 	.marker {
 		flex: none;
 		display: grid;
@@ -134,15 +160,29 @@
 		position: relative;
 		z-index: 1;
 	}
-	.marker svg { width: 16px; height: 16px; }
-	[data-state='complete'] .marker { border-color: var(--k-primary); background: var(--k-primary); color: var(--k-on-primary); }
+	.marker svg {
+		width: 16px;
+		height: 16px;
+	}
+	[data-state='complete'] .marker {
+		border-color: var(--k-primary);
+		background: var(--k-primary);
+		color: var(--k-on-primary);
+	}
 	[data-state='current'] .marker {
 		border: 2px solid var(--k-primary);
 		color: var(--k-fg);
 		font-weight: var(--k-weight-heading);
-		box-shadow: 0 0 0 3px var(--k-bg), 0 0 0 5px var(--k-accent-mark);
+		box-shadow:
+			0 0 0 3px var(--k-bg),
+			0 0 0 5px var(--k-accent-mark);
 	}
-	.text { display: grid; gap: 2px; min-width: 0; padding-top: 4px; }
+	.text {
+		display: grid;
+		gap: 2px;
+		min-width: 0;
+		padding-top: 4px;
+	}
 	.name {
 		font-family: var(--k-label-font);
 		font-size: var(--k-label-size);
@@ -152,9 +192,18 @@
 		color: var(--k-fg-muted);
 		overflow-wrap: anywhere;
 	}
-	[data-state='current'] .name, [data-state='complete'] .name { color: var(--k-fg); }
-	[data-state='current'] .name { font-weight: var(--k-weight-heading); }
-	.desc { font-size: var(--k-text-sm); color: var(--k-fg-muted); overflow-wrap: anywhere; }
+	[data-state='current'] .name,
+	[data-state='complete'] .name {
+		color: var(--k-fg);
+	}
+	[data-state='current'] .name {
+		font-weight: var(--k-weight-heading);
+	}
+	.desc {
+		font-size: var(--k-text-sm);
+		color: var(--k-fg-muted);
+		overflow-wrap: anywhere;
+	}
 
 	/* Connectors: a line from each step's marker to the next one. */
 	.step:not(:last-child)::after {
@@ -162,10 +211,18 @@
 		position: absolute;
 		background: var(--k-line);
 	}
-	.step[data-state='complete']:not(:last-child)::after { background: var(--k-primary); }
+	.step[data-state='complete']:not(:last-child)::after {
+		background: var(--k-primary);
+	}
 
-	[data-orientation='horizontal'] .body { flex-direction: column; gap: var(--k-space-2); }
-	[data-orientation='horizontal'] .text { padding-top: 0; padding-inline-end: var(--k-space-3); }
+	[data-orientation='horizontal'] .body {
+		flex-direction: column;
+		gap: var(--k-space-2);
+	}
+	[data-orientation='horizontal'] .text {
+		padding-top: 0;
+		padding-inline-end: var(--k-space-3);
+	}
 	[data-orientation='horizontal'] .step:not(:last-child)::after {
 		top: calc(var(--k-space-1) + 15px);
 		left: calc(var(--k-space-1) + 40px);
@@ -173,8 +230,13 @@
 		height: 2px;
 	}
 
-	[data-orientation='vertical'] .list { flex-direction: column; }
-	[data-orientation='vertical'] .step { flex: none; padding-bottom: var(--k-space-4); }
+	[data-orientation='vertical'] .list {
+		flex-direction: column;
+	}
+	[data-orientation='vertical'] .step {
+		flex: none;
+		padding-bottom: var(--k-space-4);
+	}
 	[data-orientation='vertical'] .step:not(:last-child)::after {
 		left: calc(var(--k-space-1) + 15px);
 		top: calc(var(--k-space-1) + 40px);
@@ -182,7 +244,9 @@
 		width: 2px;
 	}
 
-	.compact { display: none; }
+	.compact {
+		display: none;
+	}
 	.compact-text {
 		margin: 0;
 		font-family: var(--k-label-font);
@@ -193,18 +257,62 @@
 		color: var(--k-fg);
 		overflow-wrap: anywhere;
 	}
-	.bar { display: flex; gap: 4px; }
-	.bar .seg { flex: 1; height: 6px; border-radius: var(--k-radius-badge); background: var(--k-bg-sunken); border: var(--k-border-w) solid var(--k-border); box-sizing: border-box; }
-	.bar .seg[data-state='complete'] { background: var(--k-primary); border-color: var(--k-primary); }
-	.bar .seg[data-state='current'] { background: var(--k-accent-mark); border-color: var(--k-primary); }
+	.bar {
+		display: flex;
+		gap: 4px;
+	}
+	.bar .seg {
+		flex: 1;
+		height: 6px;
+		border-radius: var(--k-radius-badge);
+		background: var(--k-bg-sunken);
+		border: var(--k-border-w) solid var(--k-border);
+		box-sizing: border-box;
+	}
+	.bar .seg[data-state='complete'] {
+		background: var(--k-primary);
+		border-color: var(--k-primary);
+	}
+	.bar .seg[data-state='current'] {
+		background: var(--k-accent-mark);
+		border-color: var(--k-primary);
+	}
 
 	/* Narrow container: one line of text plus a progress bar instead of the full row. */
 	@container (max-width: 520px) {
-		[data-orientation='horizontal'] .list { display: none; }
-		[data-orientation='horizontal'] .compact { display: grid; gap: var(--k-space-2); }
+		[data-orientation='horizontal'] .list {
+			display: none;
+		}
+		[data-orientation='horizontal'] .compact {
+			display: grid;
+			gap: var(--k-space-2);
+		}
 	}
-	.compact .back { flex-direction: row; width: auto; justify-self: start; align-items: center; gap: var(--k-space-2); padding: 0 var(--k-space-3) 0 var(--k-space-2); }
-	.back svg { width: 16px; height: 16px; flex: none; }
-	.back .name { color: var(--k-fg); }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+	.compact .back {
+		flex-direction: row;
+		width: auto;
+		justify-self: start;
+		align-items: center;
+		gap: var(--k-space-2);
+		padding: 0 var(--k-space-3) 0 var(--k-space-2);
+	}
+	.back svg {
+		width: 16px;
+		height: 16px;
+		flex: none;
+	}
+	.back .name {
+		color: var(--k-fg);
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+		border: 0;
+	}
 </style>

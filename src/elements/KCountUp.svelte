@@ -1,4 +1,16 @@
-<svelte:options customElement={{ props: { value: { type: "Number" }, from: { type: "Number" }, duration: { type: "Number" }, format: { type: "Object" }, locale: { type: "String" }, startInView: { type: 'String', attribute: 'start-in-view' } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			value: { type: 'Number' },
+			from: { type: 'Number' },
+			duration: { type: 'Number' },
+			format: { type: 'Object' },
+			locale: { type: 'String' },
+			startInView: { type: 'String', attribute: 'start-in-view' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @prop format {Intl.NumberFormatOptions}
@@ -12,4 +24,5 @@
 	const host = $host();
 	const on = (v: unknown, fallback: boolean) => (v === undefined || v === null ? fallback : v !== false && v !== 'false');
 </script>
+
 <CountUp {value} {from} {duration} {format} {locale} startInView={on(startInView, true)} oncomplete={() => emit(host, 'complete')} />

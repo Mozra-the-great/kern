@@ -99,12 +99,16 @@
 		>
 			<div class="inner" bind:this={inner}>
 				{#if numbers}<span class="gutter" aria-hidden="true">{numbers}</span>{/if}
-				<pre><code bind:this={codeEl} class={langClass} data-language={language}>{#if text !== undefined}{text}{:else}{@render children?.()}{/if}</code></pre>
+				<pre><code bind:this={codeEl} class={langClass} data-language={language}
+						>{#if text !== undefined}{text}{:else}{@render children?.()}{/if}</code
+					></pre>
 			</div>
 		</div>
 	</div>
 {:else}
-	<code class="k-code inline {cls}" data-language={language}>{#if text !== undefined}{text}{:else}{@render children?.()}{/if}</code>
+	<code class="k-code inline {cls}" data-language={language}>
+		{#if text !== undefined}{text}{:else}{@render children?.()}{/if}
+	</code>
 {/if}
 
 <style>
@@ -163,13 +167,35 @@
 		letter-spacing: var(--k-label-tracking);
 		text-transform: var(--k-label-transform);
 	}
-	.head :global(.copy) { margin-inline-start: auto; }
+	.head :global(.copy) {
+		margin-inline-start: auto;
+	}
 
-	.scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
-	.scroll:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	.inner { display: flex; width: max-content; min-width: 100%; }
-	pre { flex: 1 0 auto; margin: 0; padding: var(--k-space-4); font: inherit; white-space: pre; tab-size: 2; }
-	code { font: inherit; }
+	.scroll {
+		overflow-x: auto;
+		overflow-y: hidden;
+		overscroll-behavior-x: contain;
+	}
+	.scroll:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	.inner {
+		display: flex;
+		width: max-content;
+		min-width: 100%;
+	}
+	pre {
+		flex: 1 0 auto;
+		margin: 0;
+		padding: var(--k-space-4);
+		font: inherit;
+		white-space: pre;
+		tab-size: 2;
+	}
+	code {
+		font: inherit;
+	}
 	.gutter {
 		position: sticky;
 		left: 0;
@@ -185,5 +211,7 @@
 		user-select: none;
 		-webkit-user-select: none;
 	}
-	.gutter + pre { padding-left: var(--k-space-4); }
+	.gutter + pre {
+		padding-left: var(--k-space-4);
+	}
 </style>

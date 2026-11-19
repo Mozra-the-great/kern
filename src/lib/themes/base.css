@@ -152,5 +152,8 @@
  * loads later, so a plain rule here would lose. !important keeps reduced motion in force
  * for every theme, any import order and nested data-theme boxes. */
 @media (prefers-reduced-motion: reduce) {
-	:root, [data-theme] { --k-dur: 0ms !important; }
+	:root,
+	[data-theme] {
+		--k-dur: 0ms !important;
+	}
 }

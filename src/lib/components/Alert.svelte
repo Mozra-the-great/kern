@@ -51,18 +51,78 @@
 		background: var(--soft);
 		color: var(--k-fg);
 	}
-	[data-tone='ok'] { --c: var(--k-ok); --soft: var(--k-surface-ok); }
-	[data-tone='warn'] { --c: var(--k-warn); --soft: var(--k-surface-warn); }
-	[data-tone='danger'] { --c: var(--k-danger); --soft: var(--k-surface-danger); }
-	.icon { flex: none; width: 20px; height: 20px; color: var(--c); margin-top: 1px; }
-	.content { flex: 1; display: grid; gap: var(--k-space-1); min-width: 0; }
-	.title { margin: 0; font-weight: var(--k-weight-heading); color: var(--c); }
-	.text { font-size: var(--k-text-sm); }
-	.text :global(p) { margin: 0; }
-	.actions { display: flex; flex-wrap: wrap; gap: var(--k-space-2); margin-top: var(--k-space-2); }
-	.x { position: relative; flex: none; display: grid; place-items: center; width: 32px; height: 32px; margin: -6px -6px 0 0; padding: 0; border: 0; border-radius: var(--k-radius-control); background: transparent; color: var(--k-fg-muted); cursor: pointer; }
-	.x::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
-	.x:hover { color: var(--k-fg); background: var(--k-bg-sunken); }
-	.x:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 0; }
-	.x svg { width: 14px; height: 14px; }
+	[data-tone='ok'] {
+		--c: var(--k-ok);
+		--soft: var(--k-surface-ok);
+	}
+	[data-tone='warn'] {
+		--c: var(--k-warn);
+		--soft: var(--k-surface-warn);
+	}
+	[data-tone='danger'] {
+		--c: var(--k-danger);
+		--soft: var(--k-surface-danger);
+	}
+	.icon {
+		flex: none;
+		width: 20px;
+		height: 20px;
+		color: var(--c);
+		margin-top: 1px;
+	}
+	.content {
+		flex: 1;
+		display: grid;
+		gap: var(--k-space-1);
+		min-width: 0;
+	}
+	.title {
+		margin: 0;
+		font-weight: var(--k-weight-heading);
+		color: var(--c);
+	}
+	.text {
+		font-size: var(--k-text-sm);
+	}
+	.text :global(p) {
+		margin: 0;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--k-space-2);
+		margin-top: var(--k-space-2);
+	}
+	.x {
+		position: relative;
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		margin: -6px -6px 0 0;
+		padding: 0;
+		border: 0;
+		border-radius: var(--k-radius-control);
+		background: transparent;
+		color: var(--k-fg-muted);
+		cursor: pointer;
+	}
+	.x::after {
+		content: '';
+		position: absolute;
+		inset: min(0px, calc((100% - var(--k-tap-target)) / 2));
+	}
+	.x:hover {
+		color: var(--k-fg);
+		background: var(--k-bg-sunken);
+	}
+	.x:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: 0;
+	}
+	.x svg {
+		width: 14px;
+		height: 14px;
+	}
 </style>

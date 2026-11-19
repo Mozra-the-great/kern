@@ -13,18 +13,7 @@
 		/** Content inside the field after the text, e.g. a unit or button. */
 		trailing?: Snippet | undefined;
 	}
-	let {
-		label,
-		hint,
-		error,
-		value = $bindable(),
-		id,
-		required,
-		class: cls = '',
-		leading,
-		trailing,
-		...rest
-	}: Props = $props();
+	let { label, hint, error, value = $bindable(), id, required, class: cls = '', leading, trailing, ...rest }: Props = $props();
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);
 </script>
@@ -60,9 +49,17 @@
 		color: var(--k-fg);
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
-	.k-input:hover { border-color: var(--k-fg-muted); }
-	.k-input:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.invalid { border-color: var(--k-danger); }
+	.k-input:hover {
+		border-color: var(--k-fg-muted);
+	}
+	.k-input:focus-within {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
 	input {
 		flex: 1;
 		min-width: 0;
@@ -77,9 +74,23 @@
 		font: inherit;
 		font-size: var(--k-text-md);
 	}
-	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	input:disabled { cursor: not-allowed; }
-	.k-input:has(input:disabled) { opacity: 0.55; }
-	.adorn { display: inline-flex; align-items: center; color: var(--k-fg-muted); }
-	.adorn :global(svg) { width: 18px; height: 18px; }
+	input::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	input:disabled {
+		cursor: not-allowed;
+	}
+	.k-input:has(input:disabled) {
+		opacity: 0.55;
+	}
+	.adorn {
+		display: inline-flex;
+		align-items: center;
+		color: var(--k-fg-muted);
+	}
+	.adorn :global(svg) {
+		width: 18px;
+		height: 18px;
+	}
 </style>

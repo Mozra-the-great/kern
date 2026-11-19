@@ -53,7 +53,9 @@
 		{#each cells as ch, i (cells.length - 1 - i)}
 			{#if /[0-9]/.test(ch)}
 				<span class="col" style:--d={Number(ch)}>
-					<span class="strip">{#each DIGITS as d (d)}<span class="digit">{d}</span>{/each}</span>
+					<span class="strip">
+						{#each DIGITS as d (d)}<span class="digit">{d}</span>{/each}
+					</span>
 				</span>
 			{:else}
 				<span class="sep">{ch}</span>
@@ -71,15 +73,30 @@
 		vertical-align: bottom;
 		white-space: nowrap;
 	}
-	.cells { display: inline-flex; }
-	.col { display: block; width: 1ch; height: 1.2em; overflow: hidden; }
-	.sep { display: block; height: 1.2em; white-space: pre; }
+	.cells {
+		display: inline-flex;
+	}
+	.col {
+		display: block;
+		width: 1ch;
+		height: 1.2em;
+		overflow: hidden;
+	}
+	.sep {
+		display: block;
+		height: 1.2em;
+		white-space: pre;
+	}
 	.strip {
 		display: block;
 		transform: translateY(calc(var(--d) * -1.2em));
 		transition: transform var(--k-odo-dur) var(--k-ease);
 	}
-	.digit { display: block; height: 1.2em; text-align: center; }
+	.digit {
+		display: block;
+		height: 1.2em;
+		text-align: center;
+	}
 	.sr {
 		position: absolute;
 		width: 1px;
@@ -88,5 +105,9 @@
 		clip-path: inset(50%);
 		white-space: nowrap;
 	}
-	@media (prefers-reduced-motion: reduce) { .strip { transition: none; } }
+	@media (prefers-reduced-motion: reduce) {
+		.strip {
+			transition: none;
+		}
+	}
 </style>

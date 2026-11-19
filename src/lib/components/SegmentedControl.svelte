@@ -95,8 +95,13 @@
 		border-radius: var(--k-radius-control);
 		background: var(--k-bg-sunken);
 	}
-	.block { display: flex; width: 100%; }
-	.invalid { border-color: var(--k-danger); }
+	.block {
+		display: flex;
+		width: 100%;
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
 	.seg {
 		position: relative;
 		flex: 1 0 auto;
@@ -118,10 +123,19 @@
 		text-align: center;
 		cursor: pointer;
 		user-select: none;
-		transition: background-color var(--k-dur) var(--k-ease), color var(--k-dur) var(--k-ease), box-shadow var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease);
+		transition:
+			background-color var(--k-dur) var(--k-ease),
+			color var(--k-dur) var(--k-ease),
+			box-shadow var(--k-dur) var(--k-ease),
+			border-color var(--k-dur) var(--k-ease);
 	}
-	.block .seg { flex: 1 1 auto; padding: 0 var(--k-space-2); }
-	.seg:hover:not(.on):not(:has(input:disabled)) { color: var(--k-fg); }
+	.block .seg {
+		flex: 1 1 auto;
+		padding: 0 var(--k-space-2);
+	}
+	.seg:hover:not(.on):not(:has(input:disabled)) {
+		color: var(--k-fg);
+	}
 	/* Selected: raised surface with an edge (never colour alone) and the theme's raised shadow. */
 	.seg.on {
 		border-color: var(--k-border);
@@ -138,7 +152,19 @@
 		opacity: 0;
 		cursor: inherit;
 	}
-	.seg:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); z-index: 1; }
-	.seg:has(input:disabled) { opacity: 0.45; cursor: not-allowed; }
-	.txt { padding: var(--k-space-1) 0; min-width: 0; overflow-wrap: break-word; hyphens: auto; }
+	.seg:has(input:focus-visible) {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		z-index: 1;
+	}
+	.seg:has(input:disabled) {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+	.txt {
+		padding: var(--k-space-1) 0;
+		min-width: 0;
+		overflow-wrap: break-word;
+		hyphens: auto;
+	}
 </style>

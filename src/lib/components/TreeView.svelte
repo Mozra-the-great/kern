@@ -30,16 +30,7 @@
 		ontoggle?: ((id: string, expanded: boolean) => void) | undefined;
 		class?: string | undefined;
 	}
-	let {
-		nodes,
-		selected = $bindable(),
-		expanded = $bindable(),
-		label,
-		item,
-		onselect,
-		ontoggle,
-		class: cls = ''
-	}: Props = $props();
+	let { nodes, selected = $bindable(), expanded = $bindable(), label, item, onselect, ontoggle, class: cls = '' }: Props = $props();
 
 	interface Entry {
 		node: TreeNode;
@@ -207,7 +198,9 @@
 			aria-disabled={node.disabled || undefined}
 			tabindex={node.id === tabId ? 0 : -1}
 			style:--level={level}
-			onfocus={(e) => { if (e.target === e.currentTarget) focusId = node.id; }}
+			onfocus={(e) => {
+				if (e.target === e.currentTarget) focusId = node.id;
+			}}
 		>
 			<div class="row" class:selected={isSelected}>
 				<span class="twisty" aria-hidden="true">
@@ -229,9 +222,19 @@
 </ul>
 
 <style>
-	.k-tree, ul { margin: 0; padding: 0; list-style: none; }
-	.k-tree { min-width: 0; font-size: var(--k-text-sm); }
-	li { outline: none; }
+	.k-tree,
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.k-tree {
+		min-width: 0;
+		font-size: var(--k-text-sm);
+	}
+	li {
+		outline: none;
+	}
 	.row {
 		display: flex;
 		align-items: center;
@@ -245,17 +248,47 @@
 		user-select: none;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	.row:hover { background: var(--k-bg-sunken); }
+	.row:hover {
+		background: var(--k-bg-sunken);
+	}
 	.row.selected {
 		background: var(--k-surface-selected);
 		box-shadow: inset 3px 0 0 var(--k-accent-mark);
 		font-weight: var(--k-weight-heading);
 	}
-	li:focus-visible > .row { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	li[aria-disabled='true'] > .row { opacity: 0.45; cursor: not-allowed; }
-	.twisty { flex: none; display: grid; place-items: center; width: 32px; height: max(40px, var(--k-tap-target)); color: var(--k-fg-muted); }
-	.twisty svg { width: 14px; height: 14px; transition: transform var(--k-dur) var(--k-ease); }
-	li[aria-expanded='true'] > .row .twisty svg { transform: rotate(90deg); }
-	.text { flex: 1; min-width: 0; padding: var(--k-space-2) 0; overflow-wrap: anywhere; }
-	@media (pointer: coarse) { .twisty { width: 40px; } }
+	li:focus-visible > .row {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	li[aria-disabled='true'] > .row {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+	.twisty {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: max(40px, var(--k-tap-target));
+		color: var(--k-fg-muted);
+	}
+	.twisty svg {
+		width: 14px;
+		height: 14px;
+		transition: transform var(--k-dur) var(--k-ease);
+	}
+	li[aria-expanded='true'] > .row .twisty svg {
+		transform: rotate(90deg);
+	}
+	.text {
+		flex: 1;
+		min-width: 0;
+		padding: var(--k-space-2) 0;
+		overflow-wrap: anywhere;
+	}
+	@media (pointer: coarse) {
+		.twisty {
+			width: 40px;
+		}
+	}
 </style>

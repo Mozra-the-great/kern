@@ -38,7 +38,11 @@ function createStore(): ToastStore {
 		add(input) {
 			const item: ToastItem = { id: next++, tone: 'info', duration: 5000, ...input };
 			store.items = [...store.items, item];
-			if (item.duration > 0) timers.set(item.id, setTimeout(() => store.dismiss(item.id), item.duration));
+			if (item.duration > 0)
+				timers.set(
+					item.id,
+					setTimeout(() => store.dismiss(item.id), item.duration)
+				);
 			notify();
 			return item.id;
 		},

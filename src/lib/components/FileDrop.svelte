@@ -81,12 +81,18 @@
 		const units = ['B', 'KB', 'MB', 'GB'];
 		let v = bytes;
 		let u = 0;
-		while (v >= 1024 && u < units.length - 1) { v /= 1024; u++; }
+		while (v >= 1024 && u < units.length - 1) {
+			v /= 1024;
+			u++;
+		}
 		return `${u === 0 || v >= 10 ? Math.round(v) : v.toFixed(1)} ${units[u]}`;
 	}
 
 	function accepted(file: File): boolean {
-		const tokens = (accept ?? '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
+		const tokens = (accept ?? '')
+			.split(',')
+			.map((t) => t.trim().toLowerCase())
+			.filter(Boolean);
 		if (!tokens.length) return true;
 		const fileName = file.name.toLowerCase();
 		const type = file.type.toLowerCase();
@@ -188,7 +194,9 @@
 					aria-describedby={[label ? promptId : undefined, describedby].filter(Boolean).join(' ') || undefined}
 					onclick={() => input?.click()}
 				>
-					<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 15v4h16v-4" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+					<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M12 16V4M7 9l5-5 5 5M4 15v4h16v-4" fill="none" stroke="currentColor" stroke-width="2" />
+					</svg>
 					<span class="prompt" id={promptId}>{prompt}</span>
 				</button>
 				<input
@@ -224,8 +232,15 @@
 </Field>
 
 <style>
-	.k-filedrop { position: relative; display: grid; gap: var(--k-space-3); min-width: 0; }
-	.drop { position: relative; }
+	.k-filedrop {
+		position: relative;
+		display: grid;
+		gap: var(--k-space-3);
+		min-width: 0;
+	}
+	.drop {
+		position: relative;
+	}
 	.zone {
 		display: grid;
 		justify-items: center;
@@ -241,22 +256,70 @@
 		font: inherit;
 		text-align: center;
 		cursor: pointer;
-		transition: background-color var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease), box-shadow var(--k-dur) var(--k-ease);
+		transition:
+			background-color var(--k-dur) var(--k-ease),
+			border-color var(--k-dur) var(--k-ease),
+			box-shadow var(--k-dur) var(--k-ease);
 	}
-	.zone > * { pointer-events: none; }
-	.zone:hover:not(:disabled) { border-color: var(--k-fg); }
-	.zone:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.zone:disabled { opacity: 0.55; cursor: not-allowed; }
-	.zone.invalid { border-color: var(--k-danger); }
+	.zone > * {
+		pointer-events: none;
+	}
+	.zone:hover:not(:disabled) {
+		border-color: var(--k-fg);
+	}
+	.zone:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.zone:disabled {
+		opacity: 0.55;
+		cursor: not-allowed;
+	}
+	.zone.invalid {
+		border-color: var(--k-danger);
+	}
 	/* dragging: solid line and inset ring on top of the colour change */
-	.zone.dragging { border-style: solid; border-color: var(--k-accent-mark); background: var(--k-surface-selected); box-shadow: inset 0 0 0 var(--k-border-w) var(--k-accent-mark); }
-	.icon { width: 28px; height: 28px; color: var(--k-fg-hint); transition: transform var(--k-dur) var(--k-ease); }
-	.dragging .icon { transform: translateY(-4px); color: var(--k-accent-text); }
-	.prompt { font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); overflow-wrap: anywhere; }
+	.zone.dragging {
+		border-style: solid;
+		border-color: var(--k-accent-mark);
+		background: var(--k-surface-selected);
+		box-shadow: inset 0 0 0 var(--k-border-w) var(--k-accent-mark);
+	}
+	.icon {
+		width: 28px;
+		height: 28px;
+		color: var(--k-fg-hint);
+		transition: transform var(--k-dur) var(--k-ease);
+	}
+	.dragging .icon {
+		transform: translateY(-4px);
+		color: var(--k-accent-text);
+	}
+	.prompt {
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		overflow-wrap: anywhere;
+	}
 	/* The real input is invisible and stays under the zone, so native validation bubbles point at it. */
-	.native { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+	.native {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		pointer-events: none;
+	}
 
-	.files { display: grid; gap: var(--k-space-2); margin: 0; padding: 0; list-style: none; }
+	.files {
+		display: grid;
+		gap: var(--k-space-2);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
 	.files li {
 		display: flex;
 		align-items: center;
@@ -267,8 +330,18 @@
 		border-radius: var(--k-radius-field);
 		background: var(--k-bg-raised);
 	}
-	.fname { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: var(--k-text-sm); }
-	.fsize { flex: none; font-family: var(--k-font-mono); font-size: var(--k-text-xs); color: var(--k-fg-muted); }
+	.fname {
+		flex: 1;
+		min-width: 0;
+		overflow-wrap: anywhere;
+		font-size: var(--k-text-sm);
+	}
+	.fsize {
+		flex: none;
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-xs);
+		color: var(--k-fg-muted);
+	}
 	.rm {
 		display: grid;
 		place-items: center;
@@ -282,9 +355,30 @@
 		color: var(--k-fg);
 		cursor: pointer;
 	}
-	.rm svg { width: 16px; height: 16px; }
-	.rm:hover:not(:disabled) { background: var(--k-bg-sunken); }
-	.rm:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.rm:disabled { opacity: 0.5; cursor: not-allowed; }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+	.rm svg {
+		width: 16px;
+		height: 16px;
+	}
+	.rm:hover:not(:disabled) {
+		background: var(--k-bg-sunken);
+	}
+	.rm:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.rm:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
 </style>

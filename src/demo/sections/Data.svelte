@@ -26,7 +26,20 @@
 
 	/* DataTable */
 	type Polish = { name: string; brand: string; finish: string; price: number; stock: number; added: string };
-	const names = ['Mintgrün', 'Beerenrot', 'Nachtblau', 'Sandgold', 'Altrosa', 'Pfirsich', 'Lavendel', 'Smaragd', 'Koralle', 'Graphit', 'Perlweiß', 'Honig'];
+	const names = [
+		'Mintgrün',
+		'Beerenrot',
+		'Nachtblau',
+		'Sandgold',
+		'Altrosa',
+		'Pfirsich',
+		'Lavendel',
+		'Smaragd',
+		'Koralle',
+		'Graphit',
+		'Perlweiß',
+		'Honig'
+	];
 	const brands = ['Lacque', 'Petal & Co', 'Nordglanz'];
 	const finishes = ['Creme', 'Glitzer', 'Matt', 'Metallic', 'Gel'];
 	const random = rng(7);
@@ -42,7 +55,14 @@
 		{ key: 'name', label: 'Name', sortable: true },
 		{ key: 'brand', label: 'Marke', sortable: true },
 		{ key: 'finish', label: 'Finish', sortable: true },
-		{ key: 'price', label: 'Preis', align: 'end', mono: true, sortable: true, format: (v) => `${Number(v).toFixed(2).replace('.', ',')} €` },
+		{
+			key: 'price',
+			label: 'Preis',
+			align: 'end',
+			mono: true,
+			sortable: true,
+			format: (v) => `${Number(v).toFixed(2).replace('.', ',')} €`
+		},
 		{ key: 'stock', label: 'Bestand', align: 'end', mono: true, sortable: true },
 		{ key: 'added', label: 'Hinzugefügt', mono: true, sortable: true }
 	];
@@ -119,13 +139,25 @@
 	const timelineNames = { done: 'Erledigt', current: 'Aktuell', upcoming: 'Ausstehend', error: 'Fehlgeschlagen' };
 	const order: TimelineItem[] = [
 		{ id: 'o1', title: 'Bestellung eingegangen', time: '2026-11-14T09:12', description: 'Zahlung per Rechnung bestätigt.', status: 'done' },
-		{ id: 'o2', title: 'Lack verpackt', time: '2026-11-15T14:40', description: 'Drei Fläschchen, mit Seidenpapier gepolstert.', status: 'done' },
+		{
+			id: 'o2',
+			title: 'Lack verpackt',
+			time: '2026-11-15T14:40',
+			description: 'Drei Fläschchen, mit Seidenpapier gepolstert.',
+			status: 'done'
+		},
 		{ id: 'o3', title: 'Beim Paketdienst', time: '2026-11-17', description: 'Zustellung heute zwischen 14 und 18 Uhr.', status: 'current' },
 		{ id: 'o4', title: 'Zugestellt', time: 'voraussichtlich 18. November', status: 'upcoming' }
 	];
 	const deploy: TimelineItem[] = [
 		{ id: 'd1', title: 'Build gestartet', time: '2026-11-18T08:00', status: 'done' },
-		{ id: 'd2', title: 'Tests fehlgeschlagen', time: '2026-11-18T08:06', description: '2 von 148 Tests sind rot. Die Veröffentlichung ist angehalten.', status: 'error' },
+		{
+			id: 'd2',
+			title: 'Tests fehlgeschlagen',
+			time: '2026-11-18T08:06',
+			description: '2 von 148 Tests sind rot. Die Veröffentlichung ist angehalten.',
+			status: 'error'
+		},
 		{ id: 'd3', title: 'Veröffentlichung', status: 'upcoming' }
 	];
 </script>
@@ -151,7 +183,9 @@
 			{#if column.key === 'finish'}
 				<Badge tone={value === 'Glitzer' ? 'accent' : 'neutral'}>{value}</Badge>
 			{:else if column.key === 'stock'}
-				{#if Number(value) === 0}<Badge tone="danger">leer</Badge>{:else if Number(value) < 3}<Badge tone="warn">{value}</Badge>{:else}{value}{/if}
+				{#if Number(value) === 0}<Badge tone="danger">leer</Badge>{:else if Number(value) < 3}<Badge tone="warn">
+						{value}
+					</Badge>{:else}{value}{/if}
 			{:else if column.format}
 				{column.format(value, row)}
 			{:else}
@@ -171,10 +205,30 @@
 		<Stat label="Bestellungen" value={348} delta={-3.1} deltaLabel="zur Vorwoche" locale="de-DE">
 			{#snippet spark()}<Sparkline values={orders} variant="bar" label={trend30('Bestellungen')} locale="de-DE" />{/snippet}
 		</Stat>
-		<Stat label="Fehlerrate" value="0,8" unit="%" delta={0.3} deltaUnit="Pkt." positiveIsGood={false} deltaLabel="zur Vorwoche" upLabel={errorUp} downLabel={errorDown} locale="de-DE">
+		<Stat
+			label="Fehlerrate"
+			value="0,8"
+			unit="%"
+			delta={0.3}
+			deltaUnit="Pkt."
+			positiveIsGood={false}
+			deltaLabel="zur Vorwoche"
+			upLabel={errorUp}
+			downLabel={errorDown}
+			locale="de-DE"
+		>
 			{#snippet spark()}<Sparkline values={errors} label={trend30('Fehlerrate')} locale="de-DE" />{/snippet}
 		</Stat>
-		<Stat label="Antwortzeit" value={182} unit="ms" delta={0} deltaLabel="zur Vorwoche" flatLabel="unverändert" description="Median über alle Anfragen." locale="de-DE">
+		<Stat
+			label="Antwortzeit"
+			value={182}
+			unit="ms"
+			delta={0}
+			deltaLabel="zur Vorwoche"
+			flatLabel="unverändert"
+			description="Median über alle Anfragen."
+			locale="de-DE"
+		>
 			{#snippet spark()}<Sparkline values={latency} label={trend30('Antwortzeit')} locale="de-DE" />{/snippet}
 		</Stat>
 	</div>
@@ -183,12 +237,30 @@
 <section>
 	<h2>Sparkline</h2>
 	<div class="grid3">
-		<div class="stack"><p class="muted m0">Linie</p><Sparkline values={visits} locale="de-DE" label={trendLabel} /></div>
-		<div class="stack"><p class="muted m0">Fläche, 56 px hoch</p><Sparkline values={orders} variant="area" height={56} locale="de-DE" label={trendLabel} /></div>
-		<div class="stack"><p class="muted m0">Balken</p><Sparkline values={latency.slice(0, 14)} variant="bar" locale="de-DE" label={trendLabel} /></div>
-		<div class="stack"><p class="muted m0">Ein Wert</p><Sparkline values={[4]} label={trendLabel} /></div>
-		<div class="stack"><p class="muted m0">Keine Daten</p><Sparkline values={[]} emptyLabel="Keine Daten" /></div>
-		<div class="stack"><p class="muted m0">Feste Skala von 0 bis 200</p><Sparkline values={latency} min={0} max={200} locale="de-DE" label={trendLabel} /></div>
+		<div class="stack">
+			<p class="muted m0">Linie</p>
+			<Sparkline values={visits} locale="de-DE" label={trendLabel} />
+		</div>
+		<div class="stack">
+			<p class="muted m0">Fläche, 56 px hoch</p>
+			<Sparkline values={orders} variant="area" height={56} locale="de-DE" label={trendLabel} />
+		</div>
+		<div class="stack">
+			<p class="muted m0">Balken</p>
+			<Sparkline values={latency.slice(0, 14)} variant="bar" locale="de-DE" label={trendLabel} />
+		</div>
+		<div class="stack">
+			<p class="muted m0">Ein Wert</p>
+			<Sparkline values={[4]} label={trendLabel} />
+		</div>
+		<div class="stack">
+			<p class="muted m0">Keine Daten</p>
+			<Sparkline values={[]} emptyLabel="Keine Daten" />
+		</div>
+		<div class="stack">
+			<p class="muted m0">Feste Skala von 0 bis 200</p>
+			<Sparkline values={latency} min={0} max={200} locale="de-DE" label={trendLabel} />
+		</div>
 	</div>
 </section>
 
@@ -206,7 +278,16 @@
 	<p class="muted m0" aria-live="polite">{picked}</p>
 	<h3>Sonntag als Wochenstart, kurzer Zeitraum</h3>
 	<div class="narrow">
-		<Heatmap data={activity.slice(-40)} label="Die letzten 40 Tage" locale="de-DE" weekStart={0} cellSize={20} cellLabel={heatCellShort} lessLabel="Weniger" moreLabel="Mehr" />
+		<Heatmap
+			data={activity.slice(-40)}
+			label="Die letzten 40 Tage"
+			locale="de-DE"
+			weekStart={0}
+			cellSize={20}
+			cellLabel={heatCellShort}
+			lessLabel="Weniger"
+			moreLabel="Mehr"
+		/>
 	</div>
 </section>
 
@@ -239,23 +320,80 @@
 </section>
 
 <style>
-	section { display: grid; gap: var(--k-space-5); padding: var(--k-space-8) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	section:last-child { border-bottom: 0; }
-	h2 { margin: 0; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); color: var(--k-fg-muted); }
-	h3 { margin: 0; font-size: var(--k-text-md); font-weight: var(--k-weight-heading); }
-	.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-3); }
-	.stack { display: grid; gap: var(--k-space-2); align-content: start; min-width: 0; }
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--k-space-5); }
-	.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--k-space-5); }
-	.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--k-space-4); }
-	.m0 { margin: 0; }
-	.muted { color: var(--k-fg-muted); font-size: var(--k-text-sm); }
-	.narrow { max-width: 360px; }
-	.tl-title { margin: 0; font-weight: var(--k-weight-heading); }
+	section {
+		display: grid;
+		gap: var(--k-space-5);
+		padding: var(--k-space-8) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	section:last-child {
+		border-bottom: 0;
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		color: var(--k-fg-muted);
+	}
+	h3 {
+		margin: 0;
+		font-size: var(--k-text-md);
+		font-weight: var(--k-weight-heading);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--k-space-3);
+	}
+	.stack {
+		display: grid;
+		gap: var(--k-space-2);
+		align-content: start;
+		min-width: 0;
+	}
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--k-space-5);
+	}
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--k-space-5);
+	}
+	.grid4 {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: var(--k-space-4);
+	}
+	.m0 {
+		margin: 0;
+	}
+	.muted {
+		color: var(--k-fg-muted);
+		font-size: var(--k-text-sm);
+	}
+	.narrow {
+		max-width: 360px;
+	}
+	.tl-title {
+		margin: 0;
+		font-weight: var(--k-weight-heading);
+	}
 	@media (max-width: 1000px) {
-		.grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		.grid4 {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 	@media (max-width: 760px) {
-		.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+		.grid2,
+		.grid3,
+		.grid4 {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

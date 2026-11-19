@@ -44,12 +44,39 @@
 		{ value: 'zuerich', label: 'Zürich' }
 	];
 	const commands: Command[] = [
-		{ id: 'new-file', label: 'Neue Datei', group: 'Dateien', shortcut: 'Strg+N', keywords: ['erstellen', 'anlegen'], onselect: () => toast('Neue Datei') },
+		{
+			id: 'new-file',
+			label: 'Neue Datei',
+			group: 'Dateien',
+			shortcut: 'Strg+N',
+			keywords: ['erstellen', 'anlegen'],
+			onselect: () => toast('Neue Datei')
+		},
 		{ id: 'upload', label: 'Hochladen', group: 'Dateien', keywords: ['import'], onselect: () => toast('Hochladen') },
-		{ id: 'share', label: 'Link teilen', group: 'Dateien', shortcut: 'Strg+L', keywords: ['freigabe'], onselect: () => toast.ok('Link kopiert') },
-		{ id: 'theme', label: 'Theme wechseln', group: 'Ansicht', keywords: ['farbe', 'dunkel', 'hell'], onselect: () => toast('Theme oben rechts wählen') },
+		{
+			id: 'share',
+			label: 'Link teilen',
+			group: 'Dateien',
+			shortcut: 'Strg+L',
+			keywords: ['freigabe'],
+			onselect: () => toast.ok('Link kopiert')
+		},
+		{
+			id: 'theme',
+			label: 'Theme wechseln',
+			group: 'Ansicht',
+			keywords: ['farbe', 'dunkel', 'hell'],
+			onselect: () => toast('Theme oben rechts wählen')
+		},
 		{ id: 'grid', label: 'Rasteransicht', group: 'Ansicht', onselect: () => toast('Raster') },
-		{ id: 'settings', label: 'Einstellungen öffnen', group: 'Konto', shortcut: 'Strg+,', keywords: ['optionen'], onselect: () => toast('Einstellungen') },
+		{
+			id: 'settings',
+			label: 'Einstellungen öffnen',
+			group: 'Konto',
+			shortcut: 'Strg+,',
+			keywords: ['optionen'],
+			onselect: () => toast('Einstellungen')
+		},
 		{ id: 'logout', label: 'Abmelden', group: 'Konto', onselect: () => toast.danger('Abgemeldet') }
 	];
 	const tree: TreeNode[] = [
@@ -57,7 +84,14 @@
 			id: 'fotos',
 			label: 'Fotos',
 			children: [
-				{ id: 'fotos-2025', label: '2025', children: [{ id: 'fotos-2025-urlaub', label: 'Urlaub' }, { id: 'fotos-2025-familie', label: 'Familie' }] },
+				{
+					id: 'fotos-2025',
+					label: '2025',
+					children: [
+						{ id: 'fotos-2025-urlaub', label: 'Urlaub' },
+						{ id: 'fotos-2025-familie', label: 'Familie' }
+					]
+				},
 				{ id: 'fotos-2026', label: '2026' },
 				{ id: 'fotos-privat', label: 'Privat (gesperrt)', disabled: true }
 			]
@@ -100,7 +134,9 @@
 			</div>
 		</Popover>
 		<Popover label="Info zum Speicher" triggerVariant="ghost" placement="bottom-end">
-			{#snippet trigger()}<svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="8" /><path d="M10 9v5M10 6v.5" /></svg>{/snippet}
+			{#snippet trigger()}<svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<circle cx="10" cy="10" r="8" /><path d="M10 9v5M10 6v.5" />
+				</svg>{/snippet}
 			<p class="m0">18,2 GB von 50 GB belegt. Der Papierkorb zählt mit.</p>
 		</Popover>
 		<span class="muted">Status: {popoverOpen ? 'offen' : 'zu'}</span>
@@ -110,9 +146,26 @@
 <section>
 	<h2>Combobox</h2>
 	<div class="grid2">
-		<Combobox label="Farbe" options={colors} bind:value={color} placeholder="Tippen zum Filtern" hint="„creme“ findet auch „Crème“." noResults="Keine Treffer" toggleLabel="Optionen anzeigen" name="farbe" />
+		<Combobox
+			label="Farbe"
+			options={colors}
+			bind:value={color}
+			placeholder="Tippen zum Filtern"
+			hint="„creme“ findet auch „Crème“."
+			noResults="Keine Treffer"
+			toggleLabel="Optionen anzeigen"
+			name="farbe"
+		/>
 		<Combobox label="Stadt" options={cities} bind:value={city} noResults="Keine Treffer" toggleLabel="Optionen anzeigen" />
-		<Combobox label="Schlagwort" options={colors} bind:value={tagText} allowCustom placeholder="Eigenes Wort erlaubt" noResults="Neues Schlagwort – Enter übernimmt" toggleLabel="Optionen anzeigen" />
+		<Combobox
+			label="Schlagwort"
+			options={colors}
+			bind:value={tagText}
+			allowCustom
+			placeholder="Eigenes Wort erlaubt"
+			noResults="Neues Schlagwort – Enter übernimmt"
+			toggleLabel="Optionen anzeigen"
+		/>
 		<p class="muted">Werte: {color || '–'} · {city || '–'} · {tagText || '–'}</p>
 	</div>
 </section>
@@ -179,23 +232,88 @@
 <section>
 	<h2>DatePicker</h2>
 	<div class="grid2">
-		<DatePicker label="Datum" bind:value={date} locale="de-DE" placeholder="TT.MM.JJJJ" hint="Tippen (18.11.2026 oder 2026-11-18) oder Kalender." calendarLabel="Datum wählen" prevMonthLabel="Vorheriger Monat" nextMonthLabel="Nächster Monat" invalidText="Bitte ein gültiges Datum eingeben." name="datum" />
-		<DatePicker label="Frist" bind:value={deadline} min={minDate} max={maxDate} locale="de-DE" placeholder="TT.MM.JJJJ" hint="Nur die nächsten drei Monate." calendarLabel="Datum wählen" prevMonthLabel="Vorheriger Monat" nextMonthLabel="Nächster Monat" invalidText="Datum außerhalb des Zeitraums." />
+		<DatePicker
+			label="Datum"
+			bind:value={date}
+			locale="de-DE"
+			placeholder="TT.MM.JJJJ"
+			hint="Tippen (18.11.2026 oder 2026-11-18) oder Kalender."
+			calendarLabel="Datum wählen"
+			prevMonthLabel="Vorheriger Monat"
+			nextMonthLabel="Nächster Monat"
+			invalidText="Bitte ein gültiges Datum eingeben."
+			name="datum"
+		/>
+		<DatePicker
+			label="Frist"
+			bind:value={deadline}
+			min={minDate}
+			max={maxDate}
+			locale="de-DE"
+			placeholder="TT.MM.JJJJ"
+			hint="Nur die nächsten drei Monate."
+			calendarLabel="Datum wählen"
+			prevMonthLabel="Vorheriger Monat"
+			nextMonthLabel="Nächster Monat"
+			invalidText="Datum außerhalb des Zeitraums."
+		/>
 		<p class="muted">ISO-Werte: {date || '–'} · {deadline || '–'}</p>
 	</div>
 </section>
 
 <style>
-	section { display: grid; gap: var(--k-space-5); padding: var(--k-space-8) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	h2 { margin: 0; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); color: var(--k-fg-muted); }
-	.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-3); }
-	.end { justify-content: flex-end; }
-	.stack { display: grid; gap: var(--k-space-4); align-content: start; }
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--k-space-5); align-items: start; }
-	.m0 { margin: 0; }
-	.muted { color: var(--k-fg-muted); margin: 0; }
-	.icon { width: 18px; height: 18px; flex: none; }
-	.node { display: inline-flex; align-items: center; gap: var(--k-space-2); }
+	section {
+		display: grid;
+		gap: var(--k-space-5);
+		padding: var(--k-space-8) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		color: var(--k-fg-muted);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--k-space-3);
+	}
+	.end {
+		justify-content: flex-end;
+	}
+	.stack {
+		display: grid;
+		gap: var(--k-space-4);
+		align-content: start;
+	}
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--k-space-5);
+		align-items: start;
+	}
+	.m0 {
+		margin: 0;
+	}
+	.muted {
+		color: var(--k-fg-muted);
+		margin: 0;
+	}
+	.icon {
+		width: 18px;
+		height: 18px;
+		flex: none;
+	}
+	.node {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--k-space-2);
+	}
 	.target {
 		display: grid;
 		gap: var(--k-space-1);
@@ -204,6 +322,16 @@
 		border-radius: var(--k-radius-card);
 		background: var(--k-bg-sunken);
 	}
-	kbd { font-family: var(--k-font-mono); font-size: var(--k-text-xs); padding: 1px 4px; border: var(--k-border-w) solid var(--k-line); border-radius: min(var(--k-radius-badge), 4px); }
-	@media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+	kbd {
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-xs);
+		padding: 1px 4px;
+		border: var(--k-border-w) solid var(--k-line);
+		border-radius: min(var(--k-radius-badge), 4px);
+	}
+	@media (max-width: 760px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
 </style>

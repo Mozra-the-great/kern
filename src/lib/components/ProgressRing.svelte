@@ -88,11 +88,30 @@
 </div>
 
 <style>
-	.k-progress-ring { position: relative; display: inline-grid; flex: none; width: var(--size); height: var(--size); color: var(--k-accent-text); }
-	.svg { display: block; width: 100%; height: 100%; overflow: visible; }
-	.track { stroke: var(--k-line); }
-	.arc { stroke: currentColor; transition: stroke-dashoffset calc(var(--k-dur) * 2.5) var(--k-ease); }
-	.indeterminate .svg { animation: k-ring-spin 1s linear infinite; }
+	.k-progress-ring {
+		position: relative;
+		display: inline-grid;
+		flex: none;
+		width: var(--size);
+		height: var(--size);
+		color: var(--k-accent-text);
+	}
+	.svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	.track {
+		stroke: var(--k-line);
+	}
+	.arc {
+		stroke: currentColor;
+		transition: stroke-dashoffset calc(var(--k-dur) * 2.5) var(--k-ease);
+	}
+	.indeterminate .svg {
+		animation: k-ring-spin 1s linear infinite;
+	}
 	.centre {
 		position: absolute;
 		inset: 0;
@@ -105,12 +124,32 @@
 		line-height: 1.1;
 		overflow: hidden;
 	}
-	.val { font-family: var(--k-font-mono); font-size: var(--value-size); font-weight: 500; font-variant-numeric: tabular-nums; }
-	.loading { display: none; font-family: var(--k-font-sans); font-size: max(10px, calc(var(--value-size) * 0.7)); font-weight: 600; }
-	@keyframes k-ring-spin { to { transform: rotate(360deg); } }
+	.val {
+		font-family: var(--k-font-mono);
+		font-size: var(--value-size);
+		font-weight: 500;
+		font-variant-numeric: tabular-nums;
+	}
+	.loading {
+		display: none;
+		font-family: var(--k-font-sans);
+		font-size: max(10px, calc(var(--value-size) * 0.7));
+		font-weight: 600;
+	}
+	@keyframes k-ring-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
 	@media (prefers-reduced-motion: reduce) {
-		.arc { transition: none; }
-		.indeterminate .svg { animation: none; }
-		.loading.fits { display: block; }
+		.arc {
+			transition: none;
+		}
+		.indeterminate .svg {
+			animation: none;
+		}
+		.loading.fits {
+			display: block;
+		}
 	}
 </style>

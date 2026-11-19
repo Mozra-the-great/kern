@@ -107,11 +107,32 @@
 		max-width: 100%;
 		color: var(--k-accent-text, var(--k-fg));
 	}
-	svg { display: block; width: 100%; height: 100%; overflow: visible; }
-	[data-variant='line'] svg, [data-variant='area'] svg { width: calc(100% - 6px); margin-inline: 3px; }
-	.line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-	.area { fill: color-mix(in srgb, currentColor 22%, transparent); stroke: none; }
-	rect { fill: currentColor; }
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	[data-variant='line'] svg,
+	[data-variant='area'] svg {
+		width: calc(100% - 6px);
+		margin-inline: 3px;
+	}
+	.line {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+		vector-effect: non-scaling-stroke;
+	}
+	.area {
+		fill: color-mix(in srgb, currentColor 22%, transparent);
+		stroke: none;
+	}
+	rect {
+		fill: currentColor;
+	}
 	.dot {
 		position: absolute;
 		right: 0;

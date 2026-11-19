@@ -114,7 +114,11 @@
 	{#if parts.length > 0}
 		{#each parts as part, i (i)}
 			{#if i > 0 && separator}<span class="sep">{separator}</span>{/if}
-			<kbd class="key">{#if part.glyph === part.text}{part.glyph}{:else}<span aria-hidden="true">{part.glyph}</span><span class="sr">{part.text}</span>{/if}</kbd>
+			<kbd class="key">
+				{#if part.glyph === part.text}{part.glyph}{:else}<span aria-hidden="true">{part.glyph}</span><span class="sr">
+						{part.text}
+					</span>{/if}
+			</kbd>
 		{/each}
 	{:else}
 		<kbd class="key">{@render children?.()}</kbd>
@@ -132,7 +136,9 @@
 		line-height: 1;
 		white-space: nowrap;
 	}
-	[data-size='sm'] { font-size: var(--k-text-xs); }
+	[data-size='sm'] {
+		font-size: var(--k-text-xs);
+	}
 	.key {
 		position: relative;
 		display: inline-flex;
@@ -152,7 +158,10 @@
 		letter-spacing: var(--k-label-tracking);
 		text-transform: var(--k-label-transform);
 	}
-	.sep { color: var(--k-fg-muted); font-family: var(--k-font-sans); }
+	.sep {
+		color: var(--k-fg-muted);
+		font-family: var(--k-font-sans);
+	}
 	.sr {
 		position: absolute;
 		width: 1px;

@@ -40,5 +40,7 @@
 		line-height: 1.5;
 		color: var(--k-fg);
 	}
-	.req { color: var(--k-danger); }
+	.req {
+		color: var(--k-danger);
+	}
 </style>

@@ -6,17 +6,38 @@
  * Keep in step with the Svelte components' exported types (minus Svelte-only callbacks).
  */
 
-export interface SelectOption { value: string; label: string; disabled?: boolean | undefined }
-export interface ComboboxOption { value: string; label: string; disabled?: boolean | undefined }
-export interface RadioOption { value: string; label: string; hint?: string | undefined; disabled?: boolean | undefined }
-export interface SegmentOption { value: string; label: string; disabled?: boolean | undefined }
+export interface SelectOption {
+	value: string;
+	label: string;
+	disabled?: boolean | undefined;
+}
+export interface ComboboxOption {
+	value: string;
+	label: string;
+	disabled?: boolean | undefined;
+}
+export interface RadioOption {
+	value: string;
+	label: string;
+	hint?: string | undefined;
+	disabled?: boolean | undefined;
+}
+export interface SegmentOption {
+	value: string;
+	label: string;
+	disabled?: boolean | undefined;
+}
 export interface ColorSwatch {
 	/** Any accepted hex form. */
 	value: string;
 	/** Accessible name; default: the hex value. */
 	label?: string | undefined;
 }
-export interface TabItem { id: string; label: string; disabled?: boolean | undefined }
+export interface TabItem {
+	id: string;
+	label: string;
+	disabled?: boolean | undefined;
+}
 export interface BreadcrumbItem {
 	label: string;
 	/** Without `href` the item is plain text. */
@@ -30,7 +51,15 @@ export interface NavbarItem {
 }
 /** Entry of <k-dropdown-menu> / <k-context-menu>; choosing an item fires `select` with its id. */
 export type MenuEntry =
-	| { type?: 'item' | undefined; id: string; label: string; href?: string | undefined; danger?: boolean | undefined; disabled?: boolean | undefined; shortcut?: string | undefined }
+	| {
+			type?: 'item' | undefined;
+			id: string;
+			label: string;
+			href?: string | undefined;
+			danger?: boolean | undefined;
+			disabled?: boolean | undefined;
+			shortcut?: string | undefined;
+	  }
 	| { type: 'separator' }
 	| { type: 'label'; label: string };
 export interface Command {
@@ -61,7 +90,11 @@ export interface TableColumn {
 export type TableRow = Record<string, unknown>;
 export type DataRowKey = string | number;
 export type DataSortDir = 'asc' | 'desc';
-export interface StepItem { id: string; label: string; description?: string | undefined }
+export interface StepItem {
+	id: string;
+	label: string;
+	description?: string | undefined;
+}
 export type TimelineStatus = 'done' | 'current' | 'upcoming' | 'error';
 export interface TimelineItem {
 	id: string;

@@ -14,7 +14,10 @@
 </span>
 
 <style>
-	.k-spinner { display: inline-flex; color: var(--k-accent-text); }
+	.k-spinner {
+		display: inline-flex;
+		color: var(--k-accent-text);
+	}
 	.ring {
 		width: var(--size);
 		height: var(--size);
@@ -23,7 +26,22 @@
 		border-radius: 50%;
 		animation: k-spin 0.7s linear infinite;
 	}
-	.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-	@keyframes k-spin { to { transform: rotate(360deg); } }
-	@media (prefers-reduced-motion: reduce) { .ring { animation-duration: 2s; } }
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+	@keyframes k-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ring {
+			animation-duration: 2s;
+		}
+	}
 </style>

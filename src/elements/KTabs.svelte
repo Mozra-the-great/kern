@@ -1,4 +1,9 @@
-<svelte:options customElement={{ props: { tabs: { type: "Array" }, value: { type: 'String', reflect: true }, label: { type: "String" }, look: { type: "String" } } }} />
+<svelte:options
+	customElement={{
+		props: { tabs: { type: 'Array' }, value: { type: 'String', reflect: true }, label: { type: 'String' }, look: { type: 'String' } }
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @prop tabs {TabItem[]}
@@ -29,6 +34,7 @@
 		return () => mo.disconnect();
 	});
 </script>
+
 <Tabs tabs={list} bind:value {label} {look} onchange={(id: string) => emit(host, 'change', id)}>
 	{#snippet panel()}{#if list}<slot />{/if}{/snippet}
 </Tabs>

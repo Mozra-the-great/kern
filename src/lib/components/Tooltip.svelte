@@ -34,14 +34,19 @@
 	onmouseleave={() => (shown = false)}
 	onfocusin={() => (shown = true)}
 	onfocusout={() => (shown = false)}
-	onkeydown={(e) => { if (e.key === 'Escape') shown = false; }}
+	onkeydown={(e) => {
+		if (e.key === 'Escape') shown = false;
+	}}
 >
 	{@render children()}
 	<span class="tip" id="{uid}-tip" role="tooltip" data-placement={placement} class:shown>{text}</span>
 </span>
 
 <style>
-	.k-tooltip { position: relative; display: inline-flex; }
+	.k-tooltip {
+		position: relative;
+		display: inline-flex;
+	}
 	.tip {
 		position: absolute;
 		z-index: 900;
@@ -62,9 +67,28 @@
 		visibility: hidden;
 		transition: opacity var(--k-dur) var(--k-ease);
 	}
-	.shown { opacity: 1; visibility: visible; }
-	[data-placement='top'] { bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); }
-	[data-placement='bottom'] { top: calc(100% + 6px); left: 50%; transform: translateX(-50%); }
-	[data-placement='left'] { right: calc(100% + 6px); top: 50%; transform: translateY(-50%); }
-	[data-placement='right'] { left: calc(100% + 6px); top: 50%; transform: translateY(-50%); }
+	.shown {
+		opacity: 1;
+		visibility: visible;
+	}
+	[data-placement='top'] {
+		bottom: calc(100% + 6px);
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	[data-placement='bottom'] {
+		top: calc(100% + 6px);
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	[data-placement='left'] {
+		right: calc(100% + 6px);
+		top: 50%;
+		transform: translateY(-50%);
+	}
+	[data-placement='right'] {
+		left: calc(100% + 6px);
+		top: 50%;
+		transform: translateY(-50%);
+	}
 </style>

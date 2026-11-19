@@ -1,4 +1,15 @@
-<svelte:options customElement={{ props: { text: { type: "String" }, duration: { type: "Number" }, glyphs: { type: "String" }, interval: { type: "Number" }, hover: { type: "Boolean" } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			text: { type: 'String' },
+			duration: { type: 'Number' },
+			glyphs: { type: 'String' },
+			interval: { type: 'Number' },
+			hover: { type: 'Boolean' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @event complete The text is resolved.
@@ -9,4 +20,5 @@
 	let { text, duration, glyphs, interval, hover = false } = $props();
 	const host = $host();
 </script>
+
 <Scramble text={text ?? (host.textContent ?? '').trim()} {duration} {glyphs} {interval} {hover} oncomplete={() => emit(host, 'complete')} />

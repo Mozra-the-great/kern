@@ -39,7 +39,10 @@
 		text-transform: var(--k-label-transform);
 		letter-spacing: var(--k-label-tracking);
 	}
-	.selected { border-color: var(--k-accent-mark); background: var(--k-surface-selected); }
+	.selected {
+		border-color: var(--k-accent-mark);
+		background: var(--k-surface-selected);
+	}
 	.x {
 		position: relative;
 		display: grid;
@@ -54,8 +57,21 @@
 		color: var(--k-fg-muted);
 		cursor: pointer;
 	}
-	.x::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
-	.x:hover { color: var(--k-fg); background: var(--k-bg-sunken); }
-	.x:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 0; }
-	.x svg { width: 12px; height: 12px; }
+	.x::after {
+		content: '';
+		position: absolute;
+		inset: min(0px, calc((100% - var(--k-tap-target)) / 2));
+	}
+	.x:hover {
+		color: var(--k-fg);
+		background: var(--k-bg-sunken);
+	}
+	.x:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: 0;
+	}
+	.x svg {
+		width: 12px;
+		height: 12px;
+	}
 </style>

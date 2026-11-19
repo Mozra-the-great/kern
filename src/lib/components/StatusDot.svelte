@@ -53,7 +53,14 @@
 					<rect width="16" height="16" fill="#fff" />
 					<path d="M8 6.2v3.6M8 11.9v.5" fill="none" stroke="#000" stroke-width="1.7" />
 				</mask>
-				<path d="M8 1.7L14.6 13.5H1.4z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" mask="url(#{uid}-m)" />
+				<path
+					d="M8 1.7L14.6 13.5H1.4z"
+					fill="currentColor"
+					stroke="currentColor"
+					stroke-width="1.4"
+					stroke-linejoin="round"
+					mask="url(#{uid}-m)"
+				/>
 			{:else if status === 'down'}
 				<mask id="{uid}-m" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
 					<rect width="16" height="16" fill="#fff" />
@@ -69,7 +76,9 @@
 		</svg>
 	</span>
 	{#if custom}
-		<span class="text" class:sr={labelHidden}>{#if children}{@render children()}{:else}{label}{/if}</span>{#if spokenState}<span class="sr">, {name}</span>{/if}
+		<span class="text" class:sr={labelHidden}>
+			{#if children}{@render children()}{:else}{label}{/if}
+		</span>{#if spokenState}<span class="sr">, {name}</span>{/if}
 	{:else}
 		<span class="text" class:sr={labelHidden}>{name}</span>
 	{/if}
@@ -91,13 +100,36 @@
 		text-transform: var(--k-label-transform);
 		line-height: 1.4;
 	}
-	[data-size='sm'] { --g: 12px; gap: var(--k-space-1); font-size: var(--k-text-xs); }
-	[data-status='ok'] { --c: var(--k-ok); }
-	[data-status='warn'] { --c: var(--k-warn); }
-	[data-status='down'] { --c: var(--k-danger); }
-	[data-status='busy'] { --c: var(--k-info); }
-	.glyph { position: relative; flex: none; display: inline-grid; width: var(--g); height: var(--g); color: var(--c); }
-	svg { width: 100%; height: 100%; overflow: visible; }
+	[data-size='sm'] {
+		--g: 12px;
+		gap: var(--k-space-1);
+		font-size: var(--k-text-xs);
+	}
+	[data-status='ok'] {
+		--c: var(--k-ok);
+	}
+	[data-status='warn'] {
+		--c: var(--k-warn);
+	}
+	[data-status='down'] {
+		--c: var(--k-danger);
+	}
+	[data-status='busy'] {
+		--c: var(--k-info);
+	}
+	.glyph {
+		position: relative;
+		flex: none;
+		display: inline-grid;
+		width: var(--g);
+		height: var(--g);
+		color: var(--c);
+	}
+	svg {
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
 	.halo {
 		position: absolute;
 		inset: 0;
@@ -107,13 +139,24 @@
 		animation: k-status-pulse 1.6s var(--k-ease) infinite;
 	}
 	@keyframes k-status-pulse {
-		from { opacity: 0.45; transform: scale(0.9); }
-		to { opacity: 0; transform: scale(1.9); }
+		from {
+			opacity: 0.45;
+			transform: scale(0.9);
+		}
+		to {
+			opacity: 0;
+			transform: scale(1.9);
+		}
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.halo { animation: none; display: none; }
+		.halo {
+			animation: none;
+			display: none;
+		}
 	}
-	.text { min-width: 0; }
+	.text {
+		min-width: 0;
+	}
 	.sr {
 		position: absolute;
 		width: 1px;

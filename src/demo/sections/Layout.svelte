@@ -40,7 +40,20 @@
 
 	// ScrollArea
 	const polishes = Array.from({ length: 24 }, (_, i) => `Lack Nr. ${i + 1}`);
-	const chips = ['Mintgrün', 'Beerenrot', 'Nachtblau', 'Sandgold', 'Altrosa', 'Pfirsich', 'Salbei', 'Lavendel', 'Petrol', 'Kupfer', 'Elfenbein', 'Anthrazit'];
+	const chips = [
+		'Mintgrün',
+		'Beerenrot',
+		'Nachtblau',
+		'Sandgold',
+		'Altrosa',
+		'Pfirsich',
+		'Salbei',
+		'Lavendel',
+		'Petrol',
+		'Kupfer',
+		'Elfenbein',
+		'Anthrazit'
+	];
 </script>
 
 <section>
@@ -59,7 +72,7 @@
 		<div class="theme-box" bind:this={boxB} data-theme="stuffcloud">
 			<div class="row between">
 				<strong>Alle Themen</strong>
-				<ThemeToggle target={boxB ?? null} themes={themes} bind:value={themeB} label="Theme dieser Fläche" />
+				<ThemeToggle target={boxB ?? null} {themes} bind:value={themeB} label="Theme dieser Fläche" />
 			</div>
 			<p class="m0">Ab drei Themen wird das Umschalten zu einer Auswahl.</p>
 			<p class="m0 muted">Aktiv: <code>{themeB ?? '…'}</code></p>
@@ -118,16 +131,25 @@
 
 <section>
 	<h2>Resizable</h2>
-	<p class="muted">Griffe mit der Maus oder per Tab fokussieren: Pfeiltasten ändern um 2 %, Umschalt + Pfeil um 10 %, Pos1/Ende springen an die Grenzen, Enter klappt zu und wieder auf. Unter 520 px Breite stapeln sich die Spalten und die Griffe verschwinden.</p>
+	<p class="muted">
+		Griffe mit der Maus oder per Tab fokussieren: Pfeiltasten ändern um 2 %, Umschalt + Pfeil um 10 %, Pos1/Ende springen an die Grenzen,
+		Enter klappt zu und wieder auf. Unter 520 px Breite stapeln sich die Spalten und die Griffe verschwinden.
+	</p>
 	<Resizable panels={columns} bind:sizes={columnSizes} height={240}>
 		{#snippet panel(p)}
-			<div class="pane"><strong>{p.label}</strong><p class="m0 muted">{p.min ?? 10} bis {p.max ?? 100} %</p></div>
+			<div class="pane">
+				<strong>{p.label}</strong>
+				<p class="m0 muted">{p.min ?? 10} bis {p.max ?? 100} %</p>
+			</div>
 		{/snippet}
 	</Resizable>
 	<p class="muted m0">Größen: {columnSizes.map((s) => `${Math.round(s)} %`).join(' · ')}</p>
 	<Resizable panels={rows} direction="vertical" bind:sizes={rowSizes} height={300}>
 		{#snippet panel(p)}
-			<div class="pane"><strong>{p.label}</strong><p class="m0 muted">Stapel: Pfeil hoch/runter ändert die Höhe.</p></div>
+			<div class="pane">
+				<strong>{p.label}</strong>
+				<p class="m0 muted">Stapel: Pfeil hoch/runter ändert die Höhe.</p>
+			</div>
 		{/snippet}
 	</Resizable>
 </section>
@@ -150,31 +172,110 @@
 					{#each chips as c (c)}<span class="chip">{c}</span>{/each}
 				</div>
 			</ScrollArea>
-			<ScrollArea maxHeight={72} label="Kurzer Inhalt"><p class="m0">Passt der Inhalt, wird nichts scrollbar und nichts fokussierbar.</p></ScrollArea>
+			<ScrollArea maxHeight={72} label="Kurzer Inhalt">
+				<p class="m0">Passt der Inhalt, wird nichts scrollbar und nichts fokussierbar.</p>
+			</ScrollArea>
 		</div>
 	</div>
 </section>
 
 <style>
-	section { display: grid; gap: var(--k-space-5); padding: var(--k-space-8) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	section:last-child { border-bottom: 0; }
-	h2 { margin: 0; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); color: var(--k-fg-muted); }
-	.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-3); }
-	.between { justify-content: space-between; }
-	.stack { display: grid; gap: var(--k-space-4); align-content: start; min-width: 0; }
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--k-space-5); }
-	.m0 { margin: 0; }
-	.muted { color: var(--k-fg-muted); margin: 0; }
-	code { font-family: var(--k-font-mono); font-size: 0.9em; }
-	.theme-box { display: grid; gap: var(--k-space-3); align-content: start; min-width: 0; padding: var(--k-space-5); border: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-card); }
-	.centre-text { font-family: var(--k-font-mono); font-size: var(--k-text-sm); }
-	.trigger-rich { display: inline-flex; align-items: center; gap: var(--k-space-2); }
-	.pane { display: grid; gap: var(--k-space-2); align-content: start; padding: var(--k-space-4); }
-	.list { margin: 0; padding: var(--k-space-2) var(--k-space-4) var(--k-space-2) var(--k-space-6); }
-	.list li { padding: var(--k-space-2) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	.chips { display: flex; gap: var(--k-space-3); padding: var(--k-space-2) 0 var(--k-space-3); }
-	.chip { flex: none; padding: var(--k-space-2) var(--k-space-4); border: var(--k-border-w) solid var(--k-border); border-radius: var(--k-radius-badge); background: var(--k-bg-raised); }
+	section {
+		display: grid;
+		gap: var(--k-space-5);
+		padding: var(--k-space-8) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	section:last-child {
+		border-bottom: 0;
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		color: var(--k-fg-muted);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--k-space-3);
+	}
+	.between {
+		justify-content: space-between;
+	}
+	.stack {
+		display: grid;
+		gap: var(--k-space-4);
+		align-content: start;
+		min-width: 0;
+	}
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--k-space-5);
+	}
+	.m0 {
+		margin: 0;
+	}
+	.muted {
+		color: var(--k-fg-muted);
+		margin: 0;
+	}
+	code {
+		font-family: var(--k-font-mono);
+		font-size: 0.9em;
+	}
+	.theme-box {
+		display: grid;
+		gap: var(--k-space-3);
+		align-content: start;
+		min-width: 0;
+		padding: var(--k-space-5);
+		border: var(--k-border-w) solid var(--k-line);
+		border-radius: var(--k-radius-card);
+	}
+	.centre-text {
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-sm);
+	}
+	.trigger-rich {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--k-space-2);
+	}
+	.pane {
+		display: grid;
+		gap: var(--k-space-2);
+		align-content: start;
+		padding: var(--k-space-4);
+	}
+	.list {
+		margin: 0;
+		padding: var(--k-space-2) var(--k-space-4) var(--k-space-2) var(--k-space-6);
+	}
+	.list li {
+		padding: var(--k-space-2) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	.chips {
+		display: flex;
+		gap: var(--k-space-3);
+		padding: var(--k-space-2) 0 var(--k-space-3);
+	}
+	.chip {
+		flex: none;
+		padding: var(--k-space-2) var(--k-space-4);
+		border: var(--k-border-w) solid var(--k-border);
+		border-radius: var(--k-radius-badge);
+		background: var(--k-bg-raised);
+	}
 	@media (max-width: 760px) {
-		.grid2 { grid-template-columns: 1fr; }
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

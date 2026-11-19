@@ -191,15 +191,33 @@
 	}
 	function onkeydown(e: KeyboardEvent) {
 		switch (e.key) {
-			case 'ArrowUp': e.preventDefault(); stepBy(1); break;
-			case 'ArrowDown': e.preventDefault(); stepBy(-1); break;
-			case 'PageUp': e.preventDefault(); stepBy(10); break;
-			case 'PageDown': e.preventDefault(); stepBy(-10); break;
+			case 'ArrowUp':
+				e.preventDefault();
+				stepBy(1);
+				break;
+			case 'ArrowDown':
+				e.preventDefault();
+				stepBy(-1);
+				break;
+			case 'PageUp':
+				e.preventDefault();
+				stepBy(10);
+				break;
+			case 'PageDown':
+				e.preventDefault();
+				stepBy(-10);
+				break;
 			case 'Home':
-				if (lo !== undefined) { e.preventDefault(); toEdge(lo); }
+				if (lo !== undefined) {
+					e.preventDefault();
+					toEdge(lo);
+				}
 				break;
 			case 'End':
-				if (hi !== undefined) { e.preventDefault(); toEdge(hi); }
+				if (hi !== undefined) {
+					e.preventDefault();
+					toEdge(hi);
+				}
 				break;
 			case 'Enter': {
 				const n = parse(text);
@@ -286,10 +304,20 @@
 		color: var(--k-fg);
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
-	.k-number:hover { border-color: var(--k-fg-muted); }
-	.k-number:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.invalid { border-color: var(--k-danger); }
-	.disabled { opacity: 0.55; }
+	.k-number:hover {
+		border-color: var(--k-fg-muted);
+	}
+	.k-number:focus-within {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
+	.disabled {
+		opacity: 0.55;
+	}
 	input {
 		flex: 1;
 		min-width: 0;
@@ -305,8 +333,13 @@
 		font-variant-numeric: tabular-nums;
 		text-align: center;
 	}
-	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	input:disabled { cursor: not-allowed; }
+	input::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	input:disabled {
+		cursor: not-allowed;
+	}
 	.step {
 		flex: none;
 		display: grid;
@@ -321,7 +354,16 @@
 		cursor: pointer;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	.step:hover:not(:disabled) { background: var(--k-bg-sunken); }
-	.step:disabled { color: var(--k-fg-muted); opacity: 0.5; cursor: not-allowed; }
-	.step svg { width: 16px; height: 16px; }
+	.step:hover:not(:disabled) {
+		background: var(--k-bg-sunken);
+	}
+	.step:disabled {
+		color: var(--k-fg-muted);
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.step svg {
+		width: 16px;
+		height: 16px;
+	}
 </style>

@@ -170,12 +170,7 @@
 <Field {hint} {error} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		{#if label}<Label id="{baseId}-label" for="{baseId}-0" text={label} {required} />{/if}
-		<div
-			class="k-pin"
-			role="group"
-			aria-labelledby={label ? `${baseId}-label` : undefined}
-			aria-describedby={describedby}
-		>
+		<div class="k-pin" role="group" aria-labelledby={label ? `${baseId}-label` : undefined} aria-describedby={describedby}>
 			{#each { length: count } as _, i (i)}
 				<input
 					bind:this={boxes[i]}
@@ -205,7 +200,12 @@
 </Field>
 
 <style>
-	.k-pin { display: flex; flex-wrap: wrap; gap: var(--k-space-2); min-width: 0; }
+	.k-pin {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--k-space-2);
+		min-width: 0;
+	}
 	.box {
 		/* Basis 0 + max-width: boxes shrink to 40px before the row wraps. */
 		flex: 1 1 0;
@@ -225,12 +225,32 @@
 		font-variant-numeric: tabular-nums;
 		text-align: center;
 		caret-color: var(--k-accent-mark);
-		transition: border-color var(--k-dur) var(--k-ease), background-color var(--k-dur) var(--k-ease);
+		transition:
+			border-color var(--k-dur) var(--k-ease),
+			background-color var(--k-dur) var(--k-ease);
 	}
-	.box:hover:not(:disabled) { border-color: var(--k-fg-muted); }
-	.box:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.box.filled { border-color: var(--k-fg); background: var(--k-bg-raised); }
-	.box[aria-invalid='true'] { border-color: var(--k-danger); }
-	.box:disabled { opacity: 0.55; cursor: not-allowed; }
-	@media (max-width: 360px) { .k-pin { gap: var(--k-space-1); } }
+	.box:hover:not(:disabled) {
+		border-color: var(--k-fg-muted);
+	}
+	.box:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.box.filled {
+		border-color: var(--k-fg);
+		background: var(--k-bg-raised);
+	}
+	.box[aria-invalid='true'] {
+		border-color: var(--k-danger);
+	}
+	.box:disabled {
+		opacity: 0.55;
+		cursor: not-allowed;
+	}
+	@media (max-width: 360px) {
+		.k-pin {
+			gap: var(--k-space-1);
+		}
+	}
 </style>

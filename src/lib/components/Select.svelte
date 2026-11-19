@@ -24,7 +24,14 @@
 <Field {label} {hint} {error} {required} for={selId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-select" class:invalid>
-			<select id={selId} bind:value={() => value ?? '', (v: string) => (value = v)} {required} aria-invalid={invalid || undefined} aria-describedby={describedby} {...rest}>
+			<select
+				id={selId}
+				bind:value={() => value ?? '', (v: string) => (value = v)}
+				{required}
+				aria-invalid={invalid || undefined}
+				aria-describedby={describedby}
+				{...rest}
+			>
 				{#if placeholder}<option value="" disabled={required}>{placeholder}</option>{/if}
 				{#each options as o (o.value)}
 					<option value={o.value} disabled={o.disabled}>{o.label}</option>
@@ -36,7 +43,10 @@
 </Field>
 
 <style>
-	.k-select { position: relative; display: flex; }
+	.k-select {
+		position: relative;
+		display: flex;
+	}
 	select {
 		appearance: none;
 		box-sizing: border-box;
@@ -51,8 +61,25 @@
 		font-size: var(--k-text-md);
 		cursor: pointer;
 	}
-	select:hover { border-color: var(--k-fg-muted); }
-	select:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.invalid select { border-color: var(--k-danger); }
-	svg { position: absolute; right: var(--k-space-4); top: 50%; width: 16px; height: 16px; transform: translateY(-50%); pointer-events: none; color: var(--k-fg-muted); }
+	select:hover {
+		border-color: var(--k-fg-muted);
+	}
+	select:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.invalid select {
+		border-color: var(--k-danger);
+	}
+	svg {
+		position: absolute;
+		right: var(--k-space-4);
+		top: 50%;
+		width: 16px;
+		height: 16px;
+		transform: translateY(-50%);
+		pointer-events: none;
+		color: var(--k-fg-muted);
+	}
 </style>

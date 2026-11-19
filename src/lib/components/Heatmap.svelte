@@ -88,7 +88,7 @@
 		return { from: Math.max(from, to - MAX_DAYS + 1), to };
 	});
 
-	const first = $derived(((weekday(span?.from ?? 0) - (Math.floor(weekStart) || 0)) % 7 + 7) % 7);
+	const first = $derived((((weekday(span?.from ?? 0) - (Math.floor(weekStart) || 0)) % 7) + 7) % 7);
 	const gridStart = $derived((span?.from ?? 0) - first);
 	const cols = $derived(span ? Math.floor((span.to - gridStart) / 7) + 1 : 0);
 	const lastRow = $derived(span ? (span.to - gridStart) % 7 : 0);
@@ -104,7 +104,13 @@
 	});
 	const levelOf = (v: number): number => (v <= 0 || topValue <= 0 ? 0 : Math.max(1, Math.min(4, Math.ceil((v / topValue) * 4))));
 
-	interface Cell { day: number; iso: string; value: number; level: number; text: string }
+	interface Cell {
+		day: number;
+		iso: string;
+		value: number;
+		level: number;
+		text: string;
+	}
 	const cells = $derived.by((): Map<number, Cell> => {
 		const map = new Map<number, Cell>();
 		if (!span) return map;
@@ -189,9 +195,13 @@
 		else if (key === 'ArrowRight') c += 1;
 		else if (key === 'ArrowUp') r -= 1;
 		else if (key === 'ArrowDown') r += 1;
-		else if (key === 'Home') { if (ctrl) return span.from; c = 0; }
-		else if (key === 'End') { if (ctrl) return span.to; c = cols - 1; }
-		else return null;
+		else if (key === 'Home') {
+			if (ctrl) return span.from;
+			c = 0;
+		} else if (key === 'End') {
+			if (ctrl) return span.to;
+			c = cols - 1;
+		} else return null;
 		c = Math.max(0, Math.min(cols - 1, c));
 		r = Math.max(c === 0 ? first : 0, Math.min(c === cols - 1 ? lastRow : 6, r));
 		return dayAt(c, r);
@@ -203,7 +213,10 @@
 	function onkeydown(e: KeyboardEvent) {
 		const day = dayOf(e.target);
 		if (day === null) return;
-		if (e.key === 'Escape') { hideTip(); return; }
+		if (e.key === 'Escape') {
+			hideTip();
+			return;
+		}
 		if (e.altKey || e.metaKey) return;
 		if (e.key === 'Enter' || e.key === ' ') {
 			e.preventDefault();
@@ -244,7 +257,18 @@
 			</div>
 			<!-- Roving tabindex: the cells take focus, not the grid itself. -->
 			<!-- svelte-ignore a11y_interactive_supports_focus -->
-			<div class="grid" role="grid" aria-label={label} bind:this={grid} {onkeydown} {onclick} {onfocusin} onfocusout={hideTip} {onpointerover} onpointerleave={hideTip}>
+			<div
+				class="grid"
+				role="grid"
+				aria-label={label}
+				bind:this={grid}
+				{onkeydown}
+				{onclick}
+				{onfocusin}
+				onfocusout={hideTip}
+				{onpointerover}
+				onpointerleave={hideTip}
+			>
 				{#each rowIdx as r (r)}
 					<div class="row" role="row" style:--cols={cols}>
 						<span class="lead" aria-hidden="true">{weekdayNames[r]}</span>
@@ -252,7 +276,14 @@
 							{@const day = dayAt(c, r)}
 							{@const cell = cells.get(day)}
 							{#if cell && inRange(day)}
-								<div class="cell" role="gridcell" data-day={day} data-level={cell.level} tabindex={day === tabbable ? 0 : -1} aria-label={cell.text}></div>
+								<div
+									class="cell"
+									role="gridcell"
+									data-day={day}
+									data-level={cell.level}
+									tabindex={day === tabbable ? 0 : -1}
+									aria-label={cell.text}
+								></div>
 							{:else}
 								<div class="cell pad" role="gridcell" aria-hidden="true"></div>
 							{/if}
@@ -278,7 +309,15 @@
 </div>
 
 <style>
-	.k-heatmap { --gap: 3px; --lead: 54px; position: relative; display: grid; gap: var(--k-space-2); min-width: 0; color: var(--k-fg); }
+	.k-heatmap {
+		--gap: 3px;
+		--lead: 54px;
+		position: relative;
+		display: grid;
+		gap: var(--k-space-2);
+		min-width: 0;
+		color: var(--k-fg);
+	}
 	.scroll {
 		overflow-x: auto;
 		padding: var(--k-space-3) var(--k-space-4) var(--k-space-3) 0;
@@ -286,13 +325,55 @@
 		border-radius: min(var(--k-radius-card), 20px);
 		background: var(--k-bg-raised);
 	}
-	.months, .grid { width: max-content; }
-	.months, .row { display: grid; grid-template-columns: var(--lead) repeat(var(--cols), var(--cell)); column-gap: var(--gap); }
-	.grid { display: grid; row-gap: var(--gap); margin-top: var(--gap); }
-	.lead { position: sticky; left: 0; z-index: 2; box-sizing: border-box; padding-left: var(--k-space-4); display: flex; align-items: center; background: var(--k-bg-raised); color: var(--k-fg-muted); font-family: var(--k-label-font); font-size: var(--k-text-xs); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); line-height: 1; }
-	.months .lead { height: 1px; }
-	.month { grid-row: 1; justify-self: start; color: var(--k-fg-muted); font-family: var(--k-label-font); font-size: var(--k-text-xs); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); line-height: 1; white-space: nowrap; }
-	.months { height: 14px; align-items: end; }
+	.months,
+	.grid {
+		width: max-content;
+	}
+	.months,
+	.row {
+		display: grid;
+		grid-template-columns: var(--lead) repeat(var(--cols), var(--cell));
+		column-gap: var(--gap);
+	}
+	.grid {
+		display: grid;
+		row-gap: var(--gap);
+		margin-top: var(--gap);
+	}
+	.lead {
+		position: sticky;
+		left: 0;
+		z-index: 2;
+		box-sizing: border-box;
+		padding-left: var(--k-space-4);
+		display: flex;
+		align-items: center;
+		background: var(--k-bg-raised);
+		color: var(--k-fg-muted);
+		font-family: var(--k-label-font);
+		font-size: var(--k-text-xs);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		line-height: 1;
+	}
+	.months .lead {
+		height: 1px;
+	}
+	.month {
+		grid-row: 1;
+		justify-self: start;
+		color: var(--k-fg-muted);
+		font-family: var(--k-label-font);
+		font-size: var(--k-text-xs);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		line-height: 1;
+		white-space: nowrap;
+	}
+	.months {
+		height: 14px;
+		align-items: end;
+	}
 	.cell {
 		--bg: var(--k-bg-sunken);
 		width: var(--cell);
@@ -301,19 +382,62 @@
 		background: var(--bg);
 		box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--k-fg) 16%, transparent);
 	}
-	[data-level='1'] { --bg: color-mix(in srgb, var(--k-accent) 30%, var(--k-bg-sunken)); }
-	[data-level='2'] { --bg: color-mix(in srgb, var(--k-accent) 55%, var(--k-bg-sunken)); }
-	[data-level='3'] { --bg: color-mix(in srgb, var(--k-accent) 78%, var(--k-bg-sunken)); }
-	[data-level='4'] { --bg: var(--k-accent); }
-	.pad { visibility: hidden; }
-	div.cell[data-day] { cursor: pointer; }
-	div.cell[data-day]:hover { box-shadow: inset 0 0 0 2px var(--k-fg); }
-	.cell:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 1px; position: relative; z-index: 1; }
-	.legend { display: flex; align-items: center; justify-content: flex-end; gap: var(--k-space-1); color: var(--k-fg-muted); font-family: var(--k-label-font); font-size: var(--k-text-xs); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
-	.legend span:first-child { margin-right: var(--k-space-1); }
-	.legend span:last-child { margin-left: var(--k-space-1); }
-	.sw { width: 12px; height: 12px; }
-	.empty { margin: 0; padding: var(--k-space-6); border: var(--k-border-w) dashed var(--k-line); border-radius: var(--k-radius-card); color: var(--k-fg-muted); text-align: center; }
+	[data-level='1'] {
+		--bg: color-mix(in srgb, var(--k-accent) 30%, var(--k-bg-sunken));
+	}
+	[data-level='2'] {
+		--bg: color-mix(in srgb, var(--k-accent) 55%, var(--k-bg-sunken));
+	}
+	[data-level='3'] {
+		--bg: color-mix(in srgb, var(--k-accent) 78%, var(--k-bg-sunken));
+	}
+	[data-level='4'] {
+		--bg: var(--k-accent);
+	}
+	.pad {
+		visibility: hidden;
+	}
+	div.cell[data-day] {
+		cursor: pointer;
+	}
+	div.cell[data-day]:hover {
+		box-shadow: inset 0 0 0 2px var(--k-fg);
+	}
+	.cell:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: 1px;
+		position: relative;
+		z-index: 1;
+	}
+	.legend {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: var(--k-space-1);
+		color: var(--k-fg-muted);
+		font-family: var(--k-label-font);
+		font-size: var(--k-text-xs);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+	}
+	.legend span:first-child {
+		margin-right: var(--k-space-1);
+	}
+	.legend span:last-child {
+		margin-left: var(--k-space-1);
+	}
+	.sw {
+		width: 12px;
+		height: 12px;
+	}
+	.empty {
+		margin: 0;
+		padding: var(--k-space-6);
+		border: var(--k-border-w) dashed var(--k-line);
+		border-radius: var(--k-radius-card);
+		color: var(--k-fg-muted);
+		text-align: center;
+	}
 	.tip {
 		position: absolute;
 		z-index: 900;

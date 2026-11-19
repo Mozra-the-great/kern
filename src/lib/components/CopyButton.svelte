@@ -136,7 +136,11 @@
 </span>
 
 <style>
-	.k-copy-button { position: relative; display: inline-flex; flex: none; }
+	.k-copy-button {
+		position: relative;
+		display: inline-flex;
+		flex: none;
+	}
 	.btn {
 		display: inline-grid;
 		place-items: center;
@@ -151,16 +155,44 @@
 		background: transparent;
 		color: var(--k-fg);
 		cursor: pointer;
-		transition: background-color var(--k-dur) var(--k-ease), color var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease);
+		transition:
+			background-color var(--k-dur) var(--k-ease),
+			color var(--k-dur) var(--k-ease),
+			border-color var(--k-dur) var(--k-ease);
 	}
-	.btn[data-size='sm'] { width: max(var(--k-control-h-sm), 40px); height: max(var(--k-control-h-sm), 40px); }
-	.btn[data-variant='secondary'] { border-color: var(--k-border); }
-	.btn:hover:not(:disabled) { background: var(--k-bg-sunken); }
-	.btn:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-	.btn[data-status='copied'] { color: var(--k-ok); }
-	.btn[data-status='error'] { color: var(--k-danger); }
-	svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
+	.btn[data-size='sm'] {
+		width: max(var(--k-control-h-sm), 40px);
+		height: max(var(--k-control-h-sm), 40px);
+	}
+	.btn[data-variant='secondary'] {
+		border-color: var(--k-border);
+	}
+	.btn:hover:not(:disabled) {
+		background: var(--k-bg-sunken);
+	}
+	.btn:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.btn[data-status='copied'] {
+		color: var(--k-ok);
+	}
+	.btn[data-status='error'] {
+		color: var(--k-danger);
+	}
+	svg {
+		width: 20px;
+		height: 20px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: square;
+		stroke-linejoin: miter;
+	}
 	.sr {
 		position: absolute;
 		width: 1px;

@@ -48,7 +48,11 @@ const selectorOf = (brand: string): RegExp => new RegExp(`\\[data-theme[\\^]?=\\
 /** Hex colours a brand file uses that neither base.css nor `other` uses. */
 function ownColours(brand: string, other: string): string[] {
 	const hex = (file: string): Set<string> =>
-		new Set((readFileSync(resolve(THEMES, file), 'utf8').toLowerCase().match(/#[0-9a-f]{6}\b/g) ?? []));
+		new Set(
+			readFileSync(resolve(THEMES, file), 'utf8')
+				.toLowerCase()
+				.match(/#[0-9a-f]{6}\b/g) ?? []
+		);
 	const mine = hex(`brands/${brand}.css`);
 	const shared = new Set([...hex('base.css'), ...hex(`brands/${other}.css`)]);
 	return [...mine].filter((c) => !shared.has(c));

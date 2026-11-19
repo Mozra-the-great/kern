@@ -1,4 +1,19 @@
-<svelte:options customElement={{ props: { text: { type: "String" }, speed: { type: "Number" }, eraseSpeed: { type: 'Number', attribute: 'erase-speed' }, delay: { type: "Number" }, hold: { type: "Number" }, loop: { type: "Boolean" }, caret: { type: "String" }, caretShape: { type: 'String', attribute: 'caret-shape' }, label: { type: "String" } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			text: { type: 'String' },
+			speed: { type: 'Number' },
+			eraseSpeed: { type: 'Number', attribute: 'erase-speed' },
+			delay: { type: 'Number' },
+			hold: { type: 'Number' },
+			loop: { type: 'Boolean' },
+			caret: { type: 'String' },
+			caretShape: { type: 'String', attribute: 'caret-shape' },
+			label: { type: 'String' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @prop text {string | string[]}
@@ -24,4 +39,16 @@
 		return typeof v === 'string' ? v : (host.textContent ?? '').trim();
 	};
 </script>
-<Typewriter text={list(text)} {speed} {eraseSpeed} {delay} {hold} {loop} caret={on(caret, true)} {caretShape} {label} oncomplete={() => emit(host, 'complete')} />
+
+<Typewriter
+	text={list(text)}
+	{speed}
+	{eraseSpeed}
+	{delay}
+	{hold}
+	{loop}
+	caret={on(caret, true)}
+	{caretShape}
+	{label}
+	oncomplete={() => emit(host, 'complete')}
+/>

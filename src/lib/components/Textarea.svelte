@@ -27,8 +27,7 @@
 			{required}
 			aria-invalid={invalid || undefined}
 			aria-describedby={describedby}
-			{...rest}
-		></textarea>
+			{...rest}></textarea>
 	{/snippet}
 </Field>
 
@@ -46,9 +45,23 @@
 		line-height: 1.5;
 		resize: vertical;
 	}
-	.k-textarea:hover { border-color: var(--k-fg-muted); }
-	.k-textarea:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.k-textarea::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	.invalid { border-color: var(--k-danger); }
-	.autosize { field-sizing: content; min-height: calc(var(--k-control-h) * 2); }
+	.k-textarea:hover {
+		border-color: var(--k-fg-muted);
+	}
+	.k-textarea:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.k-textarea::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
+	.autosize {
+		field-sizing: content;
+		min-height: calc(var(--k-control-h) * 2);
+	}
 </style>

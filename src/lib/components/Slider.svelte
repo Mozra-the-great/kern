@@ -69,7 +69,11 @@
 </Field>
 
 <style>
-	.k-slider { display: flex; align-items: center; gap: var(--k-space-4); }
+	.k-slider {
+		display: flex;
+		align-items: center;
+		gap: var(--k-space-4);
+	}
 	input {
 		--thumb: 24px;
 		--track: 10px;
@@ -85,8 +89,14 @@
 		background: transparent;
 		cursor: pointer;
 	}
-	input:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	input:disabled { opacity: 0.5; cursor: not-allowed; }
+	input:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	input:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
 
 	input::-webkit-slider-runnable-track {
 		box-sizing: border-box;
@@ -112,7 +122,9 @@
 		border: 2px solid var(--k-bg-raised);
 		border-radius: var(--k-radius-control);
 		background: var(--k-primary);
-		box-shadow: 0 0 0 var(--k-border-w) var(--k-primary), var(--k-shadow-raised);
+		box-shadow:
+			0 0 0 var(--k-border-w) var(--k-primary),
+			var(--k-shadow-raised);
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
 	input::-moz-range-thumb {
@@ -122,13 +134,31 @@
 		border: 2px solid var(--k-bg-raised);
 		border-radius: var(--k-radius-control);
 		background: var(--k-primary);
-		box-shadow: 0 0 0 var(--k-border-w) var(--k-primary), var(--k-shadow-raised);
+		box-shadow:
+			0 0 0 var(--k-border-w) var(--k-primary),
+			var(--k-shadow-raised);
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	input:hover:not(:disabled)::-webkit-slider-thumb { background: var(--k-primary-hover); }
-	input:hover:not(:disabled)::-moz-range-thumb { background: var(--k-primary-hover); }
-	.invalid input::-webkit-slider-runnable-track { border-color: var(--k-danger); }
-	.invalid input::-moz-range-track { border-color: var(--k-danger); }
+	input:hover:not(:disabled)::-webkit-slider-thumb {
+		background: var(--k-primary-hover);
+	}
+	input:hover:not(:disabled)::-moz-range-thumb {
+		background: var(--k-primary-hover);
+	}
+	.invalid input::-webkit-slider-runnable-track {
+		border-color: var(--k-danger);
+	}
+	.invalid input::-moz-range-track {
+		border-color: var(--k-danger);
+	}
 
-	.val { flex: none; min-width: 4ch; text-align: end; font-family: var(--k-font-mono); font-size: var(--k-text-sm); font-variant-numeric: tabular-nums; color: var(--k-fg); }
+	.val {
+		flex: none;
+		min-width: 4ch;
+		text-align: end;
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-sm);
+		font-variant-numeric: tabular-nums;
+		color: var(--k-fg);
+	}
 </style>

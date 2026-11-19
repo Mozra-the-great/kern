@@ -77,7 +77,9 @@
 						aria-label="{pageLabel} {s.page}"
 						aria-current={s.page === current ? 'page' : undefined}
 						onclick={() => go(s.page)}
-					>{s.page}</button>
+					>
+						{s.page}
+					</button>
 				</li>
 			{:else}
 				<li class="num gap" aria-hidden="true">…</li>
@@ -97,9 +99,23 @@
 </nav>
 
 <style>
-	.k-pagination { container-type: inline-size; min-width: 0; }
-	ul { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--k-space-1); margin: 0; padding: 0; list-style: none; }
-	li { display: inline-flex; }
+	.k-pagination {
+		container-type: inline-size;
+		min-width: 0;
+	}
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: var(--k-space-1);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	li {
+		display: inline-flex;
+	}
 	.btn {
 		display: inline-flex;
 		box-sizing: border-box;
@@ -120,21 +136,80 @@
 		letter-spacing: var(--k-label-tracking);
 		line-height: 1.2;
 		cursor: pointer;
-		transition: background-color var(--k-dur) var(--k-ease), color var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease);
+		transition:
+			background-color var(--k-dur) var(--k-ease),
+			color var(--k-dur) var(--k-ease),
+			border-color var(--k-dur) var(--k-ease);
 	}
-	.btn svg { flex: none; width: 14px; height: 14px; }
-	.btn:hover:not([aria-disabled='true']) { background: var(--k-bg-sunken); border-color: var(--k-border); }
-	.btn:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.step { border-color: var(--k-border); }
-	.step[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
-	.page[aria-current='page'] { background: var(--k-primary); border-color: var(--k-primary); color: var(--k-on-primary); font-weight: var(--k-weight-display); text-decoration: underline; text-underline-offset: 4px; }
-	.page[aria-current='page']:hover { background: var(--k-primary-hover); border-color: var(--k-primary-hover); color: var(--k-on-primary-hover); }
-	.gap { min-width: 24px; justify-content: center; align-items: center; color: var(--k-fg-muted); }
-	.compact { display: none; min-width: 64px; justify-content: center; padding: 0 var(--k-space-2); font-family: var(--k-font-mono); font-size: var(--k-text-sm); }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+	.btn svg {
+		flex: none;
+		width: 14px;
+		height: 14px;
+	}
+	.btn:hover:not([aria-disabled='true']) {
+		background: var(--k-bg-sunken);
+		border-color: var(--k-border);
+	}
+	.btn:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.step {
+		border-color: var(--k-border);
+	}
+	.step[aria-disabled='true'] {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.page[aria-current='page'] {
+		background: var(--k-primary);
+		border-color: var(--k-primary);
+		color: var(--k-on-primary);
+		font-weight: var(--k-weight-display);
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+	.page[aria-current='page']:hover {
+		background: var(--k-primary-hover);
+		border-color: var(--k-primary-hover);
+		color: var(--k-on-primary-hover);
+	}
+	.gap {
+		min-width: 24px;
+		justify-content: center;
+		align-items: center;
+		color: var(--k-fg-muted);
+	}
+	.compact {
+		display: none;
+		min-width: 64px;
+		justify-content: center;
+		padding: 0 var(--k-space-2);
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-sm);
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
 	@container (max-width: 520px) {
-		ul { flex-wrap: nowrap; justify-content: space-between; }
-		.num { display: none; }
-		.compact { display: inline-flex; flex: 1; }
+		ul {
+			flex-wrap: nowrap;
+			justify-content: space-between;
+		}
+		.num {
+			display: none;
+		}
+		.compact {
+			display: inline-flex;
+			flex: 1;
+		}
 	}
 </style>

@@ -15,7 +15,15 @@
 		class?: string | undefined;
 		children?: Snippet | undefined;
 	}
-	let { maxHeight, direction = 'vertical', fade = false, fadeSize = 28, label = 'Scrollable content', class: cls = '', children }: Props = $props();
+	let {
+		maxHeight,
+		direction = 'vertical',
+		fade = false,
+		fadeSize = 28,
+		label = 'Scrollable content',
+		class: cls = '',
+		children
+	}: Props = $props();
 
 	let scroller: HTMLElement | undefined = $state();
 	let content: HTMLElement | undefined = $state();
@@ -85,9 +93,16 @@
 </div>
 
 <style>
-	.k-scroll-area { min-width: 0; max-width: 100%; }
+	.k-scroll-area {
+		min-width: 0;
+		max-width: 100%;
+	}
 	/* The focus ring sits on the wrapper: a mask on the scroller would clip an outside outline. */
-	.k-scroll-area:has(.scroller:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-radius: var(--k-radius-field); }
+	.k-scroll-area:has(.scroller:focus-visible) {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-radius: var(--k-radius-field);
+	}
 	.scroller {
 		overflow: auto;
 		overscroll-behavior: contain;
@@ -95,10 +110,19 @@
 		scrollbar-color: var(--k-border) var(--k-bg-sunken);
 		outline: none;
 	}
-	.scroller[data-direction='vertical'] { overflow-x: hidden; }
-	.scroller[data-direction='horizontal'] { overflow-y: hidden; }
-	.content { min-width: 0; }
-	.scroller:not([data-direction='vertical']) > .content { width: max-content; min-width: 100%; }
+	.scroller[data-direction='vertical'] {
+		overflow-x: hidden;
+	}
+	.scroller[data-direction='horizontal'] {
+		overflow-y: hidden;
+	}
+	.content {
+		min-width: 0;
+	}
+	.scroller:not([data-direction='vertical']) > .content {
+		width: max-content;
+		min-width: 100%;
+	}
 
 	.fade .scroller[data-direction='vertical'] {
 		mask-image: linear-gradient(to bottom, transparent 0, #000 var(--fade-t), #000 calc(100% - var(--fade-b)), transparent 100%);
@@ -115,8 +139,17 @@
 
 	/* Browsers without scrollbar-color/-width (older Safari) get a styled WebKit scrollbar instead. */
 	@supports not (scrollbar-width: thin) {
-		.scroller::-webkit-scrollbar { width: 10px; height: 10px; }
-		.scroller::-webkit-scrollbar-track { background: var(--k-bg-sunken); }
-		.scroller::-webkit-scrollbar-thumb { border: 2px solid var(--k-bg-sunken); border-radius: var(--k-radius-badge); background: var(--k-border); }
+		.scroller::-webkit-scrollbar {
+			width: 10px;
+			height: 10px;
+		}
+		.scroller::-webkit-scrollbar-track {
+			background: var(--k-bg-sunken);
+		}
+		.scroller::-webkit-scrollbar-thumb {
+			border: 2px solid var(--k-bg-sunken);
+			border-radius: var(--k-radius-badge);
+			background: var(--k-border);
+		}
 	}
 </style>
