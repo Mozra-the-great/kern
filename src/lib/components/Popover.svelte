@@ -12,7 +12,7 @@
 		trigger?: Snippet;
 		triggerVariant?: 'secondary' | 'ghost';
 		placement?: Placement;
-		/** Called when the popover opens or closes. */
+		/** Called when the user opens or closes the popover, not when `open` is set from outside. */
 		ontoggle?: (open: boolean) => void;
 		class?: string;
 		/** Panel content. */
@@ -31,7 +31,6 @@
 	const uid = $props.id();
 	let btn: HTMLButtonElement | undefined = $state();
 	let panel: HTMLElement | undefined = $state();
-	let wasOpen = false;
 
 	$effect(() => {
 		if (!open || !btn || !panel) return;
@@ -42,15 +41,15 @@
 		return stop;
 	});
 
-	$effect(() => {
-		if (open === wasOpen) return;
-		wasOpen = open;
-		ontoggle?.(open);
-	});
-
+	function show() {
+		if (open) return;
+		open = true;
+		ontoggle?.(true);
+	}
 	function close(refocus: boolean) {
 		if (!open) return;
 		open = false;
+		ontoggle?.(false);
 		if (refocus) btn?.focus();
 	}
 	function onPanelKey(e: KeyboardEvent) {
@@ -90,7 +89,7 @@
 		aria-expanded={open}
 		aria-controls="{uid}-panel"
 		aria-label={trigger ? label : undefined}
-		onclick={() => (open ? close(true) : (open = true))}
+		onclick={() => (open ? close(true) : show())}
 		onkeydown={onTriggerKey}
 	>
 		{#if trigger}{@render trigger()}{:else}{label}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg>{/if}
