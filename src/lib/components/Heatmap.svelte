@@ -458,4 +458,38 @@
 		pointer-events: none;
 		transform: translate(-50%, calc(-100% - 6px));
 	}
+	@media (forced-colors: active) {
+		/* Cells are filled squares: keep the intensity as a mix of Highlight and Canvas, add an edge
+		 * (the inset shadow is dropped) and keep the legend swatches identical to the cells. */
+		.cell {
+			forced-color-adjust: none;
+			border: 1px solid CanvasText;
+			background: Canvas;
+			box-sizing: border-box;
+		}
+		[data-level='1'] {
+			background: color-mix(in srgb, Highlight 30%, Canvas);
+		}
+		[data-level='2'] {
+			background: color-mix(in srgb, Highlight 55%, Canvas);
+		}
+		[data-level='3'] {
+			background: color-mix(in srgb, Highlight 78%, Canvas);
+		}
+		[data-level='4'] {
+			background: Highlight;
+		}
+		div.cell[data-day]:hover {
+			outline: 2px solid Highlight;
+			outline-offset: -2px;
+		}
+		.cell:focus-visible {
+			outline-color: Highlight;
+		}
+		.tip {
+			border: 1px solid CanvasText;
+			background: Canvas;
+			color: CanvasText;
+		}
+	}
 </style>

@@ -249,3 +249,40 @@
 		--k-dur: 0ms !important;
 	}
 }
+
+/* Forced colours (Windows high contrast, #27). The browser swaps every colour for the system palette
+ * and drops box-shadows, so a shape drawn by background or shadow alone disappears. Components carry
+ * their own `@media (forced-colors: active)` rules (Highlight/HighlightText for selected, CanvasText
+ * and ButtonText for edges, GrayText for disabled, LinkText for links). This block is the part a theme
+ * must not defeat, so it uses !important: custom properties set on [data-theme^='…'] have the same
+ * specificity as these selectors and load later. Normal rendering is untouched: the whole block sits
+ * inside the media query. */
+@media (forced-colors: active) {
+	:root,
+	[data-theme] {
+		/* disabled is GrayText, not a dimmed colour (dimming makes the text unreadable) */
+		--k-disabled-opacity: 1 !important;
+		--k-field-disabled-opacity: 1 !important;
+		--k-check-disabled-opacity: 1 !important;
+		--k-fg-disabled: GrayText !important;
+		/* depth is dropped by the browser anyway; the parts that read the tokens say so too */
+		--k-shadow-raised: none !important;
+		--k-shadow-overlay: none !important;
+		--k-shadow-sm: none !important;
+		/* edges, focus ring and the non-text accent: system colours, never a theme colour */
+		--k-border: ButtonText !important;
+		--k-button-secondary-border: ButtonText !important;
+		--k-line: CanvasText !important;
+		--k-line-strong: CanvasText !important;
+		--k-line-dashed: CanvasText !important;
+		--k-focus: Highlight !important;
+		--k-accent-mark: Highlight !important;
+		--k-toast-ok-border: CanvasText !important;
+		--k-toast-warn-border: CanvasText !important;
+		/* a track edge even in a theme that draws the track without one, and an empty track: the edge
+		 * and fill tokens above are system colours now, so a theme that paints the track with
+		 * --k-line would otherwise fill it solid */
+		--k-progress-track-border-w: 1px !important;
+		--k-progress-track: Canvas !important;
+	}
+}

@@ -235,10 +235,22 @@
 		outline-offset: var(--k-focus-offset);
 	}
 	@media (forced-colors: active) {
+		/* Selected tab: a Highlight bar instead of the inset shadow (dropped). In the line look the strip
+		 * clips the 1px the tab overlaps the baseline by, so the bar is 4px to show 3px. */
 		[data-look='line'] button[aria-selected='true'],
 		[data-look='pill'] button[aria-selected='true'] {
 			box-shadow: none;
-			border-bottom: 2px solid Highlight;
+			border-bottom: 3px solid Highlight;
+		}
+		[data-look='line'] button[aria-selected='true'] {
+			border-bottom-width: 4px;
+		}
+		button:disabled {
+			opacity: 1;
+			color: GrayText;
+		}
+		button:focus-visible {
+			outline-color: Highlight;
 		}
 	}
 </style>

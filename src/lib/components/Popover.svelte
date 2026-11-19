@@ -197,4 +197,16 @@
 			transform: translateY(4px);
 		}
 	}
+	@media (forced-colors: active) {
+		.trigger {
+			color: ButtonText;
+		}
+		.trigger[aria-expanded='true'] {
+			border-color: Highlight;
+			border-width: 3px;
+		}
+		.trigger svg {
+			color: ButtonText;
+		}
+	}
 </style>

@@ -291,4 +291,23 @@
 			width: 40px;
 		}
 	}
+	@media (forced-colors: active) {
+		/* Selected row: inverted instead of a tint and an inset bar (both dropped). */
+		.row.selected {
+			forced-color-adjust: none;
+			background: Highlight;
+			color: HighlightText;
+			box-shadow: none;
+		}
+		.row.selected .twisty {
+			color: HighlightText;
+		}
+		li:focus-visible > .row.selected {
+			outline-color: HighlightText;
+		}
+		li[aria-disabled='true'] > .row {
+			opacity: 1;
+			color: GrayText;
+		}
+	}
 </style>

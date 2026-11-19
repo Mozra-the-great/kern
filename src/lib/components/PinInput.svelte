@@ -255,4 +255,18 @@
 			gap: var(--k-space-1);
 		}
 	}
+	@media (forced-colors: active) {
+		.box:focus-visible {
+			border-color: Highlight;
+		}
+		.box[aria-invalid='true'] {
+			border-style: double;
+			border-width: 3px;
+		}
+		.box:disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+	}
 </style>

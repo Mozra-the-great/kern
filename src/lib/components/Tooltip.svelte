@@ -91,4 +91,11 @@
 		top: 50%;
 		transform: translateY(-50%);
 	}
+	@media (forced-colors: active) {
+		.tip {
+			border: 1px solid CanvasText;
+			background: Canvas;
+			color: CanvasText;
+		}
+	}
 </style>

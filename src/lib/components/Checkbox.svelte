@@ -122,4 +122,20 @@
 		font-size: var(--k-text-sm);
 		color: var(--k-fg-muted);
 	}
+	@media (forced-colors: active) {
+		/* The mark is an SVG: it would keep its authored colour (dark on a dark canvas) and vanish. */
+		svg {
+			color: CanvasText;
+		}
+		input:checked,
+		input:indeterminate {
+			border-color: Highlight;
+		}
+		input:disabled {
+			border-color: GrayText;
+		}
+		input:disabled + svg {
+			color: GrayText;
+		}
+	}
 </style>

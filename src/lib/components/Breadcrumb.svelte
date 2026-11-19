@@ -178,4 +178,20 @@
 			display: inline-flex;
 		}
 	}
+	@media (forced-colors: active) {
+		a {
+			color: LinkText;
+			text-decoration-color: LinkText;
+		}
+		a[aria-current='page'] {
+			text-decoration-thickness: 2px;
+		}
+		.sep {
+			color: CanvasText;
+		}
+		.more {
+			border-color: ButtonText;
+			color: ButtonText;
+		}
+	}
 </style>

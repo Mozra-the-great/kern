@@ -314,4 +314,20 @@
 			transform: scale(0.97);
 		}
 	}
+	@media (forced-colors: active) {
+		/* The roving item is marked by a tint that is dropped: outline it (also when focus came from the pointer). */
+		[role='menuitem']:focus {
+			outline: 2px solid Highlight;
+			outline-offset: -2px;
+		}
+		.danger {
+			font-weight: 700;
+		}
+		kbd {
+			color: CanvasText;
+		}
+		.sep {
+			border-top-color: CanvasText;
+		}
+	}
 </style>

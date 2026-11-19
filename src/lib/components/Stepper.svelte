@@ -321,4 +321,45 @@
 		white-space: nowrap;
 		border: 0;
 	}
+	@media (forced-colors: active) {
+		/* Markers, connectors and the compact bar are backgrounds: draw them in system colours. */
+		[data-state='complete'] .marker {
+			forced-color-adjust: none;
+			border-color: Highlight;
+			background: Highlight;
+			color: HighlightText;
+		}
+		[data-state='current'] .marker {
+			border-width: 4px;
+			border-style: double;
+			border-color: Highlight;
+		}
+		.step:not(:last-child)::after {
+			forced-color-adjust: none;
+			background: CanvasText;
+		}
+		.step[data-state='complete']:not(:last-child)::after {
+			background: Highlight;
+		}
+		.link .name {
+			text-decoration: underline;
+			text-underline-offset: 3px;
+		}
+		.link:hover {
+			outline: 1px solid Highlight;
+		}
+		.bar .seg {
+			forced-color-adjust: none;
+			border-color: CanvasText;
+			background: Canvas;
+		}
+		.bar .seg[data-state='complete'] {
+			border-color: Highlight;
+			background: Highlight;
+		}
+		.bar .seg[data-state='current'] {
+			border-color: Highlight;
+			background: repeating-linear-gradient(135deg, Highlight 0 2px, Canvas 2px 4px);
+		}
+	}
 </style>

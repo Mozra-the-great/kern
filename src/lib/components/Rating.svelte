@@ -209,4 +209,29 @@
 		white-space: nowrap;
 		border: 0;
 	}
+	@media (forced-colors: active) {
+		.star {
+			color: CanvasText;
+		}
+		.star path {
+			stroke: CanvasText;
+		}
+		.star.on path,
+		.readonly .full path {
+			fill: CanvasText;
+		}
+		.disabled .star {
+			opacity: 1;
+			color: GrayText;
+		}
+		.disabled .star path {
+			stroke: GrayText;
+		}
+		.disabled .star.on path {
+			fill: GrayText;
+		}
+		[aria-invalid='true'] .star:not(.on) path {
+			stroke-dasharray: 3 2;
+		}
+	}
 </style>

@@ -385,4 +385,23 @@
 			transition: none;
 		}
 	}
+	@media (forced-colors: active) {
+		/* The divider line and the grip are backgrounds: draw them in system colours. */
+		.handle::before,
+		.grip {
+			forced-color-adjust: none;
+			background: CanvasText;
+		}
+		.handle:hover::before,
+		.handle.active::before,
+		.handle:hover .grip,
+		.handle.active .grip,
+		.handle:focus-visible::before,
+		.handle:focus-visible .grip {
+			background: Highlight;
+		}
+		.handle:focus-visible .grip {
+			outline-color: Highlight;
+		}
+	}
 </style>

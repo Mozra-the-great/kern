@@ -89,4 +89,16 @@
 			background-size: 100% 0.62em;
 		}
 	}
+	@media (forced-colors: active) {
+		/* The marker stripe is a background: keep it in the system Mark colours. It covers the whole line
+		 * height here, because MarkText on the page canvas (above the usual lower stripe) is unreadable. */
+		.k-highlight,
+		[data-drawn='false'] {
+			forced-color-adjust: none;
+			background-image: linear-gradient(Mark, Mark);
+			background-position: 0 0;
+			background-size: 100% 100%;
+			color: MarkText;
+		}
+	}
 </style>

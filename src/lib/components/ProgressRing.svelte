@@ -154,4 +154,12 @@
 			display: block;
 		}
 	}
+	@media (forced-colors: active) {
+		.track {
+			stroke: GrayText;
+		}
+		.arc {
+			stroke: Highlight;
+		}
+	}
 </style>

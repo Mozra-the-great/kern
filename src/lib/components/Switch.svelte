@@ -103,4 +103,30 @@
 		font-size: var(--k-text-sm);
 		color: var(--k-fg-muted);
 	}
+	@media (forced-colors: active) {
+		/* Track and thumb in system colours: off = canvas track with a text-coloured thumb at the start,
+		 * on = Highlight track with HighlightText thumb at the end (the position changes as well). */
+		input {
+			forced-color-adjust: none;
+			border-color: ButtonText;
+			background: Canvas;
+		}
+		input::after {
+			background: ButtonText;
+		}
+		input:checked {
+			border-color: Highlight;
+			background: Highlight;
+		}
+		input:checked::after {
+			background: HighlightText;
+		}
+		input:disabled {
+			border-color: GrayText;
+			background: Canvas;
+		}
+		input:disabled::after {
+			background: GrayText;
+		}
+	}
 </style>

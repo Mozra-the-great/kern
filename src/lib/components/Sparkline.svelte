@@ -146,4 +146,21 @@
 		background: currentColor;
 		box-shadow: 0 0 0 2px var(--k-bg-raised);
 	}
+	@media (forced-colors: active) {
+		.line {
+			stroke: CanvasText;
+		}
+		.area {
+			fill: CanvasText;
+			fill-opacity: 0.25;
+		}
+		rect {
+			fill: CanvasText;
+		}
+		.dot {
+			forced-color-adjust: none;
+			background: CanvasText;
+			box-shadow: none;
+		}
+	}
 </style>

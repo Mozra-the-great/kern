@@ -35,4 +35,12 @@
 	[data-kind='alert'] {
 		color: var(--k-danger);
 	}
+	@media (forced-colors: active) {
+		/* An alert is not only red: mark it with a heavy edge and weight. */
+		[data-kind='alert'] {
+			padding-inline-start: 0.6em;
+			border-inline-start: 4px solid CanvasText;
+			font-weight: 700;
+		}
+	}
 </style>

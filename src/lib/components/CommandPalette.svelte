@@ -409,4 +409,24 @@
 			transform: translateY(8px) scale(0.98);
 		}
 	}
+	@media (forced-colors: active) {
+		.search:focus-within {
+			outline: 2px solid Highlight;
+			outline-offset: -2px;
+			box-shadow: none;
+		}
+		.x {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+		.glass {
+			color: CanvasText;
+		}
+		kbd {
+			color: CanvasText;
+		}
+		.option.active {
+			outline-color: Highlight;
+		}
+	}
 </style>

@@ -312,4 +312,30 @@
 	.tip .detail {
 		opacity: 0.85;
 	}
+	@media (forced-colors: active) {
+		/* Status without colour: ok = full bar, warn = short bar, down = hatched, none = outline only. */
+		.fill {
+			forced-color-adjust: none;
+			background: CanvasText;
+		}
+		[data-status='down'] > .fill {
+			border-color: CanvasText;
+			background: repeating-linear-gradient(135deg, CanvasText 0 2px, Canvas 2px 4px);
+		}
+		[data-status='none'] > .fill {
+			border-color: CanvasText;
+			background: transparent;
+		}
+		.bar:hover > .fill {
+			filter: none;
+		}
+		.bar:focus-visible {
+			outline-color: Highlight;
+		}
+		.tip {
+			border: 1px solid CanvasText;
+			background: Canvas;
+			color: CanvasText;
+		}
+	}
 </style>
