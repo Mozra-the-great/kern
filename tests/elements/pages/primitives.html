@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-theme="stuffcloud">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: skip link, announcer, online status, prose</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script>
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+			}
+			main {
+				display: grid;
+				gap: 16px;
+				max-width: 880px;
+			}
+		</style>
+	</head>
+	<body>
+		<k-skip-link id="skip" target="main"></k-skip-link>
+		<k-skip-link id="skip-missing" target="does-not-exist" label="Skip nowhere"></k-skip-link>
+		<k-online-status id="online" offline-title="No connection" offline-text="Opened tools keep working." online-text="Back online"></k-online-status>
+		<header>
+			<nav aria-label="Primary"><a href="#a">First</a> <a href="#b">Second</a></nav>
+		</header>
+		<main id="main">
+			<h1>Skip link, announcer, online status, prose</h1>
+			<div>
+				<k-button id="say-polite">Say polite</k-button>
+				<k-button id="say-assertive">Say assertive</k-button>
+			</div>
+
+			<k-prose id="prose-text" text="Angaben gemäß § 5 DDG&#10;&#10;Mara Lind&#10;Beispielweg 12&#10;&#10;Kontakt: kontakt@example.com oder https://example.com/impressum.&#10;&#10;<b>Kein</b> Markup: <img src=x onerror=&quot;window.pwned = 1&quot;>"></k-prose>
+			<k-prose id="prose-slot">
+				<h2>Eigenes Markup</h2>
+				<p>Erster Absatz.</p>
+				<p>Zweiter Absatz mit <a href="https://example.com">Link</a>.</p>
+				<ul>
+					<li>Eins</li>
+					<li>Zwei</li>
+				</ul>
+			</k-prose>
+		</main>
+		<k-live-announcer id="announcer"></k-live-announcer>
+	</body>
+</html>

@@ -6,6 +6,11 @@
  * Keep in step with the Svelte components' exported types (minus Svelte-only callbacks).
  */
 
+// The generator replaces the next two lines by the interface itself (written from the catalogue in
+// src/lib/components/strings.ts), so the shipped d.ts needs no import.
+import type { KernStrings } from '../lib/components/strings.js';
+export type { KernStrings };
+
 export interface SelectOption {
 	value: string;
 	label: string;
@@ -223,7 +228,43 @@ export interface ToastFunction {
 	danger(message: string, options?: Partial<ToastInput>): number;
 	clear(): void;
 }
+/** Detail of the `change` event of <k-online-status>. */
+export interface OnlineChangeDetail {
+	/** `true` when the connection came back, `false` when it was lost. */
+	online: boolean;
+}
+export type AnnouncePoliteness = 'polite' | 'assertive';
+type StringsDeepPartial<T> = { [K in keyof T]?: (T[K] extends string ? string : StringsDeepPartial<T[K]>) | undefined };
+/** A part of the default texts, by component and name (`{ modal: { closeLabel: 'Schließen' } }`); `lang` is a BCP 47 tag. */
+export type KernStringsInput = StringsDeepPartial<KernStrings> & { lang?: string | undefined };
+/** A complete set of texts for one language. */
+export interface KernBundle extends KernStrings {
+	lang: string;
+}
+/** `window.kern.strings`: the default texts of every element. Attributes and properties still win. */
+export interface KernStringsApi {
+	/** Sets the texts: a bundle (`kern.strings.de`), a part of the catalogue, or several (later ones win). Replaces the earlier choice. */
+	set(...inputs: readonly KernStringsInput[]): void;
+	/** Back to the built-in English texts. */
+	reset(): void;
+	/** The texts in use. */
+	get(): KernStrings;
+	/** Makes a bundle available to `setLocale` and `followLang`. `en` and `de` are registered already. */
+	register(lang: string, bundle: KernStringsInput): void;
+	/** Selects the bundle of a language tag (`de-AT` finds `de`); `false` when there is none (texts stay English, formats follow the tag). */
+	setLocale(lang: string | undefined): boolean;
+	/** Follows the `lang` attribute of `root` (default `<html>`). Returns the function that stops it. */
+	followLang(root?: Element): () => void;
+	/** The tag of the chosen bundle, if any. */
+	readonly lang: string | undefined;
+	/** The built-in bundles. */
+	readonly en: KernBundle;
+	readonly de: KernBundle;
+}
 export interface KernGlobal {
 	toast: ToastFunction;
 	dismissToast(id: number): void;
+	/** Says `message` through the page's <k-live-announcer>. `polite` is the default. */
+	announce: (message: string, politeness?: AnnouncePoliteness) => void;
+	strings: KernStringsApi;
 }

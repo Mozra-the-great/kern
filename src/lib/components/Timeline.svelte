@@ -15,6 +15,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { dateFormat, withDefaults } from './data-utils.js';
+	import { formatLocale, strings } from './strings.svelte.js';
 
 	interface Props {
 		items: TimelineItem[];
@@ -22,25 +23,16 @@
 		label?: string | undefined;
 		/** Spoken status before each title. */
 		statusLabels?: { [K in TimelineStatus]?: string | undefined } | undefined;
-		/** Locale of the dates. */
+		/** Locale of the dates. Default: the chosen strings language, else the browser's. */
 		locale?: string | undefined;
 		/** Custom body of an entry, replacing title, time and description. */
 		item?: Snippet<[{ item: TimelineItem; index: number }]> | undefined;
 		class?: string | undefined;
 	}
-	let { items, label, statusLabels, locale, item, class: cls = '' }: Props = $props();
+	let { items, label, statusLabels, locale: localeProp, item, class: cls = '' }: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
 
-	const names = $derived(
-		withDefaults<Record<TimelineStatus, string>>(
-			{
-				done: 'Done',
-				current: 'Current',
-				upcoming: 'Upcoming',
-				error: 'Failed'
-			},
-			statusLabels
-		)
-	);
+	const names = $derived(withDefaults<Record<TimelineStatus, string>>(strings().timeline.statuses, statusLabels));
 
 	const ISO = /^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/;
 	interface Stamp {

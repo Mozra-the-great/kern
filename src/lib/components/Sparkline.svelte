@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatLocale, strings } from './strings.svelte.js';
 	import { fill, numberFormat } from './data-utils.js';
 
 	interface Props {
@@ -19,7 +20,7 @@
 		height?: number | undefined;
 		/** CSS length, or a number of pixels. */
 		width?: string | number | undefined;
-		/** Locale of the numbers in the summary. */
+		/** Locale of the numbers in the summary. Default: the chosen strings language, else the browser's. */
 		locale?: string | undefined;
 		class?: string | undefined;
 	}
@@ -28,14 +29,17 @@
 		variant = 'line',
 		min,
 		max,
-		label = 'Trend: first {first}, last {last}, min {min}, max {max}',
-		emptyLabel = 'No data',
+		label: labelProp,
+		emptyLabel: emptyLabelProp,
 		showLast = true,
 		height = 32,
 		width,
-		locale,
+		locale: localeProp,
 		class: cls = ''
 	}: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
+	const label = $derived(labelProp ?? strings().sparkline.label);
+	const emptyLabel = $derived(emptyLabelProp ?? strings().sparkline.emptyLabel);
 
 	const data = $derived((values ?? []).filter((v) => typeof v === 'number' && Number.isFinite(v)));
 	const lo = $derived.by((): number => {

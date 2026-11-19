@@ -1,19 +1,45 @@
 /**
- * axe on the element test pages in five themes: no serious or critical violation (#25, #50, #51).
+ * axe on the element test pages in five themes: no serious or critical violation (#25, #50, #51, #58, #64).
  * The pages cover the parity components (Card list and interactive cards, Button/Link, FileDrop,
  * fields with hint and error, CopyButton, StatusMessage), the feedback components (Progress,
  * Toaster, Modal, Drawer), the navigation and content components (Tabs as a tab bar with badges,
- * TabLinks, CodeBlock, Tile/TileGrid) and a form of every form element.
+ * TabLinks, CodeBlock, Tile/TileGrid), a form of every form element, every element with default texts (strings), and the
+ * skip link, live announcer, online status and prose (primitives). The primitives page is also
+ * checked with the skip link focused and while offline, the states in which those parts are visible.
  */
-import { expect, test } from '@playwright/test';
+import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 import { axeViolations } from './axe.js';
 
-const pages = ['parity', 'feedback', 'form', 'navigation'];
+interface Case {
+	name: string;
+	/** Puts the page in a state before axe looks at it. */
+	prepare?: (page: Page, context: BrowserContext) => Promise<void>;
+	label?: string;
+}
+
+const cases: Case[] = [
+	{ name: 'parity' },
+	{ name: 'feedback' },
+	{ name: 'form' },
+	{ name: 'navigation' },
+	{ name: 'strings' },
+	{ name: 'primitives' },
+	{
+		name: 'primitives',
+		label: 'primitives page with the skip link focused and while offline',
+		prepare: async (page, context) => {
+			await page.keyboard.press('Tab');
+			await expect(page.locator('#skip a')).toBeFocused();
+			await context.setOffline(true);
+			await expect(page.locator('#online .notice')).toBeVisible();
+		}
+	}
+];
 const themes = ['stuffcloud', 'stuffcloud-light', 'flower', 'pop-dark', 'line'];
 
-for (const name of pages) {
+for (const { name, prepare, label } of cases) {
 	for (const theme of themes) {
-		test(`axe: ${name} page in ${theme} has no serious or critical violation`, async ({ page }) => {
+		test(`axe: ${label ?? `${name} page`} in ${theme} has no serious or critical violation`, async ({ page, context }) => {
 			// Colour transitions would let axe measure mid-fade colours after the theme switch:
 			// reduced motion sets --k-dur to 0, and running animations are awaited below as well.
 			await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -29,6 +55,7 @@ for (const name of pages) {
 					.filter((el) => el.tagName.startsWith('K-'))
 					.every((el) => customElements.get(el.tagName.toLowerCase()) && el.shadowRoot)
 			);
+			await prepare?.(page, context);
 			const findings = await axeViolations(page);
 			expect(findings, JSON.stringify(findings, null, 2)).toEqual([]);
 		});

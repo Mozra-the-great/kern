@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -32,10 +33,11 @@
 		showValue = false,
 		valueText,
 		format,
-		loadingText = 'Loading',
+		loadingText: loadingTextProp,
 		class: cls = '',
 		children
 	}: Props = $props();
+	const loadingText = $derived(loadingTextProp ?? strings().progressRing.loadingText);
 
 	const span = $derived(max > 0 ? max : 100);
 	const dim = $derived(Math.max(16, size));

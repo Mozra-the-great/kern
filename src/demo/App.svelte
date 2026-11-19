@@ -26,6 +26,9 @@
 		Tooltip,
 		DropdownMenu,
 		Table,
+		SkipLink,
+		LiveAnnouncer,
+		OnlineStatus,
 		toast
 	} from '../lib/index.js';
 	import { themes } from './themes.js';
@@ -41,6 +44,7 @@
 	import Mascots from './sections/Mascots.svelte';
 	import Data from './sections/Data.svelte';
 	import Feedback from './sections/Feedback.svelte';
+	import Texts from './sections/Texts.svelte';
 
 	let theme = $state(readTheme());
 	function readTheme() {
@@ -80,7 +84,7 @@
 	];
 </script>
 
-<a class="skip" href="#main">Zum Inhalt</a>
+<SkipLink target="main" label="Zum Inhalt" />
 
 <header class="top">
 	<div class="frame bar">
@@ -94,6 +98,8 @@
 		</label>
 	</div>
 </header>
+
+<OnlineStatus />
 
 <main id="main" class="frame">
 	<section class="hero">
@@ -309,6 +315,7 @@
 	<Effects />
 	<Mascots />
 	<Assets />
+	<Texts />
 </main>
 
 <Modal bind:open={modalOpen} title="Ordner löschen?" description="„Urlaub 2026“ und 214 Dateien werden in den Papierkorb gelegt.">
@@ -344,20 +351,9 @@
 </Drawer>
 
 <Toaster label="Benachrichtigungen" dismissLabel="Schließen" undoLabel="Rückgängig" />
+<LiveAnnouncer />
 
 <style>
-	.skip {
-		position: absolute;
-		left: -9999px;
-	}
-	.skip:focus {
-		left: 16px;
-		top: 16px;
-		z-index: 2000;
-		padding: 8px 12px;
-		background: var(--k-bg-raised);
-		color: var(--k-fg);
-	}
 	.frame {
 		width: 100%;
 		max-width: 1120px;

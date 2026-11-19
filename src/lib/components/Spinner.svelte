@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	interface Props {
 		/** Accessible label, read by screen readers. */
 		label?: string | undefined;
 		size?: number | undefined;
 		class?: string | undefined;
 	}
-	let { label = 'Loading', size = 20, class: cls = '' }: Props = $props();
+	let { label: labelProp, size = 20, class: cls = '' }: Props = $props();
+	const label = $derived(labelProp ?? strings().spinner.label);
 </script>
 
 <span class="k-spinner {cls}" role="status" style:--size="{size}px">

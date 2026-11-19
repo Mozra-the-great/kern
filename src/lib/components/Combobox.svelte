@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import Field from './Field.svelte';
 	import { anchorTo } from './anchor.js';
 
@@ -42,13 +43,15 @@
 		required = false,
 		disabled = false,
 		allowCustom = false,
-		noResults = 'No results',
-		toggleLabel = 'Show options',
+		noResults: noResultsProp,
+		toggleLabel: toggleLabelProp,
 		autocomplete = 'off',
 		id,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const noResults = $derived(noResultsProp ?? strings().combobox.noResults);
+	const toggleLabel = $derived(toggleLabelProp ?? strings().combobox.toggleLabel);
 
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);

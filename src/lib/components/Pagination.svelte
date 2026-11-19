@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	interface Props {
 		/** Current page, 1-based. */
 		page?: number | undefined;
@@ -24,14 +25,19 @@
 		page = $bindable(),
 		pageCount,
 		siblings = 1,
-		label = 'Pagination',
-		prevLabel = 'Previous',
-		nextLabel = 'Next',
-		pageLabel = 'Page',
-		ofLabel = 'of',
+		label: labelProp,
+		prevLabel: prevLabelProp,
+		nextLabel: nextLabelProp,
+		pageLabel: pageLabelProp,
+		ofLabel: ofLabelProp,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const label = $derived(labelProp ?? strings().pagination.label);
+	const prevLabel = $derived(prevLabelProp ?? strings().pagination.prevLabel);
+	const nextLabel = $derived(nextLabelProp ?? strings().pagination.nextLabel);
+	const pageLabel = $derived(pageLabelProp ?? strings().pagination.pageLabel);
+	const ofLabel = $derived(ofLabelProp ?? strings().pagination.ofLabel);
 
 	const total = $derived(Math.max(1, Math.floor(pageCount) || 1));
 	const current = $derived(Math.min(total, Math.max(1, Math.floor(page ?? 1) || 1)));

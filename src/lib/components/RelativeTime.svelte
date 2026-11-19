@@ -41,11 +41,13 @@
 </script>
 
 <script lang="ts">
+	import { formatLocale } from './strings.svelte.js';
 	import { dateFormat } from './data-utils.js';
 
 	interface Props {
 		/** The moment to show. Invalid values render `fallback`. */
 		value: TimeInput;
+		/** BCP 47 locale of the numbers and dates. Default: the chosen strings language, else the browser's. */
 		locale?: string | undefined;
 		/** `auto` writes "yesterday" and "now", `always` writes "1 day ago". */
 		numeric?: 'always' | 'auto' | undefined;
@@ -60,7 +62,7 @@
 	}
 	let {
 		value,
-		locale,
+		locale: localeProp,
 		numeric = 'auto',
 		style = 'long',
 		absoluteFormat = { dateStyle: 'full', timeStyle: 'medium' },
@@ -68,6 +70,7 @@
 		fallback = '',
 		class: cls = ''
 	}: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
 
 	let tick = $state(Date.now());
 	const target = $derived(toMs(value));

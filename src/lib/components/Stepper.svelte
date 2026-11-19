@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	export interface StepItem {
 		id: string;
 		label: string;
@@ -29,14 +30,19 @@
 		steps,
 		current = 0,
 		orientation = 'horizontal',
-		label = 'Progress',
+		label: labelProp,
 		onstep,
-		completeLabel = 'completed',
-		compactLabel = 'Step {current} of {total}: {label}',
-		doneLabel = 'All {total} steps completed',
-		backLabel = 'Back to {label}',
+		completeLabel: completeLabelProp,
+		compactLabel: compactLabelProp,
+		doneLabel: doneLabelProp,
+		backLabel: backLabelProp,
 		class: cls = ''
 	}: Props = $props();
+	const label = $derived(labelProp ?? strings().stepper.label);
+	const completeLabel = $derived(completeLabelProp ?? strings().stepper.completeLabel);
+	const compactLabel = $derived(compactLabelProp ?? strings().stepper.compactLabel);
+	const doneLabel = $derived(doneLabelProp ?? strings().stepper.doneLabel);
+	const backLabel = $derived(backLabelProp ?? strings().stepper.backLabel);
 
 	const total = $derived(steps.length);
 	const at = $derived(Math.max(0, Math.min(total, Math.floor(Number.isFinite(current) ? current : 0))));

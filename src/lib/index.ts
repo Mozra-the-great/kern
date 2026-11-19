@@ -80,6 +80,29 @@ export { default as Resizable } from './components/Resizable.svelte';
 export { default as ScrollArea } from './components/ScrollArea.svelte';
 export { default as Tile } from './components/Tile.svelte';
 export { default as TileGrid } from './components/TileGrid.svelte';
+
+export { default as Prose } from './components/Prose.svelte';
+export { default as SkipLink } from './components/SkipLink.svelte';
+export { default as LiveAnnouncer } from './components/LiveAnnouncer.svelte';
+export { default as OnlineStatus } from './components/OnlineStatus.svelte';
+export { announce, createAnnouncer, sharedAnnouncer, ANNOUNCE_CLEAR_MS, ANNOUNCE_REPEAT_MS } from './components/announcer.js';
+export type { Announcer, AnnouncerHost, Politeness } from './components/announcer.js';
+export { parseProse } from './components/prose.js';
+export type { ProseParagraph, ProseSegment } from './components/prose.js';
+export {
+	setStrings,
+	resetStrings,
+	getStrings,
+	getLang,
+	registerStrings,
+	setLocale,
+	followLang,
+	createStringsStore,
+	sharedStringsStore,
+	en
+} from './components/strings.js';
+export type { KernBundle, KernStrings, KernStringsInput, StringsStore } from './components/strings.js';
+export { de } from './components/strings-de.js';
 export { toast, toasts, dismissToast, createToastQueue, sharedToastQueue, TOAST_DURATIONS, TOAST_MAX } from './components/toast.svelte.js';
 export type { ToastItem, ToastInput, ToastTone, ToastCloseReason, ToastQueue } from './components/toast.svelte.js';
 export type { SelectOption } from './components/Select.svelte';

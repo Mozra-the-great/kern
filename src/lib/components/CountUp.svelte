@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatLocale } from './strings.svelte.js';
 	import { untrack } from 'svelte';
 	import { makeNumberFormatter, observeInView, useReducedMotion, wholeNumberOptions } from './motion.svelte.js';
 
@@ -11,7 +12,7 @@
 		duration?: number | undefined;
 		/** `Intl.NumberFormat` options, e.g. `{ style: 'currency', currency: 'EUR' }`. */
 		format?: Intl.NumberFormatOptions | undefined;
-		/** BCP 47 locale of the number format. Defaults to the browser's. */
+		/** BCP 47 locale of the number format. Default: the language chosen with `setStrings`/`setLocale`, else the browser's. */
 		locale?: string | undefined;
 		/** Wait until the number is scrolled into view. */
 		startInView?: boolean | undefined;
@@ -19,7 +20,8 @@
 		oncomplete?: (() => void) | undefined;
 		class?: string | undefined;
 	}
-	let { value, from = 0, duration = 1600, format, locale, startInView = true, oncomplete, class: cls = '' }: Props = $props();
+	let { value, from = 0, duration = 1600, format, locale: localeProp, startInView = true, oncomplete, class: cls = '' }: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
 
 	const reduced = useReducedMotion();
 	const formatter = $derived(makeNumberFormatter(locale, wholeNumberOptions(format, Number.isInteger(value) && Number.isInteger(from))));

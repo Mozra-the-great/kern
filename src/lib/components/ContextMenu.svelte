@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import type { MenuEntry } from './DropdownMenu.svelte';
 	import { activeElementOf, composedContains, deepActiveElement, eventWithin, placeAtPoint } from './anchor.js';
@@ -20,7 +21,7 @@
 	}
 	let {
 		items,
-		label = 'Context menu',
+		label: labelProp,
 		areaLabel,
 		focusable = true,
 		longPress = 500,
@@ -28,6 +29,7 @@
 		class: cls = '',
 		children
 	}: Props = $props();
+	const label = $derived(labelProp ?? strings().contextMenu.label);
 	const uid = $props.id();
 
 	let open = $state(false);

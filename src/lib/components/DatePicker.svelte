@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatLocale, strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import Field from './Field.svelte';
 	import { anchorTo, activeElementOf, eventWithin } from './anchor.js';
@@ -13,7 +14,7 @@
 		min?: string | undefined;
 		/** Latest selectable date, ISO. */
 		max?: string | undefined;
-		/** BCP 47 locale for names and the typed format; default: the browser's. */
+		/** BCP 47 locale for names and the typed format; default: the language chosen with `setStrings`/`setLocale`, else the browser's. */
 		locale?: string | undefined;
 		/** First day of the week, 0 = Sunday … 6 = Saturday; default: from the locale, else Monday. */
 		weekStart?: number | undefined;
@@ -41,20 +42,25 @@
 		value = $bindable(),
 		min,
 		max,
-		locale,
+		locale: localeProp,
 		weekStart,
 		name,
 		required = false,
 		disabled = false,
 		placeholder,
-		calendarLabel = 'Choose date',
-		prevMonthLabel = 'Previous month',
-		nextMonthLabel = 'Next month',
-		invalidText = 'Enter a valid date.',
+		calendarLabel: calendarLabelProp,
+		prevMonthLabel: prevMonthLabelProp,
+		nextMonthLabel: nextMonthLabelProp,
+		invalidText: invalidTextProp,
 		id,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
+	const calendarLabel = $derived(calendarLabelProp ?? strings().datePicker.calendarLabel);
+	const prevMonthLabel = $derived(prevMonthLabelProp ?? strings().datePicker.prevMonthLabel);
+	const nextMonthLabel = $derived(nextMonthLabelProp ?? strings().datePicker.nextMonthLabel);
+	const invalidText = $derived(invalidTextProp ?? strings().datePicker.invalidText);
 
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);
@@ -121,12 +127,23 @@
 			.map((p) => p.type)
 			.filter((t): t is 'day' | 'month' | 'year' => t === 'day' || t === 'month' || t === 'year')
 	);
-	const pattern = $derived(
-		shortFmt
+	const pattern = $derived.by(() => {
+		const parts = strings().datePicker.pattern;
+		return shortFmt
 			.formatToParts(utc(2033, 10, 22))
-			.map((p) => (p.type === 'day' ? 'dd' : p.type === 'month' ? 'mm' : p.type === 'year' ? 'yyyy' : p.type === 'literal' ? p.value : ''))
-			.join('')
-	);
+			.map((p) =>
+				p.type === 'day'
+					? parts.day
+					: p.type === 'month'
+						? parts.month
+						: p.type === 'year'
+							? parts.year
+							: p.type === 'literal'
+								? p.value
+								: ''
+			)
+			.join('');
+	});
 	const firstDay = $derived.by(() => {
 		if (weekStart !== undefined && Number.isInteger(weekStart)) return ((weekStart % 7) + 7) % 7;
 		try {

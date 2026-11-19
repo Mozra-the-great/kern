@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -22,7 +23,9 @@
 		menuLabel?: string | undefined;
 		class?: string | undefined;
 	}
-	let { items, brand, actions, label = 'Main', menuLabel = 'Menu', class: cls = '' }: Props = $props();
+	let { items, brand, actions, label: labelProp, menuLabel: menuLabelProp, class: cls = '' }: Props = $props();
+	const label = $derived(labelProp ?? strings().navbar.label);
+	const menuLabel = $derived(menuLabelProp ?? strings().navbar.menuLabel);
 	const uid = $props.id();
 
 	let open = $state(false);

@@ -1,4 +1,6 @@
 <script lang="ts" module>
+	import type { KernStrings } from './strings.js';
+
 	/** A key as drawn (`glyph`) and as spoken (`text`). */
 	export interface KbdKey {
 		glyph: string;
@@ -14,64 +16,64 @@
 	}
 
 	/** Maps a key name ("mod", "shift", "up", "K") to what is drawn and what is spoken. */
-	function describeKey(key: string, mac: boolean, labels: Record<string, string> | undefined): KbdKey {
+	function describeKey(key: string, mac: boolean, labels: Record<string, string> | undefined, names: KernStrings['kbd']): KbdKey {
 		const name = key.trim();
 		const id = name.toLowerCase();
 		let glyph = name;
 		let text = name;
 		switch (id) {
 			case 'mod':
-				[glyph, text] = mac ? ['⌘', 'Command'] : ['Ctrl', 'Control'];
+				[glyph, text] = mac ? ['⌘', names.command] : ['Ctrl', names.control];
 				break;
 			case 'cmd':
 			case 'command':
-				[glyph, text] = ['⌘', 'Command'];
+				[glyph, text] = ['⌘', names.command];
 				break;
 			case 'meta':
-				[glyph, text] = mac ? ['⌘', 'Command'] : ['Win', 'Windows'];
+				[glyph, text] = mac ? ['⌘', names.command] : ['Win', names.windows];
 				break;
 			case 'ctrl':
 			case 'control':
-				[glyph, text] = mac ? ['⌃', 'Control'] : ['Ctrl', 'Control'];
+				[glyph, text] = mac ? ['⌃', names.control] : ['Ctrl', names.control];
 				break;
 			case 'alt':
 			case 'option':
 			case 'opt':
-				[glyph, text] = mac ? ['⌥', 'Option'] : ['Alt', 'Alt'];
+				[glyph, text] = mac ? ['⌥', names.option] : ['Alt', names.alt];
 				break;
 			case 'shift':
-				[glyph, text] = mac ? ['⇧', 'Shift'] : ['Shift', 'Shift'];
+				[glyph, text] = mac ? ['⇧', names.shift] : ['Shift', names.shift];
 				break;
 			case 'enter':
 			case 'return':
-				[glyph, text] = ['↵', 'Enter'];
+				[glyph, text] = ['↵', names.enter];
 				break;
 			case 'esc':
 			case 'escape':
-				[glyph, text] = ['Esc', 'Escape'];
+				[glyph, text] = ['Esc', names.escape];
 				break;
 			case 'backspace':
-				[glyph, text] = ['⌫', 'Backspace'];
+				[glyph, text] = ['⌫', names.backspace];
 				break;
 			case 'delete':
 			case 'del':
-				[glyph, text] = ['Del', 'Delete'];
+				[glyph, text] = ['Del', names.delete];
 				break;
 			case 'up':
 			case 'arrowup':
-				[glyph, text] = ['↑', 'Up arrow'];
+				[glyph, text] = ['↑', names.up];
 				break;
 			case 'down':
 			case 'arrowdown':
-				[glyph, text] = ['↓', 'Down arrow'];
+				[glyph, text] = ['↓', names.down];
 				break;
 			case 'left':
 			case 'arrowleft':
-				[glyph, text] = ['←', 'Left arrow'];
+				[glyph, text] = ['←', names.left];
 				break;
 			case 'right':
 			case 'arrowright':
-				[glyph, text] = ['→', 'Right arrow'];
+				[glyph, text] = ['→', names.right];
 				break;
 		}
 		const spoken = labels?.[id] ?? labels?.[name];
@@ -81,6 +83,7 @@
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { strings } from './strings.svelte.js';
 
 	interface Props {
 		/**
@@ -107,7 +110,7 @@
 		detected = isApple();
 	});
 	const mac = $derived(platform === 'mac' || (platform === 'auto' && detected));
-	const parts = $derived((keys ?? []).filter((k) => k.trim() !== '').map((k) => describeKey(k, mac, labels)));
+	const parts = $derived((keys ?? []).filter((k) => k.trim() !== '').map((k) => describeKey(k, mac, labels, strings().kbd)));
 </script>
 
 <kbd class="k-kbd {cls}" data-size={size}>

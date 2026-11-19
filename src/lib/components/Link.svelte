@@ -1,17 +1,22 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
+	import { strings } from './strings.svelte.js';
 
 	interface Props extends HTMLAnchorAttributes {
 		/** Opens in a new tab with rel="noopener noreferrer". */
 		external?: boolean | undefined;
+		/** Read after the text of an `external` link. Default: "(opens in a new tab)" (see the strings catalogue). */
+		externalLabel?: string | undefined;
 		children?: Snippet; // same type as the inherited HTML attribute
 	}
-	let { external = false, class: cls = '', children, ...rest }: Props = $props();
+	let { external = false, externalLabel, class: cls = '', children, ...rest }: Props = $props();
 </script>
 
 <a class="k-link {cls}" target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} {...rest}>
-	{@render children?.()}{#if external}<span class="ext" aria-hidden="true">↗</span><span class="sr">(opens in a new tab)</span>{/if}
+	{@render children?.()}{#if external}<span class="ext" aria-hidden="true">↗</span><span class="sr">
+			{externalLabel ?? strings().link.externalLabel}
+		</span>{/if}
 </a>
 
 <style>

@@ -296,7 +296,9 @@ import { toast } from '@mozra-the-great/kern/elements/toaster'; // <k-toaster> +
 
 Der Name ist der Tag ohne `k-` (`k-segmented-control` → `elements/segmented-control`).
 `elements/accordion` registriert auch `<k-accordion-item>`; `elements/toaster` exportiert `toast`
-und `dismissToast` und setzt `window.kern`. Ohne Bundler liegen die Dateien unter
+und `dismissToast` und setzt `window.kern`; `elements/live-announcer` exportiert `announce`;
+`elements/strings` (kein Tag) exportiert `setStrings`, `setLocale`, `followLang`, `en`, `de` und weitere
+(siehe [Texte und Sprache](#standardtexte-und-sprache)). Ohne Bundler liegen die Dateien unter
 `dist-elements/elements/<name>.js`. Beide Wege lassen sich mischen (die Registrierung ist
 idempotent), dann lädt die Seite aber zwei Kopien der Laufzeit; besser einen Weg wählen.
 
@@ -614,6 +616,141 @@ bzw. `role="listitem"` auf sich); weitere Attribute gehen an das Wurzelelement.
 	<Tile as="li" href="/pdf"><PdfIcon /><span>PDF</span></Tile>
 	<Tile as="li"><span>Bald mehr</span></Tile>
 </TileGrid>
+
+## Texte, Sprache und Barrierefreiheit
+
+### Standardtexte und Sprache
+
+Jede Komponente bringt englische Standardtexte mit (Schließen-Knopf, „Loading“, „No results“,
+Seitenzahlen, Statusnamen, Tastennamen …). Alle stehen in einem Katalog (`KernStrings`, nach
+Komponente und Name geordnet); eine Prop oder ein Attribut gewinnt immer gegen den Katalog.
+Auch Texte, die nur gesprochen werden (`aria-roledescription` des Karussells, „(opens in a new tab)“
+bei externen Links), und das Datumsmuster im Platzhalter des DatePicker (`dd.mm.yyyy`) stehen im Katalog.
+Keine Sprache haben nur Formathinweise wie `#rrggbb` im ColorPicker und der `## Texte, Sprache und Barrierefreiheit
+
+### Standardtexte und Sprache
+
+Jede Komponente bringt englische Standardtexte mit (Schließen-Knopf, „Loading“, „No results“,
+Seitenzahlen, Statusnamen, Tastennamen …). Alle stehen in einem Katalog (`KernStrings`, nach
+Komponente und Name geordnet); eine Prop oder ein Attribut gewinnt immer gegen den Katalog.
+-Prompt des Terminals. Ein Test prüft, dass
+keine Komponente einen englischen Text als Vorgabe im Code trägt und dass jeder Katalogeintrag
+gelesen wird.
+
+```svelte
+<script>
+	import { setStrings, de } from '@mozra-the-great/kern';
+	setStrings(de); // einmal beim Start: gilt für die ganze Seite, auch für schon sichtbare Komponenten
+</script>
+```
+
+```js
+setStrings(de, { modal: { closeLabel: 'Zu' } }); // Bündel plus eigene Texte; spätere gewinnen
+setStrings(); // zurück zu Englisch
+```
+
+Ohne Bundler: `kern.strings.set(kern.strings.de)`; `kern.strings.en` und `.de` sind dabei. Wer nur die
+Texte braucht, lädt `@mozra-the-great/kern/elements/strings` (setzt auch `window.kern`).
+
+| Funktion | Wirkung |
+| --- | --- |
+| `setStrings(...bündel)` | Setzt die Texte der Seite: ein Bündel (`de`), ein Teil des Katalogs oder mehrere (spätere gewinnen). Ersetzt die frühere Wahl; ohne Argumente: Englisch. `lang` im Bündel setzt zugleich das Zahlen- und Datumsformat. |
+| `resetStrings()` | Englisch, Format wieder vom Browser. |
+| `getStrings()` | Die Texte, die gerade gelten (Englisch mit der Wahl darüber). |
+| `registerStrings(lang, bündel)` | Macht ein Bündel für `setLocale` und `followLang` verfügbar. |
+| `setLocale(lang)` | Wählt das registrierte Bündel (`de-AT` findet `de`). Ohne Bündel bleiben die Texte englisch und nur das Format folgt dem Tag (Ergebnis `false`). |
+| `followLang(root?)` | Folgt dem `lang`-Attribut von `<html>` (oder `root`), sofort und bei jeder Änderung; gibt die Stopp-Funktion zurück. Im Server-Render ohne Wirkung. |
+
+Die Texte sind reaktiv: Wer die Sprache zur Laufzeit wechselt, sieht sie in allen Komponenten
+umspringen, die schon da sind. Der Katalog liegt auf `globalThis[Symbol.for('kern.strings')]`;
+das Svelte-Paket und `kern-elements.js` auf einer Seite teilen also eine Wahl, so wie sie sich
+den Toast-Speicher teilen. Das deutsche Bündel `de` ist eine eigene Datei: wer es nicht importiert,
+liefert es nicht aus (im All-in-one-Bundle der Elemente ist es dabei).
+
+**Eine Sprache hinzufügen.** Der Typ `KernBundle` ist der ganze Katalog plus `lang`; `KernStringsInput`
+erlaubt jeden Teil davon. Fehlende Texte bleiben englisch:
+
+```ts
+import { registerStrings, followLang, type KernBundle } from '@mozra-the-great/kern';
+
+const fr: KernBundle = { lang: 'fr', modal: { closeLabel: 'Fermer' } /* … alle Abschnitte … */ };
+registerStrings('fr', fr);
+followLang(); // <html lang="fr"> wählt es
+```
+
+Platzhalter wie `{count}` oder `{tag}` bleiben in der Übersetzung stehen; welche ein Text hat, zeigt
+der englische Katalog (`src/lib/components/strings.ts`). Neue Sprache im Repo: `strings-de.ts` ist
+vollständig getypt, ein neuer englischer Text kompiliert erst, wenn er auch dort steht.
+
+**Zahlen und Datum.** `CountUp`, `Odometer`, `NumberInput`, `DatePicker`, `RelativeTime`, `Stat`,
+`Sparkline`, `Heatmap`, `HistoryBar` und `Timeline` nehmen `locale`, sonst die Sprache des gewählten
+Bündels (`lang`), sonst die des Browsers. Wer nie ein Bündel wählt, merkt keine Änderung.
+
+### Text ohne HTML
+
+kern erzeugt Markup nie aus einem String: kein `{@html}`, kein `innerHTML`, `outerHTML`,
+`insertAdjacentHTML`, `document.write`, `srcdoc` in `src/lib` und `src/elements`. `npm run check:html`
+(und ein CI-Schritt) schlägt fehl, wenn eines davon auftaucht. Texte aus Props sind immer Textknoten;
+eine Bereinigungsbibliothek braucht man dafür nicht.
+
+**Prose** setzt langen Text: Absätze, Listen, Überschriften und Links mit begrenzter Zeilenlänge
+(`--k-prose-measure`, 68ch), Zeilenhöhe (`--k-prose-leading`, 1,6) und Blockabstand (`--k-prose-gap`);
+Farben nur aus Tokens (`--k-fg-soft`, `--k-link`, `--k-focus`), im Kontrastmodus `LinkText`.
+
+```svelte
+<!-- Reiner Text, z. B. Impressum und Datenschutz vom Server -->
+<Prose text={impressum} />
+
+<!-- Eigenes Markup -->
+<Prose>
+	<h2>Datenschutz</h2>
+	<p>Wir speichern <a href="/daten">diese Daten</a>.</p>
+</Prose>
+```
+
+Mit `text` werden Leerzeilen zu Absätzen, einfache Zeilenumbrüche bleiben Zeilen, und `http(s)://`-Adressen
+und E-Mail-Adressen werden Links (Satzzeichen am Ende gehören nicht dazu; andere Schemata wie `javascript:`
+nie). Externe Links öffnen in einem neuen Tab mit `rel="noopener noreferrer"` und einem gesprochenen
+Hinweis (`externalLabel`, sonst der Katalog); E-Mail-Links nicht. `<k-prose text="…">` ist dasselbe; im
+Element gestaltet der Shadow-Root nur Elemente, die direkt darin stehen (Überschriften, Absätze, Listen,
+Links), tiefer verschachteltes Markup behält die Stile der Seite. `parseProse(text)` ist exportiert (Absätze →
+Zeilen → Segmente), für eigene Darstellung. `Link external` setzt `target="_blank"` und
+`rel="noopener noreferrer"` und hängt „(opens in a new tab)“ für Screenreader an (`externalLabel`). Fokus und
+Kontrast von `--k-link` prüft der Kontrasttest in jedem Theme.
+
+### Skip-Link, Ansagen, Verbindung
+
+**SkipLink** (`<k-skip-link target="main">`) als erstes Element der Seite: unsichtbar, bis er per Tastatur
+Fokus bekommt; dann mit Fokusring, im Kontrastmodus mit `Canvas`/`LinkText`. Enter setzt den Fokus
+auf das Ziel (ein Element mit dieser `id`; es braucht kein `tabindex`, der Link setzt es bis zum
+Verlassen) und lässt die Adresszeile in Ruhe, damit Hash-Router nicht anspringen. Ohne Ziel verhält
+er sich wie ein normaler Fragment-Link. Text: `label` oder der Katalog.
+
+**LiveAnnouncer** (`<k-live-announcer>`) einmal in die Seite (z. B. in die Shell): zwei unsichtbare
+Regionen, `role="status"` (höflich) und `role="alert"` (sofort), von Anfang an leer vorhanden.
+`announce(message, politeness)` sagt etwas an, wenn der Fokus nicht wandert: Seitenwechsel in einer SPA,
+Ergebnis, Statuswechsel. Dieselbe Nachricht zweimal wird erneut gesprochen (die Region wird dazwischen
+geleert); nach zehn Sekunden verschwindet der Text. Svelte: `announce()` aus dem Paket; Elemente:
+`window.kern.announce()` oder `import { announce } from '@mozra-the-great/kern/elements/live-announcer'`.
+Wie beim Toast-Speicher gibt es einen Zustand auf `globalThis[Symbol.for('kern.announcer')]`: ein
+Aufruf aus dem Svelte-Paket erreicht ein `<k-live-announcer>` und umgekehrt. Stehen mehrere
+LiveAnnouncer auf einer Seite (je einer pro Build), füllt nur der erste seine Regionen, damit nichts
+doppelt gesprochen wird. Ohne LiveAnnouncer gehen Nachrichten ins Leere.
+
+**OnlineStatus** (`<k-online-status>`, Svelte `bind:online`) zeigt unter dem Kopf einen nicht blockierenden
+Hinweis, solange der Browser offline ist (`navigator.onLine`, Ereignisse `online`/`offline`; das ist ein
+Hinweis auf das Netz, keine Zusage, dass der Server antwortet), und sagt den Wechsel über den
+LiveAnnouncer an: Verlust sofort beim Auftreten (auch beim Laden ohne Netz), „Wieder online“ nur nach
+einem Verlust. Gibt es keinen LiveAnnouncer (oder `announce="false"`), ist der Hinweis selbst eine
+Live-Region. Texte: `offlineTitle`, `offlineText`, `onlineText` (`offline-title` …) oder der Katalog;
+`politeness`; das Element feuert `change` (`{ online }`) bei einem Wechsel, nicht beim Laden.
+
+```svelte
+<SkipLink target="main" label="Zum Inhalt" />
+<OnlineStatus />
+<main id="main">…</main>
+<LiveAnnouncer />
+<!-- irgendwo: announce('Gespeichert'); announce('Verbindung verloren', 'assertive'); -->
 ```
 
 ## Komponenten (Kern-Set)
@@ -627,7 +764,8 @@ Daten: DataTable (Filter, Sortierung, Seiten, Zeilenauswahl), Stat, Sparkline, H
 Overlays: Modal, Drawer, Tooltip, Popover ·
 Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, TabLinks, Accordion/AccordionItem, TreeView ·
 Effekte: Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal, Highlight, GridBackground, Terminal ·
-Pixel-Art: Mascot
+Pixel-Art: Mascot ·
+Text und Barrierefreiheit: Prose, SkipLink, LiveAnnouncer, OnlineStatus
 
 Ziel ist ein Umfang wie [cock](https://github.com/JoshiCodes/cock) oder größer.
 
@@ -651,6 +789,7 @@ npm run test:elements             # Playwright: gebaute Custom Elements (nach np
 npm run test:types                # Element-Typen gegen eine strikte React-19-Fixture (nach dem Build)
 npm run test:consumer             # Svelte-App mit strengen TS-Flags gegen dist/ (nach dem Build)
 npm run check:dts                 # kein `any` in den veröffentlichten .d.ts (nach dem Build)
+npm run check:html                # kein {@html}/innerHTML in src/lib und src/elements
 npm run size                      # Größenbudget der Custom Elements
 npm run test:mascot               # Playwright: <k-mascot> unter strenger CSP (nach npm run build)
 npm run assets:check              # Pixel-Art gegen assets/stuffcloud/manifest.json (Drift-Check)

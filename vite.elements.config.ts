@@ -28,9 +28,14 @@ const nameOf = (file: string) =>
 
 /** Tags an entry registers besides its own: items are useless without their container. */
 const companions: Record<string, string[]> = { accordion: ['accordion-item'] };
-/** Extra modules an entry loads: the toaster also brings window.kern and exports the toast API. */
+/** Extra modules an entry loads: the toaster also brings window.kern and exports the toast API, the live announcer `announce`. */
 const extras: Record<string, string> = {
-	toaster: `import { installGlobal } from ${JSON.stringify(dir + 'global.ts')};\ninstallGlobal();\nexport { toast, dismissToast } from ${JSON.stringify(dir + 'global.ts')};\n`
+	toaster: `import { installGlobal } from ${JSON.stringify(dir + 'global.ts')};\ninstallGlobal();\nexport { toast, dismissToast } from ${JSON.stringify(dir + 'global.ts')};\n`,
+	'live-announcer': `import { installGlobal } from ${JSON.stringify(dir + 'global.ts')};\ninstallGlobal();\nexport { announce } from ${JSON.stringify(dir + 'global.ts')};\n`
+};
+/** Entries without a tag: `elements/strings` sets the default texts (window.kern.strings) and registers the built-in bundles. */
+const plain: Record<string, string> = {
+	strings: `import { installGlobal, registerLocales } from ${JSON.stringify(dir + 'global.ts')};\ninstallGlobal();\nregisterLocales();\nexport { setStrings, resetStrings, getStrings, getLang, registerStrings, setLocale, followLang, en, de } from ${JSON.stringify(dir + 'global.ts')};\n`
 };
 
 // Lib mode resolves entries against the project root, so the marker may come back as an absolute path.
@@ -47,6 +52,8 @@ function entries(): Plugin {
 		load(id) {
 			if (!id.startsWith(PREFIX)) return null;
 			const name = id.slice(PREFIX.length);
+			const standalone = plain[name];
+			if (standalone !== undefined) return standalone;
 			const names = [name, ...(companions[name] ?? [])];
 			let code = `import { define } from ${JSON.stringify(dir + 'define.ts')};\n`;
 			names.forEach((n, i) => {
@@ -83,7 +90,7 @@ export default defineConfig(({ mode }) => {
 			lib: {
 				entry: bundle
 					? { 'kern-elements': 'src/elements/index.ts' }
-					: Object.fromEntries(wrappers.map((f) => [`elements/${nameOf(f)}`, MARK + nameOf(f)])),
+					: Object.fromEntries([...wrappers.map(nameOf), ...Object.keys(plain)].map((n) => [`elements/${n}`, MARK + n])),
 				formats: ['es'],
 				fileName: (_format, entryName) => `${entryName}.js`
 			},

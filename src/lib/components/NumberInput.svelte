@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatLocale, strings } from './strings.svelte.js';
 	import Field from './Field.svelte';
 
 	interface Props {
@@ -16,7 +17,7 @@
 		 * `{ style: 'currency', currency: 'EUR' }`. While editing, the plain number is shown.
 		 */
 		format?: Intl.NumberFormatOptions | undefined;
-		/** BCP 47 locale for `format` and the decimal separator; default: the browser's. */
+		/** BCP 47 locale for `format` and the decimal separator; default: the language chosen with `setStrings`/`setLocale`, else the browser's. */
 		locale?: string | undefined;
 		/** Form field name; a hidden input carries the plain number. */
 		name?: string | undefined;
@@ -41,18 +42,21 @@
 		max,
 		step = 1,
 		format,
-		locale,
+		locale: localeProp,
 		name,
 		required = false,
 		disabled = false,
 		readonly = false,
 		placeholder,
-		decrementLabel = 'Decrease',
-		incrementLabel = 'Increase',
+		decrementLabel: decrementLabelProp,
+		incrementLabel: incrementLabelProp,
 		id,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
+	const decrementLabel = $derived(decrementLabelProp ?? strings().numberInput.decrementLabel);
+	const incrementLabel = $derived(incrementLabelProp ?? strings().numberInput.incrementLabel);
 
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);

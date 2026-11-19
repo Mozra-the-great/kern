@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import { sharedToastQueue, type ToastItem, type ToastQueue } from './toast-queue.js';
 
@@ -23,15 +24,18 @@
 	}
 	let {
 		position = 'bottom-right',
-		dismissLabel = 'Dismiss',
-		undoLabel = 'Undo',
-		label = 'Notifications',
+		dismissLabel: dismissLabelProp,
+		undoLabel: undoLabelProp,
+		label: labelProp,
 		max,
 		queue,
 		ondismiss,
 		onundo,
 		onaction
 	}: Props = $props();
+	const dismissLabel = $derived(dismissLabelProp ?? strings().toaster.dismissLabel);
+	const undoLabel = $derived(undoLabelProp ?? strings().toaster.undoLabel);
+	const label = $derived(labelProp ?? strings().toaster.label);
 
 	const q = $derived(queue ?? sharedToastQueue());
 	let items: readonly ToastItem[] = $state.raw([]);

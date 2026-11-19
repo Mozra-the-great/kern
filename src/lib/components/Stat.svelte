@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatLocale, strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import { fill, numberFormat } from './data-utils.js';
 
@@ -21,6 +22,7 @@
 		downLabel?: string | undefined;
 		flatLabel?: string | undefined;
 		description?: string | undefined;
+		/** BCP 47 locale of the numbers and dates. Default: the chosen strings language, else the browser's. */
 		locale?: string | undefined;
 		/** `raised` = on bg-raised, `sunken` = recessed, `outline` = border only. */
 		look?: 'raised' | 'sunken' | 'outline' | undefined;
@@ -36,15 +38,19 @@
 		deltaUnit = '%',
 		deltaLabel,
 		positiveIsGood = true,
-		upLabel = 'up {value}',
-		downLabel = 'down {value}',
-		flatLabel = 'unchanged',
+		upLabel: upLabelProp,
+		downLabel: downLabelProp,
+		flatLabel: flatLabelProp,
 		description,
-		locale,
+		locale: localeProp,
 		look = 'raised',
 		spark,
 		class: cls = ''
 	}: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
+	const upLabel = $derived(upLabelProp ?? strings().stat.upLabel);
+	const downLabel = $derived(downLabelProp ?? strings().stat.downLabel);
+	const flatLabel = $derived(flatLabelProp ?? strings().stat.flatLabel);
 
 	const hasDelta = $derived(typeof delta === 'number' && Number.isFinite(delta));
 	const shown = $derived(typeof value === 'number' ? numberFormat(locale).format(value) : value);

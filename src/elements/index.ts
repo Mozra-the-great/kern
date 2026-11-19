@@ -82,8 +82,27 @@ import KScrollArea from './KScrollArea.svelte';
 import KTile from './KTile.svelte';
 import KTileGrid from './KTileGrid.svelte';
 import KMascot from './KMascot.svelte';
+import KProse from './KProse.svelte';
+import KSkipLink from './KSkipLink.svelte';
+import KLiveAnnouncer from './KLiveAnnouncer.svelte';
+import KOnlineStatus from './KOnlineStatus.svelte';
 import { define, tagOf, type ElementComponent } from './define.js';
-import { toast, dismissToast, installGlobal } from './global.js';
+import {
+	toast,
+	dismissToast,
+	announce,
+	setStrings,
+	resetStrings,
+	getStrings,
+	getLang,
+	registerStrings,
+	setLocale,
+	followLang,
+	en,
+	de,
+	installGlobal,
+	registerLocales
+} from './global.js';
 
 export const elements = {
 	KButton,
@@ -165,9 +184,14 @@ export const elements = {
 	KScrollArea,
 	KTile,
 	KTileGrid,
-	KMascot
+	KMascot,
+	KProse,
+	KSkipLink,
+	KLiveAnnouncer,
+	KOnlineStatus
 };
-export { toast, dismissToast };
+export { toast, dismissToast, announce, setStrings, resetStrings, getStrings, getLang, registerStrings, setLocale, followLang, en, de };
 
 for (const [name, component] of Object.entries(elements)) define(tagOf(name), component as ElementComponent);
 installGlobal();
+registerLocales();

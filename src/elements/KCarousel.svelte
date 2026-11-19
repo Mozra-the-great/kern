@@ -7,7 +7,9 @@
 			nextLabel: { type: 'String', attribute: 'next-label' },
 			dotsLabel: { type: 'String', attribute: 'dots-label' },
 			slideLabel: { type: 'String', attribute: 'slide-label' },
-			ofLabel: { type: 'String', attribute: 'of-label' }
+			ofLabel: { type: 'String', attribute: 'of-label' },
+			roleDescription: { type: 'String', attribute: 'role-description' },
+			slideRoleDescription: { type: 'String', attribute: 'slide-role-description' }
 		}
 	}}
 />
@@ -19,10 +21,31 @@
 	import Carousel from '../lib/components/Carousel.svelte';
 	import { emit } from './form.js';
 	/* Slides are the light-DOM children: one element per slide. */
-	let { index = $bindable(0), label, prevLabel, nextLabel, dotsLabel, slideLabel, ofLabel } = $props();
+	let {
+		index = $bindable(0),
+		label,
+		prevLabel,
+		nextLabel,
+		dotsLabel,
+		slideLabel,
+		ofLabel,
+		roleDescription,
+		slideRoleDescription
+	} = $props();
 	const host = $host();
 </script>
 
-<Carousel bind:index {label} {prevLabel} {nextLabel} {dotsLabel} {slideLabel} {ofLabel} onchange={(i: number) => emit(host, 'change', i)}>
+<Carousel
+	bind:index
+	{label}
+	{prevLabel}
+	{nextLabel}
+	{dotsLabel}
+	{slideLabel}
+	{ofLabel}
+	{roleDescription}
+	{slideRoleDescription}
+	onchange={(i: number) => emit(host, 'change', i)}
+>
 	<slot />
 </Carousel>

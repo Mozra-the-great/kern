@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import Field from './Field.svelte';
 	import Button from './Button.svelte';
@@ -80,14 +81,20 @@
 		id,
 		dropLabel,
 		buttonLabel,
-		removeLabel = 'Remove',
-		listLabel = 'Selected files',
-		sizeError = '{name} is larger than {max}.',
-		typeError = '{name} is not an accepted file type.',
-		countError = 'Only one file can be selected.',
-		statusLabel = 'Files selected: {count}',
+		removeLabel: removeLabelProp,
+		listLabel: listLabelProp,
+		sizeError: sizeErrorProp,
+		typeError: typeErrorProp,
+		countError: countErrorProp,
+		statusLabel: statusLabelProp,
 		class: cls = ''
 	}: Props = $props();
+	const removeLabel = $derived(removeLabelProp ?? strings().fileDrop.removeLabel);
+	const listLabel = $derived(listLabelProp ?? strings().fileDrop.listLabel);
+	const sizeError = $derived(sizeErrorProp ?? strings().fileDrop.sizeError);
+	const typeError = $derived(typeErrorProp ?? strings().fileDrop.typeError);
+	const countError = $derived(countErrorProp ?? strings().fileDrop.countError);
+	const statusLabel = $derived(statusLabelProp ?? strings().fileDrop.statusLabel);
 	const uid = $props.id();
 	const zoneId = $derived(id ?? `${uid}-zone`);
 	const promptId = `${uid}-prompt`;
@@ -99,11 +106,11 @@
 		dropLabel ??
 			(buttonLabel
 				? multiple
-					? 'Drop files here'
-					: 'Drop a file here'
+					? strings().fileDrop.dropMany
+					: strings().fileDrop.dropOne
 				: multiple
-					? 'Drop files here or click to choose'
-					: 'Drop a file here or click to choose')
+					? strings().fileDrop.dropManyOrChoose
+					: strings().fileDrop.dropOneOrChoose)
 	);
 
 	let input: HTMLInputElement | undefined = $state();

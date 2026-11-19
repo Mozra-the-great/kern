@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import Field from './Field.svelte';
 	import Label from './Label.svelte';
 
@@ -33,10 +34,11 @@
 		disabled = false,
 		name,
 		required = false,
-		starLabel = '{value} of {max} stars',
+		starLabel: starLabelProp,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const starLabel = $derived(starLabelProp ?? strings().rating.starLabel);
 
 	const uid = $props.id();
 	const count = $derived(Math.max(1, Math.min(20, Math.floor(Number.isFinite(max) ? max : 5))));

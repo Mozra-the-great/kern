@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { strings } from './strings.svelte.js';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	interface Props extends Omit<HTMLAttributes<HTMLElement>, 'title' | 'class' | 'children' | 'onclick'> {
@@ -60,7 +61,7 @@
 		...rest
 	}: Props = $props();
 	const action = $derived(href ? 'link' : onclick ? 'button' : undefined);
-	const name = $derived(actionLabel ?? (title ? undefined : description || 'Open'));
+	const name = $derived(actionLabel ?? (title ? undefined : description || strings().card.openLabel));
 </script>
 
 <svelte:element this={as} {...rest} class="k-card {cls}" data-look={look} class:linked={!!action} class:muted>

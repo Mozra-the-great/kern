@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import { ModalDialog } from './modal-dialog.js';
 
@@ -39,12 +40,13 @@
 		closeOnBackdrop = true,
 		dismissible = true,
 		initialFocus,
-		closeLabel = 'Close',
+		closeLabel: closeLabelProp,
 		oncancel,
 		onclose,
 		footer,
 		children
 	}: Props = $props();
+	const closeLabel = $derived(closeLabelProp ?? strings().drawer.closeLabel);
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();
 	// Same open/close, scroll lock and focus handling as Modal.
