@@ -86,8 +86,9 @@ jobs:
           listing="$(tar -tzf "$tarball")"
           for f in package/package.json package/LICENSE package/NOTICE package/README.md \
                    package/CHANGELOG.md package/dist/index.js package/dist/themes/index.css \
+                   package/dist/themes/code.css package/dist/themes/stuffcloud.css \
                    package/dist-elements/kern-elements.js \
-                   package/assets/stuffcloud/logo/logo.svg package/assets/pop/logo/logo.svg \
+                   package/assets/code/logo/logo.svg package/assets/pop/logo/logo.svg \
                    package/assets/line/logo/mark-ink.svg package/assets/flower/trees/olive-tree.svg; do
             grep -qxF "$f" <<<"$listing" || { echo "::error::$f missing from $tarball"; exit 1; }
           done

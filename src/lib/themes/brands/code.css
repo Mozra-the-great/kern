@@ -1,4 +1,4 @@
-/* Stuffcloud — from the Stuffcloud design system. Grid look: square corners,
+/* Code — from the stuffcloud design system (the app that first used it). Grid look: square corners,
  * hard offset shadows, ink-filled buttons that turn accent on hover.
  * Fonts: Inter, JetBrains Mono, Silkscreen (load them yourself).
  *
@@ -10,7 +10,11 @@
  * --line2, --bg-error, --bg-warn, --bg-selected, --fg-*, --line-drop, --shadow);
  * the design system defines no such tokens for light, paper and contrast, so
  * those keep the base defaults except a derived line-strong.
- * bg-code is the design's surface-code in every variant. */
+ * bg-code is the design's surface-code in every variant.
+ *
+ * Renamed from "stuffcloud" (#85): every rule also answers to the old data-theme values
+ * (stuffcloud, stuffcloud-dark, -light, -paper, -contrast) as deprecated aliases until 1.0. */
+[data-theme^='code'],
 [data-theme^='stuffcloud'] {
 	--k-border-w: 1px;
 	--k-radius-control: 0;
@@ -50,11 +54,14 @@
 	--k-toaster-offset-mobile: 76px;
 }
 @media (max-width: 760px) {
+	[data-theme^='code'],
 	[data-theme^='stuffcloud'] {
 		--k-control-h: 56px;
 	}
 }
+[data-theme='code'],
 [data-theme='stuffcloud'],
+[data-theme='code-dark'],
 [data-theme='stuffcloud-dark'] {
 	color-scheme: dark;
 	--k-bg: #101012;
@@ -96,6 +103,7 @@
 	--k-fg-soft: #d8d8de;
 	--k-fg-disabled: #6a6a74;
 }
+[data-theme='code-light'],
 [data-theme='stuffcloud-light'] {
 	color-scheme: light;
 	--k-bg: #fbfaf8;
@@ -129,6 +137,7 @@
 	--k-bg-code: #f1f0ee;
 	--k-line-strong: #bdbbc3; /* derived: 30 % from line toward border, like the dark pair */
 }
+[data-theme='code-paper'],
 [data-theme='stuffcloud-paper'] {
 	color-scheme: light;
 	--k-bg: #ffffff;
@@ -162,6 +171,7 @@
 	--k-bg-code: #f4f3f1;
 	--k-line-strong: #b5b5b5; /* derived: 30 % from line toward border, like the dark pair */
 }
+[data-theme='code-contrast'],
 [data-theme='stuffcloud-contrast'] {
 	color-scheme: dark;
 	--k-bg: #000000;

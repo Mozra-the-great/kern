@@ -58,7 +58,7 @@ jobs:
       - name: No markup from strings ({@html}, innerHTML, ... in src/lib and src/elements)
         # The kit renders text as text nodes; a consumer can pass untrusted text without a sanitizer (#59).
         run: npm run check:html
-      - name: Brand-art drift (assets/* against their manifests, the stuffcloud catalogue and the SVG rules)
+      - name: Brand-art drift (assets/* against their manifests, the Code catalogue and the SVG rules)
         # The manifests are the contract with the art sources; refresh: assets/README.md.
         run: npm run assets:check
       - name: Build

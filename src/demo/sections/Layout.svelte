@@ -69,7 +69,7 @@
 			<p class="m0 muted">Aktiv: <code>{themeA ?? '…'}</code></p>
 			<div class="row"><Button size="sm">Speichern</Button><Badge tone="accent">Neu</Badge></div>
 		</div>
-		<div class="theme-box" bind:this={boxB} data-theme="stuffcloud">
+		<div class="theme-box" bind:this={boxB} data-theme="code">
 			<div class="row between">
 				<strong>Alle Themen</strong>
 				<ThemeToggle target={boxB ?? null} {themes} bind:value={themeB} label="Theme dieser Fläche" />

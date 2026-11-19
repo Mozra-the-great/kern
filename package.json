@@ -26,7 +26,8 @@
 		},
 		"./themes.css": "./dist/themes/index.css",
 		"./themes/base.css": "./dist/themes/base.css",
-		"./themes/stuffcloud.css": "./dist/themes/stuffcloud.css",
+		"./themes/code.css": "./dist/themes/code.css",
+		"./themes/stuffcloud.css": "./dist/themes/code.css",
 		"./themes/flower.css": "./dist/themes/flower.css",
 		"./themes/pop.css": "./dist/themes/pop.css",
 		"./themes/line.css": "./dist/themes/line.css",
@@ -44,6 +45,7 @@
 			"default": "./dist-elements/elements/*.js"
 		},
 		"./custom-elements.json": "./custom-elements.json",
+		"./assets/stuffcloud/*": "./assets/code/*",
 		"./assets/*": "./assets/*",
 		"./package.json": "./package.json"
 	},

@@ -199,7 +199,7 @@ test.describe('TabLinks (#47)', () => {
 		await page.emulateMedia({ reducedMotion: 'reduce' });
 		await page.reload();
 		await ready(page);
-		for (const theme of ['stuffcloud', 'flower', 'line']) {
+		for (const theme of ['code', 'flower', 'line']) {
 			await page.evaluate(async (t) => {
 				document.documentElement.dataset.theme = t;
 				await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));

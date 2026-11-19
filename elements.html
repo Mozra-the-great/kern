@@ -31,10 +31,10 @@
 				<select id="theme">
 					<option value="flower">Flower · Creme</option>
 					<option value="flower-wald">Flower · Wald</option>
-					<option value="stuffcloud">Stuffcloud · Dark</option>
-					<option value="stuffcloud-light">Stuffcloud · Light</option>
-					<option value="stuffcloud-paper">Stuffcloud · Paper</option>
-					<option value="stuffcloud-contrast">Stuffcloud · Contrast</option>
+					<option value="code">Code · Dark</option>
+					<option value="code-light">Code · Light</option>
+					<option value="code-paper">Code · Paper</option>
+					<option value="code-contrast">Code · Contrast</option>
 					<option value="pop">Pop · Light</option>
 					<option value="pop-dark">Pop · Dark</option>
 					<option value="line">Line · Dark</option>
@@ -201,7 +201,7 @@
 			<div id="tbox" data-theme="flower" style="display:grid;gap:12px;padding:16px;border:1px solid var(--k-line)">
 				<div class="row">
 					<k-theme-toggle id="tt" target="#tbox" persist="kern-els-box"></k-theme-toggle>
-					<k-theme-toggle id="tm" target="#tbox" label="Theme der Fläche" themes='[{"id":"flower","label":"Flower"},{"id":"pop","label":"Pop"},{"id":"stuffcloud-light","label":"Stuffcloud hell"}]'></k-theme-toggle>
+					<k-theme-toggle id="tm" target="#tbox" label="Theme der Fläche" themes='[{"id":"flower","label":"Flower"},{"id":"pop","label":"Pop"},{"id":"code-light","label":"Code hell"}]'></k-theme-toggle>
 				</div>
 				<span>Nur diese Fläche wechselt das Theme.</span>
 			</div>
@@ -252,9 +252,9 @@
 		<script type="module">
 			import './dist-elements/kern-elements.js';
 			// Pixel art as file URLs (vite.config.ts keeps SVGs out of data: URIs).
-			import axoUrl from './assets/stuffcloud/mascots/axo.svg?url';
-			import ghostUrl from './assets/stuffcloud/mascots/mascot-ghost.svg?url';
-			import qrUrl from './assets/stuffcloud/tool-stickers/sticker-qr.svg?url';
+			import axoUrl from './assets/code/mascots/axo.svg?url';
+			import ghostUrl from './assets/code/mascots/mascot-ghost.svg?url';
+			import qrUrl from './assets/code/tool-stickers/sticker-qr.svg?url';
 			const $ = (s) => document.querySelector(s);
 			$('#m-stuffy').src = axoUrl;
 			$('#m-boo').src = ghostUrl;

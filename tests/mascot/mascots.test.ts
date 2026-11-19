@@ -1,5 +1,5 @@
 /**
- * Pixel-art runtime (#55), node side: the catalogue, the stuffcloud name mapping, integer
+ * Pixel-art runtime (#55), node side: the catalogue, the mascot name mapping (stuffcloud's), integer
  * scaling and the stylesheet rules of stuffcloud's ADR 0008 (ported from stuffcloud's
  * `mascots.test.ts` and the stylesheet part of `mascot.test.ts`). The browser behaviour
  * (motion states, off-screen and hidden-tab pause, reduced motion, layout shift) is tested
@@ -16,12 +16,15 @@ import {
 	COMPACT_MAX_WIDTH_PX,
 	integerScale,
 	isMascotName,
+	isCodeArt,
 	isStuffcloudArt,
 	MASCOT_NAMES,
 	MASCOT_SOURCES,
 	mascotSize,
 	normaliseScale,
+	CODE_ART,
 	STUFFCLOUD_ART,
+	type CodeArt,
 	type StuffcloudArt
 } from '../../src/lib/components/mascots.js';
 
@@ -34,8 +37,8 @@ interface ManifestEntry {
 	cols?: number;
 	rows?: number;
 }
-const manifest = JSON.parse(read('assets/stuffcloud/manifest.json')) as { files: Record<string, ManifestEntry> };
-const artKeys = Object.keys(STUFFCLOUD_ART) as StuffcloudArt[];
+const manifest = JSON.parse(read('assets/code/manifest.json')) as { files: Record<string, ManifestEntry> };
+const artKeys = Object.keys(CODE_ART) as CodeArt[];
 
 describe('art catalogue', () => {
 	it('lists every shipped SVG of the manifest, and nothing else', () => {
@@ -48,15 +51,30 @@ describe('art catalogue', () => {
 	});
 
 	it.each(artKeys)('%s: the pixel grid equals the viewBox of its SVG file', (key) => {
-		const svg = read(`assets/stuffcloud/${key}.svg`);
-		const { cols, rows } = STUFFCLOUD_ART[key];
+		const svg = read(`assets/code/${key}.svg`);
+		const { cols, rows } = CODE_ART[key];
 		expect(svg).toContain(`viewBox="0 0 ${String(cols)} ${String(rows)}"`);
 		expect(svg).toContain('shape-rendering="crispEdges"');
 	});
 
-	it('ships the stuffcloud groups with the expected counts', () => {
+	it('ships the Code groups with the expected counts', () => {
 		const count = (group: string): number => artKeys.filter((key) => key.startsWith(`${group}/`)).length;
 		expect([count('logo'), count('mascots'), count('marks'), count('tool-stickers'), count('seasonal')]).toEqual([1, 9, 11, 42, 52]);
+	});
+});
+
+describe('deprecated stuffcloud names (#85, removed in 1.0)', () => {
+	it('STUFFCLOUD_ART is the very same catalogue as CODE_ART', () => {
+		expect(STUFFCLOUD_ART).toBe(CODE_ART);
+		const old: StuffcloudArt = 'mascots/axo';
+		const next: CodeArt = old;
+		expect(STUFFCLOUD_ART[old]).toEqual(CODE_ART[next]);
+	});
+
+	it('isStuffcloudArt answers like isCodeArt', () => {
+		for (const name of ['mascots/axo', 'tool-stickers/sticker-qr', 'axo', 'constructor', '']) {
+			expect(isStuffcloudArt(name)).toBe(isCodeArt(name));
+		}
 	});
 });
 
@@ -88,7 +106,7 @@ describe('mascot cast (stuffcloud names → kern files)', () => {
 	it.each(MASCOT_NAMES)('%s: points at a shipped mascot file with its grid', (name) => {
 		const source = MASCOT_SOURCES[name];
 		expect(source.art).toBe(`mascots/${source.file}`);
-		expect(STUFFCLOUD_ART[source.art]).toEqual({ cols: source.cols, rows: source.rows });
+		expect(CODE_ART[source.art]).toEqual({ cols: source.cols, rows: source.rows });
 	});
 
 	it('resolves names and paths, and rejects anything else', () => {
@@ -98,14 +116,14 @@ describe('mascot cast (stuffcloud names → kern files)', () => {
 		expect(artPath('toString')).toBeUndefined();
 		expect(isMascotName('boo')).toBe(true);
 		expect(isMascotName('mascots/mascot-ghost')).toBe(false);
-		expect(isStuffcloudArt('mascots/mascot-ghost')).toBe(true);
-		expect(isStuffcloudArt('constructor')).toBe(false);
+		expect(isCodeArt('mascots/mascot-ghost')).toBe(true);
+		expect(isCodeArt('constructor')).toBe(false);
 	});
 
 	it('builds file URLs inside a base, with or without a trailing slash', () => {
-		expect(artUrl('/art/stuffcloud', 'stuffy')).toBe('/art/stuffcloud/mascots/axo.svg');
-		expect(artUrl('/art/stuffcloud/', 'seasonal/deco-sun')).toBe('/art/stuffcloud/seasonal/deco-sun.svg');
-		expect(() => artUrl('/art', 'nope' as StuffcloudArt)).toThrow('unknown stuffcloud art "nope"');
+		expect(artUrl('/art/code', 'stuffy')).toBe('/art/code/mascots/axo.svg');
+		expect(artUrl('/art/code/', 'seasonal/deco-sun')).toBe('/art/code/seasonal/deco-sun.svg');
+		expect(() => artUrl('/art', 'nope' as CodeArt)).toThrow('unknown Code art "nope"');
 	});
 });
 

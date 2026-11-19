@@ -110,8 +110,8 @@ describe('Button (#52, stuffcloud buttons.test.ts)', () => {
 			expect(source).toContain('opacity: var(--k-disabled-opacity)');
 			expect(source).toContain('@media (forced-colors: active)');
 		}
-		const stuffcloud = await readFile('src/lib/themes/brands/stuffcloud.css', 'utf8');
-		expect(stuffcloud).toContain('--k-disabled-opacity: 0.4');
+		const code = await readFile('src/lib/themes/brands/code.css', 'utf8');
+		expect(code).toContain('--k-disabled-opacity: 0.4');
 	});
 	it('IconButton keeps its label as the accessible name', () => {
 		expect(one(html(IconButton, { label: 'Close', children: snippet('x') }), 'button').attrs['aria-label']).toBe('Close');

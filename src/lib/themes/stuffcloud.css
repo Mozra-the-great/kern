@@ -1,4 +1,4 @@
-/* Self-contained stuffcloud entry: the base tokens plus only the stuffcloud theme.
- * Import this instead of themes.css when a build should ship this one brand. */
-@import './base.css';
-@import './brands/stuffcloud.css';
+/* Deprecated alias of code.css (#85), removed in 1.0: the stuffcloud theme is called Code now.
+ * The package export `themes/stuffcloud.css` points at code.css directly; this file keeps the
+ * plain file path (`<link href=".../dist/themes/stuffcloud.css">`) working. It carries no payload of its own. */
+@import './code.css';

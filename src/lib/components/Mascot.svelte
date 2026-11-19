@@ -1,22 +1,22 @@
 <script lang="ts" module>
-	import type { MascotName, StuffcloudArt } from './mascots.js';
+	import type { CodeArt, MascotName } from './mascots.js';
 
 	/** Motion state on `data-motion`: `running`, `paused` (off-screen or hidden tab) or `still`. */
 	export type MascotMotion = 'running' | 'paused' | 'still';
-	/** A stuffcloud mascot name (`stuffy`) or the path of any shipped SVG (`tool-stickers/sticker-qr`). */
-	export type MascotArt = MascotName | StuffcloudArt;
+	/** A mascot name (`stuffy`) or the path of any shipped SVG (`tool-stickers/sticker-qr`). */
+	export type MascotArt = MascotName | CodeArt;
 </script>
 
 <script lang="ts">
-	import { artPath, artUrl, mascotSize, normaliseScale, STUFFCLOUD_ART } from './mascots.js';
+	import { artPath, artUrl, mascotSize, normaliseScale, CODE_ART } from './mascots.js';
 	import { observeInView } from './motion.svelte.js';
 
 	interface Props {
-		/** Shipped art: a mascot name (`stuffy`) or a path under `assets/stuffcloud/` (`mascots/axo`). Gives the pixel grid, and the URL together with `base`. */
+		/** Shipped art: a mascot name (`stuffy`) or a path under `assets/code/` (`mascots/axo`). Gives the pixel grid, and the URL together with `base`. */
 		name?: MascotArt | undefined;
 		/** URL of the SVG file (same origin, a file, not a `data:` URI). Wins over `base`. */
 		src?: string | undefined;
-		/** URL where the `assets/stuffcloud/` folder is served; with `name` it gives the file URL. */
+		/** URL where the `assets/code/` folder is served; with `name` it gives the file URL. */
 		base?: string | undefined;
 		/** Art pixels across (the SVG `viewBox` width). Needed for art outside the catalogue. */
 		cols?: number | undefined;
@@ -36,7 +36,7 @@
 	let { name, src, base, cols, rows, scale = 8, compactScale, animated = true, label, class: cls = '' }: Props = $props();
 
 	const path = $derived(name === undefined ? undefined : artPath(name));
-	const grid = $derived(path === undefined ? undefined : STUFFCLOUD_ART[path]);
+	const grid = $derived(path === undefined ? undefined : CODE_ART[path]);
 	const width = $derived(normaliseScale(cols ?? grid?.cols ?? 0));
 	const height = $derived(normaliseScale(rows ?? grid?.rows ?? 0));
 	const url = $derived(src ?? (base !== undefined && path !== undefined ? artUrl(base, path) : undefined));
