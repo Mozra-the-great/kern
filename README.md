@@ -468,6 +468,100 @@ import type {} from '@mozra-the-great/kern/elements/react';
   `form`-Attribut); ein `<form onSubmit>` sieht sie wie native Felder. Absenden mit
   `<k-button type="submit">`.
 
+### React 19: ein getestetes Beispiel
+
+Das Beispiel läuft als Test (`tests/fixtures/react-app`, Chromium, StrictMode, React im Entwicklungsmodus;
+`tests/elements/react-*.spec.ts`). Ein Fehler in der Konsole oder ein `pageerror` lässt jeden dieser Tests
+fehlschlagen.
+
+```tsx
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import '@mozra-the-great/kern/elements/button';
+import '@mozra-the-great/kern/elements/input';
+import '@mozra-the-great/kern/elements/select';
+import '@mozra-the-great/kern/elements/checkbox';
+import '@mozra-the-great/kern/elements/toaster'; // bringt auch window.kern.toast
+import type {} from '@mozra-the-great/kern/elements/react';
+
+const SIZES = [
+	{ value: 's', label: 'Klein' },
+	{ value: 'l', label: 'Groß' }
+];
+
+export function Example() {
+	const [name, setName] = useState('');
+	const [size, setSize] = useState('');
+	const [agree, setAgree] = useState(false);
+
+	function onSubmit(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault(); // nur aufgerufen, wenn alle Pflichtfelder gültig sind
+		console.log(Object.fromEntries(new FormData(e.currentTarget)));
+		window.kern?.toast.ok('Gespeichert');
+	}
+
+	return (
+		<>
+			<form
+				onSubmit={onSubmit}
+				onReset={() => {
+					setName('');
+					setSize('');
+					setAgree(false);
+				}}
+			>
+				<k-input name="name" label="Name" value={name} required minlength="3" onchange={(e) => setName(e.detail)} />
+				<k-select name="size" label="Größe" value={size} options={SIZES} required onchange={(e) => setSize(e.detail)} />
+				<k-checkbox name="agree" label="Einverstanden" checked={agree} required onchange={(e) => setAgree(e.detail)} />
+				<k-button type="submit">Speichern</k-button>
+				<k-button type="reset" variant="ghost">
+					Zurücksetzen
+				</k-button>
+			</form>
+			<k-toaster />
+		</>
+	);
+}
+```
+
+Was die Tests festhalten (und worauf du dich verlassen kannst):
+
+- **Elemente vor dem ersten Render registrieren**, also statisch importieren wie oben. Rendert React ein
+  `<k-select options={…}>`, bevor das Element definiert ist, schreibt es das Array als Attribut
+  (`"[object Object]"`); beim späteren Upgrade wirft das einen `SyntaxError` und die Option fehlt, bis React die Prop
+  neu setzt.
+- **Properties, Attribute, Ereignisse:** Arrays und Objekte (`options`, `tabs`, `rows`, `items`) kommen als Property
+  an, auch wenn sie bei jedem Render neu erzeugt werden (kein Ereignis, keine Schleife). `maxlength`, `pattern`,
+  `minlength` und `aria-*` bleiben Attribute und erreichen das innere Feld. `on<ereignis>` kleingeschrieben
+  (`onchange`, `onclose`, `oncancel`) bekommt das richtige `detail`; `onChange` kennen die Typen für kern-Ereignisse nicht.
+  Boolean-Props mit Vorgabe `true` schaltest du über die camelCase-Property ab (`closeOnBackdrop={false}`,
+  `dismissible={false}`); `close-on-backdrop={false}` wäre in React nur ein entferntes Attribut.
+- **Kein Ereignis außer bei Nutzereingaben:** weder beim Mounten (auch nicht im doppelten Mount von StrictMode) noch
+  bei geänderten Props, noch beim Schließen aus React (`open={false}`). Ein kontrollierter Wert (React-State →
+  Element → Eingabe → `onchange` → State) braucht pro Eingabe einen Commit und verliert die Cursorposition nicht,
+  auch wenn `oninput` den State bei jedem Tastendruck zurückschreibt.
+- **Formulare:** `name`, `disabled` und `form="id"` funktionieren als Props (React setzt sie als Property): die Felder
+  stehen in `FormData`, ein `disabled` Feld wird nicht gesendet und nicht validiert, `form` verbindet ein Feld
+  außerhalb des `<form>`. `required`, `pattern`, `minlength` blockieren das Absenden über ElementInternals;
+  `ref.current.setCustomValidity('…')` markiert ein Feld als ungültig (Serverfehler). `<form onReset>` setzt
+  den State zurück, die Elemente kehren selbst auf ihren Anfangswert zurück (`k-button type="reset"` auch bei
+  Elementen mit der id `reset` oder `submit`).
+- **Refs:** `ref` liefert die Elementinstanz mit `form`, `validity`, `checkValidity()`, `setCustomValidity()` und den
+  Methoden des Elements (`reset()` bei `<k-file-drop>`). Ein Callback-Ref mit Cleanup funktioniert.
+- **Overlays:** `open={state}` öffnet und schließt `k-modal`, `k-drawer` und `k-popover`; Escape, ✕ und Hintergrund
+  melden `cancel` und `close` (`preventDefault()` in `oncancel` hält offen). Kinder, die React rendert (auch
+  `slot="footer"`), bleiben lebendig. Wird das Element ausgehängt, solange es offen ist, wird auch die
+  Scroll-Sperre der Seite wieder gelöst.
+- **Toasts und Texte sind seitenweit:** zwei React-Roots teilen sich Toast-Speicher und Textkatalog. Ein Toast aus
+  einem Root erscheint in jedem `<k-toaster>`; `window.kern.strings.set(window.kern.strings.de)` schaltet alle
+  eingehängten Elemente in allen Roots ohne React-Render um.
+- **Aufräumen:** Aushängen eines Roots entfernt Elemente und Listener auf `window`/`document`; erneutes Einhängen
+  funktioniert und verdoppelt keine Handler. Schlüssel-Listen (`key`) dürfen umsortiert werden: die Elemente behalten
+  Wert und Shadow DOM.
+
+Lokal: `npm run build`, dann `npm run test:elements` (baut die App mit `npm run build:react-app`);
+`npm run test:types` prüft die App zusätzlich mit strengem TypeScript.
+
 ### Manifest
 
 `custom-elements.json` (Custom Elements Manifest 2.1, im Paket und als

@@ -1,0 +1,25 @@
+{
+	// Type-checks the React 19 test app (#35) the way a strict consumer sees the element typings: the imports
+	// resolve through package.json "exports" (self-reference), so run `npm run build:elements` first.
+	// skipLibCheck is off so the generated .d.ts are checked too. No `any` anywhere (ESLint enforces it).
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"strict": true,
+		"exactOptionalPropertyTypes": false,
+		"noUncheckedIndexedAccess": true,
+		"noPropertyAccessFromIndexSignature": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"skipLibCheck": false,
+		"noEmit": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"types": []
+	},
+	"include": ["src"],
+	"exclude": ["dist"]
+}
