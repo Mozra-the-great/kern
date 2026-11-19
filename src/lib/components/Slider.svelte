@@ -215,6 +215,17 @@
 			background: GrayText;
 			box-shadow: 0 0 0 1px GrayText;
 		}
+		/* invalid: a double track edge in text colour (the red one would stay: it is more specific than the track rule above) */
+		.invalid input::-webkit-slider-runnable-track {
+			border-color: CanvasText;
+			border-style: double;
+			border-width: 3px;
+		}
+		.invalid input::-moz-range-track {
+			border-color: CanvasText;
+			border-style: double;
+			border-width: 3px;
+		}
 		input:focus-visible {
 			outline-color: Highlight;
 		}

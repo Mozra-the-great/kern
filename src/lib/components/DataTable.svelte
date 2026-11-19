@@ -729,6 +729,10 @@
 		.chk input:indeterminate {
 			border-color: Highlight;
 		}
+		/* the selected row opts out of forced colours (its fill is Highlight); the checkbox in it must not inherit that, or it keeps the theme fill under a system-coloured mark */
+		.chk {
+			forced-color-adjust: auto;
+		}
 		.chk svg {
 			stroke: CanvasText;
 		}

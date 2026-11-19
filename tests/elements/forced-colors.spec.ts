@@ -112,6 +112,7 @@ function installProbe(): void {
 			cs.fill,
 			cs.stroke,
 			cs.strokeDasharray,
+			cs.borderTopLeftRadius,
 			el.getAttribute('d') ?? '',
 			String(Math.round(r.width)),
 			String(Math.round(r.height)),
@@ -405,7 +406,9 @@ const CASES: Record<string, Case> = {
 				b: '#datatable tbody tr:not(.selected) td:nth-child(2)'
 			},
 			{ name: 'checked vs unchecked box', a: '#datatable tbody tr.selected .chk', b: '#datatable tbody tr:not(.selected) .chk' }
-		]
+		],
+		// the selected row opts out of forced colours; the box in it must not keep the theme fill
+		uses: [['#datatable tbody tr.selected .chk input', 'background-color', 'Canvas']]
 	},
 	'k-date-picker': { edge: ['#date .k-date', '#date .cal'], focus: [['#date input[type=text]', '#date .k-date'], '#date .cal'] },
 	'k-divider': { exempt: 'a rule drawn by borders, which forced colors keep' },
@@ -787,13 +790,17 @@ const OVERLAYS: Record<string, Case> = {
 				k.toast({ message: 'Site published.', tone: 'ok', duration: 0 });
 				k.toast({ message: 'Storage almost full.', tone: 'warn', duration: 0 });
 				k.toast({ message: 'Upload failed.', tone: 'danger', duration: 0 });
+				k.toast({ message: 'Link copied.', duration: 0 });
 			});
 			await expect(page.getByText('Upload failed.')).toBeVisible();
 		},
 		edge: ['#toaster .toast', '#toaster .toast button'],
 		states: [
 			{ name: 'danger vs ok toast', a: '#toaster [data-tone=danger]', b: '#toaster [data-tone=ok]' },
-			{ name: 'ok vs warn toast', a: '#toaster [data-tone=ok]', b: '#toaster [data-tone=warn]' }
+			{ name: 'ok vs warn toast', a: '#toaster [data-tone=ok]', b: '#toaster [data-tone=warn]' },
+			// the dot shape must not depend on the theme's badge radius (Flower rounds it)
+			{ name: 'ok vs plain toast dot', a: '#toaster [data-tone=ok] .dot', b: '#toaster [data-tone=info] .dot' },
+			{ name: 'warn vs plain toast dot', a: '#toaster [data-tone=warn] .dot', b: '#toaster [data-tone=info] .dot' }
 		]
 	},
 	'k-tooltip': {
@@ -814,14 +821,16 @@ test.describe('forced colors: overlays', () => {
 		for (const tag of overlays) expect(OVERLAYS, `${tag} has an overlay test`).toHaveProperty(tag);
 	});
 	for (const [tag, c] of Object.entries(OVERLAYS)) {
-		test(`${tag}: opened, edge, focus, no theme colour`, async ({ page }) => {
-			await open(page);
-			await c.prepare?.(page);
-			const failures = await failuresOf(page, c);
-			const leaks = await page.evaluate(() => (window as unknown as FcWindow).__fc.leaks());
-			expect(failures, failures.join('\n')).toEqual([]);
-			expect(leaks, 'colours that are not system colours').toEqual([]);
-		});
+		for (const theme of ['code', 'flower']) {
+			test(`${tag}: opened, edge, focus, no theme colour in ${theme}`, async ({ page }) => {
+				await open(page, { theme, scheme: theme === 'code' ? 'dark' : 'light' });
+				await c.prepare?.(page);
+				const failures = await failuresOf(page, c);
+				const leaks = await page.evaluate(() => (window as unknown as FcWindow).__fc.leaks());
+				expect(failures, failures.join('\n')).toEqual([]);
+				expect(leaks, 'colours that are not system colours').toEqual([]);
+			});
+		}
 	}
 });
 
