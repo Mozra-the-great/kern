@@ -23,6 +23,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Brand artwork for Pop, Line and Flower (#84), shipped like the stuffcloud pixel art under
+  `@mozra-the-great/kern/assets/<brand>/…` (covered by the existing `./assets/*` export): `assets/pop/`
+  (88 SVGs: logo, 11 mascots with dark twins of the floaters, 18 Stuffy outfits, 5 accessories,
+  31 tool icons, 22 seasonal badges, Advent wreaths and a tree), `assets/line/` (48: logo in ink and
+  white, 9 mascots, 17 outfits, 8 tool-category tiles, 6 seasonal pieces, 6 illustrations) and
+  `assets/flower/` (46: 16 blossoms, 20 leaves and branches, 10 trees). Vector art from the
+  design-system artifacts plus the moodboard art they lack; fixed colours, each file with `xmlns` and
+  `viewBox`. Use them with `<img alt="">`; `Mascot` stays the pixel-art runtime (README, "Mascot").
+  The demo's "Marken-Assets" section shows every brand on its own ground.
+
+### Changed
+- `npm run assets:check` guards every brand: each folder has a `manifest.json` (size, sha256, plus
+  the pixel grid or the `viewBox`), and the check also fails on unsafe SVG constructs (scripts,
+  handlers, `<foreignObject>`, `<image>`, external references, `data:` URIs, `<style>`) and on an
+  unknown brand folder. `npm run assets:manifest` rewrites all manifests.
+
 ## [0.6.0] - 2026-11-19
 
 ### Added
