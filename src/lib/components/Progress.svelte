@@ -75,8 +75,8 @@
 		height: 8px;
 		overflow: hidden;
 		border-radius: var(--k-radius-badge);
-		background: var(--k-bg-sunken);
-		border: var(--k-border-w) solid var(--k-line);
+		background: var(--k-progress-track);
+		border: var(--k-progress-track-border-w) solid var(--k-line);
 	}
 	.bar {
 		height: 100%;

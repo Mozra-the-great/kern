@@ -145,6 +145,83 @@
 	--k-fg-disabled: color-mix(in srgb, var(--k-fg) 45%, transparent);
 	/* small floating pieces (Toast); --k-shadow-overlay is for dialogs and popovers */
 	--k-shadow-sm: var(--k-shadow-overlay);
+
+	/* Component look (#38). Each default is exactly what the component read before, so a theme
+	 * that sets none of them looks unchanged; a theme whose design draws a component differently
+	 * (Code: sentence-case Inter buttons, mono fields, a strip of tab cells) overrides them.
+	 * `initial` means "no value": the part then inherits its font from the page, as before. */
+	/* Button */
+	--k-button-font: var(--k-label-font);
+	--k-button-size: var(--k-label-size);
+	--k-button-weight: var(--k-weight-label);
+	--k-button-transform: var(--k-label-transform);
+	--k-button-tracking: var(--k-label-tracking);
+	--k-button-pad-x: var(--k-space-5);
+	--k-button-gap: var(--k-space-2);
+	--k-button-secondary-border: var(--k-border);
+	--k-button-secondary-weight: var(--k-button-weight);
+	--k-button-secondary-hover-bg: var(--k-bg-sunken);
+	/* Input, Select (the control) and Field, Label (label, hint and error) */
+	--k-field-font: initial;
+	--k-field-size: var(--k-text-md);
+	--k-field-bg: var(--k-bg-raised);
+	--k-select-bg: var(--k-field-bg);
+	--k-field-pad-x: var(--k-space-4);
+	--k-field-disabled-opacity: 0.55;
+	--k-field-label-color: var(--k-fg);
+	--k-field-hint-font: initial;
+	--k-field-hint-size: var(--k-text-sm);
+	--k-field-hint-color: var(--k-fg-hint);
+	/* Checkbox */
+	--k-check-gap: var(--k-space-3);
+	--k-check-checked: var(--k-primary);
+	--k-check-mark: var(--k-on-primary);
+	--k-check-label-size: initial;
+	--k-check-disabled-opacity: 0.5;
+	/* Card */
+	--k-card-bg: var(--k-bg-raised);
+	--k-card-pad: var(--k-space-6);
+	--k-card-gap: var(--k-space-4);
+	/* Tabs (line look: --k-tab-divider-w draws a border after each tab, a strip of cells) */
+	--k-tabs-gap: var(--k-space-1);
+	--k-tabs-scrollbar: thin;
+	--k-tab-h: var(--k-control-h);
+	--k-tab-pad-x: var(--k-space-4);
+	--k-tab-font: var(--k-label-font);
+	--k-tab-size: var(--k-label-size);
+	--k-tab-weight: var(--k-weight-label);
+	--k-tab-selected-weight: var(--k-tab-weight);
+	--k-tab-transform: var(--k-label-transform);
+	--k-tab-tracking: var(--k-label-tracking);
+	--k-tab-fg: var(--k-fg-muted);
+	--k-tab-hover-fg: var(--k-fg);
+	--k-tab-selected-bg: transparent;
+	--k-tab-divider-w: 0px;
+	/* Modal (--k-modal-actions-direction: column-reverse stacks the footer, a theme sets it at its phone breakpoint) */
+	--k-modal-bg: var(--k-bg-raised);
+	--k-modal-pad: var(--k-space-6);
+	--k-modal-gap: var(--k-space-4);
+	--k-modal-title-size: var(--k-text-lg);
+	--k-modal-title-tracking: 0;
+	--k-modal-title-leading: 1.3;
+	--k-modal-actions-direction: row;
+	/* Progress */
+	--k-progress-track: var(--k-bg-sunken);
+	--k-progress-track-border-w: var(--k-border-w);
+	/* Toaster (--k-toaster-width includes the --k-toaster-offset padding on both sides) */
+	--k-toaster-width: 400px;
+	--k-toast-msg-size: var(--k-text-sm);
+	--k-toast-pad: var(--k-space-3) var(--k-space-3) var(--k-space-3) var(--k-space-4);
+	--k-toast-ok-border: var(--k-line-strong);
+	--k-toast-warn-border: var(--k-line-strong);
+	/* FileDrop */
+	--k-filedrop-bg: var(--k-bg-sunken);
+	--k-filedrop-pad: var(--k-space-6) var(--k-space-4);
+	--k-filedrop-prompt-font: var(--k-label-font);
+	--k-filedrop-prompt-size: var(--k-label-size);
+	--k-filedrop-prompt-weight: var(--k-weight-label);
+	--k-filedrop-prompt-transform: var(--k-label-transform);
+	--k-filedrop-prompt-tracking: var(--k-label-tracking);
 }
 
 /* Coarse pointers (touch) always get 44px targets. */

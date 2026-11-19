@@ -46,7 +46,7 @@
 	.k-check {
 		position: relative;
 		display: flex;
-		gap: var(--k-space-3);
+		gap: var(--k-check-gap);
 		align-items: flex-start;
 		padding-block: calc(max(0px, var(--k-tap-target) - 24px) / 2);
 	}
@@ -77,15 +77,15 @@
 	}
 	input:checked,
 	input:indeterminate {
-		background: var(--k-primary);
-		border-color: var(--k-primary);
+		background: var(--k-check-checked);
+		border-color: var(--k-check-checked);
 	}
 	input:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
 	}
 	input:disabled {
-		opacity: 0.5;
+		opacity: var(--k-check-disabled-opacity);
 		cursor: not-allowed;
 	}
 	svg {
@@ -93,7 +93,7 @@
 		width: 16px;
 		height: 16px;
 		place-self: center;
-		color: var(--k-on-primary);
+		color: var(--k-check-mark);
 		opacity: 0;
 		pointer-events: none;
 	}
@@ -107,6 +107,7 @@
 	}
 	label {
 		cursor: pointer;
+		font-size: var(--k-check-label-size);
 		line-height: 1.5;
 	}
 	/* The whole row, padded to the tap target, toggles the control through its label. */

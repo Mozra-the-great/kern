@@ -362,10 +362,10 @@
 		width: 100%;
 		box-sizing: border-box;
 		min-height: 140px;
-		padding: var(--k-space-6) var(--k-space-4);
+		padding: var(--k-filedrop-pad);
 		border: var(--k-border-w) dashed var(--k-line-dashed);
 		border-radius: var(--k-radius-card);
-		background: var(--k-bg-sunken);
+		background: var(--k-filedrop-bg);
 		color: var(--k-fg);
 		font: inherit;
 		text-align: center;
@@ -430,11 +430,11 @@
 		color: var(--k-accent-text);
 	}
 	.prompt {
-		font-family: var(--k-label-font);
-		font-size: var(--k-label-size);
-		font-weight: var(--k-weight-label);
-		text-transform: var(--k-label-transform);
-		letter-spacing: var(--k-label-tracking);
+		font-family: var(--k-filedrop-prompt-font);
+		font-size: var(--k-filedrop-prompt-size);
+		font-weight: var(--k-filedrop-prompt-weight);
+		text-transform: var(--k-filedrop-prompt-transform);
+		letter-spacing: var(--k-filedrop-prompt-tracking);
 		overflow-wrap: anywhere;
 	}
 	/* The real input is invisible and stays under the zone, so native validation bubbles point at it. */
