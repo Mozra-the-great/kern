@@ -33,8 +33,8 @@ Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono un
 Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono (siehe `index.html`).
 
 Zu Stuffcloud gehört Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen,
-Saison-Deko) unter `@mozra-the-great/kern/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
-Die Komponenten laden sie nie; sie sind für eigene Seiten gedacht.
+Saison-Deko, 115 Dateien) unter `@mozra-the-great/kern/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
+Nur `Mascot` zeigt sie, und nur von einer URL, die du übergibst (siehe [Mascot](#mascot-pixel-art)).
 
 Gegen das Aufblitzen des falschen Themes beim Laden liefert `createThemeScript('kern-theme', { followSystem: true })`
 ein kleines Inline-Script für `<head>` (Schlüssel = `persist` des ThemeToggle; unter strenger CSP mit Nonce).
@@ -54,9 +54,9 @@ Für Custom Elements ohne Bundler dasselbe als `<link rel="stylesheet" href="…
 (die Datei lädt `base.css` und `brands/stuffcloud.css` per `@import`). `npm test` baut jeden Einstieg mit
 Vite und prüft, dass kein Selektor und keine Farbe einer anderen Marke darin landet. Komponenten
 werden einzeln importiert (`import { Button } from '@mozra-the-great/kern'`): ein Svelte-Bundler
-kompiliert nur die benutzten. Die Pixel-Art unter `assets/stuffcloud/` bleibt vorerst im Paket: keine
-Komponente lädt sie, sie landet also nie in einem Bundle, nur in `node_modules` (Entscheidung in #39,
-neu bewerten mit der Theme-Quelle in #37).
+kompiliert nur die benutzten. Die Pixel-Art unter `assets/stuffcloud/` bleibt im Paket als einzelne
+Dateien: keine Komponente importiert sie, sie landet also nur in einem Bundle, wenn du sie selbst
+importierst (Entscheidung in #39, neu bewerten mit der Theme-Quelle in #37).
 
 **Touch-Ziele.** Jedes bedienbare Teil ist mindestens `--k-tap-target` groß, sichtbar oder über eine
 unsichtbare Trefferfläche: 44 px (`--k-tap-min`) bei grobem Zeiger (`pointer: coarse`), bei der Maus 0,
@@ -351,6 +351,70 @@ Typen, Ereignissen samt `detail`-Typ und Slots, z. B. für Editor-Unterstützung
 `scripts/elements-manifest.mjs` erzeugt es und die Typen aus den Wrappern in `src/elements/`;
 CI prüft, dass die eingecheckte Datei aktuell ist.
 
+## Mascot (Pixel-Art)
+
+Die Laufzeit für Stuffclouds Pixel-Art liegt in kern (Entscheidung in #55; Verhalten nach
+stuffclouds ADR 0008). `Mascot` (Custom Element `<k-mascot>`) zeigt **jede** mitgelieferte SVG aus
+`assets/stuffcloud/` (oder eine eigene) als `<img>`:
+
+- nur ganzzahlige Skalen: `scale` (Standard 8) und `compactScale` unter 760 px; Bruchteile werden
+  abgeschnitten, alles unter 1 wird 1. `width`/`height` reservieren die Box, bevor das Bild lädt
+  (kein Layout-Shift);
+- Leerlauf-Wippen nur mit `transform` und `steps(1)`, Periode und Höhe über die Tokens
+  `--k-mascot-bob-period` (1.2s) und `--k-mascot-bob-offset` (4px);
+- pausiert außerhalb des Viewports (`IntersectionObserver`) und in Hintergrund-Tabs
+  (`visibilitychange`); `data-motion` ist `running`, `paused` oder `still`;
+- bei `prefers-reduced-motion: reduce` die stille Pose (per CSS, folgt einer Änderung ohne Reload),
+  `animated={false}` ebenso;
+- dekorativ (`alt=""`, `aria-hidden`), mit `label` ein benanntes Bild; kein Text, kein Canvas.
+
+```svelte
+<script>
+  import { Mascot } from '@mozra-the-great/kern';
+  import axo from '@mozra-the-great/kern/assets/stuffcloud/mascots/axo.svg?url';
+</script>
+
+<Mascot name="stuffy" src={axo} scale={16} compactScale={10} />
+<Mascot name="tool-stickers/sticker-qr" base="/art/stuffcloud" scale={4} animated={false} />
+<Mascot src="/eigene/art.svg" cols={12} rows={9} label="Seite abgelaufen" />
+```
+
+`name` ist ein Stuffcloud-Name oder ein Pfad unter `assets/stuffcloud/` ohne `.svg`; daraus kommt
+das Pixelraster (`STUFFCLOUD_ART`). Die URL kommt aus `src` oder aus `base` (wo du den Ordner
+`assets/stuffcloud/` ausspielst) plus Pfad. Für Art außerhalb des Katalogs `cols`/`rows` angeben.
+
+**CSP:** Die Bilder müssen Dateien vom eigenen Origin sein (`img-src 'self'`), keine `data:`-URIs.
+Vite inlined kleine Assets per Standard als `data:` – die SVGs sind alle unter 4 kB. Deshalb entweder
+SVGs nie inlinen:
+
+```js
+// vite.config.js
+export default { build: { assetsInlineLimit: (file) => (file.endsWith('.svg') ? false : undefined) } };
+```
+
+oder den Ordner `node_modules/@mozra-the-great/kern/assets/stuffcloud/` beim Build nach `public/`
+kopieren und `base` setzen. Ohne Bundler: `<k-mascot name="stuffy" base="/art/stuffcloud"></k-mascot>`.
+
+Namen für den 1:1-Umstieg aus stuffcloud (`MASCOT_SOURCES`, gleiche Felder `file`/`animal`/`cols`/`rows`,
+dazu `art`):
+
+| Name | Datei | Tier |
+| --- | --- | --- |
+| `stuffy` | `mascots/axo.svg` | Axolotl |
+| `mochi` | `mascots/mascot-cat.svg` | Katze |
+| `hop` | `mascots/mascot-frog.svg` | Frosch |
+| `bun` | `mascots/mascot-bunny.svg` | Hase |
+| `bloop` | `mascots/mascot-jelly.svg` | Qualle |
+| `waddle` | `mascots/mascot-penguin.svg` | Pinguin |
+| `ember` | `mascots/mascot-fox.svg` | Fuchs |
+| `boo` | `mascots/mascot-ghost.svg` | Geist |
+| `cumulo` | `mascots/mascot-cloudy.svg` | Wolke |
+
+Weitere Exporte: `MASCOT_NAMES`, `artPath`, `artUrl(base, name)`, `normaliseScale`, `integerScale`
+(größte ganze Skala für eine Zielbreite), `mascotSize`, `BOB_PERIOD_MS`, `BOB_OFFSET_PX`,
+`COMPACT_MAX_WIDTH_PX`. Stuffclouds Benchmark (`bench/`) bleibt in stuffcloud; kern prüft dasselbe
+Verhalten mit Playwright (`tests/mascot/`).
+
 ## Komponenten (Kern-Set)
 
 Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
@@ -361,7 +425,8 @@ Collapsible, ScrollArea, Resizable (Paneele mit tastaturbedienbaren Trennern) ·
 Daten: DataTable (Filter, Sortierung, Seiten, Zeilenauswahl), Stat, Sparkline, Heatmap, HistoryBar, Timeline ·
 Overlays: Modal, Drawer, Tooltip, Popover ·
 Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, Accordion/AccordionItem, TreeView ·
-Effekte: Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal, Highlight, GridBackground, Terminal
+Effekte: Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal, Highlight, GridBackground, Terminal ·
+Pixel-Art: Mascot
 
 Ziel ist ein Umfang wie [cock](https://github.com/JoshiCodes/cock) oder größer.
 
@@ -378,7 +443,7 @@ npm run check      # svelte-check
 npm run lint       # ESLint (typescript-eslint strict, eslint-plugin-svelte) + Prettier --check
 npm run format     # Prettier --write + eslint --fix
 npm run build      # dist/, dist-elements/ (+ Typen, custom-elements.json), demo-dist/
-npm test           # Vitest: Theme-Kontrast und Marken-Einstiege
+npm test           # Vitest: Theme-Kontrast, Marken-Einstiege, Pixel-Art-Katalog
 npx playwright install chromium   # einmalig
 npm run test:targets              # Playwright: Touch-Ziele in der gebauten Demo (nach npm run build)
 npm run test:elements             # Playwright: gebaute Custom Elements (nach npm run build)
@@ -386,6 +451,8 @@ npm run test:types                # Element-Typen gegen eine strikte React-19-Fi
 npm run test:consumer             # Svelte-App mit strengen TS-Flags gegen dist/ (nach dem Build)
 npm run check:dts                 # kein `any` in den veröffentlichten .d.ts (nach dem Build)
 npm run size                      # Größenbudget der Custom Elements
+npm run test:mascot               # Playwright: <k-mascot> unter strenger CSP (nach npm run build)
+npm run assets:check              # Pixel-Art gegen assets/stuffcloud/manifest.json (Drift-Check)
 ```
 
 `npm ci` baut über `prepare` bereits `dist/` und `dist-elements/`. Release: `version` in

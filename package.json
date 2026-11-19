@@ -74,7 +74,10 @@
 		"test:types": "tsc --noEmit -p tests/fixtures/react-jsx",
 		"test:consumer": "svelte-check --workspace tests/fixtures/strict-consumer --tsconfig ./tsconfig.json --fail-on-warnings && node tests/fixtures/strict-consumer/coverage.mjs",
 		"check:dts": "node scripts/ci/no-any-dts.mjs",
-		"size": "node scripts/ci/size-budget.mjs"
+		"size": "node scripts/ci/size-budget.mjs",
+		"assets:check": "node scripts/ci/assets-drift.mjs",
+		"assets:manifest": "node scripts/ci/assets-drift.mjs --write",
+		"test:mascot": "playwright test -c tests/mascot/playwright.config.ts"
 	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"

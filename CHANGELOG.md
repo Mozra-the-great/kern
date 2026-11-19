@@ -23,6 +23,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `Mascot` component and `<k-mascot>` element: the pixel-art runtime moves from stuffcloud into kern
+  (#55, stuffcloud ADR 0008). Draws any shipped stuffcloud SVG (by mascot name or
+  `<group>/<file>` path) or a consumer URL through `<img>`: integer scales only (`scale`,
+  `compactScale` below 760px), box reserved before the image loads, `transform`-only `steps(1)`
+  bob with the tokens `--k-mascot-bob-period` (1.2s) and `--k-mascot-bob-offset` (4px), paused
+  off-screen and in hidden tabs, still under `prefers-reduced-motion`, decorative unless `label`
+  is set, no canvas, no `data:` URIs.
+- Exports `MASCOT_NAMES`, `MASCOT_SOURCES` (stuffcloud names → kern files, same shape as
+  stuffcloud's), `STUFFCLOUD_ART` (pixel grid of every shipped SVG), `artPath`, `artUrl`,
+  `normaliseScale`, `integerScale`, `mascotSize`, `BOB_PERIOD_MS`, `BOB_OFFSET_PX`,
+  `COMPACT_MAX_WIDTH_PX` and the types `MascotName`, `MascotSource`, `MascotArt`, `MascotMotion`,
+  `PixelGrid`, `StuffcloudArt`.
+- The missing stuffcloud pixel art (#56): 31 tool stickers and 7 seasonal decorations; kern now
+  ships the same 115 SVGs as stuffcloud's `docs/design/prototypes`, byte for byte.
+- `assets/stuffcloud/manifest.json` (size, sha256 and grid per file) and a drift check
+  (`npm run assets:check`, in the `build` job; `--against <dir>` compares with a stuffcloud
+  checkout); refresh with `npm run assets:manifest` (see `assets/README.md`).
+- Playwright tests of `<k-mascot>` under a strict CSP (`npm run test:mascot`, in the `build` job)
+  and Vitest tests of the catalogue, the name mapping and the stylesheet rules.
+- CI type-checks a Svelte app with stuffcloud's compiler flags (`strict`,
+  `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`,
+  `noPropertyAccessFromIndexSignature`, `noUnusedLocals`, `svelte-check --fail-on-warnings`)
+  against the built package, using every component (`npm run test:consumer`), and fails on the
+  type `any` in the published `.d.ts` files (`npm run check:dts`).
+- ESLint (typescript-eslint strict and strict-type-checked, eslint-plugin-svelte,
+  `no-explicit-any` as an error) and Prettier with prettier-plugin-svelte; `npm run lint` runs
+  in CI, `npm run format` formats (#23). The code base is formatted once; the commit is listed
+  in `.git-blame-ignore-revs`.
+
+### Changed
+- The demo build no longer inlines SVGs as `data:` URIs (`build.assetsInlineLimit`).
+- The last uses of `any` are gone (`Button` link branch, `formAssociated()`, the menu element
+  wrappers); kern itself now compiles with `exactOptionalPropertyTypes`.
+
 ### Fixed
 - Strict TypeScript consumers (#22): every optional prop of every component, every optional
   field of the exported types (`TabItem`, `SelectOption`, `MenuEntry`, `ToastInput`, the element
@@ -36,21 +71,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `undefined` until the user changes something.
 - `toast({ duration: undefined })` (or `tone: undefined`) keeps the default instead of a toast
   that never closes.
-
-### Added
-- CI type-checks a Svelte app with stuffcloud's compiler flags (`strict`,
-  `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`,
-  `noPropertyAccessFromIndexSignature`, `noUnusedLocals`, `svelte-check --fail-on-warnings`)
-  against the built package, using every component (`npm run test:consumer`), and fails on the
-  type `any` in the published `.d.ts` files (`npm run check:dts`).
-- ESLint (typescript-eslint strict and strict-type-checked, eslint-plugin-svelte,
-  `no-explicit-any` as an error) and Prettier with prettier-plugin-svelte; `npm run lint` runs
-  in CI, `npm run format` formats (#23). The code base is formatted once; the commit is listed
-  in `.git-blame-ignore-revs`.
-
-### Changed
-- The last uses of `any` are gone (`Button` link branch, `formAssociated()`, the menu element
-  wrappers); kern itself now compiles with `exactOptionalPropertyTypes`.
 
 ## [0.3.0] - 2026-11-19
 

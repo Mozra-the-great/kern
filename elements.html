@@ -144,6 +144,12 @@
 				<k-status-dot status="busy" label-hidden status-labels='{"busy":"Beschäftigt"}'></k-status-dot>
 				<k-status-dot status="warn" no-pulse label="API" status-labels='{"warn":"Eingeschränkt"}'></k-status-dot>
 			</div>
+			<h2>Maskottchen</h2>
+			<div class="row" style="padding:16px;background:#17171a;border:1px solid var(--k-line)">
+				<k-mascot id="m-stuffy" name="stuffy" scale="8" compact-scale="6" label="Stuffy, das Axolotl"></k-mascot>
+				<k-mascot id="m-boo" name="boo" scale="6"></k-mascot>
+				<k-mascot id="m-qr" name="tool-stickers/sticker-qr" scale="5" animated="false"></k-mascot>
+			</div>
 			<h2>Layout</h2>
 			<div id="tbox" data-theme="flower" style="display:grid;gap:12px;padding:16px;border:1px solid var(--k-line)">
 				<div class="row">
@@ -175,7 +181,14 @@
 		<k-toaster></k-toaster>
 		<script type="module">
 			import './dist-elements/kern-elements.js';
+			// Pixel art as file URLs (vite.config.ts keeps SVGs out of data: URIs).
+			import axoUrl from './assets/stuffcloud/mascots/axo.svg?url';
+			import ghostUrl from './assets/stuffcloud/mascots/mascot-ghost.svg?url';
+			import qrUrl from './assets/stuffcloud/tool-stickers/sticker-qr.svg?url';
 			const $ = (s) => document.querySelector(s);
+			$('#m-stuffy').src = axoUrl;
+			$('#m-boo').src = ghostUrl;
+			$('#m-qr').src = qrUrl;
 			$('#theme').addEventListener('change', (e) => (document.documentElement.dataset.theme = e.target.value));
 			$('#hello').addEventListener('click', () => window.kern.toast.ok('Hallo aus <k-toaster>'));
 			$('#open').addEventListener('click', () => ($('#modal').open = true));

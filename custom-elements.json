@@ -6194,6 +6194,182 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/mascot.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-mascot",
+					"name": "KMascotElement",
+					"description": "Stuffcloud pixel art (a mascot or any shipped SVG) through <img>, at whole-number scales, with a transform-only idle bob that pauses off-screen, in hidden tabs and under reduced motion.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "name",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "name",
+							"description": "A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo) or a path under assets/stuffcloud/ without .svg (tool-stickers/sticker-qr)."
+						},
+						{
+							"kind": "field",
+							"name": "src",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "src",
+							"description": "URL of the SVG file (same origin); wins over base."
+						},
+						{
+							"kind": "field",
+							"name": "base",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "base",
+							"description": "URL where the assets/stuffcloud/ folder is served; with name it gives the file URL."
+						},
+						{
+							"kind": "field",
+							"name": "cols",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "cols",
+							"description": "Art pixels across (viewBox width); needed for art outside the catalogue."
+						},
+						{
+							"kind": "field",
+							"name": "rows",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "rows",
+							"description": "Art pixels down (viewBox height)."
+						},
+						{
+							"kind": "field",
+							"name": "scale",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "scale",
+							"description": "Whole CSS pixels per art pixel (default 8)."
+						},
+						{
+							"kind": "field",
+							"name": "compactScale",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "compact-scale",
+							"description": "Scale at max-width 760px; defaults to scale."
+						},
+						{
+							"kind": "field",
+							"name": "animated",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "animated",
+							"description": "animated=\"false\" shows the still pose only."
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label",
+							"description": "Text alternative; without it the art is decorative (alt=\"\", aria-hidden)."
+						}
+					],
+					"attributes": [
+						{
+							"name": "name",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "name"
+						},
+						{
+							"name": "src",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "src"
+						},
+						{
+							"name": "base",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "base"
+						},
+						{
+							"name": "cols",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "cols"
+						},
+						{
+							"name": "rows",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "rows"
+						},
+						{
+							"name": "scale",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "scale"
+						},
+						{
+							"name": "compact-scale",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "compactScale"
+						},
+						{
+							"name": "animated",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "animated"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
+						}
+					],
+					"events": [],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-mascot",
+					"declaration": {
+						"name": "KMascotElement",
+						"module": "dist-elements/elements/mascot.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/modal.js",
 			"declarations": [
 				{
@@ -13251,6 +13427,14 @@
 					"declaration": {
 						"name": "KMarqueeElement",
 						"module": "dist-elements/elements/marquee.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-mascot",
+					"declaration": {
+						"name": "KMascotElement",
+						"module": "dist-elements/elements/mascot.js"
 					}
 				},
 				{

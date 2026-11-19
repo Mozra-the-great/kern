@@ -76,6 +76,7 @@ import KProgressRing from './KProgressRing.svelte';
 import KCollapsible from './KCollapsible.svelte';
 import KResizable from './KResizable.svelte';
 import KScrollArea from './KScrollArea.svelte';
+import KMascot from './KMascot.svelte';
 import { define, tagOf, type ElementComponent } from './define.js';
 import { toast, dismissToast, installGlobal } from './global.js';
 
@@ -153,7 +154,8 @@ export const elements = {
 	KProgressRing,
 	KCollapsible,
 	KResizable,
-	KScrollArea
+	KScrollArea,
+	KMascot
 };
 export { toast, dismissToast };
 

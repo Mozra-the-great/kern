@@ -107,3 +107,21 @@ export type { CopyStatus } from './components/CopyButton.svelte';
 export type { KbdKey } from './components/Kbd.svelte';
 export type { TimeInput } from './components/RelativeTime.svelte';
 export type { DotStatus } from './components/StatusDot.svelte';
+export { default as Mascot } from './components/Mascot.svelte';
+export type { MascotArt, MascotMotion } from './components/Mascot.svelte';
+export {
+	MASCOT_NAMES,
+	MASCOT_SOURCES,
+	STUFFCLOUD_ART,
+	BOB_PERIOD_MS,
+	BOB_OFFSET_PX,
+	COMPACT_MAX_WIDTH_PX,
+	isMascotName,
+	isStuffcloudArt,
+	artPath,
+	artUrl,
+	normaliseScale,
+	integerScale,
+	mascotSize
+} from './components/mascots.js';
+export type { MascotName, MascotSource, PixelGrid, StuffcloudArt } from './components/mascots.js';
