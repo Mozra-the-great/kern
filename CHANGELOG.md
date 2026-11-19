@@ -23,6 +23,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `Progress` parity with stuffcloud (#42): `tone` (`'default' | 'warn'`), `valueText`
+  (`aria-valuetext`), `hideLabel`; `<k-progress>` gets `tone`, `value-text`, `hide-label`. Inputs are
+  normalised (value clamped to 0…max, NaN/Infinity count as 0, a non-positive or non-finite `max`
+  falls back to 100; `aria-valuenow`/`aria-valuemax` report the normalised values). The
+  indeterminate bar draws stripes moved with `transform` only, tuned by the new tokens
+  `--k-progress-period`, `--k-progress-loop`, `--k-progress-ease` (stuffcloud: `steps(4)`);
+  forced-colors rules keep the fill visible in `Highlight`.
+- `Toaster` parity with stuffcloud (#43): timers pause while a toast is hovered, holds focus or the
+  tab is hidden and resume with the remaining time; two live regions (`role="status"`,
+  `role="alert"` for danger) exist before the first toast; a limit of open toasts (`max`, default
+  5, oldest closes first); positions `bottom-left` and `top-left`; tokens `--k-toaster-offset` and
+  `--k-toaster-offset-mobile` (bottom positions below 760px; stuffcloud 76px); forced-colors rules.
+  `<k-toaster>` gets `max` and `undo-label`.
+- Injectable toast queues: `createToastQueue({ max })`, `sharedToastQueue()` and the `queue` prop
+  of `<Toaster>`; the page-wide queue stays the default. Exports `TOAST_DURATIONS`, `TOAST_MAX`
+  and the types `ToastQueue`, `ToastCloseReason`.
+- Toast lifecycle callbacks for undo/commit (#44, nagellacke Snackbar semantics): `onundo` (shows
+  an undo button labelled by the Toaster's `undoLabel`), `oncommit` (exactly once on every close
+  except undo), `onclose(reason)` with `timeout | dismiss | action | undo | replaced | cleared`,
+  and `key` (a new toast with the same key replaces the old one, which commits first). Same API in
+  `window.kern.toast`; `toast.clear()`. `<Toaster>` gets `ondismiss`, `onundo`, `onaction`;
+  `<k-toaster>` fires `dismiss`, `undo` and `action` (`detail: { id, key }`) for the buttons the
+  user pressed. After a keyboard activation, focus moves to the next toast or back to where it
+  came from.
+- `Modal` modes for blocking dialogs (#45): `dismissible={false}` (no Escape, no backdrop close,
+  no close button; `closedby="none"` plus a fallback for browsers without it), `initialFocus`
+  (element or selector), `alert` (`role="alertdialog"`), `oncancel` (cancelable close request).
+  `<k-modal>`: `dismissible="false"` attribute or property, `initial-focus`, `alert`, and a
+  cancelable `cancel` event. The page behind an open modal no longer scrolls (nested modals
+  share one lock).
+- Demo section "Rückmeldung" and element demos for the above; Vitest tests of the progress
+  normalisation and the toast queue (`tests/unit`), Playwright tests of the elements
+  (`tests/elements/feedback.spec.ts`).
+
+### Changed
+- **BREAKING:** default toast durations follow stuffcloud: info and ok 6000ms (was 5000), warn
+  10000ms (was 5000), danger stays until dismissed also through `toast({ tone: 'danger' })` (was
+  5000; `toast.danger()` already stayed). At most 5 toasts are open; the oldest closes with reason
+  `replaced`. Migrate: pass `duration` to keep the old timing; set `max` on the Toaster (or
+  `queue.max = Infinity`) for no limit.
+- **BREAKING:** the page-wide toast store on `globalThis[Symbol.for('kern.toasts')]` has a new
+  shape (`version: 2`, a `ToastQueue`). A page that mixes this kern with an older copy (Svelte
+  package and elements bundle of different versions) gets two separate stores; load both from
+  the same version.
+- **BREAKING:** `<Toaster>` renders its toasts inside two live regions (`role="status"` and
+  `role="alert"`) instead of a `role` on each `<li>`; the markup is `div.list > div.toast`. Styles
+  that targeted `.k-toaster ol`/`li` need the new selectors.
+- `action.onclick` of a toast now runs after the toast is removed (it ran before); a throwing
+  callback no longer leaves the toast open.
+- `Progress` `value` also accepts `null` (indeterminate), like `ProgressRing`; the determinate
+  width transition follows `--k-dur` (off under reduced motion) instead of a fixed 300ms.
+- `<k-modal>` documents that `close` also fires when the app closes it through `open` (unchanged
+  behaviour).
+
 ## [0.4.0] - 2026-11-19
 
 ### Added

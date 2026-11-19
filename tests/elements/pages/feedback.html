@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-theme="stuffcloud">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: feedback and overlays</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script>
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+				min-height: 200vh;
+			}
+			k-progress {
+				display: block;
+				margin-bottom: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<k-progress id="p-det" label="Upload" value="40"></k-progress>
+		<k-progress id="p-files" label="Files" value="3" max="12" value-text="3 of 12 files" show-value></k-progress>
+		<k-progress id="p-clamp" label="Clamped" value="250"></k-progress>
+		<k-progress id="p-badmax" label="Bad max" value="50" max="0"></k-progress>
+		<k-progress id="p-neg" label="Negative" value="-4"></k-progress>
+		<k-progress id="p-ind" label="Working"></k-progress>
+		<k-progress id="p-warn" label="Storage" value="100" tone="warn"></k-progress>
+		<k-progress id="p-warn-ind" label="Storage busy" tone="warn"></k-progress>
+		<k-progress id="p-hidden" label="Hidden label" value="10" hide-label></k-progress>
+
+		<button id="opener" type="button">Open blocking</button>
+		<button id="opener2" type="button">Open normal</button>
+
+		<k-modal id="block" title="Adopt local data?" dismissible="false" initial-focus="#adopt">
+			<p>Until you answer, nothing syncs.</p>
+			<k-button slot="footer" id="later">Later</k-button>
+			<button slot="footer" id="adopt" type="button">Adopt</button>
+		</k-modal>
+
+		<k-modal id="normal" title="Delete folder?" description="It goes to the trash.">
+			<p>Body</p>
+			<button slot="footer" id="cancel-btn" type="button">Cancel</button>
+		</k-modal>
+
+		<k-modal id="alertish" title="Discard changes?" alert initial-focus="#keep">
+			<button slot="footer" id="keep" type="button">Keep editing</button>
+		</k-modal>
+
+		<k-toaster id="toaster" undo-label="Rückgängig" dismiss-label="Schließen" label="Benachrichtigungen"></k-toaster>
+	</body>
+</html>

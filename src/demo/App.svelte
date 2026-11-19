@@ -38,6 +38,7 @@
 	import Assets from './sections/Assets.svelte';
 	import Mascots from './sections/Mascots.svelte';
 	import Data from './sections/Data.svelte';
+	import Feedback from './sections/Feedback.svelte';
 
 	let theme = $state(readTheme());
 	function readTheme() {
@@ -294,6 +295,7 @@
 		</Accordion>
 	</section>
 
+	<Feedback />
 	<Extras />
 	<Widgets />
 	<FormsMore />
@@ -337,7 +339,7 @@
 	{#snippet footer()}<Button block onclick={() => (drawerOpen = false)}>Anwenden</Button>{/snippet}
 </Drawer>
 
-<Toaster />
+<Toaster label="Benachrichtigungen" dismissLabel="Schließen" undoLabel="Rückgängig" />
 
 <style>
 	.skip {

@@ -145,6 +145,12 @@ export interface ResizablePanel {
 export type DotStatus = 'ok' | 'warn' | 'down' | 'idle' | 'busy';
 
 export type ToastTone = 'info' | 'ok' | 'warn' | 'danger';
+/**
+ * Why a toast closed. `timeout`: its time ran out; `dismiss`: the dismiss button or `dismissToast(id)`;
+ * `action`: its action button; `undo`: its undo button; `replaced`: a newer toast took its place
+ * (same `key`, or the oldest one above the limit); `cleared`: `toast.clear()`.
+ */
+export type ToastCloseReason = 'timeout' | 'dismiss' | 'action' | 'undo' | 'replaced' | 'cleared';
 export interface ToastItem {
 	id: number;
 	message: string;
@@ -153,22 +159,43 @@ export interface ToastItem {
 	/** Milliseconds; 0 keeps it until dismissed. */
 	duration: number;
 	action?: { label: string; onclick: () => void } | undefined;
+	/** A new toast with the same key replaces this one (reason `replaced`). */
+	key?: string | undefined;
+	/** Shows an undo button (label: the toaster's `undo-label`); runs when it is pressed. */
+	onundo?: (() => void) | undefined;
+	/** Runs once when the toast closes for any reason except undo: the place to commit a deletion. */
+	oncommit?: (() => void) | undefined;
+	/** Runs once when the toast closes, with the reason. */
+	onclose?: ((reason: ToastCloseReason) => void) | undefined;
 }
 export interface ToastInput {
 	message: string;
 	title?: string | undefined;
 	/** Default `info`. */
 	tone?: ToastTone | undefined;
-	/** Milliseconds; 0 keeps it until dismissed. Default 5000. */
+	/** Milliseconds; 0 keeps it until dismissed. Default per tone: info/ok 6000, warn 10000, danger 0. */
 	duration?: number | undefined;
 	action?: ToastItem['action'];
+	key?: ToastItem['key'];
+	onundo?: ToastItem['onundo'];
+	oncommit?: ToastItem['oncommit'];
+	onclose?: ToastItem['onclose'];
 }
-/** `toast('Saved')`, `toast({ message, tone, … })`, `toast.ok/warn/danger(message, options)`. Returns the id. */
+/** Detail of the `dismiss`, `undo` and `action` events of <k-toaster>. */
+export interface ToastEventDetail {
+	id: number;
+	key: string | undefined;
+}
+/**
+ * `toast('Saved')`, `toast({ message, tone, … })`, `toast.ok/warn/danger(message, options)`. Returns the id.
+ * `toast.clear()` closes every toast (reason `cleared`).
+ */
 export interface ToastFunction {
 	(input: string | ToastInput): number;
 	ok(message: string, options?: Partial<ToastInput>): number;
 	warn(message: string, options?: Partial<ToastInput>): number;
 	danger(message: string, options?: Partial<ToastInput>): number;
+	clear(): void;
 }
 export interface KernGlobal {
 	toast: ToastFunction;

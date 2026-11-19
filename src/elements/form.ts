@@ -66,9 +66,12 @@ export function setFormValue(host: HTMLElement, value: string | FormData | null)
 	(host as FormHost).internals?.setFormValue(value);
 }
 
-/** Dispatches a bubbling, composed event from the host element. */
-export function emit(host: HTMLElement, type: string, detail?: unknown) {
-	host.dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }));
+/**
+ * Dispatches a bubbling, composed event from the host element. With `cancelable`, returns false
+ * when a listener called `preventDefault()`.
+ */
+export function emit(host: HTMLElement, type: string, detail?: unknown, cancelable = false): boolean {
+	return host.dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true, cancelable }));
 }
 
 /** True when the host has light-DOM children assigned to the named slot. */
