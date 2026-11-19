@@ -1,0 +1,21 @@
+{
+	// Type-checks the shipped element typings the way a strict React 19 app sees them:
+	// the imports resolve through package.json "exports" (self-reference), so run
+	// `npm run build:elements` first. skipLibCheck is off so the generated .d.ts are checked too.
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"strict": true,
+		"exactOptionalPropertyTypes": false,
+		"noUncheckedIndexedAccess": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"skipLibCheck": false,
+		"noEmit": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"types": []
+	},
+	"files": ["app.tsx"]
+}

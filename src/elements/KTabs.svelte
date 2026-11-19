@@ -1,5 +1,9 @@
-<svelte:options customElement={{ tag: 'k-tabs', props: { tabs: { type: "Array" }, value: { type: 'String', reflect: true }, label: { type: "String" }, look: { type: "String" } } }} />
+<svelte:options customElement={{ props: { tabs: { type: "Array" }, value: { type: 'String', reflect: true }, label: { type: "String" }, look: { type: "String" } } }} />
 <script lang="ts">
+	/**
+	 * @prop tabs {TabItem[]}
+	 * @event change {string} Id of the tab the user picked.
+	 */
 	import Tabs, { type TabItem } from '../lib/components/Tabs.svelte';
 	import { emit } from './form.js';
 	/* Panels are light-DOM children with data-tab="<id>"; only the active one is shown.

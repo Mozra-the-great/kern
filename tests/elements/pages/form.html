@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-theme="flower">
+	<head>
+		<meta charset="utf-8" />
+		<title>kern elements: form</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+	</head>
+	<body>
+		<form id="f">
+			<k-input id="user" name="user" label="User" required minlength="3" maxlength="8" pattern="[a-z]+" autocomplete="username"></k-input>
+			<k-input id="age" name="age" label="Age" type="number" min="18" max="99" step="1"></k-input>
+			<k-textarea id="bio" name="bio" label="Bio" maxlength="5"></k-textarea>
+			<k-select id="size" name="size" label="Size" required placeholder="Pick" options='[{"value":"s","label":"Small"},{"value":"l","label":"Large"}]'></k-select>
+			<k-checkbox id="terms" name="terms" label="Terms" required></k-checkbox>
+			<k-switch id="news" name="news" label="News" value="yes"></k-switch>
+			<k-radio-group id="plan" name="plan" label="Plan" required options='[{"value":"free","label":"Free"},{"value":"pro","label":"Pro"}]'></k-radio-group>
+			<k-number-input id="qty" name="qty" label="Qty" min="1" max="10" required></k-number-input>
+			<k-date-picker id="day" name="day" label="Day" min="2026-01-01" locale="en"></k-date-picker>
+			<k-slider id="vol" name="vol" label="Volume" value="40"></k-slider>
+			<k-combobox id="city" name="city" label="City" required options='[{"value":"ber","label":"Berlin"},{"value":"ham","label":"Hamburg"}]'></k-combobox>
+			<k-tag-input id="tags" name="tag" label="Tags" required></k-tag-input>
+			<k-pin-input id="pin" name="pin" label="PIN" length="4"></k-pin-input>
+			<k-rating id="stars" name="stars" label="Stars" required></k-rating>
+			<k-segmented-control id="view" name="view" label="View" value="grid" options='[{"value":"grid","label":"Grid"},{"value":"list","label":"List"}]'></k-segmented-control>
+			<k-color-picker id="color" name="color" label="Colour"></k-color-picker>
+			<k-input id="off" name="off" label="Disabled" required disabled></k-input>
+			<k-button id="submit" type="submit">Send</k-button>
+		</form>
+		<!-- Associated through the form attribute, outside the <form>. -->
+		<k-input id="outside" name="outside" label="Outside" form="f" value="far"></k-input>
+		<script>
+			window.submitted = null;
+			document.getElementById('f').addEventListener('submit', (e) => {
+				e.preventDefault();
+				window.submitted = [...new FormData(e.target).entries()].map(([k, v]) => [k, typeof v === 'string' ? v : v.name]);
+			});
+		</script>
+	</body>
+</html>

@@ -1,5 +1,9 @@
-<svelte:options customElement={{ tag: 'k-dropdown-menu', props: { label: { type: "String" }, items: { type: "Array" }, align: { type: "String" }, triggerVariant: { type: 'String', attribute: 'trigger-variant' } } }} />
+<svelte:options customElement={{ props: { label: { type: "String" }, items: { type: "Array" }, align: { type: "String" }, triggerVariant: { type: 'String', attribute: 'trigger-variant' } } }} />
 <script lang="ts">
+	/**
+	 * @prop items {MenuEntry[]}
+	 * @event select {string} Id of the chosen item.
+	 */
 	import DropdownMenu from '../lib/components/DropdownMenu.svelte';
 	import { emit } from './form.js';
 	/* items: JSON list like the Svelte prop; choosing an item fires "select" with its id. */

@@ -1,5 +1,9 @@
-<svelte:options customElement={{ tag: 'k-count-up', props: { value: { type: "Number" }, from: { type: "Number" }, duration: { type: "Number" }, format: { type: "Object" }, locale: { type: "String" }, startInView: { type: 'String', attribute: 'start-in-view' } } }} />
+<svelte:options customElement={{ props: { value: { type: "Number" }, from: { type: "Number" }, duration: { type: "Number" }, format: { type: "Object" }, locale: { type: "String" }, startInView: { type: 'String', attribute: 'start-in-view' } } }} />
 <script lang="ts">
+	/**
+	 * @prop format {Intl.NumberFormatOptions}
+	 * @event complete The count reached `value`.
+	 */
 	import CountUp from '../lib/components/CountUp.svelte';
 	import { emit } from './form.js';
 	/* format: Intl.NumberFormat options as JSON, e.g. format='{"style":"currency","currency":"EUR"}'.

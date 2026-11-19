@@ -1,5 +1,8 @@
-<svelte:options customElement={{ tag: 'k-carousel', props: { index: { type: 'Number', reflect: true }, label: { type: "String" }, prevLabel: { type: 'String', attribute: 'prev-label' }, nextLabel: { type: 'String', attribute: 'next-label' }, dotsLabel: { type: 'String', attribute: 'dots-label' }, slideLabel: { type: 'String', attribute: 'slide-label' }, ofLabel: { type: 'String', attribute: 'of-label' } } }} />
+<svelte:options customElement={{ props: { index: { type: 'Number', reflect: true }, label: { type: "String" }, prevLabel: { type: 'String', attribute: 'prev-label' }, nextLabel: { type: 'String', attribute: 'next-label' }, dotsLabel: { type: 'String', attribute: 'dots-label' }, slideLabel: { type: 'String', attribute: 'slide-label' }, ofLabel: { type: 'String', attribute: 'of-label' } } }} />
 <script lang="ts">
+	/**
+	 * @event change {number} Index of the slide the user moved to.
+	 */
 	import Carousel from '../lib/components/Carousel.svelte';
 	import { emit } from './form.js';
 	/* Slides are the light-DOM children: one element per slide. */

@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-icon-button', props: { label: { type: "String" }, variant: { type: "String" }, size: { type: "String" }, disabled: { type: "Boolean" } } }} />
+<svelte:options customElement={{ props: { label: { type: "String" }, variant: { type: "String" }, size: { type: "String" }, disabled: { type: "Boolean" } } }} />
 <script lang="ts">
 	import IconButton from '../lib/components/IconButton.svelte';
 	let { label = '', variant, size, disabled = false } = $props();

@@ -1,5 +1,8 @@
-<svelte:options customElement={{ tag: 'k-code', props: { code: { type: 'String' }, block: { type: 'Boolean' }, language: { type: 'String' }, lineNumbers: { type: 'Boolean', attribute: 'line-numbers' }, startLine: { type: 'Number', attribute: 'start-line' }, copy: { type: 'Boolean' }, copyLabel: { type: 'String', attribute: 'copy-label' }, copiedLabel: { type: 'String', attribute: 'copied-label' }, copyErrorLabel: { type: 'String', attribute: 'copy-error-label' }, label: { type: 'String' } } }} />
+<svelte:options customElement={{ props: { code: { type: 'String' }, block: { type: 'Boolean' }, language: { type: 'String' }, lineNumbers: { type: 'Boolean', attribute: 'line-numbers' }, startLine: { type: 'Number', attribute: 'start-line' }, copy: { type: 'Boolean' }, copyLabel: { type: 'String', attribute: 'copy-label' }, copiedLabel: { type: 'String', attribute: 'copied-label' }, copyErrorLabel: { type: 'String', attribute: 'copy-error-label' }, label: { type: 'String' } } }} />
 <script lang="ts">
+	/**
+	 * @event copy {string} The copied text.
+	 */
 	import Code from '../lib/components/Code.svelte';
 	import { emit } from './form.js';
 	/*

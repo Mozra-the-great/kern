@@ -18,6 +18,7 @@
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"customElements": "custom-elements.json",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -25,7 +26,19 @@
 		},
 		"./themes.css": "./dist/themes/index.css",
 		"./themes/*": "./dist/themes/*",
-		"./elements": "./dist-elements/kern-elements.js",
+		"./elements": {
+			"types": "./dist-elements/kern-elements.d.ts",
+			"default": "./dist-elements/kern-elements.js"
+		},
+		"./elements/react": {
+			"types": "./dist-elements/react.d.ts",
+			"default": "./dist-elements/react.js"
+		},
+		"./elements/*": {
+			"types": "./dist-elements/elements/*.d.ts",
+			"default": "./dist-elements/elements/*.js"
+		},
+		"./custom-elements.json": "./custom-elements.json",
 		"./assets/*": "./assets/*",
 		"./package.json": "./package.json"
 	},
@@ -33,28 +46,35 @@
 		"dist",
 		"dist-elements",
 		"assets",
+		"custom-elements.json",
 		"NOTICE",
 		"CHANGELOG.md"
 	],
 	"sideEffects": [
 		"**/*.css",
-		"./dist-elements/*"
+		"./dist-elements/**/*.js"
 	],
 	"scripts": {
 		"dev": "vite",
 		"prepare": "npm run package && npm run build:elements",
 		"build": "npm run package && npm run build:elements && npm run build:demo",
 		"package": "svelte-package -i src/lib -o dist",
-		"build:elements": "vite build -c vite.elements.config.ts",
+		"build:elements": "vite build -c vite.elements.config.ts --mode bundle && vite build -c vite.elements.config.ts --mode entries && node scripts/elements-manifest.mjs",
 		"build:demo": "vite build",
-		"check": "svelte-check --tsconfig ./tsconfig.json"
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"test:elements": "playwright test -c tests/elements/playwright.config.ts",
+		"test:types": "tsc --noEmit -p tests/fixtures/react-jsx",
+		"size": "node scripts/ci/size-budget.mjs"
 	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.65.0",
 		"@sveltejs/package": "^3.0.2",
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
+		"@types/node": "^22.20.5",
+		"@types/react": "^19.3.0",
 		"svelte": "^5.58.0",
 		"svelte-check": "^4.7.8",
 		"typescript": "^6.0.3",

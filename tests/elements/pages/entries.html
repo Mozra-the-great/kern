@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>kern elements: entry points</title>
+		<script>
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+			window.warnings = [];
+			const warn = console.warn;
+			console.warn = (...a) => { window.warnings.push(a.join(' ')); warn(...a); };
+		</script>
+	</head>
+	<body>
+		<k-button id="b">One</k-button>
+		<k-input id="i" label="Not registered here"></k-input>
+		<k-accordion><k-accordion-item title="Item">Body</k-accordion-item></k-accordion>
+	</body>
+</html>

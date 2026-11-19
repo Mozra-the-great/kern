@@ -1,5 +1,11 @@
-<svelte:options customElement={{ tag: 'k-tree-view', props: { nodes: { type: "Array" }, selected: { type: 'String', reflect: true }, expanded: { type: "Array" }, label: { type: "String" } } }} />
+<svelte:options customElement={{ props: { nodes: { type: "Array" }, selected: { type: 'String', reflect: true }, expanded: { type: "Array" }, label: { type: "String" } } }} />
 <script lang="ts">
+	/**
+	 * @prop nodes {TreeNode[]}
+	 * @prop expanded {string[]}
+	 * @event select {string} Id of the node the user selected.
+	 * @event toggle {{ id: string; expanded: boolean }} A node the user expanded or collapsed.
+	 */
 	import TreeView from '../lib/components/TreeView.svelte';
 	import { emit } from './form.js';
 	/* nodes: JSON tree [{id,label,children?,disabled?}]. Fires "select" (detail = id) and "toggle" (detail = {id, expanded}). */

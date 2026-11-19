@@ -1,5 +1,8 @@
-<svelte:options customElement={{ tag: 'k-scramble', props: { text: { type: "String" }, duration: { type: "Number" }, glyphs: { type: "String" }, interval: { type: "Number" }, hover: { type: "Boolean" } } }} />
+<svelte:options customElement={{ props: { text: { type: "String" }, duration: { type: "Number" }, glyphs: { type: "String" }, interval: { type: "Number" }, hover: { type: "Boolean" } } }} />
 <script lang="ts">
+	/**
+	 * @event complete The text is resolved.
+	 */
 	import Scramble from '../lib/components/Scramble.svelte';
 	import { emit } from './form.js';
 	/* Without the text attribute the element's own text is used. */

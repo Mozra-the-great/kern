@@ -1,5 +1,9 @@
-<svelte:options customElement={{ tag: 'k-typewriter', props: { text: { type: "String" }, speed: { type: "Number" }, eraseSpeed: { type: 'Number', attribute: 'erase-speed' }, delay: { type: "Number" }, hold: { type: "Number" }, loop: { type: "Boolean" }, caret: { type: "String" }, caretShape: { type: 'String', attribute: 'caret-shape' }, label: { type: "String" } } }} />
+<svelte:options customElement={{ props: { text: { type: "String" }, speed: { type: "Number" }, eraseSpeed: { type: 'Number', attribute: 'erase-speed' }, delay: { type: "Number" }, hold: { type: "Number" }, loop: { type: "Boolean" }, caret: { type: "String" }, caretShape: { type: 'String', attribute: 'caret-shape' }, label: { type: "String" } } }} />
 <script lang="ts">
+	/**
+	 * @prop text {string | string[]}
+	 * @event complete Typing finished (not with `loop`).
+	 */
 	import Typewriter from '../lib/components/Typewriter.svelte';
 	import { emit } from './form.js';
 	/* text: a string, or a JSON array of strings to cycle (text='["a","b"]'). Without the attribute the element's own text is used.

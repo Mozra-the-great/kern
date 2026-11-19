@@ -1,5 +1,9 @@
-<svelte:options customElement={{ tag: 'k-kbd', props: { keys: { type: 'Array' }, separator: { type: 'String' }, size: { type: 'String' }, platform: { type: 'String' }, labels: { type: 'Object' } } }} />
+<svelte:options customElement={{ props: { keys: { type: 'Array' }, separator: { type: 'String' }, size: { type: 'String' }, platform: { type: 'String' }, labels: { type: 'Object' } } }} />
 <script lang="ts">
+	/**
+	 * @prop keys {string[]}
+	 * @prop labels {Record<string, string>}
+	 */
 	import Kbd from '../lib/components/Kbd.svelte';
 	/* keys: JSON, e.g. keys='["mod","K"]'. Without keys the slot is one key. labels: JSON, spoken names by key, e.g. labels='{"mod":"Befehl"}'. */
 	let { keys, separator, size, platform, labels } = $props();

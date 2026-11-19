@@ -1,5 +1,8 @@
-<svelte:options customElement={{ tag: 'k-tag', props: { removable: { type: "Boolean" }, removeLabel: { type: 'String', attribute: 'remove-label' }, selected: { type: "Boolean" } } }} />
+<svelte:options customElement={{ props: { removable: { type: "Boolean" }, removeLabel: { type: 'String', attribute: 'remove-label' }, selected: { type: "Boolean" } } }} />
 <script lang="ts">
+	/**
+	 * @event remove The user clicked the remove button (`removable`).
+	 */
 	import Tag from '../lib/components/Tag.svelte';
 	import { emit } from './form.js';
 	let { removable = false, removeLabel, selected = false } = $props();

@@ -1,5 +1,11 @@
-<svelte:options customElement={{ tag: 'k-resizable', props: { direction: { type: 'String' }, sizes: { type: 'Array' }, panels: { type: 'Array' }, height: { type: 'String' }, step: { type: 'Number' }, largeStep: { type: 'Number', attribute: 'large-step' }, handleLabel: { type: 'String', attribute: 'handle-label' } } }} />
+<svelte:options customElement={{ props: { direction: { type: 'String' }, sizes: { type: 'Array' }, panels: { type: 'Array' }, height: { type: 'String' }, step: { type: 'Number' }, largeStep: { type: 'Number', attribute: 'large-step' }, handleLabel: { type: 'String', attribute: 'handle-label' } } }} />
 <script lang="ts">
+	/**
+	 * @prop sizes {number[]}
+	 * @prop panels {ResizablePanel[]}
+	 * @event change {number[]} Panel sizes in % after the user moved a handle.
+	 * @slot - The panels: children with data-panel="<id>" (up to 8).
+	 */
 	import Resizable from '../lib/components/Resizable.svelte';
 	import { emit } from './form.js';
 	/* Panels are the light-DOM children with data-panel="<id>" (up to 8, in order); optional

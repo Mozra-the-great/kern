@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-skeleton', props: { variant: { type: "String" }, width: { type: "String" }, height: { type: "String" }, lines: { type: "Number" } } }} />
+<svelte:options customElement={{ props: { variant: { type: "String" }, width: { type: "String" }, height: { type: "String" }, lines: { type: "Number" } } }} />
 <script lang="ts">
 	import Skeleton from '../lib/components/Skeleton.svelte';
 	/* width/height: any CSS length ("12rem", "40px"); a bare number means pixels. */
