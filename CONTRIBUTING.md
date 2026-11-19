@@ -42,6 +42,13 @@ steps, costs and the open runner/ruleset decisions are in
   lightness, note the deviation in the theme file) rather than in the test.
 - `npm test` also builds each per-brand entry (`themes/<brand>.css`) and fails when another
   brand's selectors or colours end up in it.
+- **Every component has tests.** A new export from `src/lib/index.ts` needs an entry in the `SMOKE` table of
+  `tests/dom/smoke.test.ts` (renders, root element, accessible name, no console output) and, for anything
+  interactive, a behaviour test in `tests/dom/` (props, bindable values, callbacks, keyboard, focus, ARIA,
+  disabled/invalid/loading). How to write them, the jsdom stand-ins and the stuffcloud mapping:
+  [`docs/testing.md`](docs/testing.md).
+- `npm run test:coverage` prints the v8 coverage of `src/lib` and fails when it drops below the thresholds in
+  `vitest.config.ts`. They are a ratchet (the current numbers rounded down); raise them when you add tests.
 - Interactive parts are at least `--k-tap-target` (44px on touch): `npm run build` then
   `npm run test:targets` measures every control of the demo with Playwright.
 

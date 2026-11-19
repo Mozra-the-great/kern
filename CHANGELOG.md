@@ -23,6 +23,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Component behaviour tests (#24, stage 1): a second Vitest project (`dom`, jsdom with
+  `@testing-library/svelte` and `user-event`) next to the node tests. A smoke test renders every
+  component exported from `src/lib/index.ts` (and fails when a new export has no entry); behaviour suites
+  cover Button, IconButton, Link, Card, Tile, Field, Input, Textarea, Select, Checkbox, Switch, RadioGroup,
+  Tabs, TabLinks, Modal, Drawer, FileDrop, Progress, ProgressRing, Toaster, Code, CodeBlock, CopyButton and
+  Mascot. `docs/testing.md` maps each stuffcloud test file to its kern counterpart.
+- `npm run test:coverage`: v8 coverage over `src/lib` (text report, `coverage/lcov.info`), uploaded as a CI
+  artifact, with a ratchet at the current numbers rounded down (raised to 95 % in stage 2).
+
 ## [0.8.0] - 2026-11-19
 
 ### Added

@@ -65,7 +65,11 @@ describe.each([
 	it('the close button closes it, reports it once and updates the bound state', async () => {
 		const user = userEvent.setup();
 		const onclose = vi.fn();
-		const props = reactive<{ open: boolean | undefined; title: string; onclose: () => void }>({ open: true, title: 'Delete site', onclose });
+		const props = reactive<{ open: boolean | undefined; title: string; onclose: () => void }>({
+			open: true,
+			title: 'Delete site',
+			onclose
+		});
 		render(Component, { props });
 		await user.click(screen.getByRole('button', { name: 'Close' }));
 		expect(dialogElement().hasAttribute('open')).toBe(false);
@@ -92,7 +96,11 @@ describe.each([
 
 	it('closes when the platform closes it: the state follows the dialog', async () => {
 		const onclose = vi.fn();
-		const props = reactive<{ open: boolean | undefined; title: string; onclose: () => void }>({ open: true, title: 'Delete site', onclose });
+		const props = reactive<{ open: boolean | undefined; title: string; onclose: () => void }>({
+			open: true,
+			title: 'Delete site',
+			onclose
+		});
 		render(Component, { props });
 		dialogElement().close();
 		await vi.waitFor(() => expect(props.open).toBe(false));
@@ -149,7 +157,9 @@ describe.each([
 	});
 
 	it('initialFocus takes a selector looked up inside the dialog, or an element', () => {
-		const children = createRawSnippet(() => ({ render: () => '<div><button id="first">One</button><button id="second">Two</button></div>' }));
+		const children = createRawSnippet(() => ({
+			render: () => '<div><button id="first">One</button><button id="second">Two</button></div>'
+		}));
 		const { unmount } = render(Component, { title: 'Pick', open: true, initialFocus: '#second', children });
 		expect(document.activeElement?.id).toBe('second');
 		unmount();

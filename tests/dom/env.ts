@@ -8,7 +8,8 @@ import { configure } from '@testing-library/dom';
 import { afterEach } from 'vitest';
 
 /** The elements a modal dialog can focus first: what a browser looks for after `autofocus`. */
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE =
+	'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const modals: HTMLDialogElement[] = [];
 

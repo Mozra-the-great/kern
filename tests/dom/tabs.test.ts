@@ -18,7 +18,10 @@ const tabs: TabItem[] = [
 const panel = mapSnippet<string>((id) => `panel: ${id}`);
 
 function selectedTab(): string | undefined {
-	return screen.getAllByRole('tab').find((tab) => tab.getAttribute('aria-selected') === 'true')?.textContent.trim();
+	return screen
+		.getAllByRole('tab')
+		.find((tab) => tab.getAttribute('aria-selected') === 'true')
+		?.textContent.trim();
 }
 
 describe('Tabs', () => {
@@ -165,7 +168,13 @@ describe('Tabs', () => {
 	});
 
 	it('without a panel it is only the tab bar and points aria-controls at the page region', () => {
-		render(Tabs, { tabs: [{ id: 'a', label: 'A', controls: 'main' }, { id: 'b', label: 'B' }], label: 'Pages' });
+		render(Tabs, {
+			tabs: [
+				{ id: 'a', label: 'A', controls: 'main' },
+				{ id: 'b', label: 'B' }
+			],
+			label: 'Pages'
+		});
 		expect(screen.queryByRole('tabpanel')).toBeNull();
 		const [a, b] = screen.getAllByRole('tab');
 		expect(a?.getAttribute('aria-controls')).toBe('main');
@@ -249,7 +258,13 @@ describe('TabLinks', () => {
 	});
 
 	it('speaks a badge after the label like Tabs does', () => {
-		render(TabLinks, { links: [{ href: '/inbox', label: 'Inbox', badge: 2, badgeLabel: '2 unread' }, { href: '/x', label: 'Alerts', dot: true, badgeLabel: 'Sync error' }], label: 'Mail' });
+		render(TabLinks, {
+			links: [
+				{ href: '/inbox', label: 'Inbox', badge: 2, badgeLabel: '2 unread' },
+				{ href: '/x', label: 'Alerts', dot: true, badgeLabel: 'Sync error' }
+			],
+			label: 'Mail'
+		});
 		expect(screen.getByRole('link', { name: 'Inbox 2 unread' })).toBeTruthy();
 		expect(screen.getByRole('link', { name: 'Alerts Sync error' })).toBeTruthy();
 	});

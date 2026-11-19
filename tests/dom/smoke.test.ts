@@ -29,36 +29,68 @@ const items = [
 const ok = { props: { children: textSnippet('Content') } };
 
 const SMOKE: Record<string, Smoke> = {
-	Accordion: { props: { items: [{ id: 'a', title: 'One' }], content: mapSnippet<string>((id) => `body ${id}`) }, root: '.k-accordion', role: { role: 'group', name: /.*/ } },
+	Accordion: {
+		props: { items: [{ id: 'a', title: 'One' }], content: mapSnippet<string>((id) => `body ${id}`) },
+		root: '.k-accordion',
+		role: { role: 'group', name: /.*/ }
+	},
 	AccordionItem: { props: { title: 'One', children: textSnippet('Body') }, root: '.k-accordion-item', role: { role: 'group', name: /.*/ } },
 	Alert: { props: { title: 'Heads up', children: textSnippet('Body') }, root: '.k-alert', role: { role: 'status', name: /.*/ } },
 	Avatar: { props: { name: 'Ada Lovelace' }, root: '.k-avatar', role: { role: 'img', name: 'Ada Lovelace' } },
 	Badge: { ...ok, root: '.k-badge' },
-	Breadcrumb: { props: { items: [{ label: 'Home', href: '/' }, { label: 'Page' }] }, root: '.k-breadcrumb', role: { role: 'navigation', name: /.+/ } },
+	Breadcrumb: {
+		props: { items: [{ label: 'Home', href: '/' }, { label: 'Page' }] },
+		root: '.k-breadcrumb',
+		role: { role: 'navigation', name: /.+/ }
+	},
 	Button: { props: { children: textSnippet('Save') }, root: 'button.k-button', role: { role: 'button', name: 'Save' } },
 	Card: { props: { title: 'Card title', children: textSnippet('Body') }, root: '.k-card', role: { role: 'heading', name: 'Card title' } },
 	Caret: { root: '.k-caret' },
-	Carousel: { props: { items: [1, 2, 3], label: 'Gallery', slide: mapSnippet2<number, number>((n, i) => `slide ${n} at ${i}`) }, root: '.k-carousel', role: { role: 'region', name: 'Gallery' } },
+	Carousel: {
+		props: { items: [1, 2, 3], label: 'Gallery', slide: mapSnippet2<number, number>((n, i) => `slide ${n} at ${i}`) },
+		root: '.k-carousel',
+		role: { role: 'region', name: 'Gallery' }
+	},
 	Checkbox: { props: { label: 'Accept' }, root: '.k-check', role: { role: 'checkbox', name: 'Accept' } },
 	Code: { props: { code: 'const a = 1;' }, root: '.k-code' },
 	CodeBlock: { props: { code: 'const a = 1;', label: 'Snippet' }, root: '.k-code-block' },
-	Collapsible: { props: { label: 'More', children: textSnippet('Hidden') }, root: '.k-collapsible', role: { role: 'button', name: /More/ } },
+	Collapsible: {
+		props: { label: 'More', children: textSnippet('Hidden') },
+		root: '.k-collapsible',
+		role: { role: 'button', name: /More/ }
+	},
 	ColorPicker: { props: { label: 'Colour', value: '#336699' }, root: '.k-color' },
-	Combobox: { props: { label: 'Fruit', options: [{ value: 'a', label: 'Apple' }] }, root: '.k-combobox', role: { role: 'combobox', name: 'Fruit' } },
+	Combobox: {
+		props: { label: 'Fruit', options: [{ value: 'a', label: 'Apple' }] },
+		root: '.k-combobox',
+		role: { role: 'combobox', name: 'Fruit' }
+	},
 	CommandPalette: { props: { commands: [{ id: 'go', label: 'Go' }] }, root: '.k-command-palette' },
 	ContextMenu: { props: { items: [{ id: 'a', label: 'Copy' }], children: textSnippet('Area') }, root: '.k-context-area' },
 	CopyButton: { props: { text: 'copy me' }, root: '.k-copy-button', role: { role: 'button', name: /.+/ } },
 	CountUp: { props: { value: 5 }, root: '.k-countup' },
-	DataTable: { props: { caption: 'People', columns: [{ key: 'name', label: 'Name' }], rows: [{ name: 'Ada' }] }, root: '.k-datatable', role: { role: 'table', name: 'People' } },
+	DataTable: {
+		props: { caption: 'People', columns: [{ key: 'name', label: 'Name' }], rows: [{ name: 'Ada' }] },
+		root: '.k-datatable',
+		role: { role: 'table', name: 'People' }
+	},
 	DatePicker: { props: { label: 'Date' }, root: '.k-date', role: { role: 'textbox', name: /Date/ } },
 	Divider: { root: '.k-divider' },
 	Drawer: { props: { title: 'Menu' }, root: '.k-drawer' },
-	DropdownMenu: { props: { label: 'Actions', items: [{ id: 'a', label: 'Open' }] }, root: '.k-dropdown', role: { role: 'button', name: 'Actions' } },
+	DropdownMenu: {
+		props: { label: 'Actions', items: [{ id: 'a', label: 'Open' }] },
+		root: '.k-dropdown',
+		role: { role: 'button', name: 'Actions' }
+	},
 	EmptyState: { props: { title: 'Nothing here' }, root: '.k-empty' },
 	Field: { props: { label: 'Name', children: mapSnippet<unknown>(() => 'control') }, root: '.k-field' },
 	FileDrop: { props: { label: 'Upload' }, root: '.k-filedrop' },
 	GridBackground: { root: '.k-grid-bg' },
-	Heatmap: { props: { label: 'Activity', data: [{ date: '2026-01-01', value: 3 }] }, root: '.k-heatmap', role: { role: 'grid', name: /Activity/ } },
+	Heatmap: {
+		props: { label: 'Activity', data: [{ date: '2026-01-01', value: 3 }] },
+		root: '.k-heatmap',
+		role: { role: 'grid', name: /Activity/ }
+	},
 	Highlight: { ...ok, root: '.k-highlight' },
 	HistoryBar: { props: { label: 'Uptime', items: [{ label: 'Mon', status: 'ok' }] }, root: '.k-history' },
 	IconButton: { props: { label: 'Close' }, root: '.k-icon-button', role: { role: 'button', name: 'Close' } },
@@ -80,20 +112,52 @@ const SMOKE: Record<string, Smoke> = {
 	Progress: { props: { label: 'Upload', value: 40 }, root: '.k-progress', role: { role: 'progressbar', name: 'Upload' } },
 	ProgressRing: { props: { label: 'Sync', value: 40 }, root: '.k-progress-ring', role: { role: 'progressbar', name: 'Sync' } },
 	Prose: { props: { text: 'One\n\nTwo' }, root: '.k-prose' },
-	RadioGroup: { props: { label: 'Size', options: [{ value: 's', label: 'Small' }, { value: 'm', label: 'Medium' }] }, root: '.k-radio-group', role: { role: 'radio', name: 'Small' } },
+	RadioGroup: {
+		props: {
+			label: 'Size',
+			options: [
+				{ value: 's', label: 'Small' },
+				{ value: 'm', label: 'Medium' }
+			]
+		},
+		root: '.k-radio-group',
+		role: { role: 'radio', name: 'Small' }
+	},
 	Rating: { props: { label: 'Rating', value: 3 }, root: '.k-rating' },
 	RelativeTime: { props: { value: new Date('2026-01-01T00:00:00Z') }, root: '.k-relative-time' },
-	Resizable: { props: { panels: [{ id: 'l' }, { id: 'r' }], panel: mapSnippet2<{ id: string }, number>((p) => p.id) }, root: '.k-resizable' },
+	Resizable: {
+		props: { panels: [{ id: 'l' }, { id: 'r' }], panel: mapSnippet2<{ id: string }, number>((p) => p.id) },
+		root: '.k-resizable'
+	},
 	Reveal: { ...ok, root: '.k-reveal' },
 	Scramble: { props: { text: 'Hello' }, root: '.k-scramble' },
 	ScrollArea: { ...ok, root: '.k-scroll-area' },
-	SegmentedControl: { props: { label: 'View', options: [{ value: 'a', label: 'List' }, { value: 'b', label: 'Grid' }] }, root: '.k-segmented' },
-	Select: { props: { label: 'Country', options: [{ value: 'de', label: 'Germany' }] }, root: '.k-select', role: { role: 'combobox', name: 'Country' } },
-	SelectGrid: { props: { items: items, label: 'Pick', key: (i: { id: string }) => i.id, itemLabel: (i: { label: string }) => i.label }, root: '.k-select-grid' },
+	SegmentedControl: {
+		props: {
+			label: 'View',
+			options: [
+				{ value: 'a', label: 'List' },
+				{ value: 'b', label: 'Grid' }
+			]
+		},
+		root: '.k-segmented'
+	},
+	Select: {
+		props: { label: 'Country', options: [{ value: 'de', label: 'Germany' }] },
+		root: '.k-select',
+		role: { role: 'combobox', name: 'Country' }
+	},
+	SelectGrid: {
+		props: { items: items, label: 'Pick', key: (i: { id: string }) => i.id, itemLabel: (i: { label: string }) => i.label },
+		root: '.k-select-grid'
+	},
 	Skeleton: { root: '.k-skeleton' },
 	SkipLink: { props: { target: 'main', label: 'Skip to content' }, root: '.k-skip-link', role: { role: 'link', name: 'Skip to content' } },
 	Slider: { props: { label: 'Volume' }, root: '.k-slider', role: { role: 'slider', name: 'Volume' } },
-	SortableList: { props: { items: items, label: 'Order', key: (i: { id: string }) => i.id, itemLabel: (i: { label: string }) => i.label }, root: '.k-sortable-list' },
+	SortableList: {
+		props: { items: items, label: 'Order', key: (i: { id: string }) => i.id, itemLabel: (i: { label: string }) => i.label },
+		root: '.k-sortable-list'
+	},
 	Sparkline: { props: { values: [1, 3, 2, 5] }, root: '.k-sparkline' },
 	Spinner: { root: '.k-spinner', role: { role: 'status', name: /.*/ } },
 	Stat: { props: { label: 'Users', value: 12 }, root: '.k-stat' },
@@ -101,20 +165,46 @@ const SMOKE: Record<string, Smoke> = {
 	StatusMessage: { props: { children: textSnippet('Saved') }, root: '.k-status-message' },
 	Stepper: { props: { steps: items, current: 0 }, root: '.k-stepper', role: { role: 'navigation', name: /.+/ } },
 	Switch: { props: { label: 'Notifications' }, root: '.k-switch', role: { role: 'switch', name: 'Notifications' } },
-	TabLinks: { props: { label: 'Sections', links: [{ href: '/a', label: 'A', current: true }, { href: '/b', label: 'B' }] }, root: '.k-tab-links', role: { role: 'navigation', name: 'Sections' } },
-	Table: { props: { columns: [{ key: 'name', label: 'Name' }], rows: [{ name: 'Ada' }] }, root: '.k-table', role: { role: 'table', name: /.*/ } },
+	TabLinks: {
+		props: {
+			label: 'Sections',
+			links: [
+				{ href: '/a', label: 'A', current: true },
+				{ href: '/b', label: 'B' }
+			]
+		},
+		root: '.k-tab-links',
+		role: { role: 'navigation', name: 'Sections' }
+	},
+	Table: {
+		props: { columns: [{ key: 'name', label: 'Name' }], rows: [{ name: 'Ada' }] },
+		root: '.k-table',
+		role: { role: 'table', name: /.*/ }
+	},
 	Tabs: { props: { tabs: items }, root: '.k-tabs', role: { role: 'tab', name: 'Alpha' } },
 	Tag: { ...ok, root: '.k-tag' },
 	TagInput: { props: { label: 'Tags' }, root: '.k-tags' },
 	Terminal: { props: { lines: [{ text: 'ls' }] }, root: '.k-terminal' },
 	Textarea: { props: { label: 'Message' }, root: '.k-textarea', role: { role: 'textbox', name: 'Message' } },
-	ThemeToggle: { props: { themes: [{ id: 'light', label: 'Light' }, { id: 'dark', label: 'Dark' }] }, root: '.k-theme-toggle' },
+	ThemeToggle: {
+		props: {
+			themes: [
+				{ id: 'light', label: 'Light' },
+				{ id: 'dark', label: 'Dark' }
+			]
+		},
+		root: '.k-theme-toggle'
+	},
 	Tile: { ...ok, root: '.k-tile' },
 	TileGrid: { ...ok, root: '.k-tile-grid' },
 	Timeline: { props: { items: [{ id: 'a', title: 'Created' }] }, root: '.k-timeline' },
 	Toaster: { root: '.k-toaster' },
 	Tooltip: { props: { text: 'Hint', children: textSnippet('Target') }, root: '.k-tooltip' },
-	TreeView: { props: { nodes: [{ id: 'a', label: 'Root', children: [{ id: 'b', label: 'Leaf' }] }] }, root: '.k-tree', role: { role: 'tree', name: /.*/ } },
+	TreeView: {
+		props: { nodes: [{ id: 'a', label: 'Root', children: [{ id: 'b', label: 'Leaf' }] }] },
+		root: '.k-tree',
+		role: { role: 'tree', name: /.*/ }
+	},
 	Typewriter: { props: { text: 'Hello' }, root: '.k-typewriter' }
 };
 

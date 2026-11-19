@@ -137,7 +137,11 @@ describe('Input', () => {
 describe('Textarea', () => {
 	it('is labelled, bindable and invalid with an error', async () => {
 		const user = userEvent.setup();
-		const props = reactive<{ label: string; value: string | undefined; error: string | undefined }>({ label: 'Message', value: 'hi', error: undefined });
+		const props = reactive<{ label: string; value: string | undefined; error: string | undefined }>({
+			label: 'Message',
+			value: 'hi',
+			error: undefined
+		});
 		render(Textarea, { props });
 		const area = screen.getByLabelText<HTMLTextAreaElement>('Message');
 		expect(area.tagName).toBe('TEXTAREA');
@@ -168,7 +172,11 @@ describe('Select', () => {
 
 	it('changes the value with the mouse and reports it through the bound value', async () => {
 		const user = userEvent.setup();
-		const props = reactive<{ label: string; options: SelectOption[]; value: string | undefined }>({ label: 'Expires', options, value: 'one' });
+		const props = reactive<{ label: string; options: SelectOption[]; value: string | undefined }>({
+			label: 'Expires',
+			options,
+			value: 'one'
+		});
 		render(Select, { props });
 		const select = screen.getByLabelText<HTMLSelectElement>('Expires');
 		await user.selectOptions(select, 'seven');
@@ -309,7 +317,11 @@ describe('Checkbox', () => {
 describe('Switch', () => {
 	it('is a switch named by its label and toggles with click and keyboard', async () => {
 		const user = userEvent.setup();
-		const props = reactive<{ label: string; checked: boolean | undefined; hint: string }>({ label: 'Notifications', checked: undefined, hint: 'Mail only' });
+		const props = reactive<{ label: string; checked: boolean | undefined; hint: string }>({
+			label: 'Notifications',
+			checked: undefined,
+			hint: 'Mail only'
+		});
 		render(Switch, { props });
 		const toggle = screen.getByRole<HTMLInputElement>('switch', { name: 'Notifications' });
 		expect(toggle.getAttribute('aria-checked')).toBe('false');

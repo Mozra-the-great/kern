@@ -21,7 +21,17 @@ const tsHandledRules = tseslint.configs.eslintRecommended.rules ?? {};
 
 export default defineConfig(
 	{
-		ignores: ['dist/', 'dist-elements/', 'demo-dist/', 'test-results/', 'playwright-report/', 'tmp/', '.claude/', '**/.svelte-kit/']
+		ignores: [
+			'dist/',
+			'dist-elements/',
+			'demo-dist/',
+			'coverage/',
+			'test-results/',
+			'playwright-report/',
+			'tmp/',
+			'.claude/',
+			'**/.svelte-kit/'
+		]
 	},
 	js.configs.recommended,
 	tseslint.configs.strict,

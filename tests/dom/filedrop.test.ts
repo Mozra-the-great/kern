@@ -24,7 +24,7 @@ function zone(): HTMLElement {
 	return element;
 }
 
-const dragging = (): boolean => (document.querySelector('.zone')?.classList.contains('dragging') ?? false);
+const dragging = (): boolean => document.querySelector('.zone')?.classList.contains('dragging') ?? false;
 
 afterEach(() => {
 	vi.unstubAllGlobals();
@@ -68,7 +68,11 @@ describe('FileDrop (zone is the button)', () => {
 
 	it('reports the picked files, shows them in a list and announces the count', async () => {
 		const onfiles = vi.fn();
-		const props = reactive<{ onfiles: (files: File[]) => void; multiple: boolean; files: File[] | undefined }>({ onfiles, multiple: true, files: undefined });
+		const props = reactive<{ onfiles: (files: File[]) => void; multiple: boolean; files: File[] | undefined }>({
+			onfiles,
+			multiple: true,
+			files: undefined
+		});
 		render(FileDrop, { props });
 		const pdf = fileOf('a.pdf', 'application/pdf', 2048);
 		await fireEvent.change(input(), { target: { files: [pdf] } });

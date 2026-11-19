@@ -2,6 +2,7 @@
 dist/
 dist-elements/
 demo-dist/
+coverage/
 .svelte-kit/
 test-results/
 playwright-report/

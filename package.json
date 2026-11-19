@@ -73,6 +73,7 @@
 		"check:html": "node scripts/ci/no-raw-html.mjs",
 		"format": "prettier --write . && eslint . --fix",
 		"test": "vitest run",
+		"test:coverage": "vitest run --coverage",
 		"test:targets": "playwright test -c tests/targets",
 		"test:elements": "playwright test -c tests/elements/playwright.config.ts",
 		"test:types": "tsc --noEmit -p tests/fixtures/react-jsx",
