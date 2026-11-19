@@ -519,8 +519,37 @@
 		.zone {
 			border-color: CanvasText;
 		}
+		/* Dragging: a solid, heavier Highlight edge (the tint and the inset ring are dropped). */
 		.zone.dragging {
+			border-width: 3px;
 			border-color: Highlight;
+		}
+		.zone.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.zone:disabled,
+		.split.disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.icon,
+		.dragging .icon {
+			color: CanvasText;
+		}
+		.zone:disabled .icon,
+		.split.disabled .icon {
+			color: GrayText;
+		}
+		.rm {
+			border-color: ButtonText;
+			color: ButtonText;
+		}
+		.rm:disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
 		}
 	}
 </style>

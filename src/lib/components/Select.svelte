@@ -99,4 +99,24 @@
 		pointer-events: none;
 		color: var(--k-fg-muted);
 	}
+	@media (forced-colors: active) {
+		select:focus-visible {
+			border-color: Highlight;
+		}
+		.invalid select {
+			border-style: double;
+			border-width: 3px;
+		}
+		select:disabled {
+			border-color: GrayText;
+			color: GrayText;
+		}
+		/* The chevron is an SVG with its own authored colour. */
+		svg {
+			color: ButtonText;
+		}
+		select:disabled + svg {
+			color: GrayText;
+		}
+	}
 </style>

@@ -76,4 +76,14 @@
 		width: 12px;
 		height: 12px;
 	}
+	@media (forced-colors: active) {
+		.selected {
+			border-width: 3px;
+			border-color: Highlight;
+		}
+		.x {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+	}
 </style>

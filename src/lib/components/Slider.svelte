@@ -161,4 +161,65 @@
 		font-variant-numeric: tabular-nums;
 		color: var(--k-fg);
 	}
+	@media (forced-colors: active) {
+		/* The fill is a gradient on the track: keep it in system colours, with a text-coloured thumb. */
+		input {
+			forced-color-adjust: none;
+			color: CanvasText;
+		}
+		input::-webkit-slider-runnable-track {
+			border-color: ButtonText;
+			background: linear-gradient(to right, Highlight var(--fill), Canvas var(--fill));
+		}
+		input::-moz-range-track {
+			border-color: ButtonText;
+			background: linear-gradient(to right, Highlight var(--fill), Canvas var(--fill));
+		}
+		input::-webkit-slider-thumb {
+			border-color: Canvas;
+			background: ButtonText;
+			box-shadow: 0 0 0 1px ButtonText;
+		}
+		input::-moz-range-thumb {
+			border-color: Canvas;
+			background: ButtonText;
+			box-shadow: 0 0 0 1px ButtonText;
+		}
+		input:hover:not(:disabled)::-webkit-slider-thumb {
+			background: Highlight;
+			box-shadow: 0 0 0 1px Highlight;
+		}
+		input:hover:not(:disabled)::-moz-range-thumb {
+			background: Highlight;
+			box-shadow: 0 0 0 1px Highlight;
+		}
+		input:disabled {
+			opacity: 1;
+			color: GrayText;
+		}
+		input:disabled::-webkit-slider-runnable-track {
+			border-color: GrayText;
+			background: linear-gradient(to right, GrayText var(--fill), Canvas var(--fill));
+		}
+		input:disabled::-moz-range-track {
+			border-color: GrayText;
+			background: linear-gradient(to right, GrayText var(--fill), Canvas var(--fill));
+		}
+		input:disabled::-webkit-slider-thumb {
+			border-color: Canvas;
+			background: GrayText;
+			box-shadow: 0 0 0 1px GrayText;
+		}
+		input:disabled::-moz-range-thumb {
+			border-color: Canvas;
+			background: GrayText;
+			box-shadow: 0 0 0 1px GrayText;
+		}
+		input:focus-visible {
+			outline-color: Highlight;
+		}
+		.val {
+			color: CanvasText;
+		}
+	}
 </style>

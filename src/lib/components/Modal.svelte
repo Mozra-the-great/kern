@@ -198,4 +198,10 @@
 			width: 100%;
 		}
 	}
+	@media (forced-colors: active) {
+		.x {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+	}
 </style>

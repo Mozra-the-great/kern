@@ -482,4 +482,35 @@
 			transform: translateY(-4px);
 		}
 	}
+	@media (forced-colors: active) {
+		.k-combobox:focus-within {
+			border-color: Highlight;
+		}
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.toggle {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+		.toggle:disabled {
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.check {
+			color: CanvasText;
+		}
+		[role='option'].active {
+			outline-color: Highlight;
+		}
+		input::placeholder {
+			color: GrayText;
+		}
+	}
 </style>

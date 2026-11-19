@@ -110,4 +110,24 @@
 		width: 18px;
 		height: 18px;
 	}
+	@media (forced-colors: active) {
+		.k-input:focus-within {
+			border-color: Highlight;
+		}
+		/* Invalid: a double edge as well as the red one (which is dropped). */
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.k-input:has(input:disabled) {
+			border-color: GrayText;
+			color: GrayText;
+		}
+		input::placeholder {
+			color: GrayText;
+		}
+		.adorn {
+			color: CanvasText;
+		}
+	}
 </style>

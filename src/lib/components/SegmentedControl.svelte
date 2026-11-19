@@ -167,4 +167,30 @@
 		overflow-wrap: break-word;
 		hyphens: auto;
 	}
+	@media (forced-colors: active) {
+		.k-segmented {
+			border-color: ButtonText;
+		}
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		/* Selected: inverted (Highlight / HighlightText), not only a raised surface. */
+		.seg.on {
+			forced-color-adjust: none;
+			border-color: Highlight;
+			background: Highlight;
+			color: HighlightText;
+		}
+		.seg:has(input:disabled) {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.seg.on:has(input:disabled) {
+			border-color: GrayText;
+			background: GrayText;
+			color: Canvas;
+		}
+	}
 </style>

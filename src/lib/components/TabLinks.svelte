@@ -164,9 +164,16 @@
 		background: var(--k-on-primary);
 	}
 	@media (forced-colors: active) {
+		/* Current tab: a Highlight bar instead of the inset shadow (dropped); see Tabs.svelte for the 4px. */
 		a[aria-current='page'] {
 			box-shadow: none;
-			border-bottom: 2px solid Highlight;
+			border-bottom: 3px solid Highlight;
+		}
+		[data-look='line'] a[aria-current='page'] {
+			border-bottom-width: 4px;
+		}
+		a:focus-visible {
+			outline-color: Highlight;
 		}
 	}
 </style>

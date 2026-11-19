@@ -259,4 +259,21 @@
 			transition: none;
 		}
 	}
+	@media (forced-colors: active) {
+		.seg.on {
+			forced-color-adjust: none;
+			background: Highlight;
+			color: HighlightText;
+			box-shadow: none;
+		}
+		.seg svg {
+			color: inherit;
+		}
+		.menu svg {
+			color: CanvasText;
+		}
+		select:focus-visible {
+			outline-color: Highlight;
+		}
+	}
 </style>

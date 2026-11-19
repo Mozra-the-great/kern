@@ -672,4 +672,50 @@
 			transform: translateY(-4px);
 		}
 	}
+	@media (forced-colors: active) {
+		.k-date:has(input:focus-visible) {
+			border-color: Highlight;
+		}
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		button {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+		button:disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		/* Selected day: inverted; today keeps its underline; unavailable days stay struck through in GrayText. */
+		[role='gridcell'][aria-selected='true'] {
+			forced-color-adjust: none;
+			background: Highlight;
+			color: HighlightText;
+		}
+		[role='gridcell'][aria-selected='true']:focus-visible {
+			outline-color: HighlightText;
+		}
+		[role='gridcell']:hover:not([aria-selected='true']):not([aria-disabled='true']) {
+			outline: 1px solid Highlight;
+			outline-offset: -1px;
+		}
+		[role='gridcell'][aria-disabled='true'] {
+			opacity: 1;
+			color: GrayText;
+		}
+		th {
+			color: CanvasText;
+		}
+		input::placeholder {
+			color: GrayText;
+		}
+	}
 </style>

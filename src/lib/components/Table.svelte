@@ -249,4 +249,21 @@
 			border-bottom: 0;
 		}
 	}
+	@media (forced-colors: active) {
+		/* Sortable headers are buttons without a box: underline them like links; the arrow keeps its state by shape. */
+		th button {
+			text-decoration: underline;
+			text-underline-offset: 3px;
+		}
+		th svg {
+			opacity: 1;
+		}
+		th svg:not(.active) {
+			opacity: 0.5;
+		}
+		tbody tr:hover td {
+			outline: 1px solid Highlight;
+			outline-offset: -1px;
+		}
+	}
 </style>

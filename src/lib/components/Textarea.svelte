@@ -80,4 +80,20 @@
 		field-sizing: content;
 		min-height: calc(var(--k-control-h) * 2);
 	}
+	@media (forced-colors: active) {
+		.k-textarea:focus-visible {
+			border-color: Highlight;
+		}
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.k-textarea:disabled {
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.k-textarea::placeholder {
+			color: GrayText;
+		}
+	}
 </style>
