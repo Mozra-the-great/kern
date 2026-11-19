@@ -54,3 +54,6 @@ __pycache__/
 # Playwright output
 test-results/
 playwright-report/
+
+# Local queue prompts and work files (never committed)
+/Prompts & Claude/
