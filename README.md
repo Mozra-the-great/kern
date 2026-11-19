@@ -994,6 +994,28 @@ vollständig getypt, ein neuer englischer Text kompiliert erst, wenn er auch dor
 `Sparkline`, `Heatmap`, `HistoryBar` und `Timeline` nehmen `locale`, sonst die Sprache des gewählten
 Bündels (`lang`), sonst die des Browsers. Wer nie ein Bündel wählt, merkt keine Änderung.
 
+### Nur für Screenreader
+
+Text, den Screenreader vorlesen, der aber nicht sichtbar ist (eine Spaltenüberschrift, die nur ein
+Symbol zeigt, die Worte „hinzugefügte Zeile“ neben einem `+`): `VisuallyHidden`, `<k-visually-hidden>` oder
+ohne Komponente die globale Klasse `.k-visually-hidden` aus jeder Theme-Datei. Der Text bleibt im
+Barrierefreiheitsbaum, wird aber auf 1 × 1 px abgeschnitten. Die Variante `focusable`
+(`.k-visually-hidden-focusable`) zeigt ihren Inhalt, solange er oder etwas darin den Fokus hat, etwa für einen
+„Zum Inhalt springen“-Link.
+
+```svelte
+<th><TimerIcon aria-hidden="true" /><VisuallyHidden>Zeitstempel</VisuallyHidden></th>
+<VisuallyHidden as="h2">Werkzeuge</VisuallyHidden>
+```
+
+```html
+<span aria-hidden="true">+</span><span class="k-visually-hidden">hinzugefügte Zeile</span>
+<k-visually-hidden focusable><a href="#ende">Zum Ende springen</a></k-visually-hidden>
+```
+
+`as` wählt das Element (`span`, Vorgabe, oder `div`, `p`, `label`, `h2`–`h4`); weitere Attribute gehen an
+das Element.
+
 ### Text ohne HTML
 
 kern erzeugt Markup nie aus einem String: kein `{@html}`, kein `innerHTML`, `outerHTML`,

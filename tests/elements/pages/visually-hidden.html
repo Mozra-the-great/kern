@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="code">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: visually hidden</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script>
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Visually hidden</h1>
+			<table>
+				<thead>
+					<tr>
+						<th id="th-element"><span aria-hidden="true">⏱</span><k-visually-hidden id="el">Timestamp</k-visually-hidden></th>
+						<th id="th-class"><span aria-hidden="true">±</span><span class="k-visually-hidden" id="cls">Change</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1</td>
+						<td>2</td>
+					</tr>
+				</tbody>
+			</table>
+			<k-visually-hidden id="el-focus" focusable><a href="#main-end">Jump to the end (element)</a></k-visually-hidden>
+			<div class="k-visually-hidden-focusable" id="cls-focus"><a href="#main-end">Jump to the end (class)</a></div>
+			<p id="main-end">End</p>
+		</main>
+	</body>
+</html>

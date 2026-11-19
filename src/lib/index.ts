@@ -72,6 +72,7 @@ export { default as CopyButton } from './components/CopyButton.svelte';
 export { default as DownloadButton } from './components/DownloadButton.svelte';
 export { default as StatusMessage } from './components/StatusMessage.svelte';
 export { default as Kbd } from './components/Kbd.svelte';
+export { default as VisuallyHidden } from './components/VisuallyHidden.svelte';
 export { default as RelativeTime } from './components/RelativeTime.svelte';
 export { default as StatusDot } from './components/StatusDot.svelte';
 export { default as ThemeToggle } from './components/ThemeToggle.svelte';

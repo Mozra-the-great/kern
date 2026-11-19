@@ -15216,6 +15216,40 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/visually-hidden.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-visually-hidden",
+					"name": "KVisuallyHiddenElement",
+					"description": "<k-visually-hidden>: the slotted text stays in the accessibility tree but is not painted (#100). The attribute `focusable` shows it while something inside has focus (a skip link). The host itself is hidden, so the slotted light-DOM text keeps the page's language and styles.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [],
+					"attributes": [],
+					"events": [],
+					"slots": [
+						{
+							"name": ""
+						}
+					]
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-visually-hidden",
+					"declaration": {
+						"name": "KVisuallyHiddenElement",
+						"module": "dist-elements/elements/visually-hidden.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/strings.js",
 			"declarations": [],
 			"exports": [
@@ -16055,6 +16089,14 @@
 					"declaration": {
 						"name": "KTypewriterElement",
 						"module": "dist-elements/elements/typewriter.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-visually-hidden",
+					"declaration": {
+						"name": "KVisuallyHiddenElement",
+						"module": "dist-elements/elements/visually-hidden.js"
 					}
 				},
 				{
