@@ -295,7 +295,7 @@ test.describe('Prose', () => {
 		await expect(root.locator('p').nth(3)).toContainText('<b>Kein</b> Markup: <img src=x onerror="window.pwned = 1">');
 		await expect(root.locator('b, img')).toHaveCount(0);
 		expect(await page.evaluate(() => (window as unknown as TestWindow).pwned)).toBeUndefined();
-		const external = root.getByRole('link', { name: /example\.com\/impressum/ });
+		const external = root.getByRole('link', { name: /^https:\/\/example\.com\/impressum(?:\s|$)/ });
 		await expect(external).toHaveAttribute('href', 'https://example.com/impressum');
 		await expect(external).toHaveAttribute('target', '_blank');
 		await expect(external).toHaveAttribute('rel', 'noopener noreferrer');

@@ -74,6 +74,19 @@ describe('the catalogue', () => {
 	});
 });
 
+describe('setStrings rejects prototype keys', () => {
+	it('a bundle with __proto__, constructor or prototype does not pollute Object.prototype', () => {
+		const hostile = JSON.parse(
+			'{"__proto__": {"polluted": "yes"}, "constructor": {"prototype": {"polluted": "yes"}}, "modal": {"__proto__": {"polluted": "yes"}, "closeLabel": "Zu"}}'
+		) as Parameters<typeof setStrings>[0];
+		setStrings(hostile);
+		expect(({} as Record<string, unknown>)['polluted']).toBeUndefined();
+		expect(Object.prototype).not.toHaveProperty('polluted');
+		// The legitimate part of the bundle still applies.
+		expect(getStrings().modal.closeLabel).toBe('Zu');
+	});
+});
+
 describe('setStrings', () => {
 	it('replaces texts, keeps the rest English and ignores unknown keys', () => {
 		setStrings({ modal: { closeLabel: 'Fermer' }, nothing: { here: 'x' } } as unknown as Parameters<typeof setStrings>[0]);

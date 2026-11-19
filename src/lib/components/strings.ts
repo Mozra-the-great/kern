@@ -203,23 +203,37 @@ export const en: KernBundle = { lang: 'en', ...catalogue };
 /* ───────────────────────────── shared store ───────────────────────────── */
 
 type Plain = { [key: string]: Plain | string };
-const UNSAFE = new Set(['__proto__', 'constructor', 'prototype']);
 
 function isPlain(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-/** Copy of `source` with only strings and plain objects, merged over `into` (later wins). */
+/** Keys that would reach a prototype when written; consumer bundles never get to set them. */
+function isUnsafeKey(key: string): boolean {
+	return key === '__proto__' || key === 'constructor' || key === 'prototype';
+}
+
+/** An object without a prototype, so even a missed key could not reach Object.prototype. */
+function plainObject(): Plain {
+	return Object.create(null) as Plain;
+}
+
+/**
+ * Copy of `source` with only strings and plain objects, merged over `into` (later wins). Only own
+ * enumerable keys of `source` are read, prototype keys are skipped, and nested targets are
+ * prototype-less objects (CodeQL js/prototype-pollution-utility).
+ */
 function mergeInto(into: Plain, source: Record<string, unknown>): void {
 	for (const key of Object.keys(source)) {
-		if (UNSAFE.has(key)) continue;
+		if (isUnsafeKey(key) || !Object.prototype.hasOwnProperty.call(source, key)) continue;
 		const value = source[key];
-		if (typeof value === 'string') into[key] = value;
-		else if (isPlain(value)) {
-			const current = into[key];
-			const target: Plain = typeof current === 'object' ? current : {};
+		if (typeof value === 'string') {
+			Object.defineProperty(into, key, { value, enumerable: true, writable: true, configurable: true });
+		} else if (isPlain(value)) {
+			const current = Object.prototype.hasOwnProperty.call(into, key) ? into[key] : undefined;
+			const target: Plain = typeof current === 'object' ? current : plainObject();
 			mergeInto(target, value);
-			into[key] = target;
+			Object.defineProperty(into, key, { value: target, enumerable: true, writable: true, configurable: true });
 		}
 	}
 }
@@ -260,7 +274,7 @@ export interface StringsStore {
 
 /** A new, independent store, e.g. for tests. */
 export function createStringsStore(): StringsStore {
-	let overrides: Plain = {};
+	let overrides: Plain = plainObject();
 	let lang: string | undefined;
 	let revision = 0;
 	const locales = new Map<string, KernStringsInput>();
@@ -290,7 +304,7 @@ export function createStringsStore(): StringsStore {
 			return revision;
 		},
 		set(inputs) {
-			const next: Plain = {};
+			const next: Plain = plainObject();
 			let nextLang: string | undefined;
 			for (const input of inputs) {
 				if (!isPlain(input)) continue;
@@ -304,7 +318,7 @@ export function createStringsStore(): StringsStore {
 			notify();
 		},
 		reset() {
-			overrides = {};
+			overrides = plainObject();
 			lang = undefined;
 			notify();
 		},
