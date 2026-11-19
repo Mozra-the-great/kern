@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import { tick, type Snippet } from 'svelte';
 	import TabBadge, { tabName } from './TabBadge.svelte';
 	import { watchScrollFade, type ScrollFade } from './scroll-fade.js';
 
@@ -57,7 +57,12 @@
 		const changed = id !== active;
 		value = id;
 		if (changed) onchange?.(id);
-		if (focus) list?.querySelector<HTMLElement>(`#${CSS.escape(tabId(id))}`)?.focus();
+		if (!focus) return;
+		const tab = list?.querySelector<HTMLElement>(`#${CSS.escape(tabId(id))}`);
+		tab?.focus();
+		// A theme may set the selected tab heavier (--k-tab-selected-weight), so it grows once the
+		// selection renders: scroll it fully into view after that, or the strip stops short of its end.
+		void tick().then(() => tab?.scrollIntoView({ block: 'nearest', inline: 'nearest' }));
 	}
 	function onkeydown(e: KeyboardEvent) {
 		const from = (e.target instanceof Element ? e.target.closest('[role="tab"]')?.getAttribute('data-id') : undefined) ?? active;
