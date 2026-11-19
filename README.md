@@ -776,14 +776,7 @@ Seitenzahlen, Statusnamen, Tastennamen …). Alle stehen in einem Katalog (`Kern
 Komponente und Name geordnet); eine Prop oder ein Attribut gewinnt immer gegen den Katalog.
 Auch Texte, die nur gesprochen werden (`aria-roledescription` des Karussells, „(opens in a new tab)“
 bei externen Links), und das Datumsmuster im Platzhalter des DatePicker (`dd.mm.yyyy`) stehen im Katalog.
-Keine Sprache haben nur Formathinweise wie `#rrggbb` im ColorPicker und der `## Texte, Sprache und Barrierefreiheit
-
-### Standardtexte und Sprache
-
-Jede Komponente bringt englische Standardtexte mit (Schließen-Knopf, „Loading“, „No results“,
-Seitenzahlen, Statusnamen, Tastennamen …). Alle stehen in einem Katalog (`KernStrings`, nach
-Komponente und Name geordnet); eine Prop oder ein Attribut gewinnt immer gegen den Katalog.
--Prompt des Terminals. Ein Test prüft, dass
+Keine Sprache haben nur Formathinweise wie `#rrggbb` im ColorPicker und der `$`-Prompt des Terminals. Ein Test prüft, dass
 keine Komponente einen englischen Text als Vorgabe im Code trägt und dass jeder Katalogeintrag
 gelesen wird.
 
