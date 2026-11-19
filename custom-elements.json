@@ -529,7 +529,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -1303,7 +1304,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -1321,7 +1323,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2137,7 +2140,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2155,7 +2159,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2530,7 +2535,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2548,7 +2554,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4092,7 +4099,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4110,7 +4118,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4877,7 +4886,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4895,7 +4905,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -5970,7 +5981,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -6005,7 +6017,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -7391,7 +7404,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -7409,7 +7423,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -8132,7 +8147,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -8150,7 +8166,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -8902,7 +8919,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -9171,7 +9189,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -9179,7 +9198,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10058,7 +10078,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10067,7 +10088,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10339,7 +10361,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10357,7 +10380,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10996,7 +11020,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -11005,7 +11030,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -12359,7 +12385,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -12377,7 +12404,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13062,7 +13090,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13080,7 +13109,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13698,7 +13728,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13732,7 +13763,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",

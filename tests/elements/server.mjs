@@ -5,7 +5,12 @@ import { readFile } from 'node:fs/promises';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 
 const root = resolve(import.meta.dirname, '../..');
-const allowed = ['dist-elements', join('dist', 'themes'), join('tests', 'elements', 'pages')].map((p) => join(root, p) + sep);
+const allowed = [
+	'dist-elements',
+	join('dist', 'themes'),
+	join('tests', 'elements', 'pages'),
+	join('tests', 'fixtures', 'react-app', 'dist')
+].map((p) => join(root, p) + sep);
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.woff2': 'font/woff2' };
 const port = Number(process.env.PORT ?? 4791);
 

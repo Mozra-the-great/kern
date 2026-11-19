@@ -10,8 +10,8 @@
 			step: { type: 'Number' },
 			showValue: { type: 'Boolean', attribute: 'show-value' },
 			unit: { type: 'String' },
-			name: { type: 'String' },
-			disabled: { type: 'Boolean' }
+			name: { type: 'String', reflect: true },
+			disabled: { type: 'Boolean', reflect: true }
 		},
 		extend: formAssociated
 	}}

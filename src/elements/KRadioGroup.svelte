@@ -4,7 +4,7 @@
 			label: { type: 'String' },
 			options: { type: 'Array' },
 			value: { type: 'String', reflect: true },
-			name: { type: 'String' },
+			name: { type: 'String', reflect: true },
 			inline: { type: 'Boolean' },
 			error: { type: 'String' },
 			required: { type: 'Boolean' }

@@ -6,11 +6,11 @@
 			error: { type: 'String' },
 			keepHint: { type: 'Boolean', attribute: 'keep-hint' },
 			value: { type: 'String', reflect: true },
-			name: { type: 'String' },
+			name: { type: 'String', reflect: true },
 			placeholder: { type: 'String' },
 			rows: { type: 'Number' },
 			required: { type: 'Boolean' },
-			disabled: { type: 'Boolean' },
+			disabled: { type: 'Boolean', reflect: true },
 			autosize: { type: 'Boolean' }
 		},
 		extend: formAssociated
