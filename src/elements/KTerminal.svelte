@@ -2,7 +2,7 @@
 <script lang="ts">
 	import Terminal from '../lib/components/Terminal.svelte';
 	import { emit } from './form.js';
-	/* lines: JSON, e.g. lines='[{"text":"npm i kern-ui","output":"added 1 package"}]'. start-in-view defaults to on. */
+	/* lines: JSON, e.g. lines='[{"text":"npm i @mozra-the-great/kern","output":"added 1 package"}]'. start-in-view defaults to on. */
 	let { lines = [], title, prompt, typewriter = false, speed, delay, linePause, startInView, copy = false, copyLabel, copiedLabel, label } = $props();
 	const host = $host();
 	const on = (v: unknown, fallback: boolean) => (v === undefined || v === null ? fallback : v !== false && v !== 'false');

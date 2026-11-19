@@ -1,4 +1,4 @@
-// kern — Svelte 5 component kit. Import a theme: `import 'kern-ui/themes.css'`
+// kern — Svelte 5 component kit. Import a theme: `import '@mozra-the-great/kern/themes.css'`
 // and set data-theme="stuffcloud" | "flower" | … on <html>.
 export { default as Button } from './components/Button.svelte';
 export { default as IconButton } from './components/IconButton.svelte';

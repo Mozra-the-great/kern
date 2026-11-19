@@ -56,3 +56,37 @@ jobs:
       - name: Build
         # svelte-package (dist/), custom elements (dist-elements/), demo (demo-dist/)
         run: npm run build
+
+      # ── Node 24 (current LTS) ─────────────────────────────────────────────────
+      # Same job on purpose: the required check `build` then means "green on Node 22
+      # and 24" and keeps its name (a matrix would rename it to `build (22)` ...).
+      # `npm ci` wipes node_modules and builds dist/ again via `prepare`.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Install (Node 24)
+        run: npm ci
+      - name: Type check (Node 24)
+        run: npm run check
+      - name: Build (Node 24)
+        run: npm run build
+
+      # ── Svelte range: lowest supported and newest 5.x ─────────────────────────
+      # peerDependencies.svelte is the lowest version the components compile on
+      # ($props.id() arrived in 5.20.0). --no-save keeps package-lock.json as is;
+      # --legacy-peer-deps because the build plugin wants a newer Svelte than the
+      # one under test. Each step builds the package and the custom elements and
+      # compiles every published component for browser and SSR.
+      - name: Svelte lowest (5.20.0)
+        # Deliberately outside the lockfile: that is the point of this step.
+        run: | # zizmor: ignore[adhoc-packages]
+          npm install --ignore-scripts --no-save --legacy-peer-deps svelte@5.20.0
+          npm run package
+          npm run build:elements
+          node scripts/ci/compile-dist.mjs
+      - name: Svelte newest 5.x
+        run: | # zizmor: ignore[adhoc-packages]
+          npm install --ignore-scripts --no-save --legacy-peer-deps 'svelte@^5'
+          npm run package
+          npm run build:elements
+          node scripts/ci/compile-dist.mjs

@@ -1,6 +1,6 @@
 # kern
 
-> Svelte 5 component kit (npm name `kern-ui`): one set of accessible components,
+> Svelte 5 component kit (npm name `@mozra-the-great/kern`): one set of accessible components,
 > many brands. Themes set colour, shape, depth, type and motion via `--k-*` CSS
 > variables. Also shipped as framework-free custom elements (`<k-button>` …).
 
@@ -19,7 +19,7 @@ src/lib/themes/       base.css (all --k-* tokens) + one CSS file per brand, inde
 src/lib/index.ts      public exports (components + types)
 src/elements/         custom-element wrappers K<Name>.svelte, form.ts helpers, index.ts
 src/demo/             demo app (App.svelte + sections/), themes.ts
-assets/<brand>/       optional brand artwork (stuffcloud pixel art), exported as kern-ui/assets/*
+assets/<brand>/       optional brand artwork (stuffcloud pixel art), exported as @mozra-the-great/kern/assets/*
 index.html            Svelte demo · elements.html: custom-elements demo
 ```
 
@@ -30,6 +30,13 @@ npm run dev     # demo: /index.html and /elements.html
 npm run check   # svelte-check, must end with 0 errors / 0 warnings
 npm run build   # dist/ (package), dist-elements/kern-elements.js, demo-dist/
 ```
+
+Release: bump `version`, move `[Unreleased]` in CHANGELOG.md to a dated section, merge, then
+push tag `vX.Y.Z` on `main`; `.github/workflows/release.yml` attaches the `npm pack` tarball
+and checksums to the GitHub release. Consumers pin that tarball URL (README, "Installation
+und Pinning"). 0.x: minor = may break, patch = no break. Svelte minimum is `^5.20.0`;
+CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
+(keep the job id `build`, it is the required check).
 
 ## Notes
 - Components read only `--k-*` tokens. Every component must look right in
