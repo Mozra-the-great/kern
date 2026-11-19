@@ -12,10 +12,24 @@ export interface Tag {
 	at: number;
 }
 
+/**
+ * Applies `pattern` until the string stops changing, so a removal cannot leave behind a new match
+ * built from the surrounding characters (CodeQL js/incomplete-multi-character-sanitization).
+ */
+function removeAll(input: string, pattern: RegExp, replacement = ''): string {
+	let previous: string;
+	let current = input;
+	do {
+		previous = current;
+		current = current.replace(pattern, replacement);
+	} while (current !== previous);
+	return current;
+}
+
 /** Server-renders `component` with `props` and returns its body markup without hydration comments. */
 export function html<P extends object>(component: Component<P>, props: P): string {
 	const generic = component as unknown as Component<Record<string, unknown>>;
-	return render(generic, { props: props as Record<string, unknown> }).body.replace(/<!--[^>]*-->/g, '');
+	return removeAll(render(generic, { props: props as Record<string, unknown> }).body, /<!--[^>]*-->/g);
 }
 
 /** All opening tags named `name` (or every tag with `*`), in document order. */
@@ -40,9 +54,7 @@ export function one(markup: string, name: string, match: Record<string, string> 
 
 /** Text content of the markup (tags removed, whitespace collapsed). */
 export function text(markup: string): string {
-	return markup
-		.replace(/<style[\s\S]*?<\/style>/g, '')
-		.replace(/<[^>]+>/g, ' ')
+	return removeAll(removeAll(markup, /<style[\s\S]*?<\/style>/g), /<[^>]+>/g, ' ')
 		.replace(/\s+/g, ' ')
 		.trim();
 }
