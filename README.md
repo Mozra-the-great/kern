@@ -126,6 +126,32 @@ prüfen Code hell und dunkel bei 1280, 375 und 320 px, auch unter den alten `stu
 Kontrasttest liest die Theme-Dateien selbst und prüft für jede `data-theme`-Variante Textpaare (4,5:1)
 und Ränder, Fokus und Markierungen (3:1).
 
+## Eigene Akzentfarbe
+
+Eine App, die eine eigene Farbe braucht (etwa vom Server oder aus den Einstellungen), setzt **nur diese Farbe auf
+ein Standard-Theme**. kern baut kein Theme pro Marke und bildet kein App-Design nach: es gibt kein `nagellacke`- oder
+`nailvault`-Theme (nagellacke und nailvault.de nutzen `flower`, die Instanz-Presets setzen darauf den Akzent). Aus einer Farbe leitet
+`@mozra-the-great/kern` zehn Tokens ab (`--k-accent`, `--k-on-accent`, `--k-accent-soft`, `--k-accent-mark`,
+`--k-accent-text`, `--k-primary`, `--k-on-primary`, `--k-primary-hover`, `--k-on-primary-hover`, `--k-focus`) und
+verschiebt nur die Helligkeit, wo die Farbe ihren Kontrast verfehlen würde (Text 4,5:1, Marker und Fokus 3:1, auf
+den Flächen des Themes, hell und dunkel). Ungültige Eingabe ändert nichts und wirft nie.
+
+```ts
+import { accentTokens, installAccent, removeAccent, createAccentScript } from '@mozra-the-great/kern';
+
+const r = accentTokens('#ffc8e6', { theme: 'flower' }); // rein, ohne DOM
+if (r.ok) console.log(r.tokens, r.adjustments, r.guaranteed); // was geändert wurde, und dass der Kontrast hält
+
+installAccent(branding.accentColor, { storageKey: 'kern-accent', themeColor: 'accent' }); // seitenweit, folgt dem Theme-Wechsel
+removeAccent({ storageKey: 'kern-accent' }); // zurück zum Theme
+// <head>: <script>${createAccentScript('kern-accent')}</script>  → kein Aufblitzen vor dem ersten Frame
+```
+
+`accentCss(hex)` liefert dasselbe als Stylesheet (eine Regel je Theme) für den Server, `applyAccent(el, hex)` setzt die
+Tokens auf einem Element. Ohne JavaScript setzt `@mozra-the-great/kern/themes/accent.css` die Füllung (`--k-accent`,
+`--k-on-accent`) aus `--k-accent-color`. Ohne Bundler: `window.kern.accent` (`kern-elements.js`) oder
+`import '@mozra-the-great/kern/elements/accent'`. Tokens, Garantien, Head-Snippet und `theme-color`: [`docs/themes.md`](docs/themes.md#eigene-akzentfarbe).
+
 ## Installation und Pinning
 
 Das Paket heißt `@mozra-the-great/kern` (der frühere Name ist auf npmjs.com an eine fremde Bibliothek vergeben).

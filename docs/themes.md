@@ -253,3 +253,172 @@ features, so that is left to the page (`font-feature-settings: 'calt' 0`).
   warn, info on bg, raised and their `-soft` and `surface-*`; fg and fg-muted on every `surface-*`.
 - non-text 3:1: border on bg / raised / sunken, line-dashed on bg / sunken, focus on bg / raised /
   sunken, accent-mark on bg / raised / sunken, primary on bg / raised, danger on raised.
+
+## Eigene Akzentfarbe
+
+Eine App, deren Betreiber eine eigene Farbe wählt (nagellacke: `branding.accentColor` vom Server),
+setzt **nur diese Farbe auf ein Standard-Theme**. kern baut dafür **kein Theme pro Marke**: es gibt kein
+`nagellacke`- oder `nailvault`-Theme, und nichts davon bildet das Aussehen einer App nach (Entscheidung
+von Moritz, #41). nagellacke und nailvault.de nutzen das Standard-Theme `flower`; die Instanz-Presets
+setzen darauf nur den Akzent. Die Akzent-API (`@mozra-the-great/kern`, im Browser `window.kern.accent`)
+ist die allgemeine Funktion dafür und gilt für `code`, `flower`, `pop` und `line`, hell und dunkel.
+
+### Welche Tokens ein Akzent setzt
+
+Aus einer Farbe (`#rgb` oder `#rrggbb`) entstehen zehn Tokens in drei Gruppen (`roles`, Standard: alle):
+
+| Gruppe    | Token                  | Wert                                                                                                              | Garantie                                           |
+| --------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `accent`  | `--k-accent`           | die Farbe selbst (Füllung von Accent-Button, Badge, TabBadge)                                                     | wird nie verschoben                                |
+|           | `--k-on-accent`        | Schrift auf der Füllung: Tinte des Themes (`--k-fg` oder `--k-bg`), sonst Schwarz oder Weiß                       | 4,5:1 auf `--k-accent`                             |
+|           | `--k-accent-soft`      | Farbe zu 14 % über `--k-bg-raised` (schwächer, wenn `--k-fg` darauf sonst unter 4,5:1 fiele)                      | `--k-fg` darauf 4,5:1                              |
+|           | `--k-accent-mark`      | Marker ohne Text: Fortschritt, aktiver Tab, gewählter Rand                                                        | 3:1 auf bg, raised, sunken                         |
+|           | `--k-accent-text`      | Text in Akzentfarbe (Badge, Tabs, Links im Akzent)                                                                | 4,5:1 auf bg, raised, sunken und `--k-accent-soft` |
+| `primary` | `--k-primary`          | Haupt-Button, gesetzte Checkbox, Switch, Radio, aktiver Tab (auch als Text)                                       | 4,5:1 auf bg, raised, sunken                       |
+|           | `--k-on-primary`       | Schrift auf `--k-primary`                                                                                         | 4,5:1                                              |
+|           | `--k-primary-hover`    | eine Stufe weiter von der Seite weg (hell: dunkler, dunkel: heller; am Ende der Skala die andere Richtung)        | 4,5:1 auf bg, raised, sunken                       |
+|           | `--k-on-primary-hover` | Schrift auf dem Hover                                                                                             | 4,5:1                                              |
+| `focus`   | `--k-focus`            | Fokusring                                                                                                         | 3:1 auf bg, raised, sunken                         |
+
+Nicht angefasst werden `--k-link`, `--k-info`, `--k-danger`, `--k-ok`, `--k-warn`, die Linien und die
+Flächen: Status und Links behalten ihre Bedeutung. Wer nur den Fokusring oder nur die Füllung will, nennt die
+Gruppen: `{ roles: ['focus'] }`. Die Füllung `--k-accent` ist die Markenfarbe und wird nie verschoben. Steht sie
+auf einem Grund, auf dem sie selbst kaum zu sehen ist (dunkles Blau auf einem dunklen Theme), trägt der Button
+seine Beschriftung trotzdem mit 4,5:1; wer eine Fläche braucht, die sich vom Grund abhebt, nimmt `--k-primary`.
+
+### Wie angepasst wird
+
+Besteht eine Farbe ihre Prüfung nicht, bleiben Farbton und Sättigung (OKLCH) und nur die Helligkeit wandert: auf
+hellem Grund nach dunkel, auf dunklem nach hell, so weit wie nötig und nicht weiter (binäre Suche auf den
+fertigen 8-Bit-Hex-Werten, gemessen wie in WCAG 2.2). Besteht sie, bleibt sie unverändert. Reicht selbst Schwarz
+oder Weiß nicht (Mittelgrau als eigener Grund), nimmt sie das Ende mit dem besseren Wert und sagt es in
+`guaranteed`. **Jedes Ergebnis berichtet, was geschehen ist:**
+
+```ts
+const r = accentTokens('#ffc8e6', { theme: 'flower' });
+if (r.ok) {
+	r.tokens; // { '--k-accent': '#ffc8e6', '--k-primary': '#8a5b76', '--k-focus': '#aa7794', … }
+	r.adjustments; // [{ token: '--k-primary', from: '#ffc8e6', to: '#8a5b76', kind: 'text', message: '…' }, …]
+	r.checks; // [{ token: '--k-primary', on: '#f6f0e0', ratio: 4.81, min: 4.5, pass: true }, …]
+	r.guaranteed; // true: jedes Paar in checks besteht
+	r.style; // '--k-accent:#ffc8e6;--k-on-accent:#2c4f38;…' als style-Attribut
+} else {
+	r.error; // { code: 'invalid-color' | 'unknown-theme' | 'invalid-ground' | 'invalid-selector' | 'invalid-element' | 'no-dom', message }
+}
+```
+
+Worauf geprüft wird, bestimmt der Aufruf: `theme: 'flower-wald'` prüft auf die Flächen genau dieses Themes (bg,
+raised, sunken aus `ACCENT_GROUNDS`); `scheme: 'dark'` ohne Theme prüft auf **alle** Standard-Themes des
+Schemas zugleich (etwas vorsichtiger, gilt auf jedem); `surfaces: { bg, raised, sunken, fg }` gilt für ein eigenes
+Theme; ohne alles gilt der neutrale Grund von `base.css`. `npm test` hält die Tabelle `ACCENT_GROUNDS`
+(`src/lib/components/accent-themes.ts`) gegen die Theme-CSS und misst die Ergebnisse mit der Kontrastfunktion des
+Theme-Tests auf den echten Flächen: harte Fälle (sehr hell, sehr dunkel, gesättigtes Gelb, reines Grau,
+Fast-Weiß, Fast-Schwarz, reines Weiß und Schwarz, Blau, Rot, Grün) in jedem Theme, hell und dunkel.
+
+### Die Funktionen
+
+| Funktion                                                          | Zweck                                                                      |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `accentTokens(hex, options)`                                      | die Token-Tabelle für ein Theme oder Schema (rein, ohne DOM)               |
+| `accentCss(hex, { selector, roles })`                             | ein Stylesheet mit einer Regel je Standard-Theme (rein, SSR-sicher)        |
+| `installAccent(hex, { storageKey, themeColor, nonce, roles, selector })` | setzt den Akzent seitenweit: `<style id="kern-accent">` im `<head>`        |
+| `removeAccent({ storageKey })`                                    | nimmt ihn zurück (Style, gespeicherte Kopie, `theme-color`)                |
+| `createAccentScript(storageKey, { nonce })`                       | Inline-Script gegen das Aufblitzen (unten)                                 |
+| `applyAccent(el, hex, options)` / `clearAccent(el)`               | Inline-Tokens auf einem Element, für das Theme, das es gerade zeigt        |
+
+Ungültige Eingabe (`''`, `'pink'`, `'#12'`, `null`, ein Alpha-Hex, ein unbekanntes Theme ohne `scheme`) liefert
+`{ ok: false, error }`, ändert nichts und wirft nie, auch nicht beim Rendern. Auf dem Server gibt es kein DOM:
+`installAccent` und `applyAccent` melden `no-dom`; dort rendert man `accentCss(…).css`.
+
+`accentCss` schreibt die Regeln als `:root[data-theme='flower-wald']{…}` (Spezifität 0,2,0, gewinnt gegen die
+Theme-Regel in jeder Reihenfolge), eine für jeden `data-theme`-Wert samt Aliasen und eine für
+`:root:not([data-theme])`. Ein Wechsel hell/dunkel danach (ThemeToggle) wählt die Regel des neuen Themes: der
+Kontrast gilt weiter, ohne dass Code läuft. `applyAccent` setzt dagegen feste Werte für das Theme von jetzt
+(Flächen aus den berechneten `--k-bg…` des Elements, also auch für ein eigenes Theme) und folgt einem späteren
+Wechsel nicht: für eine Seite mit Theme-Wechsel `installAccent` nehmen, `applyAccent` für eine Vorschau oder einen
+Teilbaum mit eigenem `data-theme`.
+
+### Beispiel: Akzent vom Server (nagellacke)
+
+```ts
+import { installAccent, removeAccent } from '@mozra-the-great/kern';
+
+// branding.accentColor kann fehlen, null oder kein Hex sein.
+function showBranding(accent: string | null): void {
+	if (accent === null) return removeAccent({ storageKey: 'kern-accent' });
+	const result = installAccent(accent, { storageKey: 'kern-accent', themeColor: 'accent' });
+	if (!result.ok) removeAccent({ storageKey: 'kern-accent' }); // ungültig: das Standard-Theme bleibt
+}
+```
+
+Das ersetzt das Setzen von `--md-primary` und `theme-color` per Hand: ein Aufruf, Kontrast für `flower` und
+`flower-wald` inbegriffen, und ein späterer Theme-Wechsel bricht ihn nicht.
+
+### Kein Aufblitzen vor dem ersten Frame
+
+Wer den Akzent erst nach dem Laden setzt, zeigt bis dahin das Theme. Zwei Wege davor:
+
+1. **Der Server kennt die Farbe** (Hostname, Cookie): `accentCss(hex)` beim Rendern, als
+   `<style id="kern-accent">…</style>` in den `<head>` hinter das Theme-Stylesheet. `installAccent` ersetzt später
+   genau diesen Style.
+2. **Nur der Client kennt sie** (ab dem zweiten Besuch): `installAccent(hex, { storageKey })` legt das Stylesheet
+   in `localStorage`, `createAccentScript(key)` liefert das Inline-Script, das es beim nächsten Laden vor dem ersten
+   Frame wieder einsetzt. Das Script prüft den gespeicherten Text gegen die Grammatik von `accentCss` und nimmt **nur
+   diese** Form an: Regeln, deren Selektor aus einfachen Selektorzeichen besteht (keine `{ } < @ \ /`, kein Zeilenumbruch) und
+   deren Block ausschließlich `--k-…: #rrggbb`-Zeilen der Akzent-Tokens enthält, höchstens 20 000 Zeichen. Alles andere
+   (`url()`, `image-set()`, `content`, `display`, `@`-Regeln, Kommentare, fremde Properties) wird verworfen. Ein
+   Schreibzugriff auf `localStorage` kann den Akzent also umfärben, aber nichts laden, ausblenden oder hinzufügen. Pro
+   Instanz (Origin) der App gilt **ein** Storage-Schlüssel.
+
+```html
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="/kern/themes.css" />
+	<script>/* createThemeScript('kern-theme', { followSystem: true }): setzt data-theme */</script>
+	<script>/* createAccentScript('kern-accent'): setzt den Akzent */</script>
+</head>
+```
+
+Beide Scripts erzeugt man beim Build oder auf dem Server und fügt sie als Text ein. Ohne `localStorage` (privater
+Modus, gesperrt) tut das Script nichts, und die Seite zeigt das Theme, bis der Code läuft.
+
+**Strenge CSP.** Das Inline-Script braucht ein Nonce oder einen Hash (`script-src`). Der `<style>`, den Script und
+`installAccent` anlegen, braucht das Nonce der Seite in `style-src`: `createAccentScript(key, { nonce })` und
+`installAccent(hex, { nonce })` setzen es auf das Element (nur base64-artige Werte werden angenommen), und ein
+serverseitig gerendertes `<style id="kern-accent" nonce="…">` trägt das Nonce der Seite selbst. `applyAccent` /
+`clearAccent` setzen Inline-Tokens über das CSSOM (`style.setProperty`), das `style-src` nicht blockiert: dort ist
+kein Nonce nötig.
+
+### `theme-color`
+
+Die Browserleiste sollte normalerweise zur **Seite** passen, nicht zum Akzent: statische Metas mit `media` und den
+Flächen des Themes (`ACCENT_GROUNDS['flower'].bg`, `ACCENT_GROUNDS['flower-wald'].bg`, wie `docs/index.html` von
+nagellacke es heute tut). Soll die Leiste in der Akzentfarbe stehen, setzt `installAccent(hex, { themeColor: 'accent' })`
+den Wert **jeder** vorhandenen `<meta name="theme-color">` (auch mit `media`; gibt es keine, wird eine angelegt), und
+`removeAccent` oder ein späteres `installAccent` ohne die Option stellt die alten Werte wieder her. Die Schrift der
+Leiste wählt der Browser selbst, hier ist kein Kontrast zu garantieren.
+
+### Nur CSS, ohne JavaScript
+
+`@mozra-the-great/kern/themes/accent.css` (nicht Teil von `themes.css`) setzt mit relativen Farben nur die
+**Füllung**: `--k-accent` und `--k-on-accent` (Schwarz oder Weiß, mindestens 4,58:1 für jede sRGB-Farbe; im Browser
+über einen Raster des Farbwürfels geprüft):
+
+```html
+<html data-theme="flower" data-k-accent style="--k-accent-color: #e91e8c"></html>
+```
+
+Mehr ist in CSS allein nicht sicher: `--k-primary`, `--k-accent-text`, `--k-accent-mark`, `--k-accent-soft` und
+`--k-focus` brauchen 4,5:1 oder 3:1 auf einem Grund, den ein Stylesheet nicht messen kann (die Helligkeit muss
+gesucht werden, je nach Theme in die andere Richtung). Dafür gilt `accentCss` / `installAccent`. Die Datei braucht
+`color(from …)` und `round()` (Chrome 125, Safari 16.4, Firefox 128); ohne sie bleibt der Akzent des Themes.
+`data-k-accent` nur zusammen mit `--k-accent-color` setzen. Kommt der Wert vom Server oder aus Eingaben, vor dem
+Schreiben in ein `style`-Attribut prüfen (`accentTokens(value).ok`, nur dann `value` verwenden): sonst landet fremder Text
+im Attribut.
+
+### Custom Elements
+
+`kern-elements.js` und jeder Einstieg, der `window.kern` setzt, bringen `window.kern.accent` mit (`tokens`, `css`,
+`install`, `remove`, `apply`, `clear`, `script`, `grounds`, `tokenNames`: dieselben Funktionen und Typen). Ohne
+Bundler genügt `import '@mozra-the-great/kern/elements/accent'`: es registriert kein Tag, setzt `window.kern.accent`
+und exportiert die Funktionen.

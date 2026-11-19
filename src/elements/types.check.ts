@@ -26,6 +26,7 @@ import type { ToastCloseReason, ToastInput, ToastItem } from '../lib/components/
 import type { toast, dismissToast } from '../lib/components/toast.svelte.js';
 import type { KernBundle, KernStringsInput } from '../lib/components/strings.js';
 import type { Politeness } from '../lib/components/announcer.js';
+import type * as A from '../lib/components/accent.js';
 
 type Mutual<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
 /** Mutually assignable and the same keys (catches a missing or extra optional field). */
@@ -64,5 +65,31 @@ export type Checks = [
 	Assert<Same<E.KernGlobal['dismissToast'], typeof dismissToast>>,
 	Assert<Same<E.KernStringsInput, KernStringsInput>>,
 	Assert<Same<E.KernBundle, KernBundle>>,
-	Assert<Same<E.AnnouncePoliteness, Politeness>>
+	Assert<Same<E.AnnouncePoliteness, Politeness>>,
+	Assert<Same<E.AccentScheme, A.AccentScheme>>,
+	Assert<Same<E.AccentRole, A.AccentRole>>,
+	Assert<Same<E.AccentErrorCode, A.AccentErrorCode>>,
+	Assert<Same<E.AccentError, A.AccentError>>,
+	Assert<Same<E.AccentGround, A.AccentGround>>,
+	Assert<Same<E.AccentSurfacesInput, A.AccentSurfacesInput>>,
+	Assert<Same<E.AccentOptions, A.AccentOptions>>,
+	Assert<Same<E.AccentAdjustment, A.AccentAdjustment>>,
+	Assert<Same<E.AccentCheck, A.AccentCheck>>,
+	Assert<Same<E.AccentOk, A.AccentOk>>,
+	Assert<Same<E.AccentFailure, A.AccentFailure>>,
+	Assert<Same<E.AccentResult, A.AccentResult>>,
+	Assert<Same<E.AccentCssOptions, A.AccentCssOptions>>,
+	Assert<Same<E.AccentCssOk, A.AccentCssOk>>,
+	Assert<Same<E.AccentCssResult, A.AccentCssResult>>,
+	Assert<Same<E.InstallAccentOptions, A.InstallAccentOptions>>,
+	Assert<Same<E.AccentScriptOptions, A.AccentScriptOptions>>,
+	Assert<Same<E.RemoveAccentOptions, A.RemoveAccentOptions>>,
+	Assert<Same<E.ApplyAccentOptions, A.ApplyAccentOptions>>,
+	Assert<Same<E.KernAccentApi['tokens'], typeof A.accentTokens>>,
+	Assert<Same<E.KernAccentApi['css'], typeof A.accentCss>>,
+	Assert<Same<E.KernAccentApi['install'], typeof A.installAccent>>,
+	Assert<Same<E.KernAccentApi['remove'], typeof A.removeAccent>>,
+	Assert<Same<E.KernAccentApi['apply'], typeof A.applyAccent>>,
+	Assert<Same<E.KernAccentApi['clear'], typeof A.clearAccent>>,
+	Assert<Same<E.KernAccentApi['script'], typeof A.createAccentScript>>
 ];

@@ -14998,6 +14998,69 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/accent.js",
+			"declarations": [],
+			"exports": [
+				{
+					"kind": "js",
+					"name": "accentTokens",
+					"declaration": {
+						"name": "accentTokens",
+						"module": "src/lib/components/accent.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "accentCss",
+					"declaration": {
+						"name": "accentCss",
+						"module": "src/lib/components/accent.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "installAccent",
+					"declaration": {
+						"name": "installAccent",
+						"module": "src/lib/components/accent.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "removeAccent",
+					"declaration": {
+						"name": "removeAccent",
+						"module": "src/lib/components/accent.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "applyAccent",
+					"declaration": {
+						"name": "applyAccent",
+						"module": "src/lib/components/accent.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "clearAccent",
+					"declaration": {
+						"name": "clearAccent",
+						"module": "src/lib/components/accent.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "createAccentScript",
+					"declaration": {
+						"name": "createAccentScript",
+						"module": "src/lib/components/accent.ts"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/kern-elements.js",
 			"declarations": [],
 			"exports": [
@@ -15782,6 +15845,62 @@
 					"name": "de",
 					"declaration": {
 						"name": "de",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "accentTokens",
+					"declaration": {
+						"name": "accentTokens",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "accentCss",
+					"declaration": {
+						"name": "accentCss",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "installAccent",
+					"declaration": {
+						"name": "installAccent",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "removeAccent",
+					"declaration": {
+						"name": "removeAccent",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "applyAccent",
+					"declaration": {
+						"name": "applyAccent",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "clearAccent",
+					"declaration": {
+						"name": "clearAccent",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "createAccentScript",
+					"declaration": {
+						"name": "createAccentScript",
 						"module": "src/elements/index.ts"
 					}
 				},
