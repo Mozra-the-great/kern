@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	export interface Command {
 		id: string;
 		label: string;
@@ -28,14 +29,18 @@
 	let {
 		open = $bindable(),
 		commands,
-		label = 'Command palette',
-		placeholder = 'Type a command or search…',
-		empty = 'No matching commands',
-		closeLabel = 'Close',
+		label: labelProp,
+		placeholder: placeholderProp,
+		empty: emptyProp,
+		closeLabel: closeLabelProp,
 		hotkey,
 		onselect,
 		onclose
 	}: Props = $props();
+	const label = $derived(labelProp ?? strings().commandPalette.label);
+	const placeholder = $derived(placeholderProp ?? strings().commandPalette.placeholder);
+	const empty = $derived(emptyProp ?? strings().commandPalette.empty);
+	const closeLabel = $derived(closeLabelProp ?? strings().commandPalette.closeLabel);
 
 	const uid = $props.id();
 	let dialog: HTMLDialogElement | undefined = $state();

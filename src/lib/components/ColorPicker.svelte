@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import Field from './Field.svelte';
 	import { anchorTo, composedContains, eventWithin } from './anchor.js';
@@ -54,18 +55,25 @@
 		required = false,
 		disabled = false,
 		placeholder = '#rrggbb',
-		pickerLabel = 'Choose color',
-		areaLabel = 'Saturation and brightness',
-		areaText = '{color}, saturation {saturation}%, brightness {brightness}%',
-		hueLabel = 'Hue',
-		alphaLabel = 'Opacity',
-		swatchesLabel = 'Presets',
-		invalidText = 'Enter a color as #rgb, #rrggbb or #rrggbbaa.',
+		pickerLabel: pickerLabelProp,
+		areaLabel: areaLabelProp,
+		areaText: areaTextProp,
+		hueLabel: hueLabelProp,
+		alphaLabel: alphaLabelProp,
+		swatchesLabel: swatchesLabelProp,
+		invalidText: invalidTextProp,
 		describe = describeColor,
 		id,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const pickerLabel = $derived(pickerLabelProp ?? strings().colorPicker.pickerLabel);
+	const areaLabel = $derived(areaLabelProp ?? strings().colorPicker.areaLabel);
+	const areaText = $derived(areaTextProp ?? strings().colorPicker.areaText);
+	const hueLabel = $derived(hueLabelProp ?? strings().colorPicker.hueLabel);
+	const alphaLabel = $derived(alphaLabelProp ?? strings().colorPicker.alphaLabel);
+	const swatchesLabel = $derived(swatchesLabelProp ?? strings().colorPicker.swatchesLabel);
+	const invalidText = $derived(invalidTextProp ?? strings().colorPicker.invalidText);
 
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);

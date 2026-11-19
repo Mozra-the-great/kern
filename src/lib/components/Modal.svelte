@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import { lockScroll } from './scroll-lock.js';
 
@@ -41,12 +42,13 @@
 		dismissible = true,
 		initialFocus,
 		alert = false,
-		closeLabel = 'Close',
+		closeLabel: closeLabelProp,
 		oncancel,
 		onclose,
 		footer,
 		children
 	}: Props = $props();
+	const closeLabel = $derived(closeLabelProp ?? strings().modal.closeLabel);
 
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();

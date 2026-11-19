@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -10,7 +11,8 @@
 		class?: string | undefined;
 		children?: Snippet | undefined;
 	}
-	let { onremove, removeLabel = 'Remove', selected = false, class: cls = '', children }: Props = $props();
+	let { onremove, removeLabel: removeLabelProp, selected = false, class: cls = '', children }: Props = $props();
+	const removeLabel = $derived(removeLabelProp ?? strings().tag.removeLabel);
 </script>
 
 <span class="k-tag {cls}" class:selected>

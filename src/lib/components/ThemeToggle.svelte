@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import { strings } from './strings.svelte.js';
 	import { pickBySystem, readStoredTheme, themePair, toggleRoles, writeStoredTheme, isDarkTheme, type ThemeOption } from './theme.js';
 
 	interface Props {
@@ -119,7 +120,7 @@
 			<circle cx="8.6" cy="5.9" r="1" fill="currentColor" />
 			<circle cx="12.4" cy="5.9" r="1" fill="currentColor" />
 		</svg>
-		<select aria-label={label ?? 'Theme'} value={value ?? ''} onchange={(e) => choose(e.currentTarget.value)}>
+		<select aria-label={label ?? strings().themeToggle.menuLabel} value={value ?? ''} onchange={(e) => choose(e.currentTarget.value)}>
 			{#each list as t (t.id)}<option value={t.id}>{t.label}</option>{/each}
 		</select>
 		<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
@@ -131,7 +132,7 @@
 		type="button"
 		class="k-theme-toggle switch {cls}"
 		aria-pressed={pressed}
-		aria-label={label ?? 'Dark mode'}
+		aria-label={label ?? strings().themeToggle.toggleLabel}
 		onclick={() => choose(pressed ? roles.off.id : roles.on.id)}
 	>
 		<span class="seg" class:on={!pressed}>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import { useReducedMotion } from './motion.svelte.js';
 
@@ -38,10 +39,12 @@
 		height = '16rem',
 		fade = false,
 		label,
-		pauseLabel = 'Pause',
-		playLabel = 'Play',
+		pauseLabel: pauseLabelProp,
+		playLabel: playLabelProp,
 		class: cls = ''
 	}: Props = $props();
+	const pauseLabel = $derived(pauseLabelProp ?? strings().marquee.pauseLabel);
+	const playLabel = $derived(playLabelProp ?? strings().marquee.playLabel);
 
 	const reduced = useReducedMotion();
 	const css = (v: string | number | undefined): string | undefined => (typeof v === 'number' ? `${v}px` : v);

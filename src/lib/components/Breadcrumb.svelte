@@ -7,6 +7,7 @@
 </script>
 
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 
 	interface Props {
@@ -20,7 +21,9 @@
 		expandLabel?: string | undefined;
 		class?: string | undefined;
 	}
-	let { items, label = 'Breadcrumb', max, expandLabel = 'Show hidden items', class: cls = '' }: Props = $props();
+	let { items, label: labelProp, max, expandLabel: expandLabelProp, class: cls = '' }: Props = $props();
+	const label = $derived(labelProp ?? strings().breadcrumb.label);
+	const expandLabel = $derived(expandLabelProp ?? strings().breadcrumb.expandLabel);
 
 	let expanded = $state(false);
 	let list: HTMLOListElement | undefined = $state();

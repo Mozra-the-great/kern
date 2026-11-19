@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import Field from './Field.svelte';
 	import Label from './Label.svelte';
@@ -42,12 +43,13 @@
 		name,
 		required = false,
 		disabled = false,
-		digitLabel = 'Digit {index} of {length}',
+		digitLabel: digitLabelProp,
 		id,
 		onchange,
 		oncomplete,
 		class: cls = ''
 	}: Props = $props();
+	const digitLabel = $derived(digitLabelProp ?? strings().pinInput.digitLabel);
 
 	const uid = $props.id();
 	const baseId = $derived(id ?? `${uid}-pin`);

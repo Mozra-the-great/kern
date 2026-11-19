@@ -11,6 +11,7 @@
 </script>
 
 <script lang="ts">
+	import { formatLocale, strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import { fill, numberFormat, tipAnchor, withDefaults } from './data-utils.js';
 
@@ -29,35 +30,28 @@
 		/** Text under the first and the last bar, e.g. "90 days ago" and "Today". */
 		startLabel?: string | undefined;
 		endLabel?: string | undefined;
-		/** Locale of the percentage. */
+		/** Locale of the percentage. Default: the chosen strings language, else the browser's. */
 		locale?: string | undefined;
 		class?: string | undefined;
 	}
 	let {
 		items,
 		label,
-		summaryLabel = '{percent} % ok',
-		noDataLabel = 'No data',
+		summaryLabel: summaryLabelProp,
+		noDataLabel: noDataLabelProp,
 		statusLabels,
 		legend = true,
 		startLabel,
 		endLabel,
-		locale,
+		locale: localeProp,
 		class: cls = ''
 	}: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
+	const summaryLabel = $derived(summaryLabelProp ?? strings().historyBar.summaryLabel);
+	const noDataLabel = $derived(noDataLabelProp ?? strings().historyBar.noDataLabel);
 	const uid = $props.id();
 
-	const names = $derived(
-		withDefaults<Record<HistoryStatus, string>>(
-			{
-				ok: 'OK',
-				warn: 'Degraded',
-				down: 'Down',
-				none: 'No data'
-			},
-			statusLabels
-		)
-	);
+	const names = $derived(withDefaults<Record<HistoryStatus, string>>(strings().historyBar.statuses, statusLabels));
 	const order: HistoryStatus[] = ['ok', 'warn', 'down', 'none'];
 
 	const summary = $derived.by((): string => {

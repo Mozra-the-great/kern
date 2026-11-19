@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -10,7 +11,8 @@
 		footer?: Snippet | undefined;
 		children?: Snippet | undefined;
 	}
-	let { open = $bindable(), title, side = 'right', closeLabel = 'Close', onclose, footer, children }: Props = $props();
+	let { open = $bindable(), title, side = 'right', closeLabel: closeLabelProp, onclose, footer, children }: Props = $props();
+	const closeLabel = $derived(closeLabelProp ?? strings().drawer.closeLabel);
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();
 

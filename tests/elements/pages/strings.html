@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="de" data-theme="stuffcloud">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: default texts</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script>
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+			}
+			main {
+				display: grid;
+				gap: 16px;
+				max-width: 880px;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+			Every element that has default texts, without a single label attribute: the texts come from the
+			catalogue. The content is German on purpose, so any English word left in the page after
+			`kern.strings.set(kern.strings.de)` is a text the catalogue misses.
+		-->
+		<main id="main">
+			<h1>Standardtexte</h1>
+			<k-alert id="alert" dismissible title="Hinweis">Gespeichert.</k-alert>
+			<k-breadcrumb max="3" items='[{"label":"Start","href":"#"},{"label":"Sammlung","href":"#"},{"label":"Lacke","href":"#"},{"label":"Pastell","href":"#"},{"label":"Mintgrün Nr. 14"}]'></k-breadcrumb>
+			<k-carousel>
+				<div style="height:80px">Mintgrün</div>
+				<div style="height:80px">Beerenrot</div>
+				<div style="height:80px">Nachtblau</div>
+			</k-carousel>
+			<k-code id="code" block language="ts" copy>const a = 1;</k-code>
+			<k-copy-button id="copy" value="npm i kern"></k-copy-button>
+			<k-color-picker id="color" label="Farbe" value="#d77b6f"></k-color-picker>
+			<k-combobox id="combo" label="Farbe" options='[{"value":"rose","label":"Altrosa"},{"value":"mint","label":"Mint"}]'></k-combobox>
+			<k-command-palette id="palette" commands='[{"id":"new","label":"Neue Datei"},{"id":"open","label":"Datei öffnen"}]'></k-command-palette>
+			<k-context-menu id="context" items='[{"id":"open","label":"Öffnen"}]'><div>Rechtsklick</div></k-context-menu>
+			<k-data-table id="table" caption="Lacke" selectable row-key="name" page-size="2" columns='[{"key":"name","label":"Name","sortable":true}]' rows='[{"name":"Mint"},{"name":"Rot"},{"name":"Blau"}]'></k-data-table>
+			<k-data-table id="empty-table" caption="Leer" columns='[{"key":"name","label":"Name"}]' rows='[]'></k-data-table>
+			<k-date-picker id="date" label="Datum" locale="de-DE"></k-date-picker>
+			<k-drawer id="drawer" title="Seitenleiste"><p>Inhalt</p></k-drawer>
+			<k-file-drop id="drop" label="Dateien" multiple></k-file-drop>
+			<k-file-drop id="drop-button" label="Werkzeug" mode="dispatch" button-label="Datei wählen"></k-file-drop>
+			<k-heatmap id="heatmap" label="Aktivität" start="2026-09-01" end="2026-09-30" data='[{"date":"2026-09-02","value":3}]'></k-heatmap>
+			<k-heatmap id="heatmap-empty" label="Leer" start="2026-09-01" end="2026-09-30"></k-heatmap>
+			<k-history-bar id="history" label="Verfügbarkeit" items='[{"label":"Mo","status":"ok"},{"label":"Di","status":"warn"},{"label":"Mi","status":"down"},{"label":"Do","status":"none"}]'></k-history-bar>
+			<k-kbd id="kbd" platform="other" keys='["shift","enter"]'></k-kbd>
+			<k-link id="link" href="https://example.com" external>Mehr erfahren</k-link>
+			<k-marquee label="Farben"><span>Mintgrün</span><span>Beerenrot</span></k-marquee>
+			<k-modal id="modal" title="Löschen?"><p>Wirklich?</p></k-modal>
+			<k-navbar id="navbar" items='[{"label":"Sammlung","href":"#a","current":true},{"label":"Hilfe","href":"#b"}]'><span slot="brand">kern</span></k-navbar>
+			<k-number-input id="number" label="Menge" value="2"></k-number-input>
+			<k-pagination id="pagination" page="3" page-count="9"></k-pagination>
+			<k-pin-input id="pin" label="Code" length="4"></k-pin-input>
+			<k-progress-ring id="ring" label="Geladen"></k-progress-ring>
+			<k-rating id="rating" label="Bewertung" value="3"></k-rating>
+			<k-resizable id="resizable" height="120" sizes="[30,70]">
+				<div data-panel="nav" data-label="Navigation">Navigation</div>
+				<div data-panel="main" data-label="Inhalt">Inhalt</div>
+			</k-resizable>
+			<k-scroll-area id="scroll" max-height="40"><p>Eins</p><p>Zwei</p><p>Drei</p><p>Vier</p></k-scroll-area>
+			<k-sparkline id="spark" values="[40,43,41,48]"></k-sparkline>
+			<k-sparkline id="spark-empty" values="[]"></k-sparkline>
+			<k-spinner id="spinner"></k-spinner>
+			<k-stat id="stat" label="Besuche" value="12480" delta="12.4"></k-stat>
+			<k-status-dot id="dot" status="down"></k-status-dot>
+			<k-status-dot id="dot-busy" status="busy" label="Dienst"></k-status-dot>
+			<k-stepper id="stepper" current="1" clickable steps='[{"id":"a","label":"Warenkorb"},{"id":"b","label":"Adresse"},{"id":"c","label":"Zahlung"}]'></k-stepper>
+			<k-table id="plain-table" caption="Leer" columns='[{"key":"name","label":"Name"}]' rows='[]'></k-table>
+			<k-tag id="tag" removable>Pastell</k-tag>
+			<k-tag-input id="tags" label="Schlagwörter" max="2" value='["Gel","Matt"]'></k-tag-input>
+			<k-terminal id="terminal" copy lines='[{"text":"ls","output":"a b"}]'></k-terminal>
+			<k-terminal id="terminal-named" lines='[{"text":"ls"}]'></k-terminal>
+			<k-theme-toggle id="toggle"></k-theme-toggle>
+			<k-theme-toggle id="menu" themes='[{"id":"stuffcloud","label":"Dunkel"},{"id":"flower","label":"Flower"},{"id":"pop","label":"Pop"}]'></k-theme-toggle>
+			<k-timeline id="timeline" items='[{"id":"a","title":"Eingegangen","status":"done"},{"id":"b","title":"Unterwegs","status":"current"},{"id":"c","title":"Zugestellt","status":"upcoming"},{"id":"d","title":"Abgebrochen","status":"error"}]'></k-timeline>
+			<k-card id="card" as="div" clickable></k-card>
+			<k-toaster id="toaster"></k-toaster>
+		</main>
+	</body>
+</html>

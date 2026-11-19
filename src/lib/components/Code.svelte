@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import CopyButton from './CopyButton.svelte';
+	import { fill } from './data-utils.js';
 
 	interface Props {
 		/** The code as text. Needed for line numbers and the copy button; `children` can replace it for plain content. */
@@ -32,14 +34,17 @@
 		lineNumbers = false,
 		startLine = 1,
 		copy = false,
-		copyLabel = 'Copy',
-		copiedLabel = 'Copied',
-		copyErrorLabel = 'Copy failed',
+		copyLabel: copyLabelProp,
+		copiedLabel: copiedLabelProp,
+		copyErrorLabel: copyErrorLabelProp,
 		label,
 		oncopy,
 		class: cls = '',
 		children
 	}: Props = $props();
+	const copyLabel = $derived(copyLabelProp ?? strings().code.copyLabel);
+	const copiedLabel = $derived(copiedLabelProp ?? strings().code.copiedLabel);
+	const copyErrorLabel = $derived(copyErrorLabelProp ?? strings().code.copyErrorLabel);
 
 	/* One trailing newline is a line terminator, not an empty last line. */
 	const text = $derived(code === undefined ? undefined : code.replace(/\r\n?/g, '\n').replace(/\n$/, ''));
@@ -52,7 +57,7 @@
 			.join('\n');
 	});
 	const langClass = $derived(language ? `language-${language.replace(/[^\w+#.-]/g, '')}` : undefined);
-	const regionLabel = $derived(label ?? (language ? `${language} code` : 'Code'));
+	const regionLabel = $derived(label ?? (language ? fill(strings().code.languageLabel, { language }) : strings().code.label));
 	const showHead = $derived(!!language || copy);
 
 	let codeEl: HTMLElement | undefined = $state();

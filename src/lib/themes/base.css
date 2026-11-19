@@ -109,6 +109,11 @@
 	/* Toaster: distance from the viewport edges; -mobile below 760px (room for a tab bar) */
 	--k-toaster-offset: 16px;
 	--k-toaster-offset-mobile: 16px;
+
+	/* Prose: line length, line height and space between blocks of long running text */
+	--k-prose-measure: 68ch;
+	--k-prose-leading: 1.6;
+	--k-prose-gap: var(--k-space-3);
 }
 
 /* Derived tokens. They default to another token, so a theme only sets them where

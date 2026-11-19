@@ -7,6 +7,7 @@
 </script>
 
 <script lang="ts">
+	import { formatLocale, strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import { dateFormat, fill, numberFormat, tipAnchor } from './data-utils.js';
 
@@ -20,7 +21,7 @@
 		end?: string | undefined;
 		/** First weekday row: 0 = Sunday … 6 = Saturday. */
 		weekStart?: number | undefined;
-		/** Locale of month names, weekday names, dates and numbers. */
+		/** Locale of month names, weekday names, dates and numbers. Default: the chosen strings language, else the browser's. */
 		locale?: string | undefined;
 		/** Value of the darkest step. Default: the largest value in the range. */
 		max?: number | undefined;
@@ -43,17 +44,22 @@
 		start,
 		end,
 		weekStart = 1,
-		locale,
+		locale: localeProp,
 		max,
-		cellLabel = '{date}: {value}',
+		cellLabel: cellLabelProp,
 		legend = true,
-		lessLabel = 'Less',
-		moreLabel = 'More',
-		emptyLabel = 'No data',
+		lessLabel: lessLabelProp,
+		moreLabel: moreLabelProp,
+		emptyLabel: emptyLabelProp,
 		cellSize = 16,
 		onselect,
 		class: cls = ''
 	}: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
+	const cellLabel = $derived(cellLabelProp ?? strings().heatmap.cellLabel);
+	const lessLabel = $derived(lessLabelProp ?? strings().heatmap.lessLabel);
+	const moreLabel = $derived(moreLabelProp ?? strings().heatmap.moreLabel);
+	const emptyLabel = $derived(emptyLabelProp ?? strings().heatmap.emptyLabel);
 
 	const DAY = 86_400_000;
 	const MAX_DAYS = 3660;

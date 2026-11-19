@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatLocale } from './strings.svelte.js';
 	import { makeNumberFormatter, useReducedMotion } from './motion.svelte.js';
 
 	interface Props {
@@ -8,11 +9,12 @@
 		duration?: number | undefined;
 		/** `Intl.NumberFormat` options, e.g. `{ minimumIntegerDigits: 4 }`. Only the digits 0-9 roll. */
 		format?: Intl.NumberFormatOptions | undefined;
-		/** BCP 47 locale of the number format. Defaults to the browser's. */
+		/** BCP 47 locale of the number format. Default: the language chosen with `setStrings`/`setLocale`, else the browser's. */
 		locale?: string | undefined;
 		class?: string | undefined;
 	}
-	let { value, duration = 700, format, locale, class: cls = '' }: Props = $props();
+	let { value, duration = 700, format, locale: localeProp, class: cls = '' }: Props = $props();
+	const locale = $derived(formatLocale(localeProp));
 
 	const DIGITS: readonly number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 	const reduced = useReducedMotion();

@@ -23,6 +23,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Default texts as a catalogue (#58): every label, accessible name and announcement a component shows
+  when no prop is given is an entry of `KernStrings` (by component and name), English built in. New
+  exports `setStrings(...bundles)`, `resetStrings()`, `getStrings()`, `getLang()`,
+  `registerStrings(lang, bundle)`, `setLocale(lang)`, `followLang(root?)`, `en`, `de` (complete German
+  bundle, its own module so it tree-shakes away), `createStringsStore`/`sharedStringsStore` and the types
+  `KernStrings`, `KernBundle`, `KernStringsInput`, `StringsStore`. A prop or attribute still wins. The choice is
+  reactive (components already on the page switch language) and lives on
+  `globalThis[Symbol.for('kern.strings')]`, so the Svelte package and the custom-elements bundle share it;
+  `lang` of the chosen bundle is also the default `locale` of CountUp, Odometer, NumberInput, DatePicker,
+  RelativeTime, Stat, Sparkline, Heatmap, HistoryBar and Timeline (without a choice they keep using the
+  browser's). Elements: `window.kern.strings` (`set`, `reset`, `get`, `register`, `setLocale`, `followLang`,
+  `en`, `de`) and the entry `@mozra-the-great/kern/elements/strings`; `kern-elements.js` registers `en` and `de`.
+  Texts that were hard-coded and are now overridable: the Card fallback name "Open", the Code region name,
+  the Terminal name, the ThemeToggle names, the FileDrop drop prompts, the DatePicker placeholder pattern,
+  the spoken key names of Kbd, the status names of StatusDot, HistoryBar and Timeline, and the
+  `aria-roledescription` of Carousel (new props `roleDescription` / `slideRoleDescription`,
+  `<k-carousel>`: `role-description`, `slide-role-description`). `Link` gets `externalLabel`
+  (`<k-link external-label>`) for the hidden "(opens in a new tab)". The generated typings carry
+  `KernStrings` (written from the catalogue, so they cannot drift).
+- `Prose` / `<k-prose>` (#59): typography for long plain text with a line length of `--k-prose-measure`
+  (68ch), `--k-prose-leading` and `--k-prose-gap` (new tokens), link styling and forced-colors support.
+  `text` turns blank lines into paragraphs, keeps line breaks and makes links of `http(s)://` and e-mail
+  addresses (external ones: `target="_blank"`, `rel="noopener noreferrer"` and a spoken hint; never another
+  scheme); without `text` the children get the same typography. Text is never read as HTML.
+  `parseProse(text)` is exported.
+- CI guard against markup from strings (#59): `npm run check:html` fails on `{@html}`, `innerHTML`,
+  `outerHTML`, `insertAdjacentHTML`, `document.write`, `createContextualFragment` and `srcdoc` in
+  `src/lib` and `src/elements`; it runs in the `build` job.
+- `SkipLink` / `<k-skip-link target label>` (#64): hidden until it has keyboard focus, then shown with a
+  focus ring (forced-colors aware); Enter focuses the target element (it gets a temporary `tabindex="-1"`)
+  without touching the address bar, and falls back to the normal fragment link when the target is missing.
+- `LiveAnnouncer` / `<k-live-announcer>` and `announce(message, politeness)` (#64): one polite
+  (`role="status"`) and one assertive (`role="alert"`) region, present from the first render. The state is a
+  framework-free store on `globalThis[Symbol.for('kern.announcer')]` (like the toast queue), so `announce()`
+  from the Svelte package, `window.kern.announce()` and `elements/live-announcer` reach the same regions;
+  only the first live-announcer on a page fills its regions. An equal message is cleared and set again, and
+  a message is removed after 10 s. Exports `announce`, `createAnnouncer`, `sharedAnnouncer`,
+  `ANNOUNCE_CLEAR_MS`, `ANNOUNCE_REPEAT_MS` and the types `Announcer`, `AnnouncerHost`, `Politeness`.
+- `OnlineStatus` / `<k-online-status>` (#64): a non-blocking notice while `navigator.onLine` is false,
+  announced through the announcer (the notice is a live region itself when none is mounted or
+  `announce` is off). `bind:online`, `onchange` (element: `change` with `{ online }`, only on a change),
+  `offlineTitle`, `offlineText`, `onlineText` (or the catalogue), `politeness`, `announcer`.
+- The a11y test pages are now checked in the `line` theme as well; new pages `strings` and `primitives`
+  (also with the skip link focused and while offline) join the axe run.
+
 ## [0.5.0] - 2026-11-19
 
 ### Added

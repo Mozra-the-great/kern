@@ -1137,6 +1137,22 @@
 								"text": "string | undefined"
 							},
 							"attribute": "of-label"
+						},
+						{
+							"kind": "field",
+							"name": "roleDescription",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "role-description"
+						},
+						{
+							"kind": "field",
+							"name": "slideRoleDescription",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "slide-role-description"
 						}
 					],
 					"attributes": [
@@ -1189,6 +1205,20 @@
 								"text": "string"
 							},
 							"fieldName": "ofLabel"
+						},
+						{
+							"name": "role-description",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "roleDescription"
+						},
+						{
+							"name": "slide-role-description",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "slideRoleDescription"
 						}
 					],
 					"events": [
@@ -6234,6 +6264,14 @@
 							},
 							"default": "false",
 							"attribute": "external"
+						},
+						{
+							"kind": "field",
+							"name": "externalLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "external-label"
 						}
 					],
 					"attributes": [
@@ -6251,6 +6289,13 @@
 							},
 							"default": "false",
 							"fieldName": "external"
+						},
+						{
+							"name": "external-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "externalLabel"
 						}
 					],
 					"events": [],
@@ -6268,6 +6313,44 @@
 					"declaration": {
 						"name": "KLinkElement",
 						"module": "dist-elements/elements/link.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "dist-elements/elements/live-announcer.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-live-announcer",
+					"name": "KLiveAnnouncerElement",
+					"description": "One polite and one assertive live region, visually hidden and present from the first render. Say something through them with `window.kern.announce(message, politeness)` (also from the Svelte package's `announce()`: the two share one announcer). Put one on the page, e.g. in the app shell.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [],
+					"attributes": [],
+					"events": [],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-live-announcer",
+					"declaration": {
+						"name": "KLiveAnnouncerElement",
+						"module": "dist-elements/elements/live-announcer.js"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "announce",
+					"declaration": {
+						"name": "announce",
+						"module": "src/lib/components/announcer.ts"
 					}
 				}
 			]
@@ -7414,6 +7497,123 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/online-status.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-online-status",
+					"name": "KOnlineStatusElement",
+					"description": "Shows a non-blocking notice while the browser is offline (`navigator.onLine`, the `online` and `offline` events) and says the changes through the page's `<k-live-announcer>`. Without one on the page the notice is its own live region. Nothing is shown while online.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "offlineTitle",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "offline-title"
+						},
+						{
+							"kind": "field",
+							"name": "offlineText",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "offline-text"
+						},
+						{
+							"kind": "field",
+							"name": "onlineText",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "online-text"
+						},
+						{
+							"kind": "field",
+							"name": "announce",
+							"type": {
+								"text": "boolean | 'false' | undefined"
+							},
+							"attribute": "announce",
+							"description": "Say the changes through the announcer (default on)."
+						},
+						{
+							"kind": "field",
+							"name": "politeness",
+							"type": {
+								"text": "'polite' | 'assertive' | undefined"
+							},
+							"attribute": "politeness",
+							"description": "How urgent the offline announcement is (default `polite`)."
+						}
+					],
+					"attributes": [
+						{
+							"name": "offline-title",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "offlineTitle"
+						},
+						{
+							"name": "offline-text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "offlineText"
+						},
+						{
+							"name": "online-text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "onlineText"
+						},
+						{
+							"name": "announce",
+							"type": {
+								"text": "boolean | 'false'"
+							},
+							"fieldName": "announce"
+						},
+						{
+							"name": "politeness",
+							"type": {
+								"text": "'polite' | 'assertive'"
+							},
+							"fieldName": "politeness"
+						}
+					],
+					"events": [
+						{
+							"name": "change",
+							"type": {
+								"text": "CustomEvent<OnlineChangeDetail>"
+							},
+							"description": "The connection was lost or came back (not fired when the element loads)."
+						}
+					],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-online-status",
+					"declaration": {
+						"name": "KOnlineStatusElement",
+						"module": "dist-elements/elements/online-status.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/pagination.js",
 			"declarations": [
 				{
@@ -8309,6 +8509,72 @@
 					"declaration": {
 						"name": "KProgressRingElement",
 						"module": "dist-elements/elements/progress-ring.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "dist-elements/elements/prose.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-prose",
+					"name": "KProseElement",
+					"description": "Typography for long running text, e.g. legal pages. Set `text` (plain text: blank lines make paragraphs, web and e-mail addresses become links, nothing is read as HTML) or place your own markup inside. Line length, leading and spacing come from `--k-prose-*` tokens. A shadow root can style only the elements placed directly inside (headings, paragraphs, lists, links); nested markup keeps the page's own styles.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "text",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "text"
+						},
+						{
+							"kind": "field",
+							"name": "externalLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "external-label"
+						}
+					],
+					"attributes": [
+						{
+							"name": "text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "text"
+						},
+						{
+							"name": "external-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "externalLabel"
+						}
+					],
+					"events": [],
+					"slots": [
+						{
+							"name": ""
+						}
+					]
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-prose",
+					"declaration": {
+						"name": "KProseElement",
+						"module": "dist-elements/elements/prose.js"
 					}
 				}
 			]
@@ -10130,6 +10396,68 @@
 					"declaration": {
 						"name": "KSkeletonElement",
 						"module": "dist-elements/elements/skeleton.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "dist-elements/elements/skip-link.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-skip-link",
+					"name": "KSkipLinkElement",
+					"description": "Skip link: hidden until it has keyboard focus, then jumps to the element with the id `target` (focus moves there; the address bar stays as it is). Put it first in the page, before the header. The target is looked up in the document, so it works with the page's `<main id=\"main\">`.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "target",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "target"
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label"
+						}
+					],
+					"attributes": [
+						{
+							"name": "target",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "target"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
+						}
+					],
+					"events": [],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-skip-link",
+					"declaration": {
+						"name": "KSkipLinkElement",
+						"module": "dist-elements/elements/skip-link.js"
 					}
 				}
 			]
@@ -13698,6 +14026,85 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/strings.js",
+			"declarations": [],
+			"exports": [
+				{
+					"kind": "js",
+					"name": "setStrings",
+					"declaration": {
+						"name": "setStrings",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "resetStrings",
+					"declaration": {
+						"name": "resetStrings",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "getStrings",
+					"declaration": {
+						"name": "getStrings",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "getLang",
+					"declaration": {
+						"name": "getLang",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "registerStrings",
+					"declaration": {
+						"name": "registerStrings",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "setLocale",
+					"declaration": {
+						"name": "setLocale",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "followLang",
+					"declaration": {
+						"name": "followLang",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "en",
+					"declaration": {
+						"name": "en",
+						"module": "src/lib/components/strings.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "de",
+					"declaration": {
+						"name": "de",
+						"module": "src/lib/components/strings.ts"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/kern-elements.js",
 			"declarations": [],
 			"exports": [
@@ -13983,6 +14390,14 @@
 				},
 				{
 					"kind": "custom-element-definition",
+					"name": "k-live-announcer",
+					"declaration": {
+						"name": "KLiveAnnouncerElement",
+						"module": "dist-elements/elements/live-announcer.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
 					"name": "k-marquee",
 					"declaration": {
 						"name": "KMarqueeElement",
@@ -14031,6 +14446,14 @@
 				},
 				{
 					"kind": "custom-element-definition",
+					"name": "k-online-status",
+					"declaration": {
+						"name": "KOnlineStatusElement",
+						"module": "dist-elements/elements/online-status.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
 					"name": "k-pagination",
 					"declaration": {
 						"name": "KPaginationElement",
@@ -14067,6 +14490,14 @@
 					"declaration": {
 						"name": "KProgressRingElement",
 						"module": "dist-elements/elements/progress-ring.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-prose",
+					"declaration": {
+						"name": "KProseElement",
+						"module": "dist-elements/elements/prose.js"
 					}
 				},
 				{
@@ -14147,6 +14578,14 @@
 					"declaration": {
 						"name": "KSkeletonElement",
 						"module": "dist-elements/elements/skeleton.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-skip-link",
+					"declaration": {
+						"name": "KSkipLinkElement",
+						"module": "dist-elements/elements/skip-link.js"
 					}
 				},
 				{
@@ -14322,6 +14761,86 @@
 					"name": "dismissToast",
 					"declaration": {
 						"name": "dismissToast",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "announce",
+					"declaration": {
+						"name": "announce",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "setStrings",
+					"declaration": {
+						"name": "setStrings",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "resetStrings",
+					"declaration": {
+						"name": "resetStrings",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "getStrings",
+					"declaration": {
+						"name": "getStrings",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "getLang",
+					"declaration": {
+						"name": "getLang",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "registerStrings",
+					"declaration": {
+						"name": "registerStrings",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "setLocale",
+					"declaration": {
+						"name": "setLocale",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "followLang",
+					"declaration": {
+						"name": "followLang",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "en",
+					"declaration": {
+						"name": "en",
+						"module": "src/elements/index.ts"
+					}
+				},
+				{
+					"kind": "js",
+					"name": "de",
+					"declaration": {
+						"name": "de",
 						"module": "src/elements/index.ts"
 					}
 				},

@@ -10,6 +10,7 @@
 </script>
 
 <script lang="ts" generics="Row extends Record<string, unknown>">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -26,7 +27,8 @@
 		empty?: string | undefined;
 		class?: string | undefined;
 	}
-	let { columns, rows, caption, captionHidden = false, cell, stack = true, empty = 'No entries', class: cls = '' }: Props = $props();
+	let { columns, rows, caption, captionHidden = false, cell, stack = true, empty: emptyProp, class: cls = '' }: Props = $props();
+	const empty = $derived(emptyProp ?? strings().table.empty);
 
 	let sortKey = $state<string | null>(null);
 	let sortDir = $state<1 | -1>(1);

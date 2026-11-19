@@ -68,6 +68,7 @@
 		"build:demo": "vite build",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"lint": "eslint . && prettier --check .",
+		"check:html": "node scripts/ci/no-raw-html.mjs",
 		"format": "prettier --write . && eslint . --fix",
 		"test": "vitest run",
 		"test:targets": "playwright test -c tests/targets",

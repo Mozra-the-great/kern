@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -15,15 +16,8 @@
 		class?: string | undefined;
 		children?: Snippet | undefined;
 	}
-	let {
-		maxHeight,
-		direction = 'vertical',
-		fade = false,
-		fadeSize = 28,
-		label = 'Scrollable content',
-		class: cls = '',
-		children
-	}: Props = $props();
+	let { maxHeight, direction = 'vertical', fade = false, fadeSize = 28, label: labelProp, class: cls = '', children }: Props = $props();
+	const label = $derived(labelProp ?? strings().scrollArea.label);
 
 	let scroller: HTMLElement | undefined = $state();
 	let content: HTMLElement | undefined = $state();

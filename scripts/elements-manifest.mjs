@@ -19,6 +19,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parse } from 'svelte/compiler';
+import { stringsInterface } from './strings-interface.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const src = join(root, 'src/elements');
@@ -278,6 +279,13 @@ const elements = files.map((file) => {
 });
 
 // ── custom-elements.json ─────────────────────────────────────────────────────
+/** JS exports of the entries that bring more than their tag (see extras in vite.elements.config.ts). */
+const ENTRY_EXPORTS = {
+	toaster: ['toast', 'dismissToast'].map((name) => ({ name, module: 'src/lib/components/toast.svelte.ts' })),
+	'live-announcer': [{ name: 'announce', module: 'src/lib/components/announcer.ts' }]
+};
+/** What `elements/strings` and the all-in-one bundle export besides the tags. */
+const STRINGS_EXPORTS = ['setStrings', 'resetStrings', 'getStrings', 'getLang', 'registerStrings', 'setLocale', 'followLang', 'en', 'de'];
 const typeObj = (text) => ({ text });
 const manifest = {
 	schemaVersion: '2.1.0',
@@ -349,15 +357,19 @@ const manifest = {
 					name: el.tag,
 					declaration: { name: el.className, module: `dist-elements/elements/${el.name}.js` }
 				},
-				...(el.name === 'toaster'
-					? ['toast', 'dismissToast'].map((n) => ({
-							kind: 'js',
-							name: n,
-							declaration: { name: n, module: 'src/lib/components/toast.svelte.ts' }
-						}))
-					: [])
+				...(ENTRY_EXPORTS[el.name] ?? []).map(({ name, module }) => ({
+					kind: 'js',
+					name,
+					declaration: { name, module }
+				}))
 			]
 		})),
+		{
+			kind: 'javascript-module',
+			path: 'dist-elements/elements/strings.js',
+			declarations: [],
+			exports: STRINGS_EXPORTS.map((name) => ({ kind: 'js', name, declaration: { name, module: 'src/lib/components/strings.ts' } }))
+		},
 		{
 			kind: 'javascript-module',
 			path: 'dist-elements/kern-elements.js',
@@ -368,7 +380,7 @@ const manifest = {
 					name: el.tag,
 					declaration: { name: el.className, module: `dist-elements/elements/${el.name}.js` }
 				})),
-				...['toast', 'dismissToast', 'elements'].map((n) => ({
+				...['toast', 'dismissToast', 'announce', ...STRINGS_EXPORTS, 'elements'].map((n) => ({
 					kind: 'js',
 					name: n,
 					declaration: { name: n, module: 'src/elements/index.ts' }
@@ -391,7 +403,14 @@ if (!existsSync(join(out, 'kern-elements.js'))) {
 	console.error('elements-manifest: dist-elements/kern-elements.js is missing; run the elements build first.');
 	process.exit(1);
 }
-const shapes = readFileSync(join(src, 'types.ts'), 'utf8').replace(/^\/\*[\s\S]*?\*\/\n+/, '');
+// types.ts imports `KernStrings` from the library for the repo's own type check; the shipped d.ts
+// carries the interface instead, so consumers need no source file.
+const shapes = readFileSync(join(src, 'types.ts'), 'utf8')
+	.replace(/^\/\*[\s\S]*?\*\/\n+/, '')
+	.replace(/\/\/ The generator replaces[^\n]*\n\/\/[^\n]*\nimport type \{ KernStrings \}[^\n]*\nexport type \{ KernStrings \};\n/, () =>
+		stringsInterface(root)
+	);
+if (shapes.includes("from '../lib/")) throw new Error('elements-manifest: types.ts still imports from ../lib after generating KernStrings');
 const doc = (text, indent = '') => (text ? `${indent}/** ${text.replace(/\*\//g, '*\\/')} */\n` : '');
 const quote = (n) => (/^[A-Za-z_$][\w$]*$/.test(n) ? n : `'${n}'`);
 
@@ -459,11 +478,21 @@ ${elements.map((el) => `\t'${el.tag}': ${el.className};`).join('\n')}
 export declare const elements: Readonly<Record<string, { element?: CustomElementConstructor }>>;
 export declare const toast: ToastFunction;
 export declare function dismissToast(id: number): void;
+export declare function announce(message: string, politeness?: AnnouncePoliteness): void;
+export declare const setStrings: KernStringsApi['set'];
+export declare const resetStrings: KernStringsApi['reset'];
+export declare const getStrings: KernStringsApi['get'];
+export declare function getLang(): string | undefined;
+export declare const registerStrings: KernStringsApi['register'];
+export declare const setLocale: KernStringsApi['setLocale'];
+export declare const followLang: KernStringsApi['followLang'];
+export declare const en: KernBundle;
+export declare const de: KernBundle;
 
 declare global {
 	interface HTMLElementTagNameMap extends KernElements {}
 	interface Window {
-		/** Set by kern-elements.js and the toaster entry. */
+		/** Set by kern-elements.js and the entries of the toaster, the live announcer and the strings. */
 		kern?: KernGlobal;
 	}
 }
@@ -507,10 +536,18 @@ writeFileSync(join(out, 'react.js'), '// Types only: see react.d.ts.\nexport {};
 mkdirSync(join(out, 'elements'), { recursive: true });
 for (const el of elements) {
 	const body =
-		el.name === 'toaster' ? `export { toast, dismissToast } from '../kern-elements.js';\n` : `import '../kern-elements.js';\nexport {};\n`;
+		el.name === 'toaster'
+			? `export { toast, dismissToast } from '../kern-elements.js';\n`
+			: el.name === 'live-announcer'
+				? `export { announce } from '../kern-elements.js';\n`
+				: `import '../kern-elements.js';\nexport {};\n`;
 	writeFileSync(
 		join(out, 'elements', `${el.name}.d.ts`),
 		`// Registers <${el.tag}>${el.name === 'accordion' ? ' and <k-accordion-item>' : ''}. Generated; do not edit.\n${body}`
 	);
 }
-console.log(`typings: dist-elements/kern-elements.d.ts, react.d.ts, ${elements.length} entry .d.ts`);
+writeFileSync(
+	join(out, 'elements', 'strings.d.ts'),
+	`// Sets the default texts of every element and registers the built-in bundles \`en\` and \`de\`. Generated; do not edit.\nexport { ${STRINGS_EXPORTS.join(', ')} } from '../kern-elements.js';\n`
+);
+console.log(`typings: dist-elements/kern-elements.d.ts, react.d.ts, ${elements.length + 1} entry .d.ts`);

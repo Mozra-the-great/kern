@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	export interface ResizablePanel {
@@ -39,11 +40,12 @@
 		height,
 		step = 2,
 		largeStep = 10,
-		handleLabel = 'Resize {panel}',
+		handleLabel: handleLabelProp,
 		onchange,
 		panel,
 		class: cls = ''
 	}: Props = $props();
+	const handleLabel = $derived(handleLabelProp ?? strings().resizable.handleLabel);
 	const uid = $props.id();
 
 	const DEFAULT_MIN = 10;

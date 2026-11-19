@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -12,7 +13,8 @@
 		class?: string | undefined;
 		children?: Snippet | undefined;
 	}
-	let { tone = 'info', title, ondismiss, dismissLabel = 'Dismiss', actions, class: cls = '', children }: Props = $props();
+	let { tone = 'info', title, ondismiss, dismissLabel: dismissLabelProp, actions, class: cls = '', children }: Props = $props();
+	const dismissLabel = $derived(dismissLabelProp ?? strings().alert.dismissLabel);
 	const icons: Record<string, string> = {
 		info: 'M8 7v4.5M8 4.6v.8',
 		ok: 'M4.5 8.2l2.3 2.3 4.7-5',

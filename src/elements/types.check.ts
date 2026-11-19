@@ -21,6 +21,8 @@ import type { DataRowKey, DataSortDir } from '../lib/components/DataTable.svelte
 import type { ThemeOption } from '../lib/components/theme.js';
 import type { ToastCloseReason, ToastInput, ToastItem } from '../lib/components/toast.svelte.js';
 import type { toast, dismissToast } from '../lib/components/toast.svelte.js';
+import type { KernBundle, KernStringsInput } from '../lib/components/strings.js';
+import type { Politeness } from '../lib/components/announcer.js';
 
 type Mutual<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
 /** Mutually assignable and the same keys (catches a missing or extra optional field). */
@@ -53,5 +55,8 @@ export type Checks = [
 	Assert<Same<E.ToastInput, ToastInput>>,
 	Assert<Same<E.ToastCloseReason, ToastCloseReason>>,
 	Assert<Same<E.ToastFunction, typeof toast>>,
-	Assert<Same<E.KernGlobal['dismissToast'], typeof dismissToast>>
+	Assert<Same<E.KernGlobal['dismissToast'], typeof dismissToast>>,
+	Assert<Same<E.KernStringsInput, KernStringsInput>>,
+	Assert<Same<E.KernBundle, KernBundle>>,
+	Assert<Same<E.AnnouncePoliteness, Politeness>>
 ];

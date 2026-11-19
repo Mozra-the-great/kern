@@ -14,6 +14,7 @@
 </script>
 
 <script lang="ts" generics="Row extends Record<string, unknown>">
+	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import Input from './Input.svelte';
 	import Pagination from './Pagination.svelte';
@@ -104,26 +105,39 @@
 		cell,
 		onselect,
 		onsort,
-		searchLabel = 'Filter',
+		searchLabel: searchLabelProp,
 		searchPlaceholder = '',
-		empty = 'No entries',
-		emptyFiltered = 'No entries match “{query}”',
-		resultsLabel = '{count} entries',
-		filteredLabel = '{count} of {total} entries',
-		selectedLabel = '{count} selected',
-		sortedLabel = 'Sorted by {column}, {direction}',
-		ascendingLabel = 'ascending',
-		descendingLabel = 'descending',
-		loadingLabel = 'Loading…',
-		selectAllLabel = 'Select all rows on this page',
-		selectRowLabel = 'Select {row}',
-		paginationLabel = 'Table pagination',
+		empty: emptyProp,
+		emptyFiltered: emptyFilteredProp,
+		resultsLabel: resultsLabelProp,
+		filteredLabel: filteredLabelProp,
+		selectedLabel: selectedLabelProp,
+		sortedLabel: sortedLabelProp,
+		ascendingLabel: ascendingLabelProp,
+		descendingLabel: descendingLabelProp,
+		loadingLabel: loadingLabelProp,
+		selectAllLabel: selectAllLabelProp,
+		selectRowLabel: selectRowLabelProp,
+		paginationLabel: paginationLabelProp,
 		prevLabel,
 		nextLabel,
 		pageLabel,
 		ofLabel,
 		class: cls = ''
 	}: Props = $props();
+	const searchLabel = $derived(searchLabelProp ?? strings().dataTable.searchLabel);
+	const empty = $derived(emptyProp ?? strings().dataTable.empty);
+	const emptyFiltered = $derived(emptyFilteredProp ?? strings().dataTable.emptyFiltered);
+	const resultsLabel = $derived(resultsLabelProp ?? strings().dataTable.resultsLabel);
+	const filteredLabel = $derived(filteredLabelProp ?? strings().dataTable.filteredLabel);
+	const selectedLabel = $derived(selectedLabelProp ?? strings().dataTable.selectedLabel);
+	const sortedLabel = $derived(sortedLabelProp ?? strings().dataTable.sortedLabel);
+	const ascendingLabel = $derived(ascendingLabelProp ?? strings().dataTable.ascendingLabel);
+	const descendingLabel = $derived(descendingLabelProp ?? strings().dataTable.descendingLabel);
+	const loadingLabel = $derived(loadingLabelProp ?? strings().dataTable.loadingLabel);
+	const selectAllLabel = $derived(selectAllLabelProp ?? strings().dataTable.selectAllLabel);
+	const selectRowLabel = $derived(selectRowLabelProp ?? strings().dataTable.selectRowLabel);
+	const paginationLabel = $derived(paginationLabelProp ?? strings().dataTable.paginationLabel);
 
 	interface Entry {
 		row: Row;

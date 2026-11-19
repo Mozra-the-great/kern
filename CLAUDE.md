@@ -14,7 +14,8 @@ No runtime dependencies besides Svelte, no Tailwind.
 
 ## Structure
 ```
-src/lib/components/   Svelte components (one file each) + anchor.ts, toast.svelte.ts
+src/lib/components/   Svelte components (one file each) + anchor.ts, toast.svelte.ts, announcer.ts (shared live-region
+                      store), strings.ts / strings.svelte.ts / strings-de.ts (default-text catalogue), prose.ts
 src/lib/themes/       base.css (all --k-* tokens), brands/<brand>.css (theme rules),
                       <brand>.css (self-contained entry: base + one brand), index.css (all)
 tests/tokens/         Vitest: theme contrast, per-brand entry isolation (npm test)
@@ -47,6 +48,7 @@ npm run test:elements # Playwright custom elements (after build)
 npm run test:types    # tsc on the React 19 typing fixture
 npm run test:consumer # svelte-check --fail-on-warnings on tests/fixtures/strict-consumer (after build)
 npm run check:dts     # no `any` in the published .d.ts (after build)
+npm run check:html    # no {@html}/innerHTML & co. in src/lib and src/elements (also a CI step)
 npm run size          # size budget of the elements bundles (+10 % over baseline fails)
 ```
 
@@ -77,7 +79,14 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
   focus via `getRootNode().activeElement` and outside clicks via `composedPath()`
   (helpers in `anchor.ts`).
 - Default UI strings are English and overridable via props; the demo and README
-  are German.
+  are German. The defaults are the catalogue in `strings.ts` (by component and name) with a complete
+  German bundle in `strings-de.ts` (typed, a missing text does not compile). A component never writes an
+  English literal as a prop default: it destructures `label: labelProp` and reads
+  `const label = $derived(labelProp ?? strings().section.label)` (`strings.svelte.ts`, reactive, so a
+  language change reaches mounted components); `tests/unit/strings.test.ts` enforces both. Components that
+  format numbers or dates use `formatLocale(locale)`. The state is shared with the other build via
+  `globalThis[Symbol.for('kern.strings')]` (like the toast queue and `kern.announcer`). Never use
+  `{@html}`, `innerHTML` & co. (`check:html`); text from props is always a text node (`Prose`, `parseProse`).
 - Optional props are declared `foo?: T | undefined` (consumers use `exactOptionalPropertyTypes`),
   and `undefined` must behave like a missing prop. `$bindable()` gets no fallback value
   (Svelte throws for `bind:x={undefined}` when it has one); apply the default where the value is

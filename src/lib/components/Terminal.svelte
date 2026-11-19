@@ -10,6 +10,7 @@
 </script>
 
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import Caret from './Caret.svelte';
 	import { graphemes, observeInView, useReducedMotion } from './motion.svelte.js';
 
@@ -49,12 +50,14 @@
 		linePause = 450,
 		startInView = true,
 		copy = false,
-		copyLabel = 'Copy',
-		copiedLabel = 'Copied',
+		copyLabel: copyLabelProp,
+		copiedLabel: copiedLabelProp,
 		label,
 		oncomplete,
 		class: cls = ''
 	}: Props = $props();
+	const copyLabel = $derived(copyLabelProp ?? strings().terminal.copyLabel);
+	const copiedLabel = $derived(copiedLabelProp ?? strings().terminal.copiedLabel);
 
 	interface Row {
 		kind: 'cmd' | 'out';
@@ -104,7 +107,7 @@
 		if (done >= lines.length) rows.push({ kind: 'cmd', prompt, text: '', caret: true, idle: true });
 		return rows;
 	});
-	const name = $derived(label ?? title ?? 'Terminal');
+	const name = $derived(label ?? title ?? strings().terminal.label);
 
 	$effect(() => {
 		armed = true;

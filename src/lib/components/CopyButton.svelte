@@ -40,6 +40,7 @@
 </script>
 
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 
 	interface Props {
@@ -78,10 +79,10 @@
 		text: textProp,
 		value,
 		getValue,
-		label = 'Copy',
+		label: labelProp,
 		showLabel = false,
-		copiedLabel = 'Copied',
-		errorLabel = 'Copy failed',
+		copiedLabel: copiedLabelProp,
+		errorLabel: errorLabelProp,
 		variant = 'ghost',
 		size = 'md',
 		resetAfter = 2000,
@@ -90,6 +91,9 @@
 		onerror,
 		class: cls = ''
 	}: Props = $props();
+	const label = $derived(labelProp ?? strings().copyButton.label);
+	const copiedLabel = $derived(copiedLabelProp ?? strings().copyButton.copiedLabel);
+	const errorLabel = $derived(errorLabelProp ?? strings().copyButton.errorLabel);
 
 	let status = $state<CopyStatus>('idle');
 	let button: HTMLButtonElement | undefined = $state();

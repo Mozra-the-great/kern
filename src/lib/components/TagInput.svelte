@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { strings } from './strings.svelte.js';
 	import { tick } from 'svelte';
 	import Field from './Field.svelte';
 	import { anchorTo } from './anchor.js';
@@ -52,17 +53,23 @@
 		caseSensitive = false,
 		suggestions = [],
 		addOnBlur = true,
-		removeLabel = 'Remove {tag}',
-		instructions = 'Press Enter or comma to add a tag. Backspace in the empty field removes the last tag.',
-		addedText = 'Added {tag}',
-		removedText = 'Removed {tag}',
-		duplicateText = '{tag} is already added',
-		maxText = 'At most {max} tags',
+		removeLabel: removeLabelProp,
+		instructions: instructionsProp,
+		addedText: addedTextProp,
+		removedText: removedTextProp,
+		duplicateText: duplicateTextProp,
+		maxText: maxTextProp,
 		listLabel,
 		id,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const removeLabel = $derived(removeLabelProp ?? strings().tagInput.removeLabel);
+	const instructions = $derived(instructionsProp ?? strings().tagInput.instructions);
+	const addedText = $derived(addedTextProp ?? strings().tagInput.addedText);
+	const removedText = $derived(removedTextProp ?? strings().tagInput.removedText);
+	const duplicateText = $derived(duplicateTextProp ?? strings().tagInput.duplicateText);
+	const maxText = $derived(maxTextProp ?? strings().tagInput.maxText);
 
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);

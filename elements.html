@@ -17,7 +17,9 @@
 		</style>
 	</head>
 	<body>
-		<main>
+		<k-skip-link target="main" label="Zum Inhalt"></k-skip-link>
+		<k-online-status offline-title="Keine Verbindung" offline-text="Bereits geöffnete Seiten funktionieren weiter." online-text="Wieder online"></k-online-status>
+		<main id="main">
 			<k-navbar id="nav" label="Hauptmenü" menu-label="Menü" items='[{"label":"Sammlung","href":"#a","current":true},{"label":"Hilfe","href":"#b"}]'>
 				<span slot="brand">kern</span>
 				<k-button slot="actions" size="sm" variant="secondary">Anmelden</k-button>
@@ -192,7 +194,26 @@
 				<p>Lack 1</p><p>Lack 2</p><p>Lack 3</p><p>Lack 4</p><p>Lack 5</p><p>Lack 6</p><p>Lack 7</p><p>Lack 8</p>
 			</k-scroll-area>
 			<k-command-palette id="palette" hotkey="mod+k" label="Befehlspalette" placeholder="Befehl suchen …" empty="Kein passender Befehl" close-label="Schließen" commands='[{"id":"new","label":"Neue Datei","group":"Dateien","shortcut":"Strg+N"},{"id":"share","label":"Link teilen","group":"Dateien","keywords":["freigabe"]},{"id":"theme","label":"Theme wechseln","group":"Ansicht","keywords":["dunkel","hell"]}]'></k-command-palette>
+			<h2>Texte und Sprache</h2>
+			<p>Die Standardtexte aller Elemente kommen aus einem Katalog: <code>kern.strings.set(kern.strings.de)</code> stellt sie für die ganze Seite um, <code>kern.strings.followLang()</code> folgt dem <code>lang</code>-Attribut.</p>
+			<div class="row">
+				<k-segmented-control id="lang" label="Sprache der Standardtexte" value="en" options='[{"value":"en","label":"English"},{"value":"de","label":"Deutsch"}]'></k-segmented-control>
+				<k-spinner></k-spinner>
+				<k-status-dot status="warn"></k-status-dot>
+				<k-link href="https://example.com" external>Externer Link</k-link>
+			</div>
+			<k-pagination page="3" page-count="9"></k-pagination>
+			<h2>Prose</h2>
+			<k-prose id="prose" text="Angaben gemäß § 5 DDG&#10;&#10;Mara Lind&#10;Beispielweg 12&#10;&#10;Kontakt: kontakt@example.com oder https://example.com/impressum.&#10;&#10;Hier steht &lt;b&gt;kein&lt;/b&gt; Markup."></k-prose>
+			<k-prose id="prose-slot"><h3>Eigenes Markup</h3><p>Überschrift, Absatz und Liste im Slot.</p><ul><li>Zeilenlänge aus --k-prose-measure</li><li>Abstände aus --k-prose-gap</li></ul></k-prose>
+			<h2>Ansagen</h2>
+			<div class="row">
+				<k-button id="say-polite" variant="secondary">Höflich ansagen</k-button>
+				<k-button id="say-assertive" variant="secondary">Sofort ansagen</k-button>
+				<span id="said">Letzte Ansage: noch keine</span>
+			</div>
 		</main>
+		<k-live-announcer></k-live-announcer>
 		<k-modal id="modal" title="Ordner löschen?" description="214 Dateien kommen in den Papierkorb.">
 			<p>Das lässt sich 30 Tage lang rückgängig machen.</p>
 			<div slot="footer" class="row"><k-button variant="secondary" id="cancel">Abbrechen</k-button><k-button variant="danger" id="confirm">Löschen</k-button></div>
@@ -212,6 +233,10 @@
 			$('#m-stuffy').src = axoUrl;
 			$('#m-boo').src = ghostUrl;
 			$('#m-qr').src = qrUrl;
+			$('#lang').addEventListener('change', (e) => (e.detail === 'de' ? window.kern.strings.set(window.kern.strings.de) : window.kern.strings.reset()));
+			const say = (m, p) => { $('#said').textContent = 'Letzte Ansage: ' + m; window.kern.announce(m, p); };
+			$('#say-polite').addEventListener('click', () => say('Änderungen gespeichert', 'polite'));
+			$('#say-assertive').addEventListener('click', () => say('Verbindung zum Server verloren', 'assertive'));
 			$('#theme').addEventListener('change', (e) => (document.documentElement.dataset.theme = e.target.value));
 			$('#hello').addEventListener('click', () => window.kern.toast.ok('Hallo aus <k-toaster>'));
 			$('#open').addEventListener('click', () => ($('#modal').open = true));

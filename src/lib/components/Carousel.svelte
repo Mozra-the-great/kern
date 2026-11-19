@@ -1,4 +1,5 @@
 <script lang="ts" generics="T">
+	import { strings } from './strings.svelte.js';
 	import { untrack, type Snippet } from 'svelte';
 
 	interface Props {
@@ -9,7 +10,7 @@
 		children?: Snippet | undefined;
 		/** Index of the visible slide. */
 		index?: number | undefined;
-		/** Accessible name of the carousel (`aria-roledescription="carousel"`). */
+		/** Accessible name of the carousel. */
 		label?: string | undefined;
 		prevLabel?: string | undefined;
 		nextLabel?: string | undefined;
@@ -19,6 +20,10 @@
 		slideLabel?: string | undefined;
 		/** The word in each slide's name: "2 of 5". */
 		ofLabel?: string | undefined;
+		/** What a screen reader calls the carousel (`aria-roledescription`). Default: "carousel". */
+		roleDescription?: string | undefined;
+		/** What it calls each slide (`aria-roledescription`). Default: "slide". */
+		slideRoleDescription?: string | undefined;
 		/** Called when the user moves to another slide (buttons, dots, keys, swipe), not when `index` is set from outside. */
 		onchange?: ((index: number) => void) | undefined;
 		class?: string | undefined;
@@ -28,15 +33,25 @@
 		slide,
 		children,
 		index = $bindable(),
-		label = 'Carousel',
-		prevLabel = 'Previous slide',
-		nextLabel = 'Next slide',
-		dotsLabel = 'Slides',
-		slideLabel = 'Go to slide',
-		ofLabel = 'of',
+		label: labelProp,
+		prevLabel: prevLabelProp,
+		nextLabel: nextLabelProp,
+		dotsLabel: dotsLabelProp,
+		slideLabel: slideLabelProp,
+		ofLabel: ofLabelProp,
+		roleDescription: roleDescriptionProp,
+		slideRoleDescription: slideRoleDescriptionProp,
 		onchange,
 		class: cls = ''
 	}: Props = $props();
+	const label = $derived(labelProp ?? strings().carousel.label);
+	const prevLabel = $derived(prevLabelProp ?? strings().carousel.prevLabel);
+	const nextLabel = $derived(nextLabelProp ?? strings().carousel.nextLabel);
+	const dotsLabel = $derived(dotsLabelProp ?? strings().carousel.dotsLabel);
+	const slideLabel = $derived(slideLabelProp ?? strings().carousel.slideLabel);
+	const ofLabel = $derived(ofLabelProp ?? strings().carousel.ofLabel);
+	const roleDescription = $derived(roleDescriptionProp ?? strings().carousel.roleDescription);
+	const slideRoleDescription = $derived(slideRoleDescriptionProp ?? strings().carousel.slideRoleDescription);
 	const uid = $props.id();
 
 	let track: HTMLElement | undefined = $state();
@@ -166,7 +181,7 @@
 		const active = current;
 		els.forEach((el, i) => {
 			el.setAttribute('role', 'tabpanel');
-			el.setAttribute('aria-roledescription', 'slide');
+			el.setAttribute('aria-roledescription', slideRoleDescription);
 			el.setAttribute('aria-label', `${i + 1} ${ofLabel} ${n}`);
 			el.inert = i !== active;
 		});
@@ -217,7 +232,7 @@
 	});
 </script>
 
-<section class="k-carousel {cls}" aria-roledescription="carousel" aria-label={label}>
+<section class="k-carousel {cls}" aria-roledescription={roleDescription} aria-label={label}>
 	<!-- The track scrolls, so it must be reachable by keyboard whenever it can overflow
 	     (WCAG 2.1.1, axe scrollable-region-focusable); its keys move between slides. -->
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions -->
