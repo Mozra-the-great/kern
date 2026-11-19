@@ -23,6 +23,17 @@ afterEach(() => {
 });
 
 describe('sanitizeFileName', () => {
+	it('stays linear on long runs of dots and spaces (no ReDoS, CodeQL js/polynomial-redos)', () => {
+		const hostile = `${' .'.repeat(50_000)}x`;
+		const start = performance.now();
+		expect(sanitizeFileName(hostile)).toMatch(/x$/);
+		expect(sanitizeFileName(`${'. '.repeat(50_000)}`)).toBe('download');
+		expect(performance.now() - start).toBeLessThan(500);
+		// Trailing dots and spaces are still dropped, also after shortening.
+		expect(sanitizeFileName('name. . .')).toBe('name');
+		expect(sanitizeFileName(`${'a'.repeat(170)}. . . . . . . . . .txt`)).toMatch(/^a+\.txt$/);
+	});
+
 	it('keeps an ordinary name, with spaces, dots and non-Latin letters', () => {
 		expect(sanitizeFileName('report.csv')).toBe('report.csv');
 		expect(sanitizeFileName('Quartals bericht 2026.final.xlsx')).toBe('Quartals bericht 2026.final.xlsx');

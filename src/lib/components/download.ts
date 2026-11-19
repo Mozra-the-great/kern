@@ -96,7 +96,7 @@ function clean(raw: string): string {
 		.replace(/[\\/:*?"<>|]/g, '_')
 		.trim();
 	// Windows drops trailing dots and spaces silently, which could turn "name." into "name" or ".." into "".
-	name = name.replace(/[. ]+$/, '');
+	name = trimTrailingDotsAndSpaces(name);
 	if (name === '') return '';
 	if (/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i.test(name)) name = `_${name}`;
 	const chars = Array.from(name);
@@ -104,13 +104,19 @@ function clean(raw: string): string {
 		const dot = name.lastIndexOf('.');
 		const extension = dot > 0 ? Array.from(name.slice(dot)) : [];
 		const keep = extension.length > 1 && extension.length <= MAX_EXTENSION_LENGTH ? extension : [];
-		name =
-			chars
-				.slice(0, MAX_NAME_LENGTH - keep.length)
-				.join('')
-				.replace(/[. ]+$/, '') + keep.join('');
+		name = trimTrailingDotsAndSpaces(chars.slice(0, MAX_NAME_LENGTH - keep.length).join('')) + keep.join('');
 	}
 	return name;
+}
+
+/**
+ * `text` without trailing dots and spaces. A loop instead of `/[. ]+$/`, which backtracks quadratically on
+ * input with many dots or spaces followed by another character (CodeQL js/polynomial-redos).
+ */
+function trimTrailingDotsAndSpaces(text: string): string {
+	let end = text.length;
+	while (end > 0 && (text[end - 1] === '.' || text[end - 1] === ' ')) end--;
+	return text.slice(0, end);
 }
 
 function failure(code: DownloadErrorCode, message: string, cause?: unknown): DownloadFailure {
