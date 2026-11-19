@@ -278,6 +278,7 @@ es meldet das Ende einer Animation.
   gewählte Schlüssel nach `row-key`), Heatmap (`detail` = `{date, value}`)
 - `sort`: DataTable (`detail` = `{key, dir}`)
 - `copy`: CopyButton, Code und CodeBlock (`detail` = kopierter Text) · `copy-error`: CopyButton, CodeBlock
+- `download`: DownloadButton (`detail` = `{name, size, type}`) · `download-error`: DownloadButton (`detail` = `{code, message}`)
 - `action`: Card mit `clickable` (Klick, Enter oder Leertaste auf den Karten-Button)
 - `change` außerdem: ThemeToggle (Theme-Id), Resizable (Größen in %, `number[]`) · `toggle` außerdem: Collapsible
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
@@ -467,6 +468,100 @@ import type {} from '@mozra-the-great/kern/elements/react';
 - **Formulare:** die Elemente sind echte Formularfelder (`name`, `FormData`, Reset, Validierung,
   `form`-Attribut); ein `<form onSubmit>` sieht sie wie native Felder. Absenden mit
   `<k-button type="submit">`.
+
+### React 19: ein getestetes Beispiel
+
+Das Beispiel läuft als Test (`tests/fixtures/react-app`, Chromium, StrictMode, React im Entwicklungsmodus;
+`tests/elements/react-*.spec.ts`). Ein Fehler in der Konsole oder ein `pageerror` lässt jeden dieser Tests
+fehlschlagen.
+
+```tsx
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import '@mozra-the-great/kern/elements/button';
+import '@mozra-the-great/kern/elements/input';
+import '@mozra-the-great/kern/elements/select';
+import '@mozra-the-great/kern/elements/checkbox';
+import '@mozra-the-great/kern/elements/toaster'; // bringt auch window.kern.toast
+import type {} from '@mozra-the-great/kern/elements/react';
+
+const SIZES = [
+	{ value: 's', label: 'Klein' },
+	{ value: 'l', label: 'Groß' }
+];
+
+export function Example() {
+	const [name, setName] = useState('');
+	const [size, setSize] = useState('');
+	const [agree, setAgree] = useState(false);
+
+	function onSubmit(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault(); // nur aufgerufen, wenn alle Pflichtfelder gültig sind
+		console.log(Object.fromEntries(new FormData(e.currentTarget)));
+		window.kern?.toast.ok('Gespeichert');
+	}
+
+	return (
+		<>
+			<form
+				onSubmit={onSubmit}
+				onReset={() => {
+					setName('');
+					setSize('');
+					setAgree(false);
+				}}
+			>
+				<k-input name="name" label="Name" value={name} required minlength="3" onchange={(e) => setName(e.detail)} />
+				<k-select name="size" label="Größe" value={size} options={SIZES} required onchange={(e) => setSize(e.detail)} />
+				<k-checkbox name="agree" label="Einverstanden" checked={agree} required onchange={(e) => setAgree(e.detail)} />
+				<k-button type="submit">Speichern</k-button>
+				<k-button type="reset" variant="ghost">
+					Zurücksetzen
+				</k-button>
+			</form>
+			<k-toaster />
+		</>
+	);
+}
+```
+
+Was die Tests festhalten (und worauf du dich verlassen kannst):
+
+- **Elemente vor dem ersten Render registrieren**, also statisch importieren wie oben. Rendert React ein
+  `<k-select options={…}>`, bevor das Element definiert ist, schreibt es das Array als Attribut
+  (`"[object Object]"`); beim späteren Upgrade wirft das einen `SyntaxError` und die Option fehlt, bis React die Prop
+  neu setzt.
+- **Properties, Attribute, Ereignisse:** Arrays und Objekte (`options`, `tabs`, `rows`, `items`) kommen als Property
+  an, auch wenn sie bei jedem Render neu erzeugt werden (kein Ereignis, keine Schleife). `maxlength`, `pattern`,
+  `minlength` und `aria-*` bleiben Attribute und erreichen das innere Feld. `on<ereignis>` kleingeschrieben
+  (`onchange`, `onclose`, `oncancel`) bekommt das richtige `detail`; `onChange` kennen die Typen für kern-Ereignisse nicht.
+  Boolean-Props mit Vorgabe `true` schaltest du über die camelCase-Property ab (`closeOnBackdrop={false}`,
+  `dismissible={false}`); `close-on-backdrop={false}` wäre in React nur ein entferntes Attribut.
+- **Kein Ereignis außer bei Nutzereingaben:** weder beim Mounten (auch nicht im doppelten Mount von StrictMode) noch
+  bei geänderten Props, noch beim Schließen aus React (`open={false}`). Ein kontrollierter Wert (React-State →
+  Element → Eingabe → `onchange` → State) braucht pro Eingabe einen Commit und verliert die Cursorposition nicht,
+  auch wenn `oninput` den State bei jedem Tastendruck zurückschreibt.
+- **Formulare:** `name`, `disabled` und `form="id"` funktionieren als Props (React setzt sie als Property): die Felder
+  stehen in `FormData`, ein `disabled` Feld wird nicht gesendet und nicht validiert, `form` verbindet ein Feld
+  außerhalb des `<form>`. `required`, `pattern`, `minlength` blockieren das Absenden über ElementInternals;
+  `ref.current.setCustomValidity('…')` markiert ein Feld als ungültig (Serverfehler). `<form onReset>` setzt
+  den State zurück, die Elemente kehren selbst auf ihren Anfangswert zurück (`k-button type="reset"` auch bei
+  Elementen mit der id `reset` oder `submit`).
+- **Refs:** `ref` liefert die Elementinstanz mit `form`, `validity`, `checkValidity()`, `setCustomValidity()` und den
+  Methoden des Elements (`reset()` bei `<k-file-drop>`). Ein Callback-Ref mit Cleanup funktioniert.
+- **Overlays:** `open={state}` öffnet und schließt `k-modal`, `k-drawer` und `k-popover`; Escape, ✕ und Hintergrund
+  melden `cancel` und `close` (`preventDefault()` in `oncancel` hält offen). Kinder, die React rendert (auch
+  `slot="footer"`), bleiben lebendig. Wird das Element ausgehängt, solange es offen ist, wird auch die
+  Scroll-Sperre der Seite wieder gelöst.
+- **Toasts und Texte sind seitenweit:** zwei React-Roots teilen sich Toast-Speicher und Textkatalog. Ein Toast aus
+  einem Root erscheint in jedem `<k-toaster>`; `window.kern.strings.set(window.kern.strings.de)` schaltet alle
+  eingehängten Elemente in allen Roots ohne React-Render um.
+- **Aufräumen:** Aushängen eines Roots entfernt Elemente und Listener auf `window`/`document`; erneutes Einhängen
+  funktioniert und verdoppelt keine Handler. Schlüssel-Listen (`key`) dürfen umsortiert werden: die Elemente behalten
+  Wert und Shadow DOM.
+
+Lokal: `npm run build`, dann `npm run test:elements` (baut die App mit `npm run build:react-app`);
+`npm run test:types` prüft die App zusätzlich mit strengem TypeScript.
 
 ### Manifest
 
@@ -899,6 +994,28 @@ vollständig getypt, ein neuer englischer Text kompiliert erst, wenn er auch dor
 `Sparkline`, `Heatmap`, `HistoryBar` und `Timeline` nehmen `locale`, sonst die Sprache des gewählten
 Bündels (`lang`), sonst die des Browsers. Wer nie ein Bündel wählt, merkt keine Änderung.
 
+### Nur für Screenreader
+
+Text, den Screenreader vorlesen, der aber nicht sichtbar ist (eine Spaltenüberschrift, die nur ein
+Symbol zeigt, die Worte „hinzugefügte Zeile“ neben einem `+`): `VisuallyHidden`, `<k-visually-hidden>` oder
+ohne Komponente die globale Klasse `.k-visually-hidden` aus jeder Theme-Datei. Der Text bleibt im
+Barrierefreiheitsbaum, wird aber auf 1 × 1 px abgeschnitten. Die Variante `focusable`
+(`.k-visually-hidden-focusable`) zeigt ihren Inhalt, solange er oder etwas darin den Fokus hat, etwa für einen
+„Zum Inhalt springen“-Link.
+
+```svelte
+<th><TimerIcon aria-hidden="true" /><VisuallyHidden>Zeitstempel</VisuallyHidden></th>
+<VisuallyHidden as="h2">Werkzeuge</VisuallyHidden>
+```
+
+```html
+<span aria-hidden="true">+</span><span class="k-visually-hidden">hinzugefügte Zeile</span>
+<k-visually-hidden focusable><a href="#ende">Zum Ende springen</a></k-visually-hidden>
+```
+
+`as` wählt das Element (`span`, Vorgabe, oder `div`, `p`, `label`, `h2`–`h4`); weitere Attribute gehen an
+das Element.
+
 ### Text ohne HTML
 
 kern erzeugt Markup nie aus einem String: kein `{@html}`, kein `innerHTML`, `outerHTML`,
@@ -966,9 +1083,70 @@ Live-Region. Texte: `offlineTitle`, `offlineText`, `onlineText` (`offline-title`
 <!-- irgendwo: announce('Gespeichert'); announce('Verbindung verloren', 'assertive'); -->
 ```
 
+## Dateien speichern: `saveBlob`, `saveText`, DownloadButton
+
+Für Daten, die die Seite schon hat (Ergebnis eines Werkzeugs, Export, erzeugte Datei). Es wird nichts
+gesendet: der Browser bekommt eine Object-URL dieser Seite auf einen kurz eingehängten `<a download>`,
+der einmal geklickt wird; die URL wird danach wieder freigegeben.
+
+```ts
+import { saveBlob, saveText } from '@mozra-the-great/kern';
+
+const result = saveText('bericht.csv', csv, 'text/csv'); // UTF-8, MIME-Typ text/csv;charset=utf-8
+saveBlob('bild.png', blob); // Bytes unverändert
+if (!result.ok) console.warn(result.error.code, result.error.message);
+```
+
+- **Ergebnis, nie eine Ausnahme:** `{ ok: true, name, size, type }` mit dem tatsächlich benutzten Namen,
+  sonst `{ ok: false, error: { code, message, cause? } }`. `code`: `no-dom` (kein `document`, etwa beim
+  Server-Rendering: dann passiert nichts), `invalid` (kein `Blob` bzw. kein Text), `failed` (der Browser hat
+  abgelehnt; `cause` ist der Fehler) und `content` (nur DownloadButton: kein Inhalt oder `getContent` ist
+  gescheitert).
+- **Dateiname:** `sanitizeFileName` läuft immer: Steuer-, Unsichtbar- und Richtungsumkehr-Zeichen
+  fallen weg, Pfadtrenner und die unter Windows verbotenen Zeichen (`\ / : * ? " < > |`) werden zu `_`,
+  Leerzeichen am Rand und Punkte am Ende entfallen, reservierte Namen (`CON`, `NUL` …) bekommen ein `_`,
+  sehr lange Namen werden unter Erhalt der Endung gekürzt. Bleibt nichts übrig, gilt der Katalogtext
+  `downloadButton.fallbackName` („download“, deutsch „datei“) oder `options.fallbackName`.
+- **Typ:** `saveText` nimmt `text/plain`, hängt `;charset=utf-8` an (außer der Typ nennt selbst ein
+  Charset) und ersetzt etwas, das kein MIME-Typ ist, durch `text/plain`. `saveBlob` behält den Typ des Blobs.
+- **Zeitpunkt:** aus einem Klick- oder Tasten-Handler aufrufen; Browser erlauben mehrere Downloads ohne
+  Geste nicht oder fragen nach. Der synthetische Klick steigt nicht zum `document` auf, ein Popover oder
+  Router sieht ihn nicht. Die Object-URL wird `REVOKE_DELAY_MS` (1 s) nach dem Klick widerrufen, nicht in
+  derselben Task: Chromium und Firefox nehmen die Datei sofort, bei Safari ist ein sofortiger Widerruf
+  dafür bekannt, den Download zu verlieren (hier nicht getestet).
+
+**DownloadButton** (`<k-download-button>`) ist der Button dazu, nach dem Vorbild von CopyButton:
+Symbol allein, `label` ist dann der zugängliche Name; `showLabel` (Element: `show-label`) zeigt ihn als
+Text. Den Inhalt liefert `getContent`, sonst `blob`, sonst `text`; `getContent` darf einen String oder `Blob` auch asynchron liefern
+und läuft erst beim Klick. Währenddessen zeigt der Button einen Spinner und ignoriert weitere Klicks;
+danach bekommt er den Fokus zurück. `name` ist der Dateiname, `type` der MIME-Typ (bei einem `Blob`
+ersetzt er dessen Typ). Ohne Inhalt gibt es keine leere Datei, sondern einen Fehler.
+
+Die Meldung steht in einer höflichen Live-Region (`startedLabel`, „Download gestartet“): sie wird bei
+jedem Klick geleert und neu gesetzt und bleibt bis zum nächsten Klick, nur das Symbol springt nach
+`resetAfter` zurück. Sie ist unsichtbar, außer mit `showStatus`. Ein Fehler (`errorLabel`, „Download
+fehlgeschlagen“) ist immer sichtbarer Text mit `role="alert"` unter dem Button. `ondownload(result)` und
+`onerror(error)` laufen nach dem Ergebnis; Element: `download` (`detail` = `{ name, size, type }`) und
+`download-error` (`detail` = `{ code, message }`), beide nur nach Nutzereingabe. Am Element sind `text`,
+`name`, `type`, `label` & Co. Attribute, `blob` und `getContent` nur Eigenschaften.
+
+```svelte
+<DownloadButton text={csv} name="bericht.csv" type="text/csv" label="Bericht herunterladen" showLabel />
+<DownloadButton getContent={buildReport} name="bericht.pdf" label="Bericht" showLabel showStatus
+	ondownload={(r) => log(r.name, r.size)} onerror={(e) => report(e.code)} />
+```
+
+```html
+<k-download-button id="dl" name="bericht.csv" type="text/csv" label="Bericht herunterladen" show-label></k-download-button>
+<script>
+	dl.getContent = async () => (await fetch('/api/bericht')).text(); // oder dl.blob = new Blob([...])
+	dl.addEventListener('download-error', (e) => console.warn(e.detail.code));
+</script>
+```
+
 ## Komponenten (Kern-Set)
 
-Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
+Aktionen: Button, IconButton, Link, CopyButton, DownloadButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
 Status: Badge, Tag, Avatar, StatusDot, StatusMessage, Spinner, Progress, ProgressRing, Skeleton, Alert, Toaster/`toast()` ·
 Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
 Inhalt: Card, Tile/TileGrid, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel, Code, CodeBlock, Kbd, RelativeTime,

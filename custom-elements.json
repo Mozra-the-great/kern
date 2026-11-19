@@ -529,7 +529,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -1303,7 +1304,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -1321,7 +1323,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2137,7 +2140,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2155,7 +2159,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2530,7 +2535,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -2548,7 +2554,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4092,7 +4099,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4110,7 +4118,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4440,6 +4449,271 @@
 					"declaration": {
 						"name": "KDividerElement",
 						"module": "dist-elements/elements/divider.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "dist-elements/elements/download-button.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-download-button",
+					"name": "KDownloadButtonElement",
+					"description": "Saves text or bytes as a file download and announces the result in a polite live region, once per click; the message stays until the next click. The content is the `text` attribute, or the JS property `blob` (a `Blob` or `File`) or `getContent` (a function that returns a string or a Blob, also as a promise, called at click time); `getContent` wins over `blob`, `blob` over `text`. `name` is the file name (cleaned), `type` the MIME type. `show-label` shows `label` as visible text; an error is always shown as text under the button. Nothing is sent anywhere.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "text",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "text"
+						},
+						{
+							"kind": "field",
+							"name": "blob",
+							"type": {
+								"text": "Blob | undefined"
+							},
+							"attribute": "blob",
+							"description": "A `Blob` or `File` to save. Set as a property; not an attribute."
+						},
+						{
+							"kind": "field",
+							"name": "getContent",
+							"type": {
+								"text": "(() => string | Blob | Promise<string | Blob>) | undefined"
+							},
+							"attribute": "getcontent",
+							"description": "Makes the content at click time. Set as a property; not an attribute."
+						},
+						{
+							"kind": "field",
+							"name": "name",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "name"
+						},
+						{
+							"kind": "field",
+							"name": "type",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "type"
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label"
+						},
+						{
+							"kind": "field",
+							"name": "showLabel",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "show-label"
+						},
+						{
+							"kind": "field",
+							"name": "startedLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "started-label"
+						},
+						{
+							"kind": "field",
+							"name": "errorLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "error-label"
+						},
+						{
+							"kind": "field",
+							"name": "showStatus",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "show-status"
+						},
+						{
+							"kind": "field",
+							"name": "variant",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "variant"
+						},
+						{
+							"kind": "field",
+							"name": "size",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "size"
+						},
+						{
+							"kind": "field",
+							"name": "resetAfter",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "reset-after"
+						},
+						{
+							"kind": "field",
+							"name": "disabled",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "disabled"
+						}
+					],
+					"attributes": [
+						{
+							"name": "text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "text"
+						},
+						{
+							"name": "blob",
+							"type": {
+								"text": "Blob (JSON)"
+							},
+							"fieldName": "blob"
+						},
+						{
+							"name": "getcontent",
+							"type": {
+								"text": "(() => string | Blob | Promise<string | Blob>) (JSON)"
+							},
+							"fieldName": "getContent"
+						},
+						{
+							"name": "name",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "name"
+						},
+						{
+							"name": "type",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "type"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
+						},
+						{
+							"name": "show-label",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "showLabel"
+						},
+						{
+							"name": "started-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "startedLabel"
+						},
+						{
+							"name": "error-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "errorLabel"
+						},
+						{
+							"name": "show-status",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "showStatus"
+						},
+						{
+							"name": "variant",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "variant"
+						},
+						{
+							"name": "size",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "size"
+						},
+						{
+							"name": "reset-after",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "resetAfter"
+						},
+						{
+							"name": "disabled",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "disabled"
+						}
+					],
+					"events": [
+						{
+							"name": "download",
+							"type": {
+								"text": "CustomEvent<DownloadDetail>"
+							},
+							"description": "The download was handed to the browser: the file name used, its size and type."
+						},
+						{
+							"name": "download-error",
+							"type": {
+								"text": "CustomEvent<DownloadErrorDetail>"
+							},
+							"description": "Nothing was saved: `code` is `content` (no content, or `getContent` failed), `failed` (the browser refused), `invalid` or `no-dom`."
+						}
+					],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-download-button",
+					"declaration": {
+						"name": "KDownloadButtonElement",
+						"module": "dist-elements/elements/download-button.js"
 					}
 				}
 			]
@@ -4877,7 +5151,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -4895,7 +5170,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -5970,7 +6246,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -6005,7 +6282,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -7391,7 +7669,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -7409,7 +7688,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -8132,7 +8412,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -8150,7 +8431,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -8902,7 +9184,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -9171,7 +9454,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -9179,7 +9463,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10058,7 +10343,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10067,7 +10353,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10339,7 +10626,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10357,7 +10645,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -10996,7 +11285,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -11005,7 +11295,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -12359,7 +12650,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -12377,7 +12669,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13062,7 +13355,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13080,7 +13374,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13698,7 +13993,8 @@
 							"type": {
 								"text": "string | undefined"
 							},
-							"attribute": "name"
+							"attribute": "name",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -13732,7 +14028,8 @@
 								"text": "boolean"
 							},
 							"default": "false",
-							"attribute": "disabled"
+							"attribute": "disabled",
+							"reflects": true
 						},
 						{
 							"kind": "field",
@@ -14919,6 +15216,40 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/visually-hidden.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-visually-hidden",
+					"name": "KVisuallyHiddenElement",
+					"description": "<k-visually-hidden>: the slotted text stays in the accessibility tree but is not painted (#100). The attribute `focusable` shows it while something inside has focus (a skip link). The host itself is hidden, so the slotted light-DOM text keeps the page's language and styles.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [],
+					"attributes": [],
+					"events": [],
+					"slots": [
+						{
+							"name": ""
+						}
+					]
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-visually-hidden",
+					"declaration": {
+						"name": "KVisuallyHiddenElement",
+						"module": "dist-elements/elements/visually-hidden.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/strings.js",
 			"declarations": [],
 			"exports": [
@@ -15246,6 +15577,14 @@
 					"declaration": {
 						"name": "KDividerElement",
 						"module": "dist-elements/elements/divider.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-download-button",
+					"declaration": {
+						"name": "KDownloadButtonElement",
+						"module": "dist-elements/elements/download-button.js"
 					}
 				},
 				{
@@ -15750,6 +16089,14 @@
 					"declaration": {
 						"name": "KTypewriterElement",
 						"module": "dist-elements/elements/typewriter.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-visually-hidden",
+					"declaration": {
+						"name": "KVisuallyHiddenElement",
+						"module": "dist-elements/elements/visually-hidden.js"
 					}
 				},
 				{

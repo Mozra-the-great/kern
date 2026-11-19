@@ -103,7 +103,8 @@ jobs:
       - name: Touch targets (Playwright, built demo)
         run: npm run test:targets
       - name: Element tests (Playwright, built dist-elements/)
-        # Includes the visual regression of the Code theme (tests/elements/visual.spec.ts, Linux baselines).
+        # Includes the visual regression of the Code theme (tests/elements/visual.spec.ts, Linux baselines) and the
+        # React 19 bridge tests (react-*.spec.ts, #35): the script builds tests/fixtures/react-app first.
         run: npm run test:elements
       - name: Upload the actual screenshots of a failed visual test
         # The way to new Linux baselines: `gh run download <run> -n visual-results -D <dir>`, then

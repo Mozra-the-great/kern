@@ -76,6 +76,7 @@ const SMOKE: Record<string, Smoke> = {
 	},
 	DatePicker: { props: { label: 'Date' }, root: '.k-date', role: { role: 'textbox', name: /Date/ } },
 	Divider: { root: '.k-divider' },
+	DownloadButton: { props: { text: 'file content', name: 'file.txt' }, root: '.k-download-button', role: { role: 'button', name: /.+/ } },
 	Drawer: { props: { title: 'Menu' }, root: '.k-drawer' },
 	DropdownMenu: {
 		props: { label: 'Actions', items: [{ id: 'a', label: 'Open' }] },
@@ -205,7 +206,8 @@ const SMOKE: Record<string, Smoke> = {
 		root: '.k-tree',
 		role: { role: 'tree', name: /.*/ }
 	},
-	Typewriter: { props: { text: 'Hello' }, root: '.k-typewriter' }
+	Typewriter: { props: { text: 'Hello' }, root: '.k-typewriter' },
+	VisuallyHidden: { props: { children: textSnippet('Only for screen readers') }, root: '.vh' }
 };
 
 /** Component exports: Svelte compiles a component to a function; every other export is a lowercase function, a constant or a type. */

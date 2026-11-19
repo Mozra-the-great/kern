@@ -29,10 +29,10 @@ Stage 1 numbers (node and dom projects together):
 
 | Metric     | Covered       | Threshold |
 | ---------- | ------------- | --------- |
-| Statements | 65.48 %       | 65        |
-| Branches   | 48.34 %       | 48        |
-| Functions  | 67.57 %       | 67        |
-| Lines      | 63.80 %       | 63        |
+| Statements | 65.63 %       | 65        |
+| Branches   | 48.51 %       | 48        |
+| Functions  | 67.45 %       | 67        |
+| Lines      | 63.99 %       | 63        |
 
 ## The DOM project
 

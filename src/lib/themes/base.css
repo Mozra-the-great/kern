@@ -249,3 +249,19 @@
 		--k-dur: 0ms !important;
 	}
 }
+
+/* Text for assistive technology only (#100): kept in the accessibility tree, not painted.
+ * `.k-visually-hidden-focusable` shows its content while it or something inside has focus.
+ * The same rule as the VisuallyHidden component and <k-visually-hidden>. */
+.k-visually-hidden,
+.k-visually-hidden-focusable:not(:focus, :focus-within) {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	margin: -1px !important;
+	padding: 0 !important;
+	border: 0 !important;
+	overflow: hidden !important;
+	clip-path: inset(50%) !important;
+	white-space: nowrap !important;
+}

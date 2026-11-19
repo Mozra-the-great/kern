@@ -23,6 +23,7 @@ export default defineConfig(
 	{
 		ignores: [
 			'dist/',
+			'tests/fixtures/react-app/dist/',
 			'dist-elements/',
 			'demo-dist/',
 			'coverage/',

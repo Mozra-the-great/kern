@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-theme="code">
+	<head>
+		<meta charset="utf-8" />
+		<title>kern elements: download button</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+	</head>
+	<body>
+		<main>
+			<h1>Download</h1>
+			<section aria-label="Text">
+				<k-download-button id="text" text="Grüße, 日本語 😀" name="hello.txt" label="Download text" show-label reset-after="300"></k-download-button>
+				<k-download-button id="icon" text="a,b" name="table.csv" type="text/csv" label="Download table"></k-download-button>
+				<k-download-button id="path" text="x" name="../../etc/passwd" label="Download unsafe name"></k-download-button>
+				<k-download-button id="bare" text="x" label="Download unnamed" show-label></k-download-button>
+			</section>
+			<section aria-label="Blob and producer">
+				<k-download-button id="blob" name="data.bin" label="Download bytes" show-label></k-download-button>
+				<k-download-button id="late" name="late.csv" type="text/csv" label="Download later" show-label show-status></k-download-button>
+				<k-download-button id="boom" label="Download failing" show-label error-label="Could not make the file"></k-download-button>
+				<k-download-button id="reject" label="Download rejecting" show-label></k-download-button>
+				<k-download-button id="empty" label="Download nothing" show-label></k-download-button>
+				<k-download-button id="off" text="x" label="Download disabled" show-label disabled></k-download-button>
+			</section>
+			<p id="doc-clicks">0</p>
+			<script type="module">
+				window.events = [];
+				window.docClicks = 0;
+				// What a popover or a router would see: clicks that reach the document.
+				document.addEventListener('click', (e) => {
+					if (e.target instanceof HTMLAnchorElement) window.docClicks++;
+				});
+				for (const id of ['text', 'icon', 'path', 'bare', 'blob', 'late', 'boom', 'reject', 'empty']) {
+					const el = document.getElementById(id);
+					for (const type of ['download', 'download-error'])
+						el.addEventListener(type, (e) => window.events.push(`${id}:${type}:${JSON.stringify(e.detail)}`));
+				}
+				await customElements.whenDefined('k-download-button');
+				document.getElementById('blob').blob = new Blob([new Uint8Array([0, 1, 2, 253, 254, 255])], { type: 'application/octet-stream' });
+				document.getElementById('late').getContent = async () => {
+					await new Promise((resolve) => setTimeout(resolve, 400));
+					return 'id,name\n1,Ada\n';
+				};
+				document.getElementById('boom').getContent = () => {
+					throw new Error('no data yet');
+				};
+				document.getElementById('reject').getContent = () => Promise.reject(new Error('server said no'));
+			</script>
+		</main>
+	</body>
+</html>

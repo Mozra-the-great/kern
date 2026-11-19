@@ -67,6 +67,12 @@ export const de: KernBundle = {
 		invalidText: 'Gültiges Datum eingeben.',
 		pattern: { day: 'TT', month: 'MM', year: 'JJJJ' }
 	},
+	downloadButton: {
+		label: 'Herunterladen',
+		startedLabel: 'Download gestartet',
+		errorLabel: 'Download fehlgeschlagen',
+		fallbackName: 'datei'
+	},
 	drawer: { closeLabel: 'Schließen' },
 	fileDrop: {
 		removeLabel: 'Entfernen',

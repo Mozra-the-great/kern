@@ -7,8 +7,8 @@
 			error: { type: 'String' },
 			options: { type: 'Array' },
 			value: { type: 'String', reflect: true },
-			name: { type: 'String' },
-			disabled: { type: 'Boolean' },
+			name: { type: 'String', reflect: true },
+			disabled: { type: 'Boolean', reflect: true },
 			block: { type: 'Boolean' }
 		},
 		extend: formAssociated

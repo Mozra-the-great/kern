@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Code from '../../lib/components/Code.svelte';
 	import CopyButton from '../../lib/components/CopyButton.svelte';
+	import DownloadButton from '../../lib/components/DownloadButton.svelte';
 	import Kbd from '../../lib/components/Kbd.svelte';
 	import RelativeTime from '../../lib/components/RelativeTime.svelte';
 	import StatusDot from '../../lib/components/StatusDot.svelte';
@@ -48,6 +49,18 @@ function speichern(): void {
 
 	function fail(): Promise<string> {
 		return Promise.reject(new Error('Quelle nicht erreichbar'));
+	}
+
+	let lastSaved = $state('');
+	/** Ein kleiner CSV-Bericht, mit Verzögerung wie bei einer Berechnung oder Abfrage. */
+	async function report(): Promise<string> {
+		await new Promise((resolve) => setTimeout(resolve, 700));
+		return 'Lack;Marke;Anzahl\nRubinrot;Essie;2\nMeeresgrün;OPI;1\n';
+	}
+	function pixel(): Blob {
+		// 1×1 transparentes GIF, als Beispiel für Bytes statt Text.
+		const bytes = Uint8Array.from(atob('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'), (c) => c.charCodeAt(0));
+		return new Blob([bytes], { type: 'image/gif' });
 	}
 </script>
 
@@ -112,6 +125,53 @@ function speichern(): void {
 		<CopyButton value="gesperrt" label="Kopieren" disabled />
 	</div>
 	<p class="m0 muted" aria-live="off">Zuletzt kopiert: {lastCopied || 'noch nichts'}</p>
+</section>
+
+<section>
+	<h2>DownloadButton</h2>
+	<p class="m0 muted">
+		Speichert Text oder Bytes als Datei. Es wird nichts gesendet: Der Browser bekommt eine lokale Adresse, die kurz nach dem Klick wieder
+		verfällt.
+	</p>
+	<div class="row">
+		<DownloadButton
+			text="npm i @mozra-the-great/kern"
+			name="installation.txt"
+			label="Installationsbefehl herunterladen"
+			startedLabel="Download gestartet"
+			errorLabel="Download fehlgeschlagen"
+			ondownload={(r) => (lastSaved = `${r.name} (${r.size} Bytes)`)}
+		/>
+		<DownloadButton
+			getContent={report}
+			name="lacke.csv"
+			type="text/csv"
+			label="Bericht herunterladen"
+			showLabel
+			showStatus
+			startedLabel="Bericht wird heruntergeladen"
+			ondownload={(r) => (lastSaved = `${r.name} (${r.size} Bytes)`)}
+		/>
+		<DownloadButton
+			getContent={pixel}
+			name="pixel.gif"
+			label="Bild herunterladen"
+			showLabel
+			variant="primary"
+			startedLabel="Download gestartet"
+			ondownload={(r) => (lastSaved = `${r.name} (${r.size} Bytes, ${r.type})`)}
+		/>
+		<DownloadButton
+			getContent={fail}
+			name="fehler.txt"
+			label="Fehlschlag simulieren"
+			showLabel
+			errorLabel="Der Bericht konnte nicht erstellt werden"
+			onerror={(e) => (lastSaved = `Fehler ${e.code}: ${e.message}`)}
+		/>
+		<DownloadButton text="gesperrt" label="Herunterladen" showLabel disabled />
+	</div>
+	<p class="m0 muted" aria-live="off">Zuletzt gespeichert: {lastSaved || 'noch nichts'}</p>
 </section>
 
 <section>

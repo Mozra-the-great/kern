@@ -70,8 +70,10 @@ import KTimeline from './KTimeline.svelte';
 import KCode from './KCode.svelte';
 import KCodeBlock from './KCodeBlock.svelte';
 import KCopyButton from './KCopyButton.svelte';
+import KDownloadButton from './KDownloadButton.svelte';
 import KStatusMessage from './KStatusMessage.svelte';
 import KKbd from './KKbd.svelte';
+import KVisuallyHidden from './KVisuallyHidden.svelte';
 import KRelativeTime from './KRelativeTime.svelte';
 import KStatusDot from './KStatusDot.svelte';
 import KThemeToggle from './KThemeToggle.svelte';
@@ -182,8 +184,10 @@ export const elements = {
 	KCode,
 	KCodeBlock,
 	KCopyButton,
+	KDownloadButton,
 	KStatusMessage,
 	KKbd,
+	KVisuallyHidden,
 	KRelativeTime,
 	KStatusDot,
 	KThemeToggle,

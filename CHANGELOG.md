@@ -24,6 +24,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Text for assistive technology only (#100): `VisuallyHidden` (`as`: `span` (default), `div`, `p`, `label`,
+  `h2`–`h4`; `focusable` shows the content while it has focus; other attributes go to the element),
+  `<k-visually-hidden>` (attribute `focusable`) and the global classes `.k-visually-hidden` and
+  `.k-visually-hidden-focusable` in `base.css`, so every theme entry ships them. All use the same rule
+  (1 × 1 px, `clip-path: inset(50%)`, no wrapping); the text stays in the accessibility tree.
+- Save-as-download helpers (#92): `saveBlob(name, blob)` and `saveText(name, text, type?)` offer data the page holds as
+  a file: an object URL on a temporary `<a download>` that is clicked once (its click does not bubble to the
+  document) and revoked `REVOKE_DELAY_MS` (1 s) later; nothing is sent anywhere. They never throw and return
+  `{ ok: true, name, size, type }` or `{ ok: false, error: { code, message, cause? } }` with `code` `no-dom` (no
+  document: server rendering, a worker), `invalid` or `failed`. File names go through `sanitizeFileName` (no path
+  separators, control, zero-width or direction-override characters, no characters Windows forbids, reserved names
+  prefixed, long names shortened keeping the extension; the catalogue's `downloadButton.fallbackName` when nothing is
+  left). `saveText` writes UTF-8 with `text/plain` as the default type (`textMimeType`). Types:
+  `DownloadResult`, `DownloadOk`, `DownloadFailure`, `DownloadError`, `DownloadErrorCode`, `SaveOptions`.
+- `DownloadButton` / `<k-download-button>` (#92), built like `CopyButton`: icon-only with `label` as the accessible name,
+  or `showLabel` / `show-label`. Content from `getContent` (a string or `Blob`, also async, called at click time; a spinner
+  and ignored clicks while it runs), `blob` or `text`; `name`, `type`. A polite live message (`startedLabel`) set fresh per
+  click, visible with `showStatus`; a failure (`getContent` throws or rejects, no content, the browser refuses) shows
+  `errorLabel` as an alert under the button. `ondownload(result)` / `onerror(error)`; element events `download`
+  (`{ name, size, type }`) and `download-error` (`{ code, message }`, code `content` for a failing producer), for user input
+  only. Attributes `text`, `name`, `type`, `label`, `show-label`, `started-label`, `error-label`, `show-status`, `variant`,
+  `size`, `reset-after`, `disabled`; the Blob and the producer are the properties `blob` and `getContent`.
+- Catalogue `downloadButton` (`label`, `startedLabel`, `errorLabel`, `fallbackName`) in English and German.
+- React 19 bridge tests (#35): a real React 19 app (`tests/fixtures/react-app`, StrictMode, development build, strict
+  TypeScript with the shipped element typings) runs in Chromium against the built element entries. The Playwright
+  specs `tests/elements/react-*.spec.ts` cover form controls with `FormData`, validity and reset, modal, drawer,
+  popover and toasts, tabs, tab links, data table, pagination, sortable list, select grid and file drop, controlled
+  values, refs, unmount and remount, two roots on one page and `setStrings(de)`. Every test fails on a `pageerror` or a
+  console error or warning. They run in `npm run test:elements` (which builds the app first, `npm run build:react-app`);
+  `npm run test:types` also type-checks the app. New devDependencies: `react`, `react-dom`, `@types/react-dom`.
+- README: "React 19" section with a tested example and the rules for properties, attributes, events and forms.
 - Component behaviour tests (#24, stage 1): a second Vitest project (`dom`, jsdom with
   `@testing-library/svelte` and `user-event`) next to the node tests. A smoke test renders every
   component exported from `src/lib/index.ts` (and fails when a new export has no entry); behaviour suites
@@ -32,6 +63,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Mascot. `docs/testing.md` maps each stuffcloud test file to its kern counterpart.
 - `npm run test:coverage`: v8 coverage over `src/lib` (text report, `coverage/lcov.info`), uploaded as a CI
   artifact, with a ratchet at the current numbers rounded down (raised to 95 % in stage 2).
+
+### Changed
+- CI review (#102): the tiered `claude-review` runs two more reviewers in parallel, `review-security` (opus, after
+  Anthropic's `/security-review`, confidence ≥ 8/10) and `review-docs` (sonnet, documentation the change makes wrong);
+  every review agent gets a working-environment note (single `gh pr diff` / `gh pr view` calls only), the validator
+  rules for security and docs findings, and security findings are posted as `**Security (<severity>):**`. Files taken
+  unchanged from Mozra-the-great/StressMySite `main` (identical in nagellacke and stuffcloud); job name and the
+  `claude-code-action` pin (v1.0.283) are unchanged.
+
+### Fixed
+- `<k-button type="submit">` and `type="reset"` failed with `TypeError: form.reset is not a function` when a control in
+  the form had the id or name `reset` or `submit` (the control shadows the form's method). They now call the
+  `HTMLFormElement` methods directly.
+- A kern form element whose `name` was set as a property (what React 19 does for `name="…"`) was missing from
+  `FormData` and the submit: a form-associated element is named by its `name` attribute. `name` is reflected to the
+  attribute now, on every form element.
+- `disabled={true}` set as a property (React 19) did not disable the host for the form: the field was still submitted
+  and matched `:enabled`. `disabled` is reflected to the attribute, so the host is disabled like a native field.
+- `form="id"` on a kern form element threw `Cannot set property form … which has only a getter` in React 19 (it sets
+  the property because the element has one) and unmounted the tree. `form` accepts the id now and sets the attribute.
 
 ## [0.8.0] - 2026-11-19
 
