@@ -85,7 +85,12 @@ JSON-Attribut übergeben. Attribute mit Vorgabe `true` (`pausable`, `pause-on-ho
 `caret`, `blink` …) schaltet `="false"` ab; bei den Daten-Elementen heißen sie umgekehrt (`no-search`,
 `no-stack`, `no-legend`, `no-last-dot`, `rising-is-bad`, `no-pulse`). `<k-stat>` nimmt eine `<k-sparkline>` im Slot `spark`.
 
-Ereignisse:
+Ereignisse (alle `bubbles` und `composed`, Wert in `detail`). **Ereignisse feuern nur bei
+Nutzereingaben:** Setzt der Code `value`, `tabs`, `options`, `open`, `index` usw., kommt kein
+`change`/`select`/`toggle`/`files`, wie bei nativen Feldern. Ein kontrollierter Wrapper (React
+`value={x}` plus `onchange`) läuft so nicht in eine Schleife. Ereignisse werden nie während des
+Renderns ausgelöst; ein Handler darf also sofort andere kern-Elemente ändern. Ausnahme `complete`:
+es meldet das Ende einer Animation.
 
 - `change`: Felder, Tabs, Combobox, DatePicker, Slider, NumberInput (Zahl oder `null`), PinInput,
   Rating, SegmentedControl, ColorPicker (Hex), TagInput (`string[]`), Pagination (Seite), Carousel (Folienindex)
@@ -101,6 +106,14 @@ Ereignisse:
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
 - `files`: FileDrop (`detail` = `File[]`, auch als `el.files`)
 - `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
+
+Toasts: `toast()` aus `kern-ui` und `window.kern.toast()` aus `kern-elements.js` schreiben in
+denselben Speicher (`globalThis[Symbol.for('kern.toasts')]`). Ein Toast erscheint in jedem
+`<Toaster />` und jedem `<k-toaster>` der Seite. Während einer Migration von React zu Svelte
+(beide Builds auf einer Seite) also nur **einen** Toaster einbinden, sonst erscheint jeder Toast
+doppelt: solange React-Seiten noch da sind `<k-toaster>` im gemeinsamen Layout, danach
+`<Toaster />`. Aufrufen lässt sich `toast()` von beiden Seiten. `toasts` ist eine
+schreibgeschützte Live-Liste; ändern nur über `toast()` und `dismissToast()`.
 
 Slots: Tab-Inhalte sind Kinder mit `data-tab="<id>"`, Folien von `<k-carousel>` sind seine
 Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` (Card), `actions` (Alert,

@@ -33,6 +33,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   pill controls, 32px cards, one soft shadow, Figtree 900 display, green accent.
 
 ### Changed
+- **Breaking (0.x):** `toasts` is now a read-only live mirror (`readonly ToastItem[]`)
+  of one toast store shared on `globalThis[Symbol.for('kern.toasts')]`; mutating it
+  directly no longer shows or removes toasts, use `toast()` and `dismissToast()`.
+  `toast()`, `toast.ok/warn/danger`, `dismissToast` and `window.kern.toast` are unchanged.
+- Custom elements fire `change`/`select`/`toggle`/`files` for user input only, never
+  when a property is set from code (`<k-tabs>` no longer fires `change` when `tabs` or
+  `value` are set, `<k-radio-group>` no longer when `value` is set).
+- `Popover`'s `ontoggle` (and `<k-popover>`'s `toggle`) fire only when the user opens or
+  closes it, not when `open` is set from outside.
+- `Tabs` and `RadioGroup` take an optional `onchange` for user changes.
 - Toolchain: vite 8, @sveltejs/vite-plugin-svelte 7, @sveltejs/package 3,
   TypeScript 6 (`vite/client` types for CSS side-effect imports). Dependabot
   groups vite with the Svelte plugin and skips TypeScript majors for now.
@@ -41,5 +51,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Fixed
 - Reduced motion: themes set `--k-dur` on `[data-theme^=…]`, which overrode the
   `prefers-reduced-motion` rule in base.css; the rule now wins for every theme.
+- `<k-tabs>` no longer dispatches `change` or hides panels during Svelte's render, which
+  threw `state_unsafe_mutation` and unmounted a React 19 tree whose `onchange` handler
+  updated another kern element (#29). Panel hiding is an effect now.
+- Svelte build and custom-elements bundle share one toast store, so a toast from either
+  shows in both `<Toaster />` and `<k-toaster>` (#34).
+- Carousel: the scrolling track is keyboard-operable (focusable when there is more than
+  one slide; arrow keys, Home, End) and has a focus ring (axe `scrollable-region-focusable`);
+  a separate live region announces the settled slide ("2 of 5") instead of an `aria-live`
+  track that spoke on every scroll step (#28). A negative or fractional `index` is clamped.
 - `Field` no longer stretches inside grid rows (`align-content: start`).
 - `package-lock.json` matches `package.json` again, so `npm ci` works.
