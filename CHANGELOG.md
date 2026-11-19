@@ -24,6 +24,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Code theme source of truth (#37): `src/lib/themes/code.tokens.json`, shipped as
+  `@mozra-the-great/kern/themes/code.tokens.json`, lists every token of every Code variant with its value and
+  where it comes from in stuffcloud's `docs/design` (or the app, or the design-system artifact for light, paper and
+  contrast). `brands/code.css` is generated from it (`npm run tokens:code`). `npm run tokens:check` (CI) compares it
+  with the checked-in design snapshot `scripts/ci/code-theme-snapshot.json`; `node scripts/ci/code-theme.mjs
+  --against <stuffcloud>` compares the snapshot with a stuffcloud checkout (also runnable from stuffcloud's CI) and
+  `--refresh` rewrites it (docs/themes.md, "Code theme source").
+- Instance-neutrality guard (#37): `npm run neutrality:check` (CI) fails on e-mail addresses, URLs, domains and IPv4
+  addresses in the themes, the snapshot and `assets/**`, plus an operator list from the Actions secret or variable
+  `KERN_FORBIDDEN_TERMS` (never printed).
+- Component tokens (#38): Button (`--k-button-*`), Input and Select (`--k-field-font`, `-size`, `-bg`,
+  `--k-select-bg`, `--k-field-pad-x`, `-disabled-opacity`), Field and Label (`--k-field-label-color`, `-hint-font`,
+  `-hint-size`, `-hint-color`), Checkbox (`--k-check-*`), Card (`--k-card-bg`, `-pad`, `-gap`), Tabs (`--k-tabs-gap`,
+  `-scrollbar`, `--k-tab-*`, including `--k-tab-divider-w` for a strip of cells), Modal (`--k-modal-*`, including
+  `--k-modal-actions-direction` for stacked actions at a theme's phone breakpoint), Progress
+  (`--k-progress-track`, `-track-border-w`), Toaster (`--k-toaster-width`, `--k-toast-pad`, `-msg-size`, `-ok-border`,
+  `-warn-border`) and FileDrop (`--k-filedrop-*`). Every default is the previous look: Flower, Pop and Line do not
+  change (`npm test` checks every variant).
+- Visual regression of the Code theme (#38): Playwright screenshots of those components in `code` and `code-light`
+  at 1280, 375 and 320 px (`tests/elements/visual.spec.ts`, in the `build` job); the `stuffcloud` aliases render
+  against the same baselines.
 - `SortableList` and `<k-sortable-list>` (#68): an ordered list whose items have Up, Down and Remove buttons with the
   item name in their accessible name (`Move {name} up`; it contains the visible text, WCAG 2.5.3, English
   and German in the catalogue). The focus stays on the pressed button after a move, moves to its partner when
@@ -56,6 +77,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   The demo's "Marken-Assets" section shows every brand on its own ground.
 
 ### Changed
+- The **Code** theme reproduces stuffcloud's component look (#38): sentence-case Inter 600 15 px buttons with
+  28 px padding and the ghost-style secondary button, JetBrains Mono 15 px fields on a transparent ground with
+  muted labels and mono hints, a pink checkbox, transparent cards with 20 px padding, tabs as a strip of cells
+  (selected cell raised, 600, accent underline, pink on hover), the design's dialog (page background, 32 px title,
+  36/36/32 px padding; 28 px title and stacked actions below 760 px), a `line` progress track, 420 px toasts with
+  green and amber edges, and a transparent drop zone with a mono prompt. The remaining differences are listed in
+  docs/themes.md for approval.
+- Code theme values now follow stuffcloud's `docs/design` where it and the design-system artifact disagreed (#37):
+  `--k-border` (dark) `#6e6e78` → `#6c6c76` (`--field-border`), `--k-backdrop` (dark) `rgba(0,0,0,.6)` →
+  `rgba(16,16,18,.55)` (the delete-site dialog), and the font stacks of `stuff.css` (`'Inter', system-ui, sans-serif`;
+  `'JetBrains Mono', ui-monospace, monospace`; `'Silkscreen', monospace`). Same under the `stuffcloud` aliases.
 - `npm run assets:check` guards every brand: each folder has a `manifest.json` (size, sha256, plus
   the pixel grid or the `viewBox`), and the check also fails on unsafe SVG constructs (scripts,
   handlers, `<foreignObject>`, `<image>`, external references, `data:` URIs, `<style>`) and on an
