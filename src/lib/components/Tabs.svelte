@@ -237,13 +237,14 @@
 	@media (forced-colors: active) {
 		/* Selected tab: a Highlight bar instead of the inset shadow (dropped). In the line look the strip
 		 * clips the 1px the tab overlaps the baseline by, so the bar is 4px to show 3px. */
-		[data-look='line'] button[aria-selected='true'],
-		[data-look='pill'] button[aria-selected='true'] {
-			box-shadow: none;
-			border-bottom: 3px solid Highlight;
-		}
 		[data-look='line'] button[aria-selected='true'] {
-			border-bottom-width: 4px;
+			box-shadow: none;
+			border-bottom: 4px solid Highlight;
+		}
+		/* the pill is round: a bar under it would curl, so it gets a full edge (the margin keeps its size) */
+		[data-look='pill'] button[aria-selected='true'] {
+			margin: -2px;
+			border: 2px solid Highlight;
 		}
 		button:disabled {
 			opacity: 1;
