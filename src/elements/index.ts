@@ -81,6 +81,8 @@ import KResizable from './KResizable.svelte';
 import KScrollArea from './KScrollArea.svelte';
 import KTile from './KTile.svelte';
 import KTileGrid from './KTileGrid.svelte';
+import KSortableList from './KSortableList.svelte';
+import KSelectGrid from './KSelectGrid.svelte';
 import KMascot from './KMascot.svelte';
 import KProse from './KProse.svelte';
 import KSkipLink from './KSkipLink.svelte';
@@ -184,6 +186,8 @@ export const elements = {
 	KScrollArea,
 	KTile,
 	KTileGrid,
+	KSortableList,
+	KSelectGrid,
 	KMascot,
 	KProse,
 	KSkipLink,

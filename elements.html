@@ -90,6 +90,11 @@
 				<k-tile as="li" href="#bilder"><strong>Bilder</strong>&nbsp;Größe ändern</k-tile>
 				<k-tile as="li"><strong>Bald</strong>&nbsp;Weitere Werkzeuge</k-tile>
 			</k-tile-grid>
+			<h2>Sortieren und Auswählen</h2>
+			<k-sortable-list id="files" label="Dateien zum Zusammenfügen"></k-sortable-list>
+			<p id="files-said">Letzte Aktion: keine</p>
+			<k-select-grid id="pages" label="Seiten" min="110px" reorderable></k-select-grid>
+			<p id="pages-selected">Gewählt: keine</p>
 			<k-button id="open-drawer" variant="secondary">Filter (Drawer)</k-button>
 			<k-drawer id="drawer" title="Filter" initial-focus="#apply-filter">
 				<p>Nur Bilder anzeigen.</p>
@@ -273,6 +278,40 @@
 				el.links = el.links.map((l) => ({ ...l, current: l.href === e.detail.href }));
 			});
 			$('#open-drawer').addEventListener('click', () => ($('#drawer').open = true));
+			// Sortable list and select grid: the elements never reorder themselves, the handler sets `items`.
+			const splice = (items, from, to) => {
+				const next = [...items];
+				next.splice(to, 0, next.splice(from, 1)[0]);
+				return next;
+			};
+			const files = $('#files');
+			files.items = [
+				{ id: 1, label: 'Rechnung-Mai.pdf', description: '3 Seiten, 120 KB' },
+				{ id: 2, label: 'Vertrag.pdf', description: '12 Seiten, 1,4 MB' },
+				{ id: 3, label: 'Notizen.pdf', description: '2 Seiten, 18 KB' }
+			];
+			files.addEventListener('move', (e) => {
+				const { from, to } = e.detail;
+				const name = files.items[from].label;
+				files.items = splice(files.items, from, to);
+				$('#files-said').textContent = `Letzte Aktion: ${name} an Position ${to + 1}`;
+				window.kern.announce(`${name} verschoben, Position ${to + 1} von ${files.items.length}`);
+			});
+			files.addEventListener('remove', (e) => {
+				const name = files.items[e.detail.index].label;
+				files.items = files.items.filter((_, i) => i !== e.detail.index);
+				$('#files-said').textContent = `Letzte Aktion: ${name} entfernt`;
+				window.kern.announce(`${name} entfernt`);
+			});
+			const page = (n) =>
+				'data:image/svg+xml,' +
+				encodeURIComponent(
+					`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 120"><rect width="90" height="120" fill="#fff" stroke="#888"/><text x="45" y="70" font-size="30" text-anchor="middle" fill="#333">${n}</text></svg>`
+				);
+			const pages = $('#pages');
+			pages.items = Array.from({ length: 9 }, (_, i) => ({ id: i + 1, label: `Seite ${i + 1}`, src: page(i + 1) }));
+			pages.addEventListener('change', (e) => ($('#pages-selected').textContent = `Gewählt: ${e.detail.length ? e.detail.join(', ') : 'keine'}`));
+			pages.addEventListener('move', (e) => (pages.items = splice(pages.items, e.detail.from, e.detail.to)));
 			$('#apply-filter').addEventListener('click', () => ($('#drawer').open = false));
 			$('#open-block').addEventListener('click', () => ($('#block').open = true));
 			$('#later').addEventListener('click', () => ($('#block').open = false));

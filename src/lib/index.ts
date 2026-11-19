@@ -80,6 +80,8 @@ export { default as Resizable } from './components/Resizable.svelte';
 export { default as ScrollArea } from './components/ScrollArea.svelte';
 export { default as Tile } from './components/Tile.svelte';
 export { default as TileGrid } from './components/TileGrid.svelte';
+export { default as SortableList } from './components/SortableList.svelte';
+export { default as SelectGrid } from './components/SelectGrid.svelte';
 
 export { default as Prose } from './components/Prose.svelte';
 export { default as SkipLink } from './components/SkipLink.svelte';
@@ -129,6 +131,10 @@ export type { DataColumn, DataRowKey, DataSortDir } from './components/DataTable
 export type { HeatmapDatum } from './components/Heatmap.svelte';
 export type { HistoryItem, HistoryStatus } from './components/HistoryBar.svelte';
 export type { TimelineItem, TimelineStatus } from './components/Timeline.svelte';
+export type { SortableItem } from './components/SortableList.svelte';
+export type { SelectGridItem } from './components/SelectGrid.svelte';
+export { moveItem } from './components/reorder.js';
+export type { ItemKey } from './components/reorder.js';
 export { themeScript, createThemeScript, themePair, isDarkTheme } from './components/theme.js';
 export type { ThemeOption, ThemeScriptOptions } from './components/theme.js';
 export type { ResizablePanel } from './components/Resizable.svelte';

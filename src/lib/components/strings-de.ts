@@ -118,7 +118,20 @@ export const de: KernBundle = {
 	rating: { starLabel: '{value} von {max} Sternen' },
 	resizable: { handleLabel: 'Größe von {panel} ändern' },
 	scrollArea: { label: 'Scrollbarer Inhalt' },
+	selectGrid: {
+		label: 'Auswählbare Einträge',
+		reorderHint: 'Alt gedrückt halten und eine Pfeiltaste drücken, um den fokussierten Eintrag zu verschieben.'
+	},
 	skipLink: { label: 'Zum Hauptinhalt springen' },
+	sortableList: {
+		label: 'Einträge',
+		upText: 'Nach oben',
+		downText: 'Nach unten',
+		removeText: 'Entfernen',
+		upLabel: '{name} nach oben verschieben',
+		downLabel: '{name} nach unten verschieben',
+		removeLabel: '{name} entfernen'
+	},
 	sparkline: { label: 'Verlauf: erster Wert {first}, letzter {last}, Minimum {min}, Maximum {max}', emptyLabel: 'Keine Daten' },
 	spinner: { label: 'Lädt' },
 	stat: { upLabel: 'gestiegen um {value}', downLabel: 'gesunken um {value}', flatLabel: 'unverändert' },

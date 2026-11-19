@@ -8,6 +8,8 @@ import type { SegmentOption } from '../lib/components/SegmentedControl.svelte';
 import type { ColorSwatch } from '../lib/components/ColorPicker.svelte';
 import type { TabItem } from '../lib/components/Tabs.svelte';
 import type { TabLinkItem } from '../lib/components/TabLinks.svelte';
+import type { SortableItem } from '../lib/components/SortableList.svelte';
+import type { SelectGridItem } from '../lib/components/SelectGrid.svelte';
 import type { BreadcrumbItem } from '../lib/components/Breadcrumb.svelte';
 import type { NavbarItem } from '../lib/components/Navbar.svelte';
 import type { TreeNode } from '../lib/components/TreeView.svelte';
@@ -38,6 +40,8 @@ export type Checks = [
 	Assert<Same<E.ColorSwatch, ColorSwatch>>,
 	Assert<Same<E.TabItem, TabItem>>,
 	Assert<Same<E.TabLinkItem, TabLinkItem>>,
+	Assert<Same<E.SortableItem, SortableItem>>,
+	Assert<Same<E.SelectGridItem, SelectGridItem>>,
 	Assert<Same<E.BreadcrumbItem, BreadcrumbItem>>,
 	Assert<Same<E.NavbarItem, NavbarItem>>,
 	Assert<Same<E.TreeNode, TreeNode>>,

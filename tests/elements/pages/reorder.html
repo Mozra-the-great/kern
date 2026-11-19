@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" data-theme="code">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: sortable list and select grid</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script>
+			window.errors = [];
+			window.events = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+				background: var(--k-bg);
+				color: var(--k-fg);
+				font-family: var(--k-font-sans);
+			}
+			body > * + * {
+				margin-top: 24px;
+			}
+			#wide {
+				width: 640px;
+				max-width: 100%;
+			}
+			#narrow {
+				width: 340px;
+				max-width: 100%;
+			}
+			#rtl {
+				width: 640px;
+				max-width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Sortable list and select grid</h1>
+		<button id="before" type="button">Before</button>
+		<k-live-announcer></k-live-announcer>
+
+		<k-sortable-list id="list" label="Files"></k-sortable-list>
+		<!-- A host that applies the move later than the event (a framework re-render, a server round trip). -->
+		<k-sortable-list id="slow" label="Slow files"></k-sortable-list>
+		<!-- A host that ignores the events (a rejected move). -->
+		<k-sortable-list id="stubborn" label="Stubborn files"></k-sortable-list>
+		<k-sortable-list id="fixed" label="Fixed files" removable="false" drag-drop="false"></k-sortable-list>
+		<k-sortable-list
+			id="german"
+			label="Dateien"
+			up-text="Nach oben"
+			down-text="Nach unten"
+			remove-text="Entfernen"
+			up-label="{name} nach oben verschieben"
+			down-label="{name} nach unten verschieben"
+			remove-label="{name} entfernen"
+		></k-sortable-list>
+
+		<div id="wide"><k-select-grid id="grid" label="Pages" min="140px" reorderable></k-select-grid></div>
+		<div id="narrow"><k-select-grid id="plain" label="Plain pages" min="120px"></k-select-grid></div>
+		<div id="rtl" dir="rtl"><k-select-grid id="rtlgrid" label="RTL pages" min="140px" reorderable></k-select-grid></div>
+
+		<button id="after" type="button">After</button>
+
+		<script>
+			const files = (names) => names.map((label, i) => ({ id: `f${i + 1}`, label, description: `${i + 1} page${i ? 's' : ''}` }));
+			const pic = (n) =>
+				'data:image/svg+xml,' +
+				encodeURIComponent(
+					`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 120"><rect width="90" height="120" fill="#fff" stroke="#888"/><text x="45" y="70" font-size="30" text-anchor="middle" fill="#333">${n}</text></svg>`
+				);
+			const pages = (count) => Array.from({ length: count }, (_, i) => ({ id: i + 1, label: `Page ${i + 1}`, src: pic(i + 1) }));
+			const splice = (items, from, to) => {
+				const next = [...items];
+				next.splice(to, 0, next.splice(from, 1)[0]);
+				return next;
+			};
+			const $ = (id) => document.getElementById(id);
+
+			const say = (text) => window.kern.announce(text);
+			for (const [id, delay] of [['list', 0], ['slow', 120], ['fixed', 0], ['german', 0]]) {
+				const el = $(id);
+				el.items = files(['Report.pdf', 'Invoice.pdf', 'Contract.pdf', 'Notes.pdf']);
+				const apply = (fn) => (delay ? setTimeout(fn, delay) : fn());
+				el.addEventListener('move', (e) => {
+					window.events.push(`${id}:move:${JSON.stringify(e.detail)}`);
+					apply(() => {
+						const { from, to } = e.detail;
+						const name = el.items[from].label;
+						el.items = splice(el.items, from, to);
+						say(`${name} moved to position ${to + 1} of ${el.items.length}`);
+					});
+				});
+				el.addEventListener('remove', (e) => {
+					window.events.push(`${id}:remove:${JSON.stringify(e.detail)}`);
+					apply(() => {
+						const name = el.items[e.detail.index].label;
+						el.items = el.items.filter((_, i) => i !== e.detail.index);
+						say(`${name} removed`);
+					});
+				});
+			}
+
+			$('stubborn').items = files(['One.pdf', 'Two.pdf']);
+
+			for (const id of ['grid', 'plain', 'rtlgrid']) {
+				const el = $(id);
+				el.items = pages(id === 'plain' ? 6 : 11);
+				// The plain grid starts with a selection, so axe sees the selected look as well.
+				if (id === 'plain') el.selected = [2, 5];
+				el.addEventListener('change', (e) => {
+					window.events.push(`${id}:change:${JSON.stringify(e.detail)}`);
+				});
+				el.addEventListener('move', (e) => {
+					window.events.push(`${id}:move:${JSON.stringify(e.detail)}`);
+					el.items = splice(el.items, e.detail.from, e.detail.to);
+				});
+			}
+		</script>
+	</body>
+</html>
