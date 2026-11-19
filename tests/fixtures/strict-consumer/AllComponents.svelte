@@ -36,6 +36,7 @@
 		IconButton,
 		Input,
 		Kbd,
+		VisuallyHidden,
 		Label,
 		Link,
 		Marquee,
@@ -213,6 +214,8 @@
 <IconButton label="Close" variant={undefined} size={undefined}>x</IconButton>
 <Input bind:value={text} label={maybeString} hint={maybeString} error={maybeString} />
 <Input bind:value={nullableNum} type="number" label="Number" />
+<VisuallyHidden as={undefined} focusable={undefined} class={undefined}>Nur für Screenreader</VisuallyHidden>
+<VisuallyHidden as="h2" focusable id="vh">Abschnitt</VisuallyHidden>
 <Kbd keys={['mod', 'K']} separator={maybeString} size={undefined} platform={undefined} labels={undefined} />
 <Label for={maybeString} required={maybeBoolean} text={maybeString} />
 <Link href={maybeString} external={maybeBoolean}>Link</Link>

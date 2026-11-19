@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Text for assistive technology only (#100): `VisuallyHidden` (`as`: `span` (default), `div`, `p`, `label`,
+  `h2`–`h4`; `focusable` shows the content while it has focus; other attributes go to the element),
+  `<k-visually-hidden>` (attribute `focusable`) and the global classes `.k-visually-hidden` and
+  `.k-visually-hidden-focusable` in `base.css`, so every theme entry ships them. All use the same rule
+  (1 × 1 px, `clip-path: inset(50%)`, no wrapping); the text stays in the accessibility tree.
 - Save-as-download helpers (#92): `saveBlob(name, blob)` and `saveText(name, text, type?)` offer data the page holds as
   a file: an object URL on a temporary `<a download>` that is clicked once (its click does not bubble to the
   document) and revoked `REVOKE_DELAY_MS` (1 s) later; nothing is sent anywhere. They never throw and return
