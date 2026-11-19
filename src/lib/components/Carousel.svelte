@@ -19,6 +19,7 @@
 		slideLabel?: string;
 		/** The word in each slide's name: "2 of 5". */
 		ofLabel?: string;
+		/** Called when the user moves to another slide (buttons, dots, keys, swipe), not when `index` is set from outside. */
 		onchange?: (index: number) => void;
 		class?: string;
 	}
@@ -48,6 +49,8 @@
 	let settleTimer: ReturnType<typeof setTimeout> | undefined;
 	let frame = 0;
 	let lastWidth = 0;
+	/** Text of the live region: the active slide, set once the slide has settled. */
+	let announcement = $state('');
 
 	const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
 
@@ -121,6 +124,19 @@
 		goTo(n);
 		tablist?.querySelectorAll<HTMLElement>('[role="tab"]')[n]?.focus();
 	}
+	/** The focusable track: arrow keys, Home and End move one slide (no wrap-around). */
+	function onTrackKey(e: KeyboardEvent) {
+		if (total < 2 || e.altKey || e.ctrlKey || e.metaKey) return;
+		const flip = sign();
+		let n = -1;
+		if (e.key === 'ArrowRight') n = index + flip;
+		else if (e.key === 'ArrowLeft') n = index - flip;
+		else if (e.key === 'Home') n = 0;
+		else if (e.key === 'End') n = total - 1;
+		else return;
+		e.preventDefault();
+		goTo(clamp(n, 0, total - 1));
+	}
 
 	/* Slides built from children: keep the count in sync. */
 	$effect(() => {
@@ -155,11 +171,31 @@
 	$effect(() => {
 		const i = index;
 		if (!track || total === 0) return;
-		if (i > total - 1) {
-			index = total - 1;
+		if (i > total - 1 || i < 0 || !Number.isInteger(i)) {
+			index = clamp(Number.isFinite(i) ? Math.round(i) : 0, 0, total - 1);
 			return;
 		}
 		if (untrack(scrolledIndex) !== i) goTo(i);
+	});
+
+	/* Announce the active slide once it has settled, not every step of a swipe. */
+	let announced = -1;
+	$effect(() => {
+		const i = index;
+		const n = total;
+		const of = ofLabel;
+		if (n < 2) return;
+		if (announced === -1) {
+			// The first slide is not news; only later changes are announced.
+			announced = i;
+			return;
+		}
+		const t = setTimeout(() => {
+			if (announced === i) return;
+			announced = i;
+			announcement = `${i + 1} ${of} ${n}`;
+		}, 400);
+		return () => clearTimeout(t);
 	});
 
 	/* Keep the visible slide aligned when the width changes. */
@@ -177,7 +213,18 @@
 </script>
 
 <section class="k-carousel {cls}" aria-roledescription="carousel" aria-label={label}>
-	<div class="track" bind:this={track} {onscroll} aria-live="polite" tabindex="-1">
+	<!-- The track scrolls, so it must be reachable by keyboard whenever it can overflow
+	     (WCAG 2.1.1, axe scrollable-region-focusable); its keys move between slides. -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions -->
+	<div
+		class="track"
+		role="group"
+		aria-label={label}
+		bind:this={track}
+		{onscroll}
+		onkeydown={onTrackKey}
+		tabindex={total > 1 ? 0 : -1}
+	>
 		{#if items && slide}
 			{#each items as item, i (i)}
 				<div id="{uid}-slide-{i}">{@render slide(item, i)}</div>
@@ -186,6 +233,7 @@
 			{@render children?.()}
 		{/if}
 	</div>
+	<div class="sr" aria-live="polite" aria-atomic="true">{announcement}</div>
 	{#if total > 1}
 		<div class="controls">
 			<button type="button" class="nav" aria-label={prevLabel} aria-disabled={index <= 0} onclick={() => index > 0 && goTo(index - 1)}>
@@ -213,7 +261,7 @@
 </section>
 
 <style>
-	.k-carousel { display: grid; gap: var(--k-space-3); min-width: 0; }
+	.k-carousel { position: relative; display: grid; gap: var(--k-space-3); min-width: 0; }
 	.track {
 		display: flex;
 		overflow-x: auto;
@@ -224,6 +272,8 @@
 		border-radius: var(--k-radius-card);
 	}
 	.track::-webkit-scrollbar { display: none; }
+	.track:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 	.track > :global(*) {
 		flex: 0 0 100%;
 		min-width: 0;
