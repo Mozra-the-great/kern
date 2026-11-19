@@ -716,8 +716,10 @@ const OVERLAYS: Record<string, Case> = {
 	},
 	'k-context-menu': {
 		prepare: async (page) => {
-			await page.locator('#context .k-context-area').focus();
-			await page.keyboard.press('Shift+F10');
+			// a synthetic contextmenu event: a real right click is followed by a mouse release that can close the menu again
+			await page
+				.locator('#context .k-context-area')
+				.dispatchEvent('contextmenu', { clientX: 120, clientY: 120, bubbles: true, cancelable: true });
 			await expect(page.locator('#context .menu')).toBeVisible();
 		},
 		edge: ['#context .menu'],

@@ -165,12 +165,13 @@
 	}
 	@media (forced-colors: active) {
 		/* Current tab: a Highlight bar instead of the inset shadow (dropped); see Tabs.svelte for the 4px. */
-		a[aria-current='page'] {
-			box-shadow: none;
-			border-bottom: 3px solid Highlight;
-		}
 		[data-look='line'] a[aria-current='page'] {
-			border-bottom-width: 4px;
+			box-shadow: none;
+			border-bottom: 4px solid Highlight;
+		}
+		[data-look='pill'] a[aria-current='page'] {
+			margin: -2px;
+			border: 2px solid Highlight;
 		}
 		a:focus-visible {
 			outline-color: Highlight;

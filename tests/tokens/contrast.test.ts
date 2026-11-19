@@ -95,6 +95,12 @@ describe('theme files', () => {
 		const colourToken = /^--k-(bg|fg|line|border|primary|on-|accent|link|danger|ok|warn|info|focus|selected|surface)/;
 		for (const r of rules) {
 			if (r.media === null || r.media.includes('prefers-reduced-motion')) continue;
+			// forced colors (#27): the values are system colours of the user's palette, which no contrast check can know
+			if (r.media.includes('forced-colors')) {
+				const system = /^(Canvas|CanvasText|ButtonText|GrayText|Highlight|HighlightText|LinkText|none|1|1px) !important$/;
+				for (const [prop, value] of r.decls) expect(value, `${prop} in @media ${r.media} of ${r.file}`).toMatch(system);
+				continue;
+			}
 			for (const prop of r.decls.keys()) expect(prop, `${prop} in @media ${r.media} of ${r.file}`).not.toMatch(colourToken);
 		}
 	});
