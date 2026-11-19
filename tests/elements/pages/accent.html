@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-theme="flower">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#f6f0e0" />
+		<title>kern elements: accent</title>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<link rel="stylesheet" href="/dist/themes/accent.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+	</head>
+	<body>
+		<main>
+			<h1>Accent</h1>
+			<section id="scope" aria-label="Accent roles">
+				<k-button variant="primary">Save</k-button>
+				<k-button variant="accent">Highlight</k-button>
+				<k-button variant="secondary">Cancel</k-button>
+				<k-badge tone="accent">New</k-badge>
+				<k-checkbox label="Checked" checked></k-checkbox>
+				<k-switch label="Switch" checked></k-switch>
+				<k-progress label="Upload" value="60"></k-progress>
+				<k-link href="#scope">Link</k-link>
+				<k-tabs id="tabs" label="Views" tabs='[{"id":"a","label":"First"},{"id":"b","label":"Second"}]'></k-tabs>
+			</section>
+			<section id="nested" data-theme="flower-wald" aria-label="Nested dark theme">
+				<k-button variant="primary">Nested</k-button>
+			</section>
+			<div id="fill" style="padding: 8px; background: var(--k-accent); color: var(--k-on-accent)">Fill</div>
+		</main>
+	</body>
+</html>

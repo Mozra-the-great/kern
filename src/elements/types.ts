@@ -281,10 +281,129 @@ export interface KernStringsApi {
 	readonly en: KernBundle;
 	readonly de: KernBundle;
 }
+/** Light or dark: which way an accent is moved when it fails its contrast. */
+export type AccentScheme = 'light' | 'dark';
+/** Which groups of tokens an accent sets. */
+export type AccentRole = 'primary' | 'accent' | 'focus';
+export type AccentErrorCode = 'invalid-color' | 'invalid-ground' | 'unknown-theme' | 'invalid-selector' | 'no-dom';
+export interface AccentError {
+	code: AccentErrorCode;
+	message: string;
+}
+/** What an accent has to be readable against, for one standard theme. */
+export interface AccentGround {
+	scheme: AccentScheme;
+	bg: string;
+	raised: string;
+	sunken: string;
+	fg: string;
+}
+/** Surfaces to check against when no standard theme fits (a custom theme). Hex colours. */
+export interface AccentSurfacesInput {
+	bg: string;
+	raised?: string | undefined;
+	sunken?: string | undefined;
+	fg?: string | undefined;
+	scheme?: AccentScheme | undefined;
+}
+export interface AccentOptions {
+	/** `data-theme` value to guarantee the contrast on; an unknown id is an `unknown-theme` failure unless `scheme` or `surfaces` is given. */
+	theme?: string | null | undefined;
+	/** Without `theme`: guarantee the contrast on every standard theme of this scheme at once. */
+	scheme?: AccentScheme | undefined;
+	/** Your own surfaces; they win over `theme` and `scheme`. */
+	surfaces?: AccentSurfacesInput | undefined;
+	/** Default: all of `primary`, `accent` and `focus`. */
+	roles?: readonly AccentRole[] | undefined;
+}
+/** A token whose value is not the raw accent because the raw accent failed its contrast. */
+export interface AccentAdjustment {
+	token: string;
+	from: string;
+	to: string;
+	/** `text`: needed 4.5:1; `ui`: needed 3:1. */
+	kind: 'text' | 'ui';
+	message: string;
+}
+export interface AccentCheck {
+	token: string;
+	on: string;
+	ratio: number;
+	min: number;
+	pass: boolean;
+}
+export interface AccentOk {
+	ok: true;
+	/** The accent as given, normalised to `#rrggbb`. */
+	accent: string;
+	scheme: AccentScheme;
+	/** `--k-*` token to value. */
+	tokens: Readonly<Record<string, string>>;
+	/** The same as a `style=""` attribute value. */
+	style: string;
+	adjustments: readonly AccentAdjustment[];
+	checks: readonly AccentCheck[];
+	guaranteed: boolean;
+}
+export interface AccentFailure {
+	ok: false;
+	error: AccentError;
+}
+export type AccentResult = AccentOk | AccentFailure;
+export interface AccentCssOptions {
+	/** Element that carries `data-theme`; default `:root`. */
+	selector?: string | undefined;
+	roles?: readonly AccentRole[] | undefined;
+}
+export interface AccentCssOk {
+	ok: true;
+	accent: string;
+	css: string;
+	themes: Readonly<Record<string, AccentOk>>;
+	guaranteed: boolean;
+}
+export type AccentCssResult = AccentCssOk | AccentFailure;
+export interface InstallAccentOptions extends AccentCssOptions {
+	/** Also store the CSS under this `localStorage` key for the head script. */
+	storageKey?: string | undefined;
+	/** `accent`: paint the browser UI (`<meta name="theme-color">`) in the accent. */
+	themeColor?: 'accent' | false | undefined;
+	document?: Document | undefined;
+}
+export interface RemoveAccentOptions {
+	storageKey?: string | undefined;
+	document?: Document | undefined;
+}
+export interface ApplyAccentOptions extends AccentOptions {
+	/** Skip reading the element's computed `--k-bg…` and use `theme` / `scheme` / `surfaces` only. */
+	computed?: boolean | undefined;
+}
+/** `window.kern.accent`: a custom accent colour on top of any standard theme, with WCAG contrast guaranteed. */
+export interface KernAccentApi {
+	/** The tokens for one theme or scheme (pure). Invalid input returns `{ ok: false, error }`. */
+	tokens(accent: string, options?: AccentOptions): AccentResult;
+	/** A stylesheet with a rule per standard theme (pure; for the server or the head). */
+	css(accent: string, options?: AccentCssOptions): AccentCssResult;
+	/** Puts the accent on the whole page (`<style id="kern-accent">`), optionally stored for the head script. */
+	install(accent: string, options?: InstallAccentOptions): AccentCssResult;
+	/** Undoes `install`. */
+	remove(options?: RemoveAccentOptions): void;
+	/** Inline tokens on one element, for the theme it shows right now. */
+	apply(el: Element & ElementCSSInlineStyle, accent: string, options?: ApplyAccentOptions): AccentResult;
+	/** Removes what `apply` set. */
+	clear(el: ElementCSSInlineStyle): void;
+	/** Inline `<head>` script that applies the stored accent before the first paint. */
+	script(storageKey: string): string;
+	/** The surfaces of every standard `data-theme` value. */
+	readonly grounds: Readonly<Record<string, AccentGround>>;
+	/** The tokens an accent can set. */
+	readonly tokenNames: readonly string[];
+}
 export interface KernGlobal {
 	toast: ToastFunction;
 	dismissToast(id: number): void;
 	/** Says `message` through the page's <k-live-announcer>. `polite` is the default. */
 	announce: (message: string, politeness?: AnnouncePoliteness) => void;
 	strings: KernStringsApi;
+	accent: KernAccentApi;
 }

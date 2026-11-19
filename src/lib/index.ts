@@ -137,6 +137,39 @@ export { moveItem } from './components/reorder.js';
 export type { ItemKey } from './components/reorder.js';
 export { themeScript, createThemeScript, themePair, isDarkTheme } from './components/theme.js';
 export type { ThemeOption, ThemeScriptOptions } from './components/theme.js';
+export {
+	accentTokens,
+	accentCss,
+	installAccent,
+	removeAccent,
+	applyAccent,
+	clearAccent,
+	createAccentScript,
+	accentGround,
+	ACCENT_GROUNDS,
+	ACCENT_BASE_GROUND,
+	ACCENT_TOKENS
+} from './components/accent.js';
+export type {
+	AccentAdjustment,
+	AccentCheck,
+	AccentCssOk,
+	AccentCssOptions,
+	AccentCssResult,
+	AccentError,
+	AccentErrorCode,
+	AccentFailure,
+	AccentGround,
+	AccentOk,
+	AccentOptions,
+	AccentResult,
+	AccentRole,
+	AccentScheme,
+	AccentSurfacesInput,
+	ApplyAccentOptions,
+	InstallAccentOptions,
+	RemoveAccentOptions
+} from './components/accent.js';
 export type { ResizablePanel } from './components/Resizable.svelte';
 export type { CopyStatus } from './components/CopyButton.svelte';
 export { matchesAccept, splitFiles } from './components/accept.js';

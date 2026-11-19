@@ -90,6 +90,13 @@ import KLiveAnnouncer from './KLiveAnnouncer.svelte';
 import KOnlineStatus from './KOnlineStatus.svelte';
 import { define, tagOf, type ElementComponent } from './define.js';
 import {
+	accentTokens,
+	accentCss,
+	installAccent,
+	removeAccent,
+	applyAccent,
+	clearAccent,
+	createAccentScript,
 	toast,
 	dismissToast,
 	announce,
@@ -194,7 +201,27 @@ export const elements = {
 	KLiveAnnouncer,
 	KOnlineStatus
 };
-export { toast, dismissToast, announce, setStrings, resetStrings, getStrings, getLang, registerStrings, setLocale, followLang, en, de };
+export {
+	accentTokens,
+	accentCss,
+	installAccent,
+	removeAccent,
+	applyAccent,
+	clearAccent,
+	createAccentScript,
+	toast,
+	dismissToast,
+	announce,
+	setStrings,
+	resetStrings,
+	getStrings,
+	getLang,
+	registerStrings,
+	setLocale,
+	followLang,
+	en,
+	de
+};
 
 for (const [name, component] of Object.entries(elements)) define(tagOf(name), component as ElementComponent);
 installGlobal();
