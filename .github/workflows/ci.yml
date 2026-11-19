@@ -53,6 +53,9 @@ jobs:
         run: npm ci
       - name: Type check
         run: npm run check
+      - name: Pixel-art drift (assets/stuffcloud against its manifest and catalogue)
+        # The manifest is the contract with stuffcloud's art; refresh: assets/README.md.
+        run: npm run assets:check
       - name: Build
         # svelte-package (dist/), custom elements (dist-elements/ + typings), demo (demo-dist/)
         run: npm run build
@@ -71,6 +74,8 @@ jobs:
         run: npm run test:targets
       - name: Element tests (Playwright, built dist-elements/)
         run: npm run test:elements
+      - name: Mascot runtime (Playwright, built k-mascot under a strict CSP)
+        run: npm run test:mascot
 
       # ── Node 24 (current LTS) ─────────────────────────────────────────────────
       # Same job on purpose: the required check `build` then means "green on Node 22

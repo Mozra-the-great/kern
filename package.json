@@ -70,7 +70,10 @@
 		"test:targets": "playwright test -c tests/targets",
 		"test:elements": "playwright test -c tests/elements/playwright.config.ts",
 		"test:types": "tsc --noEmit -p tests/fixtures/react-jsx",
-		"size": "node scripts/ci/size-budget.mjs"
+		"size": "node scripts/ci/size-budget.mjs",
+		"assets:check": "node scripts/ci/assets-drift.mjs",
+		"assets:manifest": "node scripts/ci/assets-drift.mjs --write",
+		"test:mascot": "playwright test -c tests/mascot/playwright.config.ts"
 	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"

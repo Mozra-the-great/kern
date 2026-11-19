@@ -7,6 +7,9 @@ export default defineConfig({
 	base: './',
 	build: {
 		outDir: 'demo-dist',
+		// The pixel art stays a file (never a data: URI), as a CSP with img-src 'self' needs and as
+		// consumers should configure it too (README, "Mascot"). Other assets keep the default.
+		assetsInlineLimit: (file) => (file.endsWith('.svg') ? false : undefined),
 		rollupOptions: { input: { index: 'index.html', elements: 'elements.html' } }
 	}
 });
