@@ -35,8 +35,8 @@ export function isDarkTheme(id: string): boolean {
 }
 
 export interface ThemePairLabels {
-	light?: string;
-	dark?: string;
+	light?: string | undefined;
+	dark?: string | undefined;
 }
 
 /**
@@ -93,7 +93,7 @@ export interface ThemeScriptOptions {
 	 * Without a stored choice, follow `prefers-color-scheme`: pick the dark or light theme
 	 * of the family that `<html data-theme>` already names (Stuffcloud when it names none).
 	 */
-	followSystem?: boolean;
+	followSystem?: boolean | undefined;
 }
 
 /**

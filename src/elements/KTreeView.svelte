@@ -1,4 +1,9 @@
-<svelte:options customElement={{ props: { nodes: { type: "Array" }, selected: { type: 'String', reflect: true }, expanded: { type: "Array" }, label: { type: "String" } } }} />
+<svelte:options
+	customElement={{
+		props: { nodes: { type: 'Array' }, selected: { type: 'String', reflect: true }, expanded: { type: 'Array' }, label: { type: 'String' } }
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @prop nodes {TreeNode[]}
@@ -12,4 +17,12 @@
 	let { nodes = [], selected = $bindable(), expanded = $bindable([]), label } = $props();
 	const host = $host();
 </script>
-<TreeView {nodes} bind:selected bind:expanded {label} onselect={(id) => emit(host, 'select', id)} ontoggle={(id, open) => emit(host, 'toggle', { id, expanded: open })} />
+
+<TreeView
+	{nodes}
+	bind:selected
+	bind:expanded
+	{label}
+	onselect={(id) => emit(host, 'select', id)}
+	ontoggle={(id, open) => emit(host, 'toggle', { id, expanded: open })}
+/>

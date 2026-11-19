@@ -4,15 +4,15 @@
 
 	interface Props {
 		/** Direction the content travels while it appears: `up` = it rises into place from below. `none` only fades. */
-		direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+		direction?: 'up' | 'down' | 'left' | 'right' | 'none' | undefined;
 		/** Milliseconds to wait after the content enters the viewport. */
-		delay?: number;
+		delay?: number | undefined;
 		/** Reveal once. Without it the content hides again when it leaves the viewport and replays. */
-		once?: boolean;
+		once?: boolean | undefined;
 		/** Share of the content that must be visible before it appears (0..1). */
-		threshold?: number;
-		class?: string;
-		children?: Snippet;
+		threshold?: number | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { direction = 'up', delay = 0, once = true, threshold = 0.15, class: cls = '', children }: Props = $props();
 
@@ -73,12 +73,7 @@
 	});
 </script>
 
-<div
-	class="k-reveal {cls}"
-	bind:this={host}
-	data-dir={direction}
-	data-settled={settled ? '' : undefined}
->
+<div class="k-reveal {cls}" bind:this={host} data-dir={direction} data-settled={settled ? '' : undefined}>
 	<div
 		class="inner"
 		data-phase={phase}
@@ -92,22 +87,51 @@
 </div>
 
 <style>
-	.k-reveal { display: block; min-width: 0; }
-	.k-reveal:is([data-dir='left'], [data-dir='right']):not([data-settled]) { overflow-x: clip; }
+	.k-reveal {
+		display: block;
+		min-width: 0;
+	}
+	.k-reveal:is([data-dir='left'], [data-dir='right']):not([data-settled]) {
+		overflow-x: clip;
+	}
 	.inner {
 		transition:
 			opacity calc(var(--k-dur) * 4) var(--k-ease),
 			transform calc(var(--k-dur) * 4) var(--k-ease);
 	}
-	[data-dir='up'] { --k-reveal-x: 0px; --k-reveal-y: var(--k-space-6); }
-	[data-dir='down'] { --k-reveal-x: 0px; --k-reveal-y: calc(var(--k-space-6) * -1); }
-	[data-dir='left'] { --k-reveal-x: var(--k-space-6); --k-reveal-y: 0px; }
-	[data-dir='right'] { --k-reveal-x: calc(var(--k-space-6) * -1); --k-reveal-y: 0px; }
-	[data-dir='none'] { --k-reveal-x: 0px; --k-reveal-y: 0px; }
+	[data-dir='up'] {
+		--k-reveal-x: 0px;
+		--k-reveal-y: var(--k-space-6);
+	}
+	[data-dir='down'] {
+		--k-reveal-x: 0px;
+		--k-reveal-y: calc(var(--k-space-6) * -1);
+	}
+	[data-dir='left'] {
+		--k-reveal-x: var(--k-space-6);
+		--k-reveal-y: 0px;
+	}
+	[data-dir='right'] {
+		--k-reveal-x: calc(var(--k-space-6) * -1);
+		--k-reveal-y: 0px;
+	}
+	[data-dir='none'] {
+		--k-reveal-x: 0px;
+		--k-reveal-y: 0px;
+	}
 	/* Hiding is instant (no fade-out flash on load); only the reveal animates. */
-	.inner[data-phase='hidden'] { opacity: 0; transform: translate3d(var(--k-reveal-x), var(--k-reveal-y), 0); transition: none; }
+	.inner[data-phase='hidden'] {
+		opacity: 0;
+		transform: translate3d(var(--k-reveal-x), var(--k-reveal-y), 0);
+		transition: none;
+	}
 	@media (prefers-reduced-motion: reduce) {
-		.inner { transition: none; }
-		.inner[data-phase='hidden'] { opacity: 1; transform: none; }
+		.inner {
+			transition: none;
+		}
+		.inner[data-phase='hidden'] {
+			opacity: 1;
+			transform: none;
+		}
 	}
 </style>

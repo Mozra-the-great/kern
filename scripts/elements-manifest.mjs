@@ -26,25 +26,52 @@ const out = join(root, 'dist-elements');
 const manifestOnly = process.argv.includes('--manifest');
 const errors = [];
 
-const nameOf = (file) => file.replace(/\.svelte$/, '').replace(/^K/, '').replace(/(?<!^)[A-Z]/g, (c) => `-${c}`).toLowerCase();
+const nameOf = (file) =>
+	file
+		.replace(/\.svelte$/, '')
+		.replace(/^K/, '')
+		.replace(/(?<!^)[A-Z]/g, (c) => `-${c}`)
+		.toLowerCase();
 const pascal = (name) => name.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
 
 // ── native attribute lists ───────────────────────────────────────────────────
 const nativeSrc = readFileSync(join(src, 'native.ts'), 'utf8');
 const nativeLists = Object.fromEntries(
-	[...nativeSrc.matchAll(/export const ([A-Z_]+) = \[([^\]]*)\]/g)].map(([, n, body]) => [n, [...body.matchAll(/'([a-z-]+)'/g)].map((m) => m[1])])
+	[...nativeSrc.matchAll(/export const ([A-Z_]+) = \[([^\]]*)\]/g)].map(([, n, body]) => [
+		n,
+		[...body.matchAll(/'([a-z-]+)'/g)].map((m) => m[1])
+	])
 );
 const booleanAttrs = new Set(nativeLists.BOOLEAN_ATTRS ?? []);
 const NATIVE_DOC = {
-	maxlength: 'Maximum length in characters.', minlength: 'Minimum length in characters.', pattern: 'Regular expression the value must match.',
-	readonly: 'Not editable; also exempt from validation.', required: 'Must be on to submit the form.', autocomplete: 'Autofill hint, as on the native control.',
-	autocapitalize: 'Virtual keyboard capitalisation.', spellcheck: 'Spell checking ("true"/"false").', enterkeyhint: 'Label of the Enter key on virtual keyboards.',
-	min: 'Smallest allowed value (number, date … as the type expects).', max: 'Largest allowed value.', step: 'Granularity of the value.',
-	size: 'Visible width in characters (input) or visible rows (select).', multiple: 'Several comma-separated values (type="email").',
-	cols: 'Visible width in characters.', wrap: 'Wrapping: soft or hard.', title: 'Advisory text (tooltip and accessible description).',
-	'aria-label': 'Accessible name when there is no visible label.', 'aria-description': 'Accessible description.'
+	maxlength: 'Maximum length in characters.',
+	minlength: 'Minimum length in characters.',
+	pattern: 'Regular expression the value must match.',
+	readonly: 'Not editable; also exempt from validation.',
+	required: 'Must be on to submit the form.',
+	autocomplete: 'Autofill hint, as on the native control.',
+	autocapitalize: 'Virtual keyboard capitalisation.',
+	spellcheck: 'Spell checking ("true"/"false").',
+	enterkeyhint: 'Label of the Enter key on virtual keyboards.',
+	min: 'Smallest allowed value (number, date … as the type expects).',
+	max: 'Largest allowed value.',
+	step: 'Granularity of the value.',
+	size: 'Visible width in characters (input) or visible rows (select).',
+	multiple: 'Several comma-separated values (type="email").',
+	cols: 'Visible width in characters.',
+	wrap: 'Wrapping: soft or hard.',
+	title: 'Advisory text (tooltip and accessible description).',
+	'aria-label': 'Accessible name when there is no visible label.',
+	'aria-description': 'Accessible description.'
 };
-const nativeType = (a) => (booleanAttrs.has(a) ? 'boolean' : ['maxlength', 'minlength', 'size', 'cols'].includes(a) ? 'number | string' : ['min', 'max', 'step'].includes(a) ? 'number | string' : 'string');
+const nativeType = (a) =>
+	booleanAttrs.has(a)
+		? 'boolean'
+		: ['maxlength', 'minlength', 'size', 'cols'].includes(a)
+			? 'number | string'
+			: ['min', 'max', 'step'].includes(a)
+				? 'number | string'
+				: 'string';
 
 // ── doc comment tags ─────────────────────────────────────────────────────────
 /** Reads `{…}` with nested braces starting at s[i] === '{'. */
@@ -59,11 +86,22 @@ function braced(s, i) {
 function docTags(script) {
 	const m = /\/\*\*([\s\S]*?)\*\//.exec(script);
 	const plain = /\/\*(?!\*)([\s\S]*?)\*\//.exec(script);
-	const text = (m ? m[1] : '').split('\n').map((l) => l.replace(/^\s*\*\s?/, '')).join('\n');
+	const text = (m ? m[1] : '')
+		.split('\n')
+		.map((l) => l.replace(/^\s*\*\s?/, ''))
+		.join('\n');
 	const parts = text.split(/\n(?=@)/);
 	// The doc comment's text before its tags, else the first plain /* … */ comment.
 	const docLead = m && !parts[0].trim().startsWith('@') ? parts[0] : '';
-	const lead = (docLead || (plain ? plain[1].split('\n').map((l) => l.replace(/^\s*\*?\s?/, '')).join('\n') : '')).trim();
+	const lead = (
+		docLead ||
+		(plain
+			? plain[1]
+					.split('\n')
+					.map((l) => l.replace(/^\s*\*?\s?/, ''))
+					.join('\n')
+			: '')
+	).trim();
 	const description = lead.startsWith('@') ? '' : lead.replace(/\s+/g, ' ');
 	const tags = { prop: new Map(), event: new Map(), slot: new Map() };
 	for (const part of parts) {
@@ -76,7 +114,13 @@ function docTags(script) {
 			[type, end] = braced(rest, 0);
 			rest = rest.slice(end);
 		}
-		tags[t[1]].set(t[2] === '-' ? '' : t[2], { type, description: rest.replace(/^\s*-?\s*/, '').replace(/\s+/g, ' ').trim() });
+		tags[t[1]].set(t[2] === '-' ? '' : t[2], {
+			type,
+			description: rest
+				.replace(/^\s*-?\s*/, '')
+				.replace(/\s+/g, ' ')
+				.trim()
+		});
 	}
 	return { description, tags };
 }
@@ -84,7 +128,26 @@ function docTags(script) {
 // ── wrappers ─────────────────────────────────────────────────────────────────
 const BASE_TYPES = { String: 'string', Number: 'number', Boolean: 'boolean', Array: 'unknown[]', Object: 'Record<string, unknown>' };
 // Members of HTMLElement a prop shadows; their type stays the DOM one.
-const HTML_MEMBERS = new Set(['title', 'hidden', 'id', 'lang', 'dir', 'slot', 'translate', 'inert', 'draggable', 'spellcheck', 'autocapitalize', 'autofocus', 'tabIndex', 'accessKey', 'role', 'popover', 'nonce', 'className']);
+const HTML_MEMBERS = new Set([
+	'title',
+	'hidden',
+	'id',
+	'lang',
+	'dir',
+	'slot',
+	'translate',
+	'inert',
+	'draggable',
+	'spellcheck',
+	'autocapitalize',
+	'autofocus',
+	'tabIndex',
+	'accessKey',
+	'role',
+	'popover',
+	'nonce',
+	'className'
+]);
 const FORM_MEMBERS = [
 	{ name: 'form', type: 'HTMLFormElement | null', readonly: true, description: 'The form the element belongs to.' },
 	{ name: 'validity', type: 'ValidityState', readonly: true, description: 'Constraint validation state, mirrored from the inner control.' },
@@ -94,10 +157,16 @@ const FORM_MEMBERS = [
 const FORM_METHODS = [
 	{ name: 'checkValidity', signature: '(): boolean', description: 'Like the native method; fires `invalid` when the value is invalid.' },
 	{ name: 'reportValidity', signature: '(): boolean', description: 'Like the native method; also shows the message at the inner control.' },
-	{ name: 'setCustomValidity', signature: '(message: string): void', description: 'A non-empty message makes the element invalid (customError).' }
+	{
+		name: 'setCustomValidity',
+		signature: '(message: string): void',
+		description: 'A non-empty message makes the element invalid (customError).'
+	}
 ];
 
-const files = readdirSync(src).filter((f) => /^K[A-Za-z]+\.svelte$/.test(f)).sort();
+const files = readdirSync(src)
+	.filter((f) => /^K[A-Za-z]+\.svelte$/.test(f))
+	.sort();
 const elements = files.map((file) => {
 	const source = readFileSync(join(src, file), 'utf8');
 	const ast = parse(source, { modern: true });
@@ -134,7 +203,16 @@ const elements = files.map((file) => {
 		const base = BASE_TYPES[def.type] ?? 'unknown';
 		const dflt = defaults.get(prop);
 		const type = doc?.type ?? base;
-		return { name: prop, kind: def.type, attribute: (def.attribute ?? prop).toLowerCase(), type, default: dflt, reflects: !!def.reflect, optional: dflt === undefined || dflt === 'undefined', description: doc?.description || undefined };
+		return {
+			name: prop,
+			kind: def.type,
+			attribute: (def.attribute ?? prop).toLowerCase(),
+			type,
+			default: dflt,
+			reflects: !!def.reflect,
+			optional: dflt === undefined || dflt === 'undefined',
+			description: doc?.description || undefined
+		};
 	});
 	for (const p of tags.prop.keys()) if (!props.some((x) => x.name === p)) errors.push(`${file}: @prop ${p} is not a prop`);
 
@@ -153,13 +231,20 @@ const elements = files.map((file) => {
 	const listName = /forwardAttributes\(host,\s*([A-Z_]+)\)/.exec(source)?.[1];
 	const forwarded = listName ? (nativeLists[listName] ?? (errors.push(`${file}: unknown list ${listName}`), [])) : [];
 	for (const a of forwarded) if (props.some((p) => p.attribute === a)) errors.push(`${file}: ${a} is a prop and forwarded`);
-	const nativeAttrs = [...forwarded.map((a) => ({ name: a, type: nativeType(a), description: `Forwarded to the inner control. ${NATIVE_DOC[a] ?? ''}`.trim() }))];
+	const nativeAttrs = [
+		...forwarded.map((a) => ({
+			name: a,
+			type: nativeType(a),
+			description: `Forwarded to the inner control. ${NATIVE_DOC[a] ?? ''}`.trim()
+		}))
+	];
 	if (formAssociated) {
 		nativeAttrs.push({ name: 'autofocus', type: 'boolean', description: 'Focuses the inner control when the element is connected.' });
 		nativeAttrs.push({ name: 'form', type: 'string', description: 'Id of the form owner (native form association).' });
 	}
 	const members = [];
-	if (/Object\.defineProperty\(host, 'files'/.test(source)) members.push({ name: 'files', type: 'readonly File[]', readonly: true, description: 'The chosen files.' });
+	if (/Object\.defineProperty\(host, 'files'/.test(source))
+		members.push({ name: 'files', type: 'readonly File[]', readonly: true, description: 'The chosen files.' });
 	if (formAssociated) members.push(...FORM_MEMBERS);
 
 	return { file, name, tag, className: `K${pascal(name)}Element`, description, formAssociated, props, events, slots, nativeAttrs, members };
@@ -193,7 +278,10 @@ const manifest = {
 							...(p.description ? { description: p.description } : {})
 						})),
 						...el.members.map((m) => ({ kind: 'field', name: m.name, type: typeObj(m.type), readonly: true, description: m.description })),
-						...(el.formAssociated ? FORM_METHODS.map((m) => ({ kind: 'method', name: m.name, description: m.description, signature: m.signature })) : []).map(({ signature, ...m }) => ({
+						...(el.formAssociated
+							? FORM_METHODS.map((m) => ({ kind: 'method', name: m.name, description: m.description, signature: m.signature }))
+							: []
+						).map(({ signature, ...m }) => ({
 							...m,
 							...(signature.includes('message') ? { parameters: [{ name: 'message', type: typeObj('string') }] } : {}),
 							return: { type: typeObj(signature.endsWith('boolean') ? 'boolean' : 'void') }
@@ -208,14 +296,26 @@ const manifest = {
 						})),
 						...el.nativeAttrs.map((a) => ({ name: a.name, type: typeObj(a.type), description: a.description }))
 					],
-					events: el.events.map((e) => ({ name: e.name, type: typeObj(`CustomEvent<${e.detail}>`), ...(e.description ? { description: e.description } : {}) })),
+					events: el.events.map((e) => ({
+						name: e.name,
+						type: typeObj(`CustomEvent<${e.detail}>`),
+						...(e.description ? { description: e.description } : {})
+					})),
 					slots: el.slots.map((s) => ({ name: s.name, ...(s.description ? { description: s.description } : {}) }))
 				}
 			],
 			exports: [
-				{ kind: 'custom-element-definition', name: el.tag, declaration: { name: el.className, module: `dist-elements/elements/${el.name}.js` } },
+				{
+					kind: 'custom-element-definition',
+					name: el.tag,
+					declaration: { name: el.className, module: `dist-elements/elements/${el.name}.js` }
+				},
 				...(el.name === 'toaster'
-					? ['toast', 'dismissToast'].map((n) => ({ kind: 'js', name: n, declaration: { name: n, module: 'src/lib/components/toast.svelte.ts' } }))
+					? ['toast', 'dismissToast'].map((n) => ({
+							kind: 'js',
+							name: n,
+							declaration: { name: n, module: 'src/lib/components/toast.svelte.ts' }
+						}))
 					: [])
 			]
 		})),
@@ -224,8 +324,16 @@ const manifest = {
 			path: 'dist-elements/kern-elements.js',
 			declarations: [],
 			exports: [
-				...elements.map((el) => ({ kind: 'custom-element-definition', name: el.tag, declaration: { name: el.className, module: `dist-elements/elements/${el.name}.js` } })),
-				...['toast', 'dismissToast', 'elements'].map((n) => ({ kind: 'js', name: n, declaration: { name: n, module: 'src/elements/index.ts' } }))
+				...elements.map((el) => ({
+					kind: 'custom-element-definition',
+					name: el.tag,
+					declaration: { name: el.className, module: `dist-elements/elements/${el.name}.js` }
+				})),
+				...['toast', 'dismissToast', 'elements'].map((n) => ({
+					kind: 'js',
+					name: n,
+					declaration: { name: n, module: 'src/elements/index.ts' }
+				}))
 			]
 		}
 	]
@@ -263,7 +371,18 @@ for (const el of elements) {
 	dts += `}\n`;
 	dts += `export type ${el.className.replace(/Element$/, 'EventMap')} = Omit<HTMLElementEventMap, keyof ${evName}> & ${evName};\n`;
 	dts += `\n/** Properties and attributes of \`<${el.tag}>\`, as JSX/props. */\nexport interface K${pascal(el.name)}Props {\n`;
-	for (const p of el.props) dts += doc([p.description, p.default !== undefined ? `@default ${p.default}` : '', p.attribute !== p.name ? `Attribute: \`${p.attribute}\`.` : ''].filter(Boolean).join(' '), '\t') + `\t${quote(p.name)}?: ${p.type}${p.kind === 'Array' || p.kind === 'Object' ? ' | string' : ''};\n`;
+	for (const p of el.props)
+		dts +=
+			doc(
+				[
+					p.description,
+					p.default !== undefined ? `@default ${p.default}` : '',
+					p.attribute !== p.name ? `Attribute: \`${p.attribute}\`.` : ''
+				]
+					.filter(Boolean)
+					.join(' '),
+				'\t'
+			) + `\t${quote(p.name)}?: ${p.type}${p.kind === 'Array' || p.kind === 'Object' ? ' | string' : ''};\n`;
 	for (const a of el.nativeAttrs) dts += doc(a.description, '\t') + `\t${quote(a.name)}?: ${a.type};\n`;
 	dts += `}\n`;
 	const map = el.className.replace(/Element$/, 'EventMap');
@@ -347,7 +466,11 @@ writeFileSync(join(out, 'react.d.ts'), react);
 writeFileSync(join(out, 'react.js'), '// Types only: see react.d.ts.\nexport {};\n');
 mkdirSync(join(out, 'elements'), { recursive: true });
 for (const el of elements) {
-	const body = el.name === 'toaster' ? `export { toast, dismissToast } from '../kern-elements.js';\n` : `import '../kern-elements.js';\nexport {};\n`;
-	writeFileSync(join(out, 'elements', `${el.name}.d.ts`), `// Registers <${el.tag}>${el.name === 'accordion' ? ' and <k-accordion-item>' : ''}. Generated; do not edit.\n${body}`);
+	const body =
+		el.name === 'toaster' ? `export { toast, dismissToast } from '../kern-elements.js';\n` : `import '../kern-elements.js';\nexport {};\n`;
+	writeFileSync(
+		join(out, 'elements', `${el.name}.d.ts`),
+		`// Registers <${el.tag}>${el.name === 'accordion' ? ' and <k-accordion-item>' : ''}. Generated; do not edit.\n${body}`
+	);
 }
 console.log(`typings: dist-elements/kern-elements.d.ts, react.d.ts, ${elements.length} entry .d.ts`);

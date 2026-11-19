@@ -4,17 +4,17 @@
 
 	interface Props extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		/** Id of the control the label points to (only for `as="label"`). */
-		for?: string;
+		for?: string | undefined;
 		/** Shows the required marker. */
-		required?: boolean | null;
+		required?: boolean | null | undefined;
 		/** Label text; or pass children for richer content. */
-		text?: string;
+		text?: string | undefined;
 		/**
 		 * `label` for a single control. `span` names a group via `aria-labelledby`
 		 * (radio groups, segmented controls), where a `<label>` has no control to point to.
 		 */
-		as?: 'label' | 'span';
-		children?: Snippet;
+		as?: 'label' | 'span' | undefined;
+		children?: Snippet | undefined;
 	}
 	let { for: forId, required = false, text, as = 'label', class: cls = '', children, ...rest }: Props = $props();
 </script>
@@ -40,5 +40,7 @@
 		line-height: 1.5;
 		color: var(--k-fg);
 	}
-	.req { color: var(--k-danger); }
+	.req {
+		color: var(--k-danger);
+	}
 </style>

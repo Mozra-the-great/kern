@@ -46,17 +46,17 @@
 	interface Props {
 		/** The moment to show. Invalid values render `fallback`. */
 		value: TimeInput;
-		locale?: string;
+		locale?: string | undefined;
 		/** `auto` writes "yesterday" and "now", `always` writes "1 day ago". */
-		numeric?: 'always' | 'auto';
-		style?: 'long' | 'short' | 'narrow';
+		numeric?: 'always' | 'auto' | undefined;
+		style?: 'long' | 'short' | 'narrow' | undefined;
 		/** Format of the full date in the tooltip and for assistive technology. */
-		absoluteFormat?: Intl.DateTimeFormatOptions;
+		absoluteFormat?: Intl.DateTimeFormatOptions | undefined;
 		/** Fixed "now". The text then never updates; meant for tests and screenshots. */
-		now?: TimeInput;
+		now?: TimeInput | undefined;
 		/** Text for an invalid `value`. */
-		fallback?: string;
-		class?: string;
+		fallback?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		value,
@@ -114,10 +114,18 @@
 {/if}
 
 <style>
-	.k-relative-time { font-variant-numeric: tabular-nums; }
-	time { position: relative; }
+	.k-relative-time {
+		font-variant-numeric: tabular-nums;
+	}
+	time {
+		position: relative;
+	}
 	@media (hover: hover) {
-		time { text-decoration: underline dotted; text-decoration-color: var(--k-border); text-underline-offset: 0.2em; }
+		time {
+			text-decoration: underline dotted;
+			text-decoration-color: var(--k-border);
+			text-underline-offset: 0.2em;
+		}
 	}
 	.sr {
 		position: absolute;

@@ -7,35 +7,35 @@
 
 	interface Props {
 		/** Name of the whole group. */
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** The entered characters (gaps are left out). */
-		value?: string;
+		value?: string | undefined;
 		/** Number of boxes. */
-		length?: number;
+		length?: number | undefined;
 		/** `numeric` = digits only (numeric keyboard), `alphanumeric` = letters and digits. */
-		type?: PinInputType;
+		type?: PinInputType | undefined;
 		/** Hide the characters like a password. */
-		mask?: boolean;
+		mask?: boolean | undefined;
 		/** Form field name; a hidden input carries `value`. */
-		name?: string;
-		required?: boolean;
-		disabled?: boolean;
+		name?: string | undefined;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Accessible name of each box; `{index}` and `{length}` are replaced. */
-		digitLabel?: string;
-		id?: string;
+		digitLabel?: string | undefined;
+		id?: string | undefined;
 		/** Called when the value changes by user input. */
-		onchange?: (value: string) => void;
+		onchange?: ((value: string) => void) | undefined;
 		/** Called when every box is filled. */
-		oncomplete?: (value: string) => void;
-		class?: string;
+		oncomplete?: ((value: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(''),
+		value = $bindable(),
 		length = 6,
 		type = 'numeric',
 		mask = false,
@@ -55,7 +55,7 @@
 	const allowed = $derived(type === 'alphanumeric' ? /[\p{L}\p{N}]/u : /[0-9]/);
 
 	let chars = $state<string[]>([]);
-	let boxes: HTMLInputElement[] = $state([]);
+	const boxes: HTMLInputElement[] = $state([]);
 
 	function clean(s: string): string[] {
 		// Full-width digits (e.g. from Japanese keyboards) count as digits.
@@ -66,10 +66,10 @@
 	// Rebuild the boxes when the value (or the length) changes from outside.
 	let syncedKey: string | undefined;
 	$effect.pre(() => {
-		const key = `${value}\u0000${count}\u0000${type}`;
+		const key = `${value ?? ''}\u0000${count}\u0000${type}`;
 		if (key === syncedKey) return;
 		syncedKey = key;
-		if (chars.join('') === value && chars.length === count) return;
+		if (chars.join('') === (value ?? '') && chars.length === count) return;
 		const next = clean(value ?? '').slice(0, count);
 		chars = Array.from({ length: count }, (_, i) => next[i] ?? '');
 	});
@@ -78,7 +78,7 @@
 		chars = next;
 		const joined = next.join('');
 		syncedKey = `${joined}\u0000${count}\u0000${type}`;
-		if (joined === value) return;
+		if (joined === (value ?? '')) return;
 		value = joined;
 		onchange?.(joined);
 		if (joined.length === count) oncomplete?.(joined);
@@ -99,7 +99,7 @@
 			next[i++] = c;
 		}
 		update(next);
-		focusBox(i >= count ? count - 1 : i);
+		void focusBox(i >= count ? count - 1 : i);
 	}
 
 	function oninput(e: Event, i: number) {
@@ -127,7 +127,7 @@
 				if (chars[i]) update(chars.map((c, k) => (k === i ? '' : c)));
 				else if (i > 0) {
 					update(chars.map((c, k) => (k === i - 1 ? '' : c)));
-					focusBox(i - 1);
+					void focusBox(i - 1);
 				}
 				break;
 			case 'Delete':
@@ -136,19 +136,19 @@
 				break;
 			case 'ArrowLeft':
 				e.preventDefault();
-				if (i > 0) focusBox(i - 1);
+				if (i > 0) void focusBox(i - 1);
 				break;
 			case 'ArrowRight':
 				e.preventDefault();
-				if (i < count - 1) focusBox(i + 1);
+				if (i < count - 1) void focusBox(i + 1);
 				break;
 			case 'Home':
 				e.preventDefault();
-				focusBox(0);
+				void focusBox(0);
 				break;
 			case 'End':
 				e.preventDefault();
-				focusBox(count - 1);
+				void focusBox(count - 1);
 				break;
 			default:
 				// A character that is not allowed never reaches the box.
@@ -170,12 +170,7 @@
 <Field {hint} {error} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		{#if label}<Label id="{baseId}-label" for="{baseId}-0" text={label} {required} />{/if}
-		<div
-			class="k-pin"
-			role="group"
-			aria-labelledby={label ? `${baseId}-label` : undefined}
-			aria-describedby={describedby}
-		>
+		<div class="k-pin" role="group" aria-labelledby={label ? `${baseId}-label` : undefined} aria-describedby={describedby}>
 			{#each { length: count } as _, i (i)}
 				<input
 					bind:this={boxes[i]}
@@ -200,12 +195,17 @@
 				/>
 			{/each}
 		</div>
-		{#if name}<input type="hidden" {name} {value} />{/if}
+		{#if name}<input type="hidden" {name} value={value ?? ''} />{/if}
 	{/snippet}
 </Field>
 
 <style>
-	.k-pin { display: flex; flex-wrap: wrap; gap: var(--k-space-2); min-width: 0; }
+	.k-pin {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--k-space-2);
+		min-width: 0;
+	}
 	.box {
 		/* Basis 0 + max-width: boxes shrink to 40px before the row wraps. */
 		flex: 1 1 0;
@@ -225,12 +225,32 @@
 		font-variant-numeric: tabular-nums;
 		text-align: center;
 		caret-color: var(--k-accent-mark);
-		transition: border-color var(--k-dur) var(--k-ease), background-color var(--k-dur) var(--k-ease);
+		transition:
+			border-color var(--k-dur) var(--k-ease),
+			background-color var(--k-dur) var(--k-ease);
 	}
-	.box:hover:not(:disabled) { border-color: var(--k-fg-muted); }
-	.box:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.box.filled { border-color: var(--k-fg); background: var(--k-bg-raised); }
-	.box[aria-invalid='true'] { border-color: var(--k-danger); }
-	.box:disabled { opacity: 0.55; cursor: not-allowed; }
-	@media (max-width: 360px) { .k-pin { gap: var(--k-space-1); } }
+	.box:hover:not(:disabled) {
+		border-color: var(--k-fg-muted);
+	}
+	.box:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.box.filled {
+		border-color: var(--k-fg);
+		background: var(--k-bg-raised);
+	}
+	.box[aria-invalid='true'] {
+		border-color: var(--k-danger);
+	}
+	.box:disabled {
+		opacity: 0.55;
+		cursor: not-allowed;
+	}
+	@media (max-width: 360px) {
+		.k-pin {
+			gap: var(--k-space-1);
+		}
+	}
 </style>

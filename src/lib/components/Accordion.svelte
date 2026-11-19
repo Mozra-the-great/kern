@@ -5,17 +5,17 @@
 	export interface AccordionEntry {
 		id: string;
 		title: string;
-		open?: boolean;
+		open?: boolean | undefined;
 	}
 	interface Props {
 		/** Data-driven items; or pass <AccordionItem> children instead. */
-		items?: AccordionEntry[];
+		items?: AccordionEntry[] | undefined;
 		/** Only one item open at a time (applies to `items`). */
-		single?: boolean;
+		single?: boolean | undefined;
 		/** Renders the content of the given item id. */
-		content?: Snippet<[string]>;
-		class?: string;
-		children?: Snippet;
+		content?: Snippet<[string]> | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { items, single = false, content, class: cls = '', children }: Props = $props();
 	const uid = $props.id();
@@ -33,5 +33,7 @@
 </div>
 
 <style>
-	.k-accordion { border-top: var(--k-border-w) solid var(--k-line); }
+	.k-accordion {
+		border-top: var(--k-border-w) solid var(--k-line);
+	}
 </style>

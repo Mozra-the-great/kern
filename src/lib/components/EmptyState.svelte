@@ -3,14 +3,14 @@
 
 	interface Props {
 		title: string;
-		description?: string;
+		description?: string | undefined;
 		/** Heading level of the title. */
-		level?: 2 | 3 | 4;
+		level?: 2 | 3 | 4 | undefined;
 		/** Decorative illustration or icon above the title (hidden from assistive technology). */
-		icon?: Snippet;
+		icon?: Snippet | undefined;
 		/** Call to action below the text, e.g. one or two buttons. */
-		actions?: Snippet;
-		class?: string;
+		actions?: Snippet | undefined;
+		class?: string | undefined;
 	}
 	let { title, description, level = 3, icon, actions, class: cls = '' }: Props = $props();
 </script>
@@ -44,8 +44,30 @@
 		background: var(--k-bg-sunken);
 		color: var(--k-fg-muted);
 	}
-	.icon :global(svg) { width: 28px; height: 28px; }
-	.title { margin: 0; max-width: 32ch; font-size: var(--k-text-lg); font-weight: var(--k-weight-heading); line-height: 1.3; text-wrap: balance; }
-	.desc { margin: 0; max-width: 44ch; color: var(--k-fg-muted); font-size: var(--k-text-sm); text-wrap: pretty; }
-	.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--k-space-3); margin-top: var(--k-space-2); }
+	.icon :global(svg) {
+		width: 28px;
+		height: 28px;
+	}
+	.title {
+		margin: 0;
+		max-width: 32ch;
+		font-size: var(--k-text-lg);
+		font-weight: var(--k-weight-heading);
+		line-height: 1.3;
+		text-wrap: balance;
+	}
+	.desc {
+		margin: 0;
+		max-width: 44ch;
+		color: var(--k-fg-muted);
+		font-size: var(--k-text-sm);
+		text-wrap: pretty;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--k-space-3);
+		margin-top: var(--k-space-2);
+	}
 </style>

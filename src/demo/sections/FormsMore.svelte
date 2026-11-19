@@ -73,8 +73,27 @@
 <section>
 	<h2>NumberInput</h2>
 	<div class="grid2">
-		<NumberInput label="Menge" bind:value={amount} min={0} max={20} hint="0 bis 20 · Pfeile, Bild auf/ab (×10), Pos1/Ende" decrementLabel="Weniger" incrementLabel="Mehr" name="menge" />
-		<NumberInput label="Preis" bind:value={price} min={0} step={0.5} locale="de-DE" format={{ style: 'currency', currency: 'EUR' }} hint="Formatiert, solange das Feld keinen Fokus hat." decrementLabel="Weniger" incrementLabel="Mehr" />
+		<NumberInput
+			label="Menge"
+			bind:value={amount}
+			min={0}
+			max={20}
+			hint="0 bis 20 · Pfeile, Bild auf/ab (×10), Pos1/Ende"
+			decrementLabel="Weniger"
+			incrementLabel="Mehr"
+			name="menge"
+		/>
+		<NumberInput
+			label="Preis"
+			bind:value={price}
+			min={0}
+			step={0.5}
+			locale="de-DE"
+			format={{ style: 'currency', currency: 'EUR' }}
+			hint="Formatiert, solange das Feld keinen Fokus hat."
+			decrementLabel="Weniger"
+			incrementLabel="Mehr"
+		/>
 		<p class="muted">Werte: {amount ?? '–'} · {price ?? '–'}</p>
 	</div>
 </section>
@@ -89,10 +108,20 @@
 			digitLabel="Ziffer {'{index}'} von {'{length}'}"
 			error={codeDone && code !== '123456' ? 'Der Code stimmt nicht (Demo: 123456).' : undefined}
 			onchange={() => (codeDone = false)}
-			oncomplete={(v) => { codeDone = true; if (v === '123456') toast.ok('Code bestätigt'); }}
+			oncomplete={(v) => {
+				codeDone = true;
+				if (v === '123456') toast.ok('Code bestätigt');
+			}}
 			name="code"
 		/>
-		<PinInput label="Gutschein" type="alphanumeric" length={4} mask digitLabel="Zeichen {'{index}'} von {'{length}'}" hint="Buchstaben und Ziffern, verdeckt." />
+		<PinInput
+			label="Gutschein"
+			type="alphanumeric"
+			length={4}
+			mask
+			digitLabel="Zeichen {'{index}'} von {'{length}'}"
+			hint="Buchstaben und Ziffern, verdeckt."
+		/>
 	</div>
 </section>
 
@@ -212,13 +241,46 @@
 </section>
 
 <style>
-	section { display: grid; gap: var(--k-space-5); padding: var(--k-space-8) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	h2 { margin: 0; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); color: var(--k-fg-muted); }
-	.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-3); }
-	.stack { display: grid; gap: var(--k-space-2); align-content: start; }
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--k-space-5); align-items: start; }
-	.narrow { max-width: 360px; }
-	.muted { color: var(--k-fg-muted); margin: 0; overflow-wrap: anywhere; }
+	section {
+		display: grid;
+		gap: var(--k-space-5);
+		padding: var(--k-space-8) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		color: var(--k-fg-muted);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--k-space-3);
+	}
+	.stack {
+		display: grid;
+		gap: var(--k-space-2);
+		align-content: start;
+	}
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--k-space-5);
+		align-items: start;
+	}
+	.narrow {
+		max-width: 360px;
+	}
+	.muted {
+		color: var(--k-fg-muted);
+		margin: 0;
+		overflow-wrap: anywhere;
+	}
 	.native {
 		box-sizing: border-box;
 		width: 100%;
@@ -230,7 +292,20 @@
 		font: inherit;
 		resize: vertical;
 	}
-	.native:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
-	.dot { width: 24px; height: 24px; border: var(--k-border-w) solid var(--k-border); border-radius: var(--k-radius-badge); }
-	@media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+	.native:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent);
+	}
+	.dot {
+		width: 24px;
+		height: 24px;
+		border: var(--k-border-w) solid var(--k-border);
+		border-radius: var(--k-radius-badge);
+	}
+	@media (max-width: 760px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
 </style>

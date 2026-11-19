@@ -4,21 +4,21 @@
 	export interface TabItem {
 		id: string;
 		label: string;
-		disabled?: boolean;
+		disabled?: boolean | undefined;
 	}
 	interface Props {
 		tabs: TabItem[];
 		/** Id of the active tab. */
-		value?: string;
+		value?: string | undefined;
 		/** Accessible name of the tab list. */
-		label?: string;
+		label?: string | undefined;
 		/** `line` = underline marker, `pill` = filled segment. */
-		look?: 'line' | 'pill';
+		look?: 'line' | 'pill' | undefined;
 		/** Renders the panel of the given tab id. */
 		panel: Snippet<[string]>;
 		/** Called when the user picks another tab (click or arrow keys), not when `value` is set from outside. */
-		onchange?: (id: string) => void;
-		class?: string;
+		onchange?: ((id: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let { tabs, value = $bindable(), label, look = 'line', panel, onchange, class: cls = '' }: Props = $props();
 	const uid = $props.id();
@@ -39,7 +39,10 @@
 		else if (e.key === 'ArrowLeft') n = (i - 1 + enabled.length) % enabled.length;
 		else if (e.key === 'Home') n = 0;
 		else if (e.key === 'End') n = enabled.length - 1;
-		if (n >= 0) { e.preventDefault(); select(enabled[n].id, true); }
+		if (n >= 0) {
+			e.preventDefault();
+			select(enabled[n].id, true);
+		}
 	}
 </script>
 
@@ -55,7 +58,9 @@
 				tabindex={t.id === active ? 0 : -1}
 				disabled={t.disabled}
 				onclick={() => select(t.id)}
-			>{t.label}</button>
+			>
+				{t.label}
+			</button>
 		{/each}
 	</div>
 	<div class="panel" role="tabpanel" id="{uid}-panel-{active}" aria-labelledby="{uid}-tab-{active}" tabindex="0">
@@ -64,9 +69,21 @@
 </div>
 
 <style>
-	.k-tabs { display: grid; gap: var(--k-space-5); min-width: 0; }
-	.list { display: flex; gap: var(--k-space-1); overflow-x: auto; scrollbar-width: thin; outline: none; }
-	[data-look='line'] .list { border-bottom: var(--k-border-w) solid var(--k-line); }
+	.k-tabs {
+		display: grid;
+		gap: var(--k-space-5);
+		min-width: 0;
+	}
+	.list {
+		display: flex;
+		gap: var(--k-space-1);
+		overflow-x: auto;
+		scrollbar-width: thin;
+		outline: none;
+	}
+	[data-look='line'] .list {
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
 	button {
 		flex: none;
 		min-height: var(--k-control-h);
@@ -80,15 +97,47 @@
 		text-transform: var(--k-label-transform);
 		letter-spacing: var(--k-label-tracking);
 		cursor: pointer;
-		transition: color var(--k-dur) var(--k-ease), background-color var(--k-dur) var(--k-ease), box-shadow var(--k-dur) var(--k-ease);
+		transition:
+			color var(--k-dur) var(--k-ease),
+			background-color var(--k-dur) var(--k-ease),
+			box-shadow var(--k-dur) var(--k-ease);
 	}
-	button:hover:not(:disabled) { color: var(--k-fg); }
-	button:disabled { opacity: 0.45; cursor: not-allowed; }
-	button:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	[data-look='line'] button { margin-bottom: calc(var(--k-border-w) * -1); box-shadow: inset 0 -2px 0 transparent; }
-	[data-look='line'] button[aria-selected='true'] { color: var(--k-fg); box-shadow: inset 0 -2px 0 var(--k-accent-mark); }
-	[data-look='pill'] .list { padding: var(--k-space-1); background: var(--k-bg-sunken); border-radius: var(--k-radius-control); width: fit-content; max-width: 100%; }
-	[data-look='pill'] button { min-height: max(calc(var(--k-control-h) - 8px), var(--k-tap-target)); border-radius: var(--k-radius-control); }
-	[data-look='pill'] button[aria-selected='true'] { color: var(--k-on-primary); background: var(--k-primary); }
-	.panel:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	button:hover:not(:disabled) {
+		color: var(--k-fg);
+	}
+	button:disabled {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+	button:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	[data-look='line'] button {
+		margin-bottom: calc(var(--k-border-w) * -1);
+		box-shadow: inset 0 -2px 0 transparent;
+	}
+	[data-look='line'] button[aria-selected='true'] {
+		color: var(--k-fg);
+		box-shadow: inset 0 -2px 0 var(--k-accent-mark);
+	}
+	[data-look='pill'] .list {
+		padding: var(--k-space-1);
+		background: var(--k-bg-sunken);
+		border-radius: var(--k-radius-control);
+		width: fit-content;
+		max-width: 100%;
+	}
+	[data-look='pill'] button {
+		min-height: max(calc(var(--k-control-h) - 8px), var(--k-tap-target));
+		border-radius: var(--k-radius-control);
+	}
+	[data-look='pill'] button[aria-selected='true'] {
+		color: var(--k-on-primary);
+		background: var(--k-primary);
+	}
+	.panel:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 </style>

@@ -5,21 +5,21 @@
 	export type PopoverPlacement = Placement;
 
 	interface Props {
-		open?: boolean;
+		open?: boolean | undefined;
 		/** Text of the trigger button; also the accessible name of the panel. */
 		label: string;
 		/** Custom trigger content; `label` stays the accessible name. Keep it non-interactive (text, icon). */
-		trigger?: Snippet;
-		triggerVariant?: 'secondary' | 'ghost';
-		placement?: Placement;
+		trigger?: Snippet | undefined;
+		triggerVariant?: 'secondary' | 'ghost' | undefined;
+		placement?: Placement | undefined;
 		/** Called when the user opens or closes the popover, not when `open` is set from outside. */
-		ontoggle?: (open: boolean) => void;
-		class?: string;
+		ontoggle?: ((open: boolean) => void) | undefined;
+		class?: string | undefined;
 		/** Panel content. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 	}
 	let {
-		open = $bindable(false),
+		open = $bindable(),
 		label,
 		trigger,
 		triggerVariant = 'secondary',
@@ -37,7 +37,9 @@
 		const stop = anchorTo(btn, panel, { placement });
 		const target = panel;
 		// Move focus into the panel: first tabbable element, else the panel itself.
-		queueMicrotask(() => { if (!focusFirstIn(target)) target.focus(); });
+		queueMicrotask(() => {
+			if (!focusFirstIn(target)) target.focus();
+		});
 		return stop;
 	});
 
@@ -86,13 +88,15 @@
 		class="trigger"
 		data-variant={triggerVariant}
 		aria-haspopup="dialog"
-		aria-expanded={open}
+		aria-expanded={open ?? false}
 		aria-controls="{uid}-panel"
 		aria-label={trigger ? label : undefined}
 		onclick={() => (open ? close(true) : show())}
 		onkeydown={onTriggerKey}
 	>
-		{#if trigger}{@render trigger()}{:else}{label}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg>{/if}
+		{#if trigger}{@render trigger()}{:else}{label}<svg viewBox="0 0 16 16" aria-hidden="true">
+				<path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" />
+			</svg>{/if}
 	</button>
 	{#if open}
 		<div
@@ -111,7 +115,10 @@
 </div>
 
 <style>
-	.k-popover { position: relative; display: inline-block; }
+	.k-popover {
+		position: relative;
+		display: inline-block;
+	}
 	.trigger {
 		display: inline-flex;
 		box-sizing: border-box;
@@ -131,11 +138,25 @@
 		letter-spacing: var(--k-label-tracking);
 		cursor: pointer;
 	}
-	.trigger[data-variant='ghost'] { border-color: transparent; }
-	.trigger:hover, .trigger[aria-expanded='true'] { background: var(--k-bg-sunken); }
-	.trigger:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.trigger svg { width: 14px; height: 14px; transition: transform var(--k-dur) var(--k-ease); }
-	.trigger[aria-expanded='true'] svg { transform: rotate(180deg); }
+	.trigger[data-variant='ghost'] {
+		border-color: transparent;
+	}
+	.trigger:hover,
+	.trigger[aria-expanded='true'] {
+		background: var(--k-bg-sunken);
+	}
+	.trigger:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.trigger svg {
+		width: 14px;
+		height: 14px;
+		transition: transform var(--k-dur) var(--k-ease);
+	}
+	.trigger[aria-expanded='true'] svg {
+		transform: rotate(180deg);
+	}
 	.panel {
 		position: fixed;
 		z-index: 950;
@@ -157,8 +178,23 @@
 		letter-spacing: 0;
 		animation: k-pop-down var(--k-dur) var(--k-ease);
 	}
-	.panel:global([data-placement^='top']) { animation-name: k-pop-up; }
-	.panel:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	@keyframes k-pop-down { from { opacity: 0; transform: translateY(-4px); } }
-	@keyframes k-pop-up { from { opacity: 0; transform: translateY(4px); } }
+	.panel:global([data-placement^='top']) {
+		animation-name: k-pop-up;
+	}
+	.panel:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	@keyframes k-pop-down {
+		from {
+			opacity: 0;
+			transform: translateY(-4px);
+		}
+	}
+	@keyframes k-pop-up {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+	}
 </style>

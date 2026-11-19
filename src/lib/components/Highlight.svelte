@@ -4,11 +4,11 @@
 
 	interface Props {
 		/** Draw the marker when the text is scrolled into view. Without it, right after mount. */
-		inView?: boolean;
+		inView?: boolean | undefined;
 		/** Milliseconds before the marker is drawn. */
-		delay?: number;
-		class?: string;
-		children?: Snippet;
+		delay?: number | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { inView = true, delay = 0, class: cls = '', children }: Props = $props();
 
@@ -78,9 +78,15 @@
 		color: inherit;
 		transition: background-size calc(var(--k-dur) * 6) var(--k-ease);
 	}
-	[data-drawn='false'] { background-size: 0% 0.62em; }
+	[data-drawn='false'] {
+		background-size: 0% 0.62em;
+	}
 	@media (prefers-reduced-motion: reduce) {
-		.k-highlight { transition: none; }
-		[data-drawn='false'] { background-size: 100% 0.62em; }
+		.k-highlight {
+			transition: none;
+		}
+		[data-drawn='false'] {
+			background-size: 100% 0.62em;
+		}
 	}
 </style>

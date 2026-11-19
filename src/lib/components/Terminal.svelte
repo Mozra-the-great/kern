@@ -1,11 +1,11 @@
 <script lang="ts" module>
 	export interface TerminalLine {
 		/** Prompt in front of the command. Defaults to the `prompt` prop. */
-		prompt?: string;
+		prompt?: string | undefined;
 		/** The command that is typed. */
 		text: string;
 		/** What the command prints. One string = one line. */
-		output?: string | string[];
+		output?: string | string[] | undefined;
 	}
 </script>
 
@@ -16,28 +16,28 @@
 	interface Props {
 		lines: TerminalLine[];
 		/** Text in the title bar. */
-		title?: string;
+		title?: string | undefined;
 		/** Default prompt of every line. */
-		prompt?: string;
+		prompt?: string | undefined;
 		/** Type the commands one after another. The complete text is always available to assistive technology. */
-		typewriter?: boolean;
+		typewriter?: boolean | undefined;
 		/** Milliseconds per typed character. */
-		speed?: number;
+		speed?: number | undefined;
 		/** Milliseconds before typing starts. */
-		delay?: number;
+		delay?: number | undefined;
 		/** Milliseconds between a typed command and its output. */
-		linePause?: number;
+		linePause?: number | undefined;
 		/** Wait until the terminal is scrolled into view before typing. */
-		startInView?: boolean;
+		startInView?: boolean | undefined;
 		/** Show a button that copies the commands. */
-		copy?: boolean;
-		copyLabel?: string;
-		copiedLabel?: string;
+		copy?: boolean | undefined;
+		copyLabel?: string | undefined;
+		copiedLabel?: string | undefined;
 		/** Accessible name of the terminal. Defaults to the title, then "Terminal". */
-		label?: string;
+		label?: string | undefined;
 		/** Fires when the last command is typed. */
-		oncomplete?: () => void;
-		class?: string;
+		oncomplete?: (() => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		lines,
@@ -75,9 +75,17 @@
 	let done = $state(0);
 	let typed = $state(0);
 
-	const outputLines = (line: TerminalLine): string[] => (line.output === undefined ? [] : Array.isArray(line.output) ? line.output : [line.output]);
-	const commandOf = (line: TerminalLine): Row => ({ kind: 'cmd', prompt: line.prompt ?? prompt, text: line.text, caret: false, idle: true });
-	const outputOf = (line: TerminalLine): Row[] => outputLines(line).map((text): Row => ({ kind: 'out', prompt: '', text, caret: false, idle: true }));
+	const outputLines = (line: TerminalLine): string[] =>
+		line.output === undefined ? [] : Array.isArray(line.output) ? line.output : [line.output];
+	const commandOf = (line: TerminalLine): Row => ({
+		kind: 'cmd',
+		prompt: line.prompt ?? prompt,
+		text: line.text,
+		caret: false,
+		idle: true
+	});
+	const outputOf = (line: TerminalLine): Row[] =>
+		outputLines(line).map((text): Row => ({ kind: 'out', prompt: '', text, caret: false, idle: true }));
 
 	/* Everything, finished. */
 	const fullRows = $derived(lines.flatMap((line) => [commandOf(line), ...outputOf(line)]));
@@ -166,7 +174,7 @@
 
 	async function copyCommands(): Promise<void> {
 		const text = lines.map((line) => line.text).join('\n');
-		let ok = false;
+		let ok: boolean;
 		try {
 			await navigator.clipboard.writeText(text);
 			ok = true;
@@ -179,6 +187,7 @@
 			document.body.append(area);
 			area.select();
 			try {
+				// eslint-disable-next-line @typescript-eslint/no-deprecated -- fallback where the async Clipboard API is missing or blocked
 				ok = document.execCommand('copy');
 			} catch {
 				ok = false;
@@ -195,7 +204,11 @@
 {#snippet rowsView(rows: Row[])}
 	{#each rows as row, i (i)}
 		{#if row.kind === 'cmd'}
-			<div class="row cmd"><span class="prompt">{row.prompt}</span><span class="text">{row.text}{#if row.caret}<Caret blink={row.idle} />{/if}</span></div>
+			<div class="row cmd">
+				<span class="prompt">{row.prompt}</span><span class="text">
+					{row.text}{#if row.caret}<Caret blink={row.idle} />{/if}
+				</span>
+			</div>
 		{:else}
 			<div class="row out">{row.text}</div>
 		{/if}
@@ -251,8 +264,17 @@
 		padding: var(--k-space-1) var(--k-space-4);
 		border-bottom: 1px solid var(--t-rule);
 	}
-	.dots { display: inline-flex; flex: none; gap: 6px; }
-	.dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--t-rule); }
+	.dots {
+		display: inline-flex;
+		flex: none;
+		gap: 6px;
+	}
+	.dots i {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: var(--t-rule);
+	}
 	.title {
 		flex: 1;
 		min-width: 0;
@@ -279,18 +301,46 @@
 		cursor: pointer;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	.copy:hover { background: var(--t-rule); }
+	.copy:hover {
+		background: var(--t-rule);
+	}
 	/* The page's focus colour can equal the terminal surface; the ink always contrasts. */
-	.copy:focus-visible { outline: var(--k-focus-w) solid var(--t-ink); outline-offset: calc(var(--k-focus-offset) * -1); }
-	.body { padding: var(--k-space-4); }
-	.stack { display: grid; }
-	.size, .live { grid-area: 1 / 1; min-width: 0; }
-	.size { visibility: hidden; }
-	.row { white-space: pre-wrap; overflow-wrap: anywhere; }
-	.cmd { display: flex; gap: 1ch; }
-	.prompt { flex: none; color: var(--t-dim); }
-	.text { min-width: 0; }
-	.out { color: var(--t-dim); }
+	.copy:focus-visible {
+		outline: var(--k-focus-w) solid var(--t-ink);
+		outline-offset: calc(var(--k-focus-offset) * -1);
+	}
+	.body {
+		padding: var(--k-space-4);
+	}
+	.stack {
+		display: grid;
+	}
+	.size,
+	.live {
+		grid-area: 1 / 1;
+		min-width: 0;
+	}
+	.size {
+		visibility: hidden;
+	}
+	.row {
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+	.cmd {
+		display: flex;
+		gap: 1ch;
+	}
+	.prompt {
+		flex: none;
+		color: var(--t-dim);
+	}
+	.text {
+		min-width: 0;
+	}
+	.out {
+		color: var(--t-dim);
+	}
 	.sr {
 		position: absolute;
 		width: 1px;

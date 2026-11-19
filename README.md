@@ -158,6 +158,11 @@ Tag `vX.Y.Z` auf `main`; der Workflow `release` baut den Tarball und legt das Gi
 <Toaster />
 ```
 
+Die Typen funktionieren auch in strengen Projekten: `strict`, `exactOptionalPropertyTypes`,
+`noUncheckedIndexedAccess` und `svelte-check --fail-on-warnings` (CI prüft das mit einer
+Fixture). Optionale Props nehmen auch `undefined`, das wie eine weggelassene Prop wirkt; auch
+`bind:value={x}` mit `x: string | undefined` geht.
+
 ## Custom Elements
 
 ```html
@@ -435,12 +440,16 @@ verschiebt deshalb ihre Position.
 npm ci
 npm run dev        # Demo: /index.html (Svelte) und /elements.html (Custom Elements)
 npm run check      # svelte-check
+npm run lint       # ESLint (typescript-eslint strict, eslint-plugin-svelte) + Prettier --check
+npm run format     # Prettier --write + eslint --fix
 npm run build      # dist/, dist-elements/ (+ Typen, custom-elements.json), demo-dist/
 npm test           # Vitest: Theme-Kontrast, Marken-Einstiege, Pixel-Art-Katalog
 npx playwright install chromium   # einmalig
 npm run test:targets              # Playwright: Touch-Ziele in der gebauten Demo (nach npm run build)
 npm run test:elements             # Playwright: gebaute Custom Elements (nach npm run build)
 npm run test:types                # Element-Typen gegen eine strikte React-19-Fixture (nach dem Build)
+npm run test:consumer             # Svelte-App mit strengen TS-Flags gegen dist/ (nach dem Build)
+npm run check:dts                 # kein `any` in den veröffentlichten .d.ts (nach dem Build)
 npm run size                      # Größenbudget der Custom Elements
 npm run test:mascot               # Playwright: <k-mascot> unter strenger CSP (nach npm run build)
 npm run assets:check              # Pixel-Art gegen assets/stuffcloud/manifest.json (Drift-Check)

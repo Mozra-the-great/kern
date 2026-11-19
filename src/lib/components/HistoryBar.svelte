@@ -6,32 +6,32 @@
 		label: string;
 		status: HistoryStatus;
 		/** Extra text, e.g. "2 min outage". */
-		detail?: string;
+		detail?: string | undefined;
 	}
 </script>
 
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { fill, numberFormat, tipAnchor } from './data-utils.js';
+	import { fill, numberFormat, tipAnchor, withDefaults } from './data-utils.js';
 
 	interface Props {
 		items: HistoryItem[];
 		/** Accessible name of the bars. */
 		label: string;
 		/** Summary above the bars. Placeholders: {percent} {ok} {total}. */
-		summaryLabel?: string;
+		summaryLabel?: string | undefined;
 		/** Summary when no period has data. */
-		noDataLabel?: string;
+		noDataLabel?: string | undefined;
 		/** Status names for tooltip, speech and legend. */
-		statusLabels?: Partial<Record<HistoryStatus, string>>;
+		statusLabels?: { [K in HistoryStatus]?: string | undefined } | undefined;
 		/** Show the legend that names the four bar shapes. */
-		legend?: boolean;
+		legend?: boolean | undefined;
 		/** Text under the first and the last bar, e.g. "90 days ago" and "Today". */
-		startLabel?: string;
-		endLabel?: string;
+		startLabel?: string | undefined;
+		endLabel?: string | undefined;
 		/** Locale of the percentage. */
-		locale?: string;
-		class?: string;
+		locale?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		items,
@@ -47,13 +47,17 @@
 	}: Props = $props();
 	const uid = $props.id();
 
-	const names = $derived<Record<HistoryStatus, string>>({
-		ok: 'OK',
-		warn: 'Degraded',
-		down: 'Down',
-		none: 'No data',
-		...statusLabels
-	});
+	const names = $derived(
+		withDefaults<Record<HistoryStatus, string>>(
+			{
+				ok: 'OK',
+				warn: 'Degraded',
+				down: 'Down',
+				none: 'No data'
+			},
+			statusLabels
+		)
+	);
 	const order: HistoryStatus[] = ['ok', 'warn', 'down', 'none'];
 
 	const summary = $derived.by((): string => {
@@ -62,7 +66,11 @@
 		const ok = items.filter((i) => i.status === 'ok').length;
 		// Truncate, so a single failure never rounds up to 100.
 		const percent = Math.floor((ok / total) * 1000) / 10;
-		return fill(summaryLabel, { percent: numberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(percent), ok, total });
+		return fill(summaryLabel, {
+			percent: numberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(percent),
+			ok,
+			total
+		});
 	});
 	const speak = (it: HistoryItem): string => `${it.label}: ${names[it.status]}${it.detail ? `, ${it.detail}` : ''}`;
 
@@ -105,21 +113,25 @@
 		if (e.altKey || e.ctrlKey || e.metaKey) return;
 		const i = indexOf(e.target);
 		if (i === null) return;
-		const to = e.key === 'ArrowLeft' ? i - 1 : e.key === 'ArrowRight' ? i + 1 : e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : null;
-		if (e.key === 'Escape') { hideTip(); return; }
+		const to =
+			e.key === 'ArrowLeft' ? i - 1 : e.key === 'ArrowRight' ? i + 1 : e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : null;
+		if (e.key === 'Escape') {
+			hideTip();
+			return;
+		}
 		if (to === null) return;
 		e.preventDefault();
-		focusAt(to);
+		void focusAt(to);
 	}
 	function onfocusin(e: FocusEvent) {
 		const i = indexOf(e.target);
 		if (i === null) return;
 		active = i;
-		showTip(i);
+		void showTip(i);
 	}
 	function onpointerover(e: PointerEvent) {
 		const i = indexOf(e.target);
-		if (i !== null) showTip(i);
+		if (i !== null) void showTip(i);
 	}
 </script>
 
@@ -172,16 +184,75 @@
 </div>
 
 <style>
-	.k-history { position: relative; display: grid; gap: var(--k-space-2); min-width: 0; color: var(--k-fg); }
-	.head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--k-space-2) var(--k-space-4); }
-	.summary { margin: 0; font-family: var(--k-font-mono); font-size: var(--k-text-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
-	.legend { display: flex; flex-wrap: wrap; gap: var(--k-space-1) var(--k-space-4); margin: 0; padding: 0; list-style: none; color: var(--k-fg-muted); font-family: var(--k-label-font); font-size: var(--k-text-xs); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
-	.legend li { display: inline-flex; align-items: center; gap: var(--k-space-2); }
-	.scroll { overflow-x: auto; padding: 3px; margin: -3px; }
-	.bars { width: max-content; min-width: 100%; }
-	.row { --h: 36px; display: flex; align-items: stretch; gap: 2px; height: var(--h); }
-	.bar { display: flex; align-items: flex-end; flex: 1 1 0; min-width: 5px; max-width: 18px; cursor: default; }
-	.bar:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 1px; position: relative; z-index: 1; }
+	.k-history {
+		position: relative;
+		display: grid;
+		gap: var(--k-space-2);
+		min-width: 0;
+		color: var(--k-fg);
+	}
+	.head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--k-space-2) var(--k-space-4);
+	}
+	.summary {
+		margin: 0;
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-sm);
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+	.legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--k-space-1) var(--k-space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		color: var(--k-fg-muted);
+		font-family: var(--k-label-font);
+		font-size: var(--k-text-xs);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+	}
+	.legend li {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--k-space-2);
+	}
+	.scroll {
+		overflow-x: auto;
+		padding: 3px;
+		margin: -3px;
+	}
+	.bars {
+		width: max-content;
+		min-width: 100%;
+	}
+	.row {
+		--h: 36px;
+		display: flex;
+		align-items: stretch;
+		gap: 2px;
+		height: var(--h);
+	}
+	.bar {
+		display: flex;
+		align-items: flex-end;
+		flex: 1 1 0;
+		min-width: 5px;
+		max-width: 18px;
+		cursor: default;
+	}
+	.bar:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: 1px;
+		position: relative;
+		z-index: 1;
+	}
 	.fill {
 		--c: var(--k-ok);
 		display: block;
@@ -190,17 +261,41 @@
 		border-radius: min(var(--k-radius-badge), 2px);
 		background: var(--c);
 	}
-	[data-status='warn'] > .fill { --c: var(--k-warn); height: 60%; }
+	[data-status='warn'] > .fill {
+		--c: var(--k-warn);
+		height: 60%;
+	}
 	[data-status='down'] > .fill {
 		--c: var(--k-danger);
 		border: 1px solid var(--c);
 		background: repeating-linear-gradient(135deg, var(--c) 0 2px, color-mix(in srgb, var(--c) 18%, var(--k-bg-raised)) 2px 4px);
 	}
-	[data-status='none'] > .fill { --c: var(--k-border); background: transparent; border: 1px solid var(--c); }
-	.bar:hover > .fill { filter: brightness(1.15); }
-	.ends { display: flex; justify-content: space-between; gap: var(--k-space-4); margin: 0; color: var(--k-fg-muted); font-size: var(--k-text-xs); }
-	.swatch { display: inline-flex; width: 8px; height: 16px; align-items: flex-end; flex: none; }
-	.swatch[data-status='warn'] .fill { height: 60%; }
+	[data-status='none'] > .fill {
+		--c: var(--k-border);
+		background: transparent;
+		border: 1px solid var(--c);
+	}
+	.bar:hover > .fill {
+		filter: brightness(1.15);
+	}
+	.ends {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--k-space-4);
+		margin: 0;
+		color: var(--k-fg-muted);
+		font-size: var(--k-text-xs);
+	}
+	.swatch {
+		display: inline-flex;
+		width: 8px;
+		height: 16px;
+		align-items: flex-end;
+		flex: none;
+	}
+	.swatch[data-status='warn'] .fill {
+		height: 60%;
+	}
 	.tip {
 		position: absolute;
 		z-index: 900;
@@ -217,6 +312,10 @@
 		pointer-events: none;
 		transform: translate(-50%, calc(-100% - 6px));
 	}
-	.tip strong { font-weight: 700; }
-	.tip .detail { opacity: 0.85; }
+	.tip strong {
+		font-weight: 700;
+	}
+	.tip .detail {
+		opacity: 0.85;
+	}
 </style>

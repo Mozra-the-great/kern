@@ -1,4 +1,17 @@
-<svelte:options customElement={{ props: { direction: { type: 'String' }, sizes: { type: 'Array' }, panels: { type: 'Array' }, height: { type: 'String' }, step: { type: 'Number' }, largeStep: { type: 'Number', attribute: 'large-step' }, handleLabel: { type: 'String', attribute: 'handle-label' } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			direction: { type: 'String' },
+			sizes: { type: 'Array' },
+			panels: { type: 'Array' },
+			height: { type: 'String' },
+			step: { type: 'Number' },
+			largeStep: { type: 'Number', attribute: 'large-step' },
+			handleLabel: { type: 'String', attribute: 'handle-label' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @prop sizes {number[]}
@@ -20,7 +33,7 @@
 
 	function scan() {
 		const marked = Array.from(host.querySelectorAll<HTMLElement>(':scope > [data-panel]'));
-		const els = (marked.length > 0 ? marked : Array.from(host.children) as HTMLElement[]).slice(0, MAX_PANELS);
+		const els = (marked.length > 0 ? marked : (Array.from(host.children) as HTMLElement[])).slice(0, MAX_PANELS);
 		const seen = new Set<string>();
 		const next = els.map((el, i) => {
 			el.slot = `p${i}`;
@@ -39,11 +52,30 @@
 	});
 	const list = $derived(panels ?? found);
 </script>
+
 <!-- A <slot> needs a static name, so the panels use p0..p7. The snippet reads `list` so Svelte keeps it in the component (a hoisted snippet cannot hold a slot). -->
 {#snippet panelS(_p: unknown, i: number)}
-	{#if i >= list.length}{:else if i === 0}<slot name="p0" />{:else if i === 1}<slot name="p1" />{:else if i === 2}<slot name="p2" />{:else if i === 3}<slot name="p3" />{:else if i === 4}<slot name="p4" />{:else if i === 5}<slot name="p5" />{:else if i === 6}<slot name="p6" />{:else if i === 7}<slot name="p7" />{/if}
+	{#if i >= list.length}{:else if i === 0}<slot name="p0" />{:else if i === 1}<slot name="p1" />{:else if i === 2}<slot
+			name="p2"
+		/>{:else if i === 3}<slot name="p3" />{:else if i === 4}<slot name="p4" />{:else if i === 5}<slot name="p5" />{:else if i === 6}<slot
+			name="p6"
+		/>{:else if i === 7}<slot name="p7" />{/if}
 {/snippet}
-<Resizable panels={list} bind:sizes {direction} height={px(height)} {step} {largeStep} {handleLabel} panel={panelS} onchange={(s: number[]) => emit(host, 'change', s)} />
+<Resizable
+	panels={list}
+	bind:sizes
+	{direction}
+	height={px(height)}
+	{step}
+	{largeStep}
+	{handleLabel}
+	panel={panelS}
+	onchange={(s: number[]) => emit(host, 'change', s)}
+/>
+
 <style>
-	:host { display: block; min-width: 0; }
+	:host {
+		display: block;
+		min-width: 0;
+	}
 </style>

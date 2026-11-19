@@ -6,15 +6,15 @@
 	interface Props {
 		items: MenuEntry[];
 		/** Accessible name of the menu. */
-		label?: string;
+		label?: string | undefined;
 		/** Accessible name of the target area (role="group"). Recommended when the area is focusable. */
-		areaLabel?: string;
+		areaLabel?: string | undefined;
 		/** Make the target area itself focusable so keyboard users can open the menu. Turn off when it holds focusable content. */
-		focusable?: boolean;
+		focusable?: boolean | undefined;
 		/** Long-press delay on touch, in ms. */
-		longPress?: number;
-		disabled?: boolean;
-		class?: string;
+		longPress?: number | undefined;
+		disabled?: boolean | undefined;
+		class?: string | undefined;
 		/** The target area. */
 		children: Snippet;
 	}
@@ -114,12 +114,23 @@
 	function onMenuKey(e: KeyboardEvent) {
 		const list = entries();
 		const i = menu ? list.indexOf(activeElementOf(menu) as HTMLElement) : -1;
-		if (e.key === 'ArrowDown') { e.preventDefault(); list[(i + 1) % list.length]?.focus(); }
-		else if (e.key === 'ArrowUp') { e.preventDefault(); list[(i - 1 + list.length) % list.length]?.focus(); }
-		else if (e.key === 'Home') { e.preventDefault(); list[0]?.focus(); }
-		else if (e.key === 'End') { e.preventDefault(); list[list.length - 1]?.focus(); }
-		else if (e.key === 'Escape' || (e.key === 'F10' && e.shiftKey) || e.key === 'ContextMenu') { e.preventDefault(); e.stopPropagation(); close(); }
-		else if (e.key === 'Tab') close(false);
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			list[(i + 1) % list.length]?.focus();
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			list[(i - 1 + list.length) % list.length]?.focus();
+		} else if (e.key === 'Home') {
+			e.preventDefault();
+			list[0]?.focus();
+		} else if (e.key === 'End') {
+			e.preventDefault();
+			list[list.length - 1]?.focus();
+		} else if (e.key === 'Escape' || (e.key === 'F10' && e.shiftKey) || e.key === 'ContextMenu') {
+			e.preventDefault();
+			e.stopPropagation();
+			close();
+		} else if (e.key === 'Tab') close(false);
 		else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
 			const k = e.key.toLowerCase();
 			const hit = [...list.slice(i + 1), ...list.slice(0, i + 1)].find((el) => el.textContent?.trim().toLowerCase().startsWith(k));
@@ -184,11 +195,25 @@
 			{:else if item.type === 'label'}
 				<div class="group-label" role="presentation">{item.label}</div>
 			{:else if item.href}
-				<a role="menuitem" tabindex="-1" href={item.href} class:danger={item.danger} aria-disabled={item.disabled || undefined} onclick={() => close(false)}>
+				<a
+					role="menuitem"
+					tabindex="-1"
+					href={item.href}
+					class:danger={item.danger}
+					aria-disabled={item.disabled || undefined}
+					onclick={() => close(false)}
+				>
 					<span>{item.label}</span>{#if item.shortcut}<kbd>{item.shortcut}</kbd>{/if}
 				</a>
 			{:else}
-				<button type="button" role="menuitem" tabindex="-1" class:danger={item.danger} aria-disabled={item.disabled || undefined} onclick={() => choose(item)}>
+				<button
+					type="button"
+					role="menuitem"
+					tabindex="-1"
+					class:danger={item.danger}
+					aria-disabled={item.disabled || undefined}
+					onclick={() => choose(item)}
+				>
 					<span>{item.label}</span>{#if item.shortcut}<kbd>{item.shortcut}</kbd>{/if}
 				</button>
 			{/if}
@@ -197,8 +222,13 @@
 {/if}
 
 <style>
-	.k-context-area { -webkit-touch-callout: none; }
-	.k-context-area:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.k-context-area {
+		-webkit-touch-callout: none;
+	}
+	.k-context-area:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 	.menu {
 		position: fixed;
 		z-index: 950;
@@ -216,10 +246,13 @@
 		font-family: var(--k-font-sans);
 		text-transform: none;
 		letter-spacing: 0;
-	transform-origin: top left;
-	animation: k-ctx var(--k-dur) var(--k-ease);
+		transform-origin: top left;
+		animation: k-ctx var(--k-dur) var(--k-ease);
 	}
-	.menu:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.menu:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 	[role='menuitem'] {
 		display: flex;
 		width: 100%;
@@ -239,12 +272,44 @@
 		text-decoration: none;
 		cursor: pointer;
 	}
-	[role='menuitem']:hover, [role='menuitem']:focus { background: var(--k-selected); outline: none; }
-	[role='menuitem']:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	[aria-disabled='true'] { color: var(--k-fg-disabled); cursor: not-allowed; }
-	.danger { color: var(--k-danger); }
-	kbd { font-family: var(--k-font-mono); font-size: var(--k-text-xs); color: var(--k-fg-muted); }
-	.sep { height: 0; margin: var(--k-space-1) 0; border-top: var(--k-border-w) solid var(--k-line); }
-	.group-label { padding: var(--k-space-2) var(--k-space-3) var(--k-space-1); font-family: var(--k-label-font); font-size: var(--k-text-xs); color: var(--k-fg-muted); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
-	@keyframes k-ctx { from { opacity: 0; transform: scale(0.97); } }
+	[role='menuitem']:hover,
+	[role='menuitem']:focus {
+		background: var(--k-selected);
+		outline: none;
+	}
+	[role='menuitem']:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	[aria-disabled='true'] {
+		color: var(--k-fg-disabled);
+		cursor: not-allowed;
+	}
+	.danger {
+		color: var(--k-danger);
+	}
+	kbd {
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-xs);
+		color: var(--k-fg-muted);
+	}
+	.sep {
+		height: 0;
+		margin: var(--k-space-1) 0;
+		border-top: var(--k-border-w) solid var(--k-line);
+	}
+	.group-label {
+		padding: var(--k-space-2) var(--k-space-3) var(--k-space-1);
+		font-family: var(--k-label-font);
+		font-size: var(--k-text-xs);
+		color: var(--k-fg-muted);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+	}
+	@keyframes k-ctx {
+		from {
+			opacity: 0;
+			transform: scale(0.97);
+		}
+	}
 </style>

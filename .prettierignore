@@ -1,0 +1,17 @@
+# Build output and generated files
+dist/
+dist-elements/
+demo-dist/
+.svelte-kit/
+test-results/
+playwright-report/
+tmp/
+custom-elements.json
+package-lock.json
+scripts/ci/size-baseline.json
+# Hand-written prose, brand artwork, workflow files and static HTML shells/test pages
+*.md
+*.html
+assets/
+.github/
+.claude/

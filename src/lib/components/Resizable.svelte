@@ -5,32 +5,32 @@
 		/** Unique within the group. */
 		id: string;
 		/** Name of the panel, used in the label of its handle. Default: the id. */
-		label?: string;
+		label?: string | undefined;
 		/** Smallest size in % of the group. Default 10. */
-		min?: number;
+		min?: number | undefined;
 		/** Largest size in %. Default 100. */
-		max?: number;
+		max?: number | undefined;
 	}
 	interface Props {
 		/** The panels in order; a handle sits between each two neighbours. */
 		panels: ResizablePanel[];
 		/** Sizes in %, one per panel, summing to 100. Default: equal shares. */
-		sizes?: number[];
+		sizes?: number[] | undefined;
 		/** `horizontal` = panels side by side, `vertical` = stacked. */
-		direction?: 'horizontal' | 'vertical';
+		direction?: 'horizontal' | 'vertical' | undefined;
 		/** Height of the group: px as a number, or any CSS length. Stacked groups need one (default 20rem). */
-		height?: number | string;
+		height?: number | string | undefined;
 		/** Size change of an Arrow key, in % of the group. */
-		step?: number;
+		step?: number | undefined;
 		/** Size change of Shift + Arrow key. */
-		largeStep?: number;
+		largeStep?: number | undefined;
 		/** Label of a handle. `{panel}` is replaced with the label of the panel before it. */
-		handleLabel?: string;
+		handleLabel?: string | undefined;
 		/** Called when the user finished a change (drag released, key pressed) with the new sizes. */
-		onchange?: (sizes: number[]) => void;
+		onchange?: ((sizes: number[]) => void) | undefined;
 		/** Renders one panel. */
 		panel: Snippet<[ResizablePanel, number]>;
-		class?: string;
+		class?: string | undefined;
 	}
 	let {
 		panels,
@@ -58,7 +58,8 @@
 	function fit(input: number[] | undefined, lo: number[], hi: number[]): number[] {
 		const n = lo.length;
 		if (n === 0) return [];
-		let s = input && input.length === n && input.every((v) => Number.isFinite(v) && v >= 0) ? input.slice() : new Array<number>(n).fill(100 / n);
+		let s =
+			input && input.length === n && input.every((v) => Number.isFinite(v) && v >= 0) ? input.slice() : new Array<number>(n).fill(100 / n);
 		const total = s.reduce((a, b) => a + b, 0);
 		s = total > 0 ? s.map((v) => (v * 100) / total) : new Array<number>(n).fill(100 / n);
 		for (let pass = 0; pass <= n; pass++) {
@@ -171,12 +172,23 @@
 		if (e.pointerType === 'mouse' && e.button !== 0) return;
 		const handle = e.currentTarget as HTMLElement;
 		const panelEls = group ? Array.from(group.querySelectorAll<HTMLElement>(':scope > .panel')) : [];
-		const extent = panelEls.reduce((sum, el) => sum + (horizontal ? el.getBoundingClientRect().width : el.getBoundingClientRect().height), 0);
+		const extent = panelEls.reduce(
+			(sum, el) => sum + (horizontal ? el.getBoundingClientRect().width : el.getBoundingClientRect().height),
+			0
+		);
 		if (extent <= 0) return;
 		e.preventDefault();
 		handle.focus({ preventScroll: true });
 		handle.setPointerCapture(e.pointerId);
-		drag = { pointerId: e.pointerId, index: i, start: horizontal ? e.clientX : e.clientY, base: current.slice(), extent, sign: horizontal && isRtl() ? -1 : 1, moved: false };
+		drag = {
+			pointerId: e.pointerId,
+			index: i,
+			start: horizontal ? e.clientX : e.clientY,
+			base: current.slice(),
+			extent,
+			sign: horizontal && isRtl() ? -1 : 1,
+			moved: false
+		};
 		active = i;
 	}
 	function onpointermove(e: PointerEvent): void {
@@ -219,7 +231,7 @@
 					aria-valuetext="{Math.round(current[i])}%"
 					onkeydown={(e) => onkeydown(e, i)}
 					onpointerdown={(e) => onpointerdown(e, i)}
-					onpointermove={onpointermove}
+					{onpointermove}
 					onpointerup={onpointerend}
 					onpointercancel={onpointerend}
 					onlostpointercapture={onpointerend}
@@ -233,7 +245,10 @@
 
 <style>
 	/* The container query below stacks a horizontal group when its own width is under 520px. */
-	.k-resizable { container-type: inline-size; min-width: 0; }
+	.k-resizable {
+		container-type: inline-size;
+		min-width: 0;
+	}
 	.group {
 		display: flex;
 		box-sizing: border-box;
@@ -243,13 +258,31 @@
 		background: var(--k-bg-raised);
 		color: var(--k-fg);
 	}
-	.group[data-direction='horizontal'] { flex-direction: row; height: var(--rz-height, auto); }
-	.group[data-direction='vertical'] { flex-direction: column; height: var(--rz-height, 20rem); }
-	.group.dragging { user-select: none; -webkit-user-select: none; }
-	.group.dragging[data-direction='horizontal'] { cursor: col-resize; }
-	.group.dragging[data-direction='vertical'] { cursor: row-resize; }
+	.group[data-direction='horizontal'] {
+		flex-direction: row;
+		height: var(--rz-height, auto);
+	}
+	.group[data-direction='vertical'] {
+		flex-direction: column;
+		height: var(--rz-height, 20rem);
+	}
+	.group.dragging {
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	.group.dragging[data-direction='horizontal'] {
+		cursor: col-resize;
+	}
+	.group.dragging[data-direction='vertical'] {
+		cursor: row-resize;
+	}
 	/* Basis 0 and grow = size: panels share the room left by the handles in proportion to their size. */
-	.panel { flex: 1 1 0; min-width: 0; min-height: 0; overflow: auto; }
+	.panel {
+		flex: 1 1 0;
+		min-width: 0;
+		min-height: 0;
+		overflow: auto;
+	}
 
 	.handle {
 		position: relative;
@@ -261,32 +294,93 @@
 		outline: none;
 		background: transparent;
 	}
-	.group[data-direction='horizontal'] > .handle { width: 12px; cursor: col-resize; }
-	.group[data-direction='vertical'] > .handle { height: 12px; cursor: row-resize; }
+	.group[data-direction='horizontal'] > .handle {
+		width: 12px;
+		cursor: col-resize;
+	}
+	.group[data-direction='vertical'] > .handle {
+		height: 12px;
+		cursor: row-resize;
+	}
 	/* The divider line. */
-	.handle::before { content: ''; position: absolute; inset: 0; margin: auto; background: var(--k-line); transition: background-color var(--k-dur) var(--k-ease); }
-	.group[data-direction='horizontal'] > .handle::before { width: var(--k-border-w); height: 100%; }
-	.group[data-direction='vertical'] > .handle::before { height: var(--k-border-w); width: 100%; }
+	.handle::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		margin: auto;
+		background: var(--k-line);
+		transition: background-color var(--k-dur) var(--k-ease);
+	}
+	.group[data-direction='horizontal'] > .handle::before {
+		width: var(--k-border-w);
+		height: 100%;
+	}
+	.group[data-direction='vertical'] > .handle::before {
+		height: var(--k-border-w);
+		width: 100%;
+	}
 	/* An invisible extension makes the handle at least 40px (the tap target where larger) wide to hit. */
-	.handle::after { content: ''; position: absolute; }
-	.group[data-direction='horizontal'] > .handle::after { inset-block: 0; inset-inline: min(-14px, calc((12px - var(--k-tap-target)) / 2)); }
-	.group[data-direction='vertical'] > .handle::after { inset-inline: 0; inset-block: min(-14px, calc((12px - var(--k-tap-target)) / 2)); }
+	.handle::after {
+		content: '';
+		position: absolute;
+	}
+	.group[data-direction='horizontal'] > .handle::after {
+		inset-block: 0;
+		inset-inline: min(-14px, calc((12px - var(--k-tap-target)) / 2));
+	}
+	.group[data-direction='vertical'] > .handle::after {
+		inset-inline: 0;
+		inset-block: min(-14px, calc((12px - var(--k-tap-target)) / 2));
+	}
 	/* The grip stays visible at all times, so the handle never relies on hover or colour. */
-	.grip { position: relative; border-radius: var(--k-radius-badge); background: var(--k-border); transition: background-color var(--k-dur) var(--k-ease); }
-	.group[data-direction='horizontal'] .grip { width: 4px; height: 32px; }
-	.group[data-direction='vertical'] .grip { width: 32px; height: 4px; }
-	.handle:hover .grip, .handle.active .grip { background: var(--k-accent-text); }
-	.handle:hover::before, .handle.active::before { background: var(--k-accent-text); }
+	.grip {
+		position: relative;
+		border-radius: var(--k-radius-badge);
+		background: var(--k-border);
+		transition: background-color var(--k-dur) var(--k-ease);
+	}
+	.group[data-direction='horizontal'] .grip {
+		width: 4px;
+		height: 32px;
+	}
+	.group[data-direction='vertical'] .grip {
+		width: 32px;
+		height: 4px;
+	}
+	.handle:hover .grip,
+	.handle.active .grip {
+		background: var(--k-accent-text);
+	}
+	.handle:hover::before,
+	.handle.active::before {
+		background: var(--k-accent-text);
+	}
 	/* Focus: the line takes the focus colour and the grip gets the focus ring. */
-	.handle:focus-visible::before { background: var(--k-focus); }
-	.handle:focus-visible .grip { background: var(--k-focus); outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.handle:focus-visible::before {
+		background: var(--k-focus);
+	}
+	.handle:focus-visible .grip {
+		background: var(--k-focus);
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 
 	@container (max-width: 519.98px) {
-		.group[data-direction='horizontal'] { flex-direction: column; height: auto; }
-		.group[data-direction='horizontal'] > .panel { flex: none !important; }
-		.group[data-direction='horizontal'] > .handle { display: none; }
+		.group[data-direction='horizontal'] {
+			flex-direction: column;
+			height: auto;
+		}
+		.group[data-direction='horizontal'] > .panel {
+			flex: none !important;
+		}
+		.group[data-direction='horizontal'] > .handle {
+			display: none;
+		}
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.handle::before, .grip { transition: none; }
+		.handle::before,
+		.grip {
+			transition: none;
+		}
 	}
 </style>

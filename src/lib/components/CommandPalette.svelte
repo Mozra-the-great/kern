@@ -3,30 +3,30 @@
 		id: string;
 		label: string;
 		/** Heading the command is listed under. */
-		group?: string;
+		group?: string | undefined;
 		/** Extra search terms. */
-		keywords?: string[];
+		keywords?: string[] | undefined;
 		/** Shortcut hint shown on the right, e.g. "Ctrl+S". */
-		shortcut?: string;
-		onselect?: () => void;
+		shortcut?: string | undefined;
+		onselect?: (() => void) | undefined;
 	}
 	interface Props {
-		open?: boolean;
+		open?: boolean | undefined;
 		commands: Command[];
 		/** Accessible name of the dialog and the search field. */
-		label?: string;
-		placeholder?: string;
+		label?: string | undefined;
+		placeholder?: string | undefined;
 		/** Shown when nothing matches. */
-		empty?: string;
-		closeLabel?: string;
+		empty?: string | undefined;
+		closeLabel?: string | undefined;
 		/** Global shortcut that toggles the palette, e.g. "mod+k" (mod = Ctrl, or Cmd on Apple). Off by default. */
-		hotkey?: string;
+		hotkey?: string | undefined;
 		/** Called after a command was chosen and the palette closed. */
-		onselect?: (id: string) => void;
-		onclose?: () => void;
+		onselect?: ((id: string) => void) | undefined;
+		onclose?: (() => void) | undefined;
 	}
 	let {
-		open = $bindable(false),
+		open = $bindable(),
 		commands,
 		label = 'Command palette',
 		placeholder = 'Type a command or search…',
@@ -122,7 +122,10 @@
 	// Global hotkey, e.g. "mod+k", "ctrl+shift+p".
 	$effect(() => {
 		if (!hotkey) return;
-		const parts = hotkey.toLowerCase().split('+').map((p) => p.trim());
+		const parts = hotkey
+			.toLowerCase()
+			.split('+')
+			.map((p) => p.trim());
 		const key = parts[parts.length - 1];
 		const mods = new Set(parts.slice(0, -1));
 		const onKey = (e: KeyboardEvent) => {
@@ -144,12 +147,22 @@
 	}
 	function onkeydown(e: KeyboardEvent) {
 		const n = flat.length;
-		if (e.key === 'ArrowDown') { e.preventDefault(); if (n) active = (active + 1) % n; }
-		else if (e.key === 'ArrowUp') { e.preventDefault(); if (n) active = (active - 1 + n) % n; }
-		else if ((e.key === 'Home' || e.key === 'End') && e.ctrlKey) { e.preventDefault(); if (n) active = e.key === 'Home' ? 0 : n - 1; }
-		else if (e.key === 'PageDown') { e.preventDefault(); if (n) active = Math.min(n - 1, active + 8); }
-		else if (e.key === 'PageUp') { e.preventDefault(); if (n) active = Math.max(0, active - 8); }
-		else if (e.key === 'Enter') {
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			if (n) active = (active + 1) % n;
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			if (n) active = (active - 1 + n) % n;
+		} else if ((e.key === 'Home' || e.key === 'End') && e.ctrlKey) {
+			e.preventDefault();
+			if (n) active = e.key === 'Home' ? 0 : n - 1;
+		} else if (e.key === 'PageDown') {
+			e.preventDefault();
+			if (n) active = Math.min(n - 1, active + 8);
+		} else if (e.key === 'PageUp') {
+			e.preventDefault();
+			if (n) active = Math.max(0, active - 8);
+		} else if (e.key === 'Enter') {
 			e.preventDefault();
 			const cmd = flat[active];
 			if (cmd) run(cmd);
@@ -164,8 +177,14 @@
 			return opt ? Number(opt.dataset.index) : -1;
 		};
 		const down = (e: MouseEvent) => e.preventDefault();
-		const click = (e: MouseEvent) => { const i = at(e); if (i >= 0 && flat[i]) run(flat[i]); };
-		const hover = (e: PointerEvent) => { const i = at(e); if (i >= 0) active = i; };
+		const click = (e: MouseEvent) => {
+			const i = at(e);
+			if (i >= 0 && flat[i]) run(flat[i]);
+		};
+		const hover = (e: PointerEvent) => {
+			const i = at(e);
+			if (i >= 0) active = i;
+		};
 		el.addEventListener('mousedown', down);
 		el.addEventListener('click', click);
 		el.addEventListener('pointermove', hover);
@@ -184,11 +203,16 @@
 	bind:this={dialog}
 	class="k-command-palette"
 	aria-label={label}
-	onclose={() => { open = false; onclose?.(); }}
+	onclose={() => {
+		open = false;
+		onclose?.();
+	}}
 	onclick={onDialogClick}
 >
 	<div class="search">
-		<svg class="glass" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="9" r="6" /><path d="M14 14l4 4" /></svg>
+		<svg class="glass" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+			<circle cx="9" cy="9" r="6" /><path d="M14 14l4 4" />
+		</svg>
 		<input
 			bind:this={input}
 			bind:value={query}
@@ -250,8 +274,13 @@
 		box-shadow: var(--k-shadow-overlay);
 		font-family: var(--k-font-sans);
 	}
-	.k-command-palette[open] { display: flex; animation: k-pop var(--k-dur) var(--k-ease); }
-	.k-command-palette::backdrop { background: var(--k-backdrop); }
+	.k-command-palette[open] {
+		display: flex;
+		animation: k-pop var(--k-dur) var(--k-ease);
+	}
+	.k-command-palette::backdrop {
+		background: var(--k-backdrop);
+	}
 	.search {
 		flex: none;
 		display: flex;
@@ -260,7 +289,12 @@
 		padding: var(--k-space-2) var(--k-space-2) var(--k-space-2) var(--k-space-4);
 		border-bottom: var(--k-border-w) solid var(--k-line);
 	}
-	.glass { flex: none; width: 18px; height: 18px; color: var(--k-fg-muted); }
+	.glass {
+		flex: none;
+		width: 18px;
+		height: 18px;
+		color: var(--k-fg-muted);
+	}
 	input {
 		flex: 1;
 		min-width: 0;
@@ -273,15 +307,56 @@
 		font: inherit;
 		font-size: var(--k-text-md);
 	}
-	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	.search:focus-within { box-shadow: inset 0 calc(var(--k-focus-w) * -1) 0 var(--k-focus); }
-	.x { flex: none; display: grid; place-items: center; width: max(40px, var(--k-tap-target)); height: max(40px, var(--k-tap-target)); padding: 0; border: 0; border-radius: var(--k-radius-control); background: transparent; color: var(--k-fg-muted); cursor: pointer; }
-	.x:hover { color: var(--k-fg); background: var(--k-bg-sunken); }
-	.x:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 0; }
-	.x svg { width: 16px; height: 16px; }
-	.list { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--k-space-1); overscroll-behavior: contain; }
-	.list.none { display: none; }
-	.group-label { padding: var(--k-space-3) var(--k-space-3) var(--k-space-1); font-family: var(--k-label-font); font-size: var(--k-text-xs); color: var(--k-fg-muted); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); }
+	input::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	.search:focus-within {
+		box-shadow: inset 0 calc(var(--k-focus-w) * -1) 0 var(--k-focus);
+	}
+	.x {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: max(40px, var(--k-tap-target));
+		height: max(40px, var(--k-tap-target));
+		padding: 0;
+		border: 0;
+		border-radius: var(--k-radius-control);
+		background: transparent;
+		color: var(--k-fg-muted);
+		cursor: pointer;
+	}
+	.x:hover {
+		color: var(--k-fg);
+		background: var(--k-bg-sunken);
+	}
+	.x:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: 0;
+	}
+	.x svg {
+		width: 16px;
+		height: 16px;
+	}
+	.list {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: auto;
+		padding: var(--k-space-1);
+		overscroll-behavior: contain;
+	}
+	.list.none {
+		display: none;
+	}
+	.group-label {
+		padding: var(--k-space-3) var(--k-space-3) var(--k-space-1);
+		font-family: var(--k-label-font);
+		font-size: var(--k-text-xs);
+		color: var(--k-fg-muted);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+	}
 	.option {
 		display: flex;
 		align-items: center;
@@ -294,9 +369,39 @@
 		font-size: var(--k-text-sm);
 		cursor: pointer;
 	}
-	.option.active { background: var(--k-selected); outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	kbd { flex: none; font-family: var(--k-font-mono); font-size: var(--k-text-xs); color: var(--k-fg-muted); }
-	.empty { margin: 0; padding: var(--k-space-6) var(--k-space-4); color: var(--k-fg-muted); font-size: var(--k-text-sm); text-align: center; }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-	@keyframes k-pop { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
+	.option.active {
+		background: var(--k-selected);
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	kbd {
+		flex: none;
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-xs);
+		color: var(--k-fg-muted);
+	}
+	.empty {
+		margin: 0;
+		padding: var(--k-space-6) var(--k-space-4);
+		color: var(--k-fg-muted);
+		font-size: var(--k-text-sm);
+		text-align: center;
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+		border: 0;
+	}
+	@keyframes k-pop {
+		from {
+			opacity: 0;
+			transform: translateY(8px) scale(0.98);
+		}
+	}
 </style>

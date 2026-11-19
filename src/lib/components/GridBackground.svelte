@@ -3,14 +3,14 @@
 
 	interface Props {
 		/** `grid` = lines, `dots` = a dot at each crossing. */
-		variant?: 'grid' | 'dots';
+		variant?: 'grid' | 'dots' | undefined;
 		/** Cell size in pixels. */
-		size?: number;
+		size?: number | undefined;
 		/** Fade the pattern out towards the edges (radial mask). */
-		fade?: boolean;
-		class?: string;
+		fade?: boolean | undefined;
+		class?: string | undefined;
 		/** Content that sits on top of the pattern. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 	}
 	let { variant = 'grid', size = 32, fade = false, class: cls = '', children }: Props = $props();
 </script>
@@ -23,7 +23,11 @@
 
 <style>
 	/* Pattern colour: --k-line, or --k-grid-color to override it. */
-	.k-grid-bg { position: relative; isolation: isolate; min-width: 0; }
+	.k-grid-bg {
+		position: relative;
+		isolation: isolate;
+		min-width: 0;
+	}
 	.pattern {
 		position: absolute;
 		inset: 0;

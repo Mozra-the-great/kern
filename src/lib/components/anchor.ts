@@ -22,11 +22,11 @@ export interface Position {
 }
 
 export interface AnchorOptions {
-	placement?: Placement;
+	placement?: Placement | undefined;
 	/** Distance between anchor and panel in px. */
-	gap?: number;
+	gap?: number | undefined;
 	/** Give the panel the anchor's width (at most the viewport width). */
-	matchWidth?: boolean;
+	matchWidth?: boolean | undefined;
 }
 
 /** Minimum distance between a panel and the viewport edge. */

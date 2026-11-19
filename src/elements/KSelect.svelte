@@ -1,4 +1,20 @@
-<svelte:options customElement={{ props: { label: { type: "String" }, hint: { type: "String" }, error: { type: "String" }, value: { type: 'String', reflect: true }, options: { type: "Array" }, placeholder: { type: "String" }, name: { type: "String" }, required: { type: "Boolean" }, disabled: { type: "Boolean" } }, extend: formAssociated }} />
+<svelte:options
+	customElement={{
+		props: {
+			label: { type: 'String' },
+			hint: { type: 'String' },
+			error: { type: 'String' },
+			value: { type: 'String', reflect: true },
+			options: { type: 'Array' },
+			placeholder: { type: 'String' },
+			name: { type: 'String' },
+			required: { type: 'Boolean' },
+			disabled: { type: 'Boolean' }
+		},
+		extend: formAssociated
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * Native select.
@@ -16,6 +32,23 @@
 	formControl(host, { anchor: control, control, watch: () => [value, options, required], disabled: () => disabled });
 	const initial = value;
 	$effect(() => setFormValue(host, value ?? ''));
-	$effect(() => { const r = () => (value = initial); host.addEventListener('k-reset', r); return () => host.removeEventListener('k-reset', r); });
+	$effect(() => {
+		const r = () => (value = initial);
+		host.addEventListener('k-reset', r);
+		return () => host.removeEventListener('k-reset', r);
+	});
 </script>
-<Select {label} {hint} {error} bind:value {options} {placeholder} {name} {required} {disabled} {...native.current} onchange={() => emit(host, 'change', value)} />
+
+<Select
+	{label}
+	{hint}
+	{error}
+	bind:value
+	{options}
+	{placeholder}
+	{name}
+	{required}
+	{disabled}
+	{...native.current}
+	onchange={() => emit(host, 'change', value)}
+/>

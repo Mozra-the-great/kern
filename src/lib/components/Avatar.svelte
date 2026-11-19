@@ -2,14 +2,19 @@
 	interface Props {
 		/** Person or item name: used for alt text and initials. */
 		name: string;
-		src?: string;
-		size?: number;
-		class?: string;
+		src?: string | undefined;
+		size?: number | undefined;
+		class?: string | undefined;
 	}
 	let { name, src, size = 40, class: cls = '' }: Props = $props();
 	let failed = $state(false);
 	const initials = $derived(
-		name.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase()).join('')
+		name
+			.split(/\s+/)
+			.filter(Boolean)
+			.slice(0, 2)
+			.map((p) => p[0]?.toUpperCase())
+			.join('')
 	);
 </script>
 
@@ -38,5 +43,9 @@
 		font-size: calc(var(--size) * 0.38);
 		line-height: 1;
 	}
-	img { width: 100%; height: 100%; object-fit: cover; }
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 </style>

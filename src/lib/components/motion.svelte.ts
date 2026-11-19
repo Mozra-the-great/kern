@@ -36,8 +36,8 @@ export function useReducedMotion(): { readonly current: boolean } {
 
 export interface InViewOptions {
 	/** Share of the element that must be visible (0..1). */
-	threshold?: number;
-	rootMargin?: string;
+	threshold?: number | undefined;
+	rootMargin?: string | undefined;
 }
 
 /**
@@ -55,7 +55,7 @@ export function observeInView(el: Element, callback: (visible: boolean) => void,
 			const last = entries[entries.length - 1];
 			if (last) callback(last.isIntersecting);
 		},
-		{ threshold: options.threshold ?? 0, rootMargin: options.rootMargin }
+		{ threshold: options.threshold ?? 0, rootMargin: options.rootMargin ?? '0px' }
 	);
 	observer.observe(el);
 	return () => observer.disconnect();

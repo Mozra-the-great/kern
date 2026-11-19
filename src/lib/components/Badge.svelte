@@ -3,11 +3,11 @@
 
 	interface Props {
 		/** Meaning. Status tones must still carry a word. */
-		tone?: 'neutral' | 'accent' | 'ok' | 'warn' | 'danger' | 'info';
+		tone?: 'neutral' | 'accent' | 'ok' | 'warn' | 'danger' | 'info' | undefined;
 		/** `soft` = tinted fill, `outline` = border only, `solid` = filled. */
-		look?: 'soft' | 'outline' | 'solid';
-		class?: string;
-		children?: Snippet;
+		look?: 'soft' | 'outline' | 'solid' | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { tone = 'neutral', look = 'soft', class: cls = '', children }: Props = $props();
 </script>
@@ -33,12 +33,41 @@
 		line-height: 1.5;
 		white-space: nowrap;
 	}
-	[data-tone='accent'] { --c: var(--k-accent-text); --soft: var(--k-accent-soft); --solid: var(--k-accent); --on: var(--k-on-accent); }
-	[data-tone='ok'] { --c: var(--k-ok); --soft: var(--k-ok-soft); }
-	[data-tone='warn'] { --c: var(--k-warn); --soft: var(--k-warn-soft); }
-	[data-tone='danger'] { --c: var(--k-danger); --soft: var(--k-danger-soft); --solid: var(--k-danger); --on: var(--k-on-danger); }
-	[data-tone='info'] { --c: var(--k-info); --soft: var(--k-info-soft); }
-	[data-look='soft'] { color: var(--c); background: var(--soft); border-color: color-mix(in srgb, var(--c) 30%, transparent); }
-	[data-look='outline'] { color: var(--c); border-color: var(--c); }
-	[data-look='solid'] { color: var(--on); background: var(--solid, var(--c)); }
+	[data-tone='accent'] {
+		--c: var(--k-accent-text);
+		--soft: var(--k-accent-soft);
+		--solid: var(--k-accent);
+		--on: var(--k-on-accent);
+	}
+	[data-tone='ok'] {
+		--c: var(--k-ok);
+		--soft: var(--k-ok-soft);
+	}
+	[data-tone='warn'] {
+		--c: var(--k-warn);
+		--soft: var(--k-warn-soft);
+	}
+	[data-tone='danger'] {
+		--c: var(--k-danger);
+		--soft: var(--k-danger-soft);
+		--solid: var(--k-danger);
+		--on: var(--k-on-danger);
+	}
+	[data-tone='info'] {
+		--c: var(--k-info);
+		--soft: var(--k-info-soft);
+	}
+	[data-look='soft'] {
+		color: var(--c);
+		background: var(--soft);
+		border-color: color-mix(in srgb, var(--c) 30%, transparent);
+	}
+	[data-look='outline'] {
+		color: var(--c);
+		border-color: var(--c);
+	}
+	[data-look='solid'] {
+		color: var(--on);
+		background: var(--solid, var(--c));
+	}
 </style>

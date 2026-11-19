@@ -1,9 +1,29 @@
 {
 	"compilerOptions": {
-		"target": "ES2022", "module": "ESNext", "moduleResolution": "bundler",
-		"strict": true, "skipLibCheck": true, "verbatimModuleSyntax": true,
-		"isolatedModules": true, "noEmit": true, "lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"exactOptionalPropertyTypes": true,
+		"skipLibCheck": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"types": ["svelte", "vite/client"]
 	},
-	"include": ["src/lib/**/*.ts", "src/elements/form.ts", "src/elements/control.svelte.ts", "src/elements/native.ts", "src/elements/define.ts", "src/elements/types.ts", "src/elements/types.check.ts", "src/elements/global.ts", "src/lib/**/*.svelte", "src/demo/**/*.ts", "src/demo/**/*.svelte", "*.ts"]
+	"include": [
+		"src/lib/**/*.ts",
+		"src/elements/form.ts",
+		"src/elements/control.svelte.ts",
+		"src/elements/native.ts",
+		"src/elements/define.ts",
+		"src/elements/types.ts",
+		"src/elements/types.check.ts",
+		"src/elements/global.ts",
+		"src/lib/**/*.svelte",
+		"src/demo/**/*.ts",
+		"src/demo/**/*.svelte",
+		"*.ts"
+	]
 }

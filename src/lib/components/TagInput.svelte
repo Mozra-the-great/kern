@@ -4,46 +4,46 @@
 	import { anchorTo } from './anchor.js';
 
 	interface Props {
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** The tags. */
-		value?: string[];
-		placeholder?: string;
+		value?: string[] | undefined;
+		placeholder?: string | undefined;
 		/** Form field name; one hidden input per tag (repeated name). */
-		name?: string;
+		name?: string | undefined;
 		/** At least one tag is needed. */
-		required?: boolean;
-		disabled?: boolean;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Most tags allowed. */
-		max?: number;
+		max?: number | undefined;
 		/** Treat "Gel" and "gel" as different tags. Default: duplicates are found ignoring case. */
-		caseSensitive?: boolean;
+		caseSensitive?: boolean | undefined;
 		/** Offered while typing (listbox autocomplete); free text stays allowed. */
-		suggestions?: string[];
+		suggestions?: string[] | undefined;
 		/** Turn leftover text into a tag when the field loses focus. */
-		addOnBlur?: boolean;
+		addOnBlur?: boolean | undefined;
 		/** Accessible name of each remove button; `{tag}` is replaced. */
-		removeLabel?: string;
+		removeLabel?: string | undefined;
 		/** Screen-reader instructions for the text field. */
-		instructions?: string;
+		instructions?: string | undefined;
 		/** Announcements (polite live region); `{tag}` and `{max}` are replaced. */
-		addedText?: string;
-		removedText?: string;
-		duplicateText?: string;
-		maxText?: string;
+		addedText?: string | undefined;
+		removedText?: string | undefined;
+		duplicateText?: string | undefined;
+		maxText?: string | undefined;
 		/** Accessible name of the tag list. */
-		listLabel?: string;
-		id?: string;
+		listLabel?: string | undefined;
+		id?: string | undefined;
 		/** Called with the new list after every add or remove. */
-		onchange?: (value: string[]) => void;
-		class?: string;
+		onchange?: ((value: string[]) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable([]),
+		value = $bindable(),
 		placeholder,
 		name,
 		required = false,
@@ -131,8 +131,16 @@
 			const t = raw.trim();
 			if (!t) continue;
 			const k = key(t);
-			if (next.some((v) => key(v) === k)) { said.push(fill(duplicateText, t)); rejected = true; continue; }
-			if (next.length >= limit) { said.push(fill(maxText, t)); rejected = true; break; }
+			if (next.some((v) => key(v) === k)) {
+				said.push(fill(duplicateText, t));
+				rejected = true;
+				continue;
+			}
+			if (next.length >= limit) {
+				said.push(fill(maxText, t));
+				rejected = true;
+				break;
+			}
 			next.push(t);
 			said.push(fill(addedText, t));
 			addedAny = true;
@@ -159,7 +167,7 @@
 		if (refocus === 'none') return;
 		await tick();
 		const buttons = removeButtons();
-		const target = refocus === 'prev' ? buttons[i - 1] ?? buttons[0] : buttons[i];
+		const target = refocus === 'prev' ? (buttons[i - 1] ?? buttons[0]) : buttons[i];
 		(target ?? input)?.focus();
 	}
 	function removeButtons(): HTMLButtonElement[] {
@@ -205,7 +213,7 @@
 			case 'Backspace':
 				if (!text && tags.length && el.selectionStart === 0 && el.selectionEnd === 0) {
 					e.preventDefault();
-					removeAt(tags.length - 1, 'none');
+					void removeAt(tags.length - 1, 'none');
 				}
 				break;
 			case 'ArrowLeft':
@@ -279,11 +287,11 @@
 				break;
 			case 'Backspace':
 				e.preventDefault();
-				removeAt(i, 'prev');
+				void removeAt(i, 'prev');
 				break;
 			case 'Delete':
 				e.preventDefault();
-				removeAt(i, 'next');
+				void removeAt(i, 'next');
 				break;
 		}
 	}
@@ -292,7 +300,9 @@
 	$effect(() => {
 		const el = box;
 		if (!el) return;
-		const click = (e: MouseEvent) => { if (e.target === el || e.target === tagList) input?.focus(); };
+		const click = (e: MouseEvent) => {
+			if (e.target === el || e.target === tagList) input?.focus();
+		};
 		el.addEventListener('click', click);
 		return () => el.removeEventListener('click', click);
 	});
@@ -381,7 +391,9 @@
 				</ul>
 			</div>
 		{/if}
-		<span class="sr" role="status">{#key messageId}<span>{message}</span>{/key}</span>
+		<span class="sr" role="status">
+			{#key messageId}<span>{message}</span>{/key}
+		</span>
 	{/snippet}
 </Field>
 
@@ -402,11 +414,31 @@
 		cursor: text;
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
-	.k-tags:hover { border-color: var(--k-fg-muted); }
-	.k-tags:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
-	.invalid { border-color: var(--k-danger); }
-	.disabled { opacity: 0.55; cursor: not-allowed; }
-	.list { display: flex; flex-wrap: wrap; gap: max(var(--k-space-1), calc(var(--k-tap-target) - 32px)) var(--k-space-1); min-width: 0; max-width: 100%; margin: 0; padding: 0; list-style: none; }
+	.k-tags:hover {
+		border-color: var(--k-fg-muted);
+	}
+	.k-tags:has(input:focus-visible) {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+		border-color: var(--k-accent-mark);
+	}
+	.invalid {
+		border-color: var(--k-danger);
+	}
+	.disabled {
+		opacity: 0.55;
+		cursor: not-allowed;
+	}
+	.list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: max(var(--k-space-1), calc(var(--k-tap-target) - 32px)) var(--k-space-1);
+		min-width: 0;
+		max-width: 100%;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
 	.tag {
 		display: inline-flex;
 		align-items: center;
@@ -426,7 +458,10 @@
 		letter-spacing: var(--k-label-tracking);
 		cursor: default;
 	}
-	.txt { min-width: 0; overflow-wrap: anywhere; }
+	.txt {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
 	.x {
 		position: relative;
 		flex: none;
@@ -442,11 +477,27 @@
 		cursor: pointer;
 	}
 	/* The visible button is small; the hit area reaches 40px (the tap target where larger). */
-	.x::after { content: ''; position: absolute; inset: min(-5px, calc((100% - var(--k-tap-target)) / 2)); }
-	.x:hover:not(:disabled) { color: var(--k-fg); background: var(--k-bg-raised); }
-	.x:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); color: var(--k-fg); }
-	.x:disabled { cursor: not-allowed; }
-	.x svg { width: 12px; height: 12px; }
+	.x::after {
+		content: '';
+		position: absolute;
+		inset: min(-5px, calc((100% - var(--k-tap-target)) / 2));
+	}
+	.x:hover:not(:disabled) {
+		color: var(--k-fg);
+		background: var(--k-bg-raised);
+	}
+	.x:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+		color: var(--k-fg);
+	}
+	.x:disabled {
+		cursor: not-allowed;
+	}
+	.x svg {
+		width: 12px;
+		height: 12px;
+	}
 	input {
 		flex: 1 1 8rem;
 		min-width: 6rem;
@@ -459,8 +510,13 @@
 		font: inherit;
 		font-size: var(--k-text-md);
 	}
-	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
-	input:disabled { cursor: not-allowed; }
+	input::placeholder {
+		color: var(--k-fg-muted);
+		opacity: 1;
+	}
+	input:disabled {
+		cursor: not-allowed;
+	}
 	.popup {
 		position: fixed;
 		z-index: 950;
@@ -477,8 +533,18 @@
 		font-family: var(--k-font-sans);
 		animation: k-drop var(--k-dur) var(--k-ease);
 	}
-	.popup[hidden] { display: none; }
-	.options { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0; padding: 0; list-style: none; overscroll-behavior: contain; }
+	.popup[hidden] {
+		display: none;
+	}
+	.options {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: auto;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		overscroll-behavior: contain;
+	}
 	[role='option'] {
 		display: flex;
 		align-items: center;
@@ -494,6 +560,21 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: calc(var(--k-focus-w) * -1);
 	}
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+		border: 0;
+	}
+	@keyframes k-drop {
+		from {
+			opacity: 0;
+			transform: translateY(-4px);
+		}
+	}
 </style>

@@ -3,7 +3,7 @@
 		label: string;
 		href: string;
 		/** Marks the link of the current page (`aria-current="page"`). */
-		current?: boolean;
+		current?: boolean | undefined;
 	}
 </script>
 
@@ -13,14 +13,14 @@
 	interface Props {
 		items: NavbarItem[];
 		/** Logo or product name, on the left. */
-		brand?: Snippet;
+		brand?: Snippet | undefined;
 		/** Controls on the right, e.g. a theme switch or a sign-in button. Stays in the bar on narrow widths. */
-		actions?: Snippet;
+		actions?: Snippet | undefined;
 		/** Accessible name of the navigation landmark. */
-		label?: string;
+		label?: string | undefined;
 		/** Accessible name of the menu button shown on narrow widths. */
-		menuLabel?: string;
-		class?: string;
+		menuLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let { items, brand, actions, label = 'Main', menuLabel = 'Menu', class: cls = '' }: Props = $props();
 	const uid = $props.id();
@@ -73,9 +73,13 @@
 			onclick={() => (open = !open)}
 		>
 			{#if open}
-				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4L4 16" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+				<svg viewBox="0 0 20 20" aria-hidden="true">
+					<path d="M4 4l12 12M16 4L4 16" fill="none" stroke="currentColor" stroke-width="2" />
+				</svg>
 			{:else}
-				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+				<svg viewBox="0 0 20 20" aria-hidden="true">
+					<path d="M3 5h14M3 10h14M3 15h14" fill="none" stroke="currentColor" stroke-width="2" />
+				</svg>
 			{/if}
 		</button>
 	</div>
@@ -91,7 +95,9 @@
 		color: var(--k-fg);
 	}
 	/* an open panel overlays the page, so lift the bar above later siblings */
-	.k-navbar.open { z-index: 950; }
+	.k-navbar.open {
+		z-index: 950;
+	}
 	.bar {
 		display: flex;
 		flex-wrap: wrap;
@@ -100,9 +106,22 @@
 		min-height: 64px;
 		padding: var(--k-space-2) var(--k-space-4);
 	}
-	.brand { flex: 1 1 auto; min-width: min-content; font-family: var(--k-font-display); font-weight: var(--k-weight-display); font-size: var(--k-text-lg); }
-	.brand :global(a) { color: inherit; text-decoration: none; }
-	.actions { display: flex; align-items: center; gap: var(--k-space-2); }
+	.brand {
+		flex: 1 1 auto;
+		min-width: min-content;
+		font-family: var(--k-font-display);
+		font-weight: var(--k-weight-display);
+		font-size: var(--k-text-lg);
+	}
+	.brand :global(a) {
+		color: inherit;
+		text-decoration: none;
+	}
+	.actions {
+		display: flex;
+		align-items: center;
+		gap: var(--k-space-2);
+	}
 
 	.toggle {
 		display: inline-grid;
@@ -117,9 +136,19 @@
 		cursor: pointer;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	.toggle:hover, .toggle[aria-expanded='true'] { background: var(--k-bg-sunken); }
-	.toggle svg { width: 20px; height: 20px; }
-	.toggle:focus-visible, a:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
+	.toggle:hover,
+	.toggle[aria-expanded='true'] {
+		background: var(--k-bg-sunken);
+	}
+	.toggle svg {
+		width: 20px;
+		height: 20px;
+	}
+	.toggle:focus-visible,
+	a:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
 
 	/* narrow: items live in a panel below the bar */
 	.panel {
@@ -133,8 +162,16 @@
 		background: var(--k-bg-raised);
 		box-shadow: var(--k-shadow-overlay);
 	}
-	.panel[data-open='true'] { display: block; }
-	ul { display: grid; gap: var(--k-space-1); margin: 0; padding: 0; list-style: none; }
+	.panel[data-open='true'] {
+		display: block;
+	}
+	ul {
+		display: grid;
+		gap: var(--k-space-1);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
 	a {
 		display: flex;
 		align-items: center;
@@ -150,15 +187,41 @@
 		text-decoration: none;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	a:hover { background: var(--k-bg-sunken); }
-	a[aria-current='page'] { background: var(--k-surface-selected); font-weight: var(--k-weight-heading); box-shadow: inset 4px 0 0 var(--k-accent-mark); }
+	a:hover {
+		background: var(--k-bg-sunken);
+	}
+	a[aria-current='page'] {
+		background: var(--k-surface-selected);
+		font-weight: var(--k-weight-heading);
+		box-shadow: inset 4px 0 0 var(--k-accent-mark);
+	}
 
 	@container (min-width: 720px) {
-		.brand { flex: none; }
-		.toggle { display: none; }
-		.panel { display: block; position: static; flex: 1; padding: 0; border: 0; background: transparent; box-shadow: none; }
-		ul { display: flex; flex-wrap: wrap; gap: var(--k-space-1); }
-		a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--k-accent-mark); }
-		.actions { margin-left: auto; }
+		.brand {
+			flex: none;
+		}
+		.toggle {
+			display: none;
+		}
+		.panel {
+			display: block;
+			position: static;
+			flex: 1;
+			padding: 0;
+			border: 0;
+			background: transparent;
+			box-shadow: none;
+		}
+		ul {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--k-space-1);
+		}
+		a[aria-current='page'] {
+			box-shadow: inset 0 -3px 0 var(--k-accent-mark);
+		}
+		.actions {
+			margin-left: auto;
+		}
 	}
 </style>

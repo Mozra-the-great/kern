@@ -68,7 +68,9 @@ for (const [name, v] of Object.entries(result)) {
 	const over = b && (v.raw > b.raw * TOLERANCE || v.gzip > b.gzip * TOLERANCE);
 	if (!b) console.log(`(no baseline for "${name}")`);
 	if (over) failed = true;
-	console.log(`| ${name} | ${v.files} | ${kb(v.raw)} | ${kb(v.gzip)} | ${b ? kb(b.gzip * TOLERANCE) : '-'}${over ? ' **over budget**' : ''} |`);
+	console.log(
+		`| ${name} | ${v.files} | ${kb(v.raw)} | ${kb(v.gzip)} | ${b ? kb(b.gzip * TOLERANCE) : '-'}${over ? ' **over budget**' : ''} |`
+	);
 }
 if (failed) {
 	console.error('Size budget exceeded. If the growth is intended, run `node scripts/ci/size-budget.mjs --update` and commit the baseline.');

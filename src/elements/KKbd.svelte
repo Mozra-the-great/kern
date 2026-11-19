@@ -1,4 +1,15 @@
-<svelte:options customElement={{ props: { keys: { type: 'Array' }, separator: { type: 'String' }, size: { type: 'String' }, platform: { type: 'String' }, labels: { type: 'Object' } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			keys: { type: 'Array' },
+			separator: { type: 'String' },
+			size: { type: 'String' },
+			platform: { type: 'String' },
+			labels: { type: 'Object' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @prop keys {string[]}
@@ -9,8 +20,12 @@
 	let { keys, separator, size, platform, labels } = $props();
 	const single = $derived(!Array.isArray(keys) || keys.length === 0);
 </script>
+
 {#snippet slotted()}{#if single}<slot />{/if}{/snippet}
 <Kbd {keys} {separator} {size} {platform} {labels} children={single ? slotted : undefined} />
+
 <style>
-	:host { display: inline; }
+	:host {
+		display: inline;
+	}
 </style>

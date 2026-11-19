@@ -66,13 +66,15 @@
 <section>
 	<h2>Scramble</h2>
 	<div class="row">
-		{#key scrambleRun + scrambleText}
+		{#key `${scrambleRun}${scrambleText}`}
 			<p class="big m0"><Scramble text={scrambleText} hover /></p>
 		{/key}
 	</div>
 	<div class="row">
 		{#each scrambleOptions as option (option)}
-			<Button size="sm" variant={scrambleText === option ? 'primary' : 'secondary'} onclick={() => (scrambleText = option)}>{option}</Button>
+			<Button size="sm" variant={scrambleText === option ? 'primary' : 'secondary'} onclick={() => (scrambleText = option)}>
+				{option}
+			</Button>
 		{/each}
 		<Button size="sm" variant="ghost" onclick={() => (scrambleRun += 1)}>Nochmal</Button>
 	</div>
@@ -108,7 +110,10 @@
 		<Button size="sm" variant="secondary" onclick={() => (odometer = odometer * 10)}>×10</Button>
 		<Button size="sm" variant="ghost" onclick={() => (odometer = 2026)}>Zurücksetzen</Button>
 	</div>
-	<p class="m0 muted"><Odometer value={odometer * 1.5} locale="de-DE" format={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }} /> mit Tausendertrennzeichen und Dezimalstelle.</p>
+	<p class="m0 muted">
+		<Odometer value={odometer * 1.5} locale="de-DE" format={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }} /> mit Tausendertrennzeichen
+		und Dezimalstelle.
+	</p>
 </section>
 
 <section>
@@ -123,7 +128,10 @@
 		<Marquee label="Aktuelle Meldungen, vertikal" direction="up" height={120} speed={30} gap={12}>
 			{#each features as f (f.title)}<p class="m0"><strong>{f.title}</strong> {f.text}</p>{/each}
 		</Marquee>
-		<p class="m0 muted">Der Lauftext pausiert beim Überfahren, bei Fokus im Inhalt und mit dem Knopf. Bei reduzierter Bewegung steht der Inhalt still und umbrochen da.</p>
+		<p class="m0 muted">
+			Der Lauftext pausiert beim Überfahren, bei Fokus im Inhalt und mit dem Knopf. Bei reduzierter Bewegung steht der Inhalt still und
+			umbrochen da.
+		</p>
 	</div>
 </section>
 
@@ -150,7 +158,10 @@
 
 <section>
 	<h2>Highlight</h2>
-	<p class="m0 big">Sammle <Highlight>jede Farbe</Highlight> und verliere <Highlight delay={250}>keinen Lack</Highlight> mehr aus den Augen, auch wenn ein Satz über mehrere Zeilen läuft und der Marker mitbricht.</p>
+	<p class="m0 big">
+		Sammle <Highlight>jede Farbe</Highlight> und verliere <Highlight delay={250}>keinen Lack</Highlight> mehr aus den Augen, auch wenn ein Satz
+		über mehrere Zeilen läuft und der Marker mitbricht.
+	</p>
 	<div class="row">
 		{#key markerRun}<span><Highlight inView={false}>Sofort beim Laden</Highlight></span>{/key}
 		<Button size="sm" variant="secondary" onclick={() => (markerRun += 1)}>Nochmal</Button>
@@ -183,24 +194,101 @@
 </section>
 
 <style>
-	section { display: grid; gap: var(--k-space-5); padding: var(--k-space-8) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	section:last-child { border-bottom: 0; }
-	h2 { margin: 0; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); color: var(--k-fg-muted); }
-	.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-3); }
-	.stack { display: grid; gap: var(--k-space-3); align-content: start; }
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--k-space-5); align-items: start; }
-	.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--k-space-5); align-items: start; }
-	.m0 { margin: 0; }
-	.muted { color: var(--k-fg-muted); }
-	.mono { font-family: var(--k-font-mono); font-size: var(--k-text-lg); }
-	.big { font-family: var(--k-font-display); font-size: var(--k-text-xl); font-weight: var(--k-weight-display); line-height: 1.3; }
-	.stat { font-size: var(--k-text-xl); font-weight: var(--k-weight-display); font-family: var(--k-font-display); }
-	.chip { display: inline-block; padding: var(--k-space-2) var(--k-space-4); border: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-badge); background: var(--k-bg-raised); color: var(--k-fg); white-space: nowrap; text-decoration: none; }
-	.link { color: var(--k-link); }
-	.link:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	:global(.stage) { border: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-card); }
-	.stage-in { margin: 0; display: grid; place-items: center; min-height: 160px; padding: var(--k-space-6); text-align: center; }
+	section {
+		display: grid;
+		gap: var(--k-space-5);
+		padding: var(--k-space-8) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	section:last-child {
+		border-bottom: 0;
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		color: var(--k-fg-muted);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--k-space-3);
+	}
+	.stack {
+		display: grid;
+		gap: var(--k-space-3);
+		align-content: start;
+	}
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--k-space-5);
+		align-items: start;
+	}
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--k-space-5);
+		align-items: start;
+	}
+	.m0 {
+		margin: 0;
+	}
+	.muted {
+		color: var(--k-fg-muted);
+	}
+	.mono {
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-lg);
+	}
+	.big {
+		font-family: var(--k-font-display);
+		font-size: var(--k-text-xl);
+		font-weight: var(--k-weight-display);
+		line-height: 1.3;
+	}
+	.stat {
+		font-size: var(--k-text-xl);
+		font-weight: var(--k-weight-display);
+		font-family: var(--k-font-display);
+	}
+	.chip {
+		display: inline-block;
+		padding: var(--k-space-2) var(--k-space-4);
+		border: var(--k-border-w) solid var(--k-line);
+		border-radius: var(--k-radius-badge);
+		background: var(--k-bg-raised);
+		color: var(--k-fg);
+		white-space: nowrap;
+		text-decoration: none;
+	}
+	.link {
+		color: var(--k-link);
+	}
+	.link:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	:global(.stage) {
+		border: var(--k-border-w) solid var(--k-line);
+		border-radius: var(--k-radius-card);
+	}
+	.stage-in {
+		margin: 0;
+		display: grid;
+		place-items: center;
+		min-height: 160px;
+		padding: var(--k-space-6);
+		text-align: center;
+	}
 	@media (max-width: 760px) {
-		.grid2, .grid3 { grid-template-columns: 1fr; }
+		.grid2,
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

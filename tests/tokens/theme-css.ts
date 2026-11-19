@@ -76,7 +76,11 @@ export function loadRules(file: string, seen: Set<string> = new Set()): Rule[] {
 	return rules;
 }
 
-const splitSelectors = (prelude: string): string[] => prelude.split(',').map((s) => s.trim()).filter(Boolean);
+const splitSelectors = (prelude: string): string[] =>
+	prelude
+		.split(',')
+		.map((s) => s.trim())
+		.filter(Boolean);
 
 const ATTR = /^\[data-theme(?:([\^]?=)\s*['"]([^'"]*)['"])?\]$/;
 
@@ -150,7 +154,10 @@ export function parseColor(value: string): Rgba {
 	}
 	m = /^rgba?\(([^)]+)\)$/.exec(v);
 	if (m) {
-		const parts = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+		const parts = m[1]
+			.split(/[\s,/]+/)
+			.filter(Boolean)
+			.map(Number);
 		return { r: parts[0], g: parts[1], b: parts[2], a: parts[3] ?? 1 };
 	}
 	throw new Error(`Unsupported colour: ${value}`);

@@ -1,4 +1,5 @@
 <svelte:options customElement={{ props: { for: { type: 'String' }, required: { type: 'Boolean' } } }} />
+
 <script lang="ts">
 	import Label from '../lib/components/Label.svelte';
 	/* A <label for> inside a shadow root cannot reach a control outside it. So the element
@@ -37,4 +38,5 @@
 		return () => host.removeEventListener('click', click);
 	});
 </script>
+
 <Label as="span" {required}><slot /></Label>

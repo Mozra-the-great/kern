@@ -4,9 +4,9 @@
 	export interface TreeNode {
 		id: string;
 		label: string;
-		children?: TreeNode[];
+		children?: TreeNode[] | undefined;
 		/** Can be focused and expanded, but not selected. */
-		disabled?: boolean;
+		disabled?: boolean | undefined;
 	}
 	export interface TreeItemState {
 		level: number;
@@ -17,29 +17,20 @@
 	interface Props {
 		nodes: TreeNode[];
 		/** Id of the selected node. */
-		selected?: string;
+		selected?: string | undefined;
 		/** Ids of the expanded nodes. */
-		expanded?: string[];
+		expanded?: string[] | undefined;
 		/** Accessible name of the tree. */
-		label?: string;
+		label?: string | undefined;
 		/** Custom node content; the default is the label. */
-		item?: Snippet<[TreeNode, TreeItemState]>;
+		item?: Snippet<[TreeNode, TreeItemState]> | undefined;
 		/** Called when the user selects a node. */
-		onselect?: (id: string) => void;
+		onselect?: ((id: string) => void) | undefined;
 		/** Called when the user expands or collapses a node. */
-		ontoggle?: (id: string, expanded: boolean) => void;
-		class?: string;
+		ontoggle?: ((id: string, expanded: boolean) => void) | undefined;
+		class?: string | undefined;
 	}
-	let {
-		nodes,
-		selected = $bindable(),
-		expanded = $bindable([]),
-		label,
-		item,
-		onselect,
-		ontoggle,
-		class: cls = ''
-	}: Props = $props();
+	let { nodes, selected = $bindable(), expanded = $bindable(), label, item, onselect, ontoggle, class: cls = '' }: Props = $props();
 
 	interface Entry {
 		node: TreeNode;
@@ -98,7 +89,7 @@
 	}
 	function setExpanded(id: string, value: boolean) {
 		if (open.has(id) === value) return;
-		expanded = value ? [...expanded, id] : expanded.filter((x) => x !== id);
+		expanded = value ? [...(expanded ?? []), id] : (expanded ?? []).filter((x) => x !== id);
 		ontoggle?.(id, value);
 	}
 	function select(node: TreeNode) {
@@ -127,26 +118,26 @@
 		let handled = true;
 		switch (e.key) {
 			case 'ArrowDown':
-				focusNode(visible[i + 1]?.id);
+				void focusNode(visible[i + 1]?.id);
 				break;
 			case 'ArrowUp':
-				focusNode(visible[i - 1]?.id);
+				void focusNode(visible[i - 1]?.id);
 				break;
 			case 'ArrowRight':
 				if (hasKids(node)) {
 					if (!open.has(node.id)) setExpanded(node.id, true);
-					else focusNode(node.children?.[0]?.id);
+					else void focusNode(node.children?.[0]?.id);
 				}
 				break;
 			case 'ArrowLeft':
 				if (hasKids(node) && open.has(node.id)) setExpanded(node.id, false);
-				else if (entry.parent !== null) focusNode(entry.parent);
+				else if (entry.parent !== null) void focusNode(entry.parent);
 				break;
 			case 'Home':
-				focusNode(visible[0]?.id);
+				void focusNode(visible[0]?.id);
 				break;
 			case 'End':
-				focusNode(visible[visible.length - 1]?.id);
+				void focusNode(visible[visible.length - 1]?.id);
 				break;
 			case 'Enter':
 			case ' ':
@@ -155,7 +146,7 @@
 			case '*': {
 				const add = entry.siblings.filter((n) => hasKids(n) && !open.has(n.id)).map((n) => n.id);
 				if (add.length) {
-					expanded = [...expanded, ...add];
+					expanded = [...(expanded ?? []), ...add];
 					for (const a of add) ontoggle?.(a, true);
 				}
 				break;
@@ -176,14 +167,14 @@
 		typedAt = now;
 		const q = norm(typed);
 		// Repeating one letter cycles through matches; a longer prefix may stay on the current node.
-		const repeat = q.length > 1 && [...q].every((c) => c === q[0]);
+		const repeat = q.length > 1 && Array.from(q).every((c) => c === q[0]);
 		const needle = repeat ? q[0] : q;
 		const start = repeat || q.length === 1 ? from + 1 : from;
 		const n = visible.length;
 		for (let k = 0; k < n; k++) {
 			const cand = visible[(start + k) % n];
 			if (norm(cand.label).startsWith(needle)) {
-				focusNode(cand.id);
+				void focusNode(cand.id);
 				break;
 			}
 		}
@@ -207,7 +198,9 @@
 			aria-disabled={node.disabled || undefined}
 			tabindex={node.id === tabId ? 0 : -1}
 			style:--level={level}
-			onfocus={(e) => { if (e.target === e.currentTarget) focusId = node.id; }}
+			onfocus={(e) => {
+				if (e.target === e.currentTarget) focusId = node.id;
+			}}
 		>
 			<div class="row" class:selected={isSelected}>
 				<span class="twisty" aria-hidden="true">
@@ -229,9 +222,19 @@
 </ul>
 
 <style>
-	.k-tree, ul { margin: 0; padding: 0; list-style: none; }
-	.k-tree { min-width: 0; font-size: var(--k-text-sm); }
-	li { outline: none; }
+	.k-tree,
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.k-tree {
+		min-width: 0;
+		font-size: var(--k-text-sm);
+	}
+	li {
+		outline: none;
+	}
 	.row {
 		display: flex;
 		align-items: center;
@@ -245,17 +248,47 @@
 		user-select: none;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	.row:hover { background: var(--k-bg-sunken); }
+	.row:hover {
+		background: var(--k-bg-sunken);
+	}
 	.row.selected {
 		background: var(--k-surface-selected);
 		box-shadow: inset 3px 0 0 var(--k-accent-mark);
 		font-weight: var(--k-weight-heading);
 	}
-	li:focus-visible > .row { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	li[aria-disabled='true'] > .row { opacity: 0.45; cursor: not-allowed; }
-	.twisty { flex: none; display: grid; place-items: center; width: 32px; height: max(40px, var(--k-tap-target)); color: var(--k-fg-muted); }
-	.twisty svg { width: 14px; height: 14px; transition: transform var(--k-dur) var(--k-ease); }
-	li[aria-expanded='true'] > .row .twisty svg { transform: rotate(90deg); }
-	.text { flex: 1; min-width: 0; padding: var(--k-space-2) 0; overflow-wrap: anywhere; }
-	@media (pointer: coarse) { .twisty { width: 40px; } }
+	li:focus-visible > .row {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	li[aria-disabled='true'] > .row {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+	.twisty {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: max(40px, var(--k-tap-target));
+		color: var(--k-fg-muted);
+	}
+	.twisty svg {
+		width: 14px;
+		height: 14px;
+		transition: transform var(--k-dur) var(--k-ease);
+	}
+	li[aria-expanded='true'] > .row .twisty svg {
+		transform: rotate(90deg);
+	}
+	.text {
+		flex: 1;
+		min-width: 0;
+		padding: var(--k-space-2) 0;
+		overflow-wrap: anywhere;
+	}
+	@media (pointer: coarse) {
+		.twisty {
+			width: 40px;
+		}
+	}
 </style>

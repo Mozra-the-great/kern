@@ -4,28 +4,28 @@
 
 	interface Props {
 		/** The content that loops. It is shown once to assistive technology; the repeats are hidden from it. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 		/** Pixels per second. */
-		speed?: number;
+		speed?: number | undefined;
 		/** Direction the content moves. `up` and `down` make a vertical marquee. */
-		direction?: 'left' | 'right' | 'up' | 'down';
+		direction?: 'left' | 'right' | 'up' | 'down' | undefined;
 		/** Pause while the pointer is over the marquee. Keyboard focus inside always pauses it. */
-		pauseOnHover?: boolean;
+		pauseOnHover?: boolean | undefined;
 		/** Show a pause/play button (WCAG 2.2.2: moving content that lasts over 5 s needs one). */
-		pausable?: boolean;
+		pausable?: boolean | undefined;
 		/** Paused by the button. Bindable. */
-		paused?: boolean;
+		paused?: boolean | undefined;
 		/** Space between the repeats. CSS length, or a number of pixels. */
-		gap?: string | number;
+		gap?: string | number | undefined;
 		/** Height of a vertical marquee. CSS length, or a number of pixels. */
-		height?: string | number;
+		height?: string | number | undefined;
 		/** Fade the content out at both ends. */
-		fade?: boolean;
+		fade?: boolean | undefined;
 		/** Accessible name of the region. Without it the marquee is not announced as a group. */
-		label?: string;
-		pauseLabel?: string;
-		playLabel?: string;
-		class?: string;
+		label?: string | undefined;
+		pauseLabel?: string | undefined;
+		playLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		children,
@@ -33,7 +33,7 @@
 		direction = 'left',
 		pauseOnHover = true,
 		pausable = true,
-		paused = $bindable(false),
+		paused = $bindable(),
 		gap,
 		height = '16rem',
 		fade = false,
@@ -125,12 +125,7 @@
 	style:--k-marquee-dir={textDir}
 >
 	<div class="viewport" bind:this={viewport}>
-		<div
-			class="track"
-			class:reverse
-			style:--shift="{shift}px"
-			style:--seconds="{seconds}s"
-		>
+		<div class="track" class:reverse style:--shift="{shift}px" style:--seconds="{seconds}s">
 			<div class="seq" bind:this={origin}>{@render children?.()}</div>
 			{#each clones as c (c)}
 				<div class="seq clone" aria-hidden="true" inert></div>
@@ -138,12 +133,7 @@
 		</div>
 	</div>
 	{#if pausable && running}
-		<button
-			type="button"
-			class="pause"
-			aria-label={paused ? playLabel : pauseLabel}
-			onclick={() => (paused = !paused)}
-		>
+		<button type="button" class="pause" aria-label={paused ? playLabel : pauseLabel} onclick={() => (paused = !paused)}>
 			{#if paused}
 				<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z" fill="currentColor" /></svg>
 			{:else}
@@ -162,8 +152,16 @@
 		max-width: 100%;
 	}
 	/* The scrolling box clips at its own edges and never widens the page. */
-	.viewport { flex: 1; min-width: 0; overflow: hidden; direction: ltr; }
-	.track { display: flex; width: max-content; }
+	.viewport {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		direction: ltr;
+	}
+	.track {
+		display: flex;
+		width: max-content;
+	}
 	.seq {
 		display: flex;
 		flex: none;
@@ -172,20 +170,48 @@
 		padding-inline-end: var(--k-marquee-gap, var(--k-space-6));
 		direction: var(--k-marquee-dir, ltr);
 	}
-	[data-axis='y'] { align-items: flex-start; }
-	[data-axis='y'] .viewport { height: var(--k-marquee-height); }
-	[data-axis='y'] .track { flex-direction: column; width: auto; }
-	[data-axis='y'] .seq { flex-direction: column; align-items: stretch; padding-inline-end: 0; padding-block-end: var(--k-marquee-gap, var(--k-space-6)); }
+	[data-axis='y'] {
+		align-items: flex-start;
+	}
+	[data-axis='y'] .viewport {
+		height: var(--k-marquee-height);
+	}
+	[data-axis='y'] .track {
+		flex-direction: column;
+		width: auto;
+	}
+	[data-axis='y'] .seq {
+		flex-direction: column;
+		align-items: stretch;
+		padding-inline-end: 0;
+		padding-block-end: var(--k-marquee-gap, var(--k-space-6));
+	}
 
-	.running .track { animation: k-marquee-x var(--seconds) linear infinite; }
-	.running[data-axis='y'] .track { animation-name: k-marquee-y; }
-	.running .track.reverse { animation-direction: reverse; }
-	@keyframes k-marquee-x { to { transform: translate3d(calc(var(--shift) * -1), 0, 0); } }
-	@keyframes k-marquee-y { to { transform: translate3d(0, calc(var(--shift) * -1), 0); } }
+	.running .track {
+		animation: k-marquee-x var(--seconds) linear infinite;
+	}
+	.running[data-axis='y'] .track {
+		animation-name: k-marquee-y;
+	}
+	.running .track.reverse {
+		animation-direction: reverse;
+	}
+	@keyframes k-marquee-x {
+		to {
+			transform: translate3d(calc(var(--shift) * -1), 0, 0);
+		}
+	}
+	@keyframes k-marquee-y {
+		to {
+			transform: translate3d(0, calc(var(--shift) * -1), 0);
+		}
+	}
 
 	.paused .track,
 	.hoverpause .viewport:hover .track,
-	.viewport:focus-within .track { animation-play-state: paused; }
+	.viewport:focus-within .track {
+		animation-play-state: paused;
+	}
 
 	.running.fade .viewport {
 		-webkit-mask-image: linear-gradient(to right, transparent, #000 var(--k-space-8), #000 calc(100% - var(--k-space-8)), transparent);
@@ -197,15 +223,44 @@
 	}
 
 	/* Without motion (not measured yet, no JS, reduced motion) everything is shown at rest, wrapped. */
-	.k-marquee:not(.running) .viewport { overflow: visible; height: auto; }
-	.k-marquee:not(.running) .track { display: block; width: auto; }
-	.k-marquee:not(.running) .seq { flex-wrap: wrap; padding: 0; row-gap: var(--k-space-2); }
-	.k-marquee:not(.running) .clone { display: none; }
+	.k-marquee:not(.running) .viewport {
+		overflow: visible;
+		height: auto;
+	}
+	.k-marquee:not(.running) .track {
+		display: block;
+		width: auto;
+	}
+	.k-marquee:not(.running) .seq {
+		flex-wrap: wrap;
+		padding: 0;
+		row-gap: var(--k-space-2);
+	}
+	.k-marquee:not(.running) .clone {
+		display: none;
+	}
 	@media (prefers-reduced-motion: reduce) {
-		.track { animation: none !important; transform: none; display: block; width: auto; }
-		.viewport { overflow: visible; height: auto !important; -webkit-mask-image: none; mask-image: none; }
-		.seq { flex-wrap: wrap; padding: 0; row-gap: var(--k-space-2); }
-		.clone, .pause { display: none; }
+		.track {
+			animation: none !important;
+			transform: none;
+			display: block;
+			width: auto;
+		}
+		.viewport {
+			overflow: visible;
+			height: auto !important;
+			-webkit-mask-image: none;
+			mask-image: none;
+		}
+		.seq {
+			flex-wrap: wrap;
+			padding: 0;
+			row-gap: var(--k-space-2);
+		}
+		.clone,
+		.pause {
+			display: none;
+		}
 	}
 
 	.pause {
@@ -223,7 +278,15 @@
 		cursor: pointer;
 		transition: background-color var(--k-dur) var(--k-ease);
 	}
-	.pause:hover { background: var(--k-bg-sunken); }
-	.pause:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.pause svg { width: 14px; height: 14px; }
+	.pause:hover {
+		background: var(--k-bg-sunken);
+	}
+	.pause:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.pause svg {
+		width: 14px;
+		height: 14px;
+	}
 </style>

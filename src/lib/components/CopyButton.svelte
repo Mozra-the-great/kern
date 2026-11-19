@@ -26,8 +26,9 @@
 		document.body.append(area);
 		area.select();
 		area.setSelectionRange(0, text.length);
-		let ok = false;
+		let ok: boolean;
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-deprecated -- fallback where the async Clipboard API is missing or blocked
 			ok = document.execCommand('copy');
 		} catch {
 			ok = false;
@@ -41,25 +42,25 @@
 <script lang="ts">
 	interface Props {
 		/** Text to copy. */
-		value?: string;
+		value?: string | undefined;
 		/** Reads the text at click time. Wins over `value`; may be async. */
-		getValue?: () => string | Promise<string>;
+		getValue?: (() => string | Promise<string>) | undefined;
 		/** Accessible name of the button. */
-		label?: string;
+		label?: string | undefined;
 		/** Spoken after a successful copy. */
-		copiedLabel?: string;
+		copiedLabel?: string | undefined;
 		/** Spoken when copying fails. */
-		errorLabel?: string;
-		variant?: 'ghost' | 'secondary';
-		size?: 'sm' | 'md';
+		errorLabel?: string | undefined;
+		variant?: 'ghost' | 'secondary' | undefined;
+		size?: 'sm' | 'md' | undefined;
 		/** Milliseconds the success or error state stays before it resets. */
-		resetAfter?: number;
-		disabled?: boolean;
+		resetAfter?: number | undefined;
+		disabled?: boolean | undefined;
 		/** Called with the copied text after a successful copy. */
-		oncopy?: (text: string) => void;
+		oncopy?: ((text: string) => void) | undefined;
 		/** Called when reading or writing the text failed. */
-		onerror?: (error: unknown) => void;
-		class?: string;
+		onerror?: ((error: unknown) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		value,
@@ -135,7 +136,11 @@
 </span>
 
 <style>
-	.k-copy-button { position: relative; display: inline-flex; flex: none; }
+	.k-copy-button {
+		position: relative;
+		display: inline-flex;
+		flex: none;
+	}
 	.btn {
 		display: inline-grid;
 		place-items: center;
@@ -150,16 +155,44 @@
 		background: transparent;
 		color: var(--k-fg);
 		cursor: pointer;
-		transition: background-color var(--k-dur) var(--k-ease), color var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease);
+		transition:
+			background-color var(--k-dur) var(--k-ease),
+			color var(--k-dur) var(--k-ease),
+			border-color var(--k-dur) var(--k-ease);
 	}
-	.btn[data-size='sm'] { width: max(var(--k-control-h-sm), 40px); height: max(var(--k-control-h-sm), 40px); }
-	.btn[data-variant='secondary'] { border-color: var(--k-border); }
-	.btn:hover:not(:disabled) { background: var(--k-bg-sunken); }
-	.btn:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
-	.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-	.btn[data-status='copied'] { color: var(--k-ok); }
-	.btn[data-status='error'] { color: var(--k-danger); }
-	svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
+	.btn[data-size='sm'] {
+		width: max(var(--k-control-h-sm), 40px);
+		height: max(var(--k-control-h-sm), 40px);
+	}
+	.btn[data-variant='secondary'] {
+		border-color: var(--k-border);
+	}
+	.btn:hover:not(:disabled) {
+		background: var(--k-bg-sunken);
+	}
+	.btn:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: var(--k-focus-offset);
+	}
+	.btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.btn[data-status='copied'] {
+		color: var(--k-ok);
+	}
+	.btn[data-status='error'] {
+		color: var(--k-danger);
+	}
+	svg {
+		width: 20px;
+		height: 20px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: square;
+		stroke-linejoin: miter;
+	}
 	.sr {
 		position: absolute;
 		width: 1px;

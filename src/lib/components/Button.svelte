@@ -1,18 +1,18 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	interface Props extends HTMLButtonAttributes {
 		/** Visual weight. One `primary` per view. */
-		variant?: 'primary' | 'secondary' | 'ghost' | 'accent' | 'danger';
-		size?: 'sm' | 'md' | 'lg';
+		variant?: 'primary' | 'secondary' | 'ghost' | 'accent' | 'danger' | undefined;
+		size?: 'sm' | 'md' | 'lg' | undefined;
 		/** Full width. */
-		block?: boolean;
+		block?: boolean | undefined;
 		/** Shows a spinner and blocks clicks. */
-		loading?: boolean;
+		loading?: boolean | undefined;
 		/** Renders an `<a>` instead of a `<button>`. */
-		href?: string;
-		children?: Snippet;
+		href?: string | undefined;
+		children?: Snippet; // same type as the inherited HTML attribute
 	}
 	let {
 		variant = 'primary',
@@ -29,7 +29,7 @@
 </script>
 
 {#if href && !disabled}
-	<a class="k-button {cls}" data-variant={variant} data-size={size} class:block {href} {...rest as any}>
+	<a class="k-button {cls}" data-variant={variant} data-size={size} class:block {href} {...rest as HTMLAnchorAttributes}>
 		{@render children?.()}
 	</a>
 {:else}
@@ -80,27 +80,69 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
 	}
-	.k-button:active:not(:disabled) { transform: translateY(1px); }
-	.k-button:disabled { cursor: not-allowed; opacity: 0.5; }
-	.block { display: flex; width: 100%; }
+	.k-button:active:not(:disabled) {
+		transform: translateY(1px);
+	}
+	.k-button:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+	.block {
+		display: flex;
+		width: 100%;
+	}
 
-	[data-size='sm'] { min-height: max(var(--k-control-h-sm), var(--k-tap-target)); padding: 0 var(--k-space-3); }
-	[data-size='lg'] { min-height: var(--k-control-h-lg); padding: 0 var(--k-space-7); }
+	[data-size='sm'] {
+		min-height: max(var(--k-control-h-sm), var(--k-tap-target));
+		padding: 0 var(--k-space-3);
+	}
+	[data-size='lg'] {
+		min-height: var(--k-control-h-lg);
+		padding: 0 var(--k-space-7);
+	}
 
-	[data-variant='primary'] { background: var(--k-primary); color: var(--k-on-primary); }
-	[data-variant='primary']:hover:not(:disabled) { background: var(--k-primary-hover); color: var(--k-on-primary-hover); }
+	[data-variant='primary'] {
+		background: var(--k-primary);
+		color: var(--k-on-primary);
+	}
+	[data-variant='primary']:hover:not(:disabled) {
+		background: var(--k-primary-hover);
+		color: var(--k-on-primary-hover);
+	}
 
-	[data-variant='secondary'] { background: transparent; color: var(--k-fg); border-color: var(--k-border); }
-	[data-variant='secondary']:hover:not(:disabled) { background: var(--k-bg-sunken); border-color: var(--k-fg); }
+	[data-variant='secondary'] {
+		background: transparent;
+		color: var(--k-fg);
+		border-color: var(--k-border);
+	}
+	[data-variant='secondary']:hover:not(:disabled) {
+		background: var(--k-bg-sunken);
+		border-color: var(--k-fg);
+	}
 
-	[data-variant='ghost'] { background: transparent; color: var(--k-fg); }
-	[data-variant='ghost']:hover:not(:disabled) { background: var(--k-bg-sunken); }
+	[data-variant='ghost'] {
+		background: transparent;
+		color: var(--k-fg);
+	}
+	[data-variant='ghost']:hover:not(:disabled) {
+		background: var(--k-bg-sunken);
+	}
 
-	[data-variant='accent'] { background: var(--k-accent); color: var(--k-on-accent); }
-	[data-variant='accent']:hover:not(:disabled) { filter: brightness(0.95); }
+	[data-variant='accent'] {
+		background: var(--k-accent);
+		color: var(--k-on-accent);
+	}
+	[data-variant='accent']:hover:not(:disabled) {
+		filter: brightness(0.95);
+	}
 
-	[data-variant='danger'] { background: var(--k-danger); color: var(--k-on-danger); }
-	[data-variant='danger']:hover:not(:disabled) { filter: brightness(0.92); }
+	[data-variant='danger'] {
+		background: var(--k-danger);
+		color: var(--k-on-danger);
+	}
+	[data-variant='danger']:hover:not(:disabled) {
+		filter: brightness(0.92);
+	}
 
 	.spin {
 		width: 1em;
@@ -110,6 +152,14 @@
 		border-radius: 50%;
 		animation: k-spin 0.7s linear infinite;
 	}
-	@keyframes k-spin { to { transform: rotate(360deg); } }
-	@media (prefers-reduced-motion: reduce) { .spin { animation-duration: 2s; } }
+	@keyframes k-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.spin {
+			animation-duration: 2s;
+		}
+	}
 </style>

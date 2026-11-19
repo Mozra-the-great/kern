@@ -16,7 +16,10 @@ export type ForwardedAttrs<N extends NativeAttr> = { [K in N]: string | true | u
  * the host (`el.title = …`) works for properties that reflect to their attribute; React 19 sets
  * unknown names (`maxlength`, `pattern` …) as attributes.
  */
-export function forwardAttributes<const N extends NativeAttr>(host: HTMLElement, names: readonly N[]): { readonly current: ForwardedAttrs<N> } {
+export function forwardAttributes<const N extends NativeAttr>(
+	host: HTMLElement,
+	names: readonly N[]
+): { readonly current: ForwardedAttrs<N> } {
 	const read = (): ForwardedAttrs<N> => {
 		const out = {} as ForwardedAttrs<N>;
 		for (const name of names) {
@@ -59,7 +62,17 @@ export interface FormControlConfig {
 	disabled?: () => boolean;
 }
 
-const FLAGS = ['valueMissing', 'typeMismatch', 'patternMismatch', 'tooLong', 'tooShort', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'badInput'] as const;
+const FLAGS = [
+	'valueMissing',
+	'typeMismatch',
+	'patternMismatch',
+	'tooLong',
+	'tooShort',
+	'rangeUnderflow',
+	'rangeOverflow',
+	'stepMismatch',
+	'badInput'
+] as const;
 
 function readValidity(el: ConstraintControl | null | undefined): { flags: ValidityStateFlags; message: string } {
 	const flags: ValidityStateFlags = {};
@@ -153,7 +166,12 @@ export function formControl(host: HTMLElement, config: FormControlConfig): void 
 		root?.addEventListener('change', schedule);
 		host.addEventListener('k-validate', schedule);
 		const observer = new MutationObserver(schedule);
-		if (root) observer.observe(root, { attributes: true, subtree: true, attributeFilter: ['required', 'pattern', 'minlength', 'maxlength', 'min', 'max', 'step', 'type', 'disabled', 'readonly'] });
+		if (root)
+			observer.observe(root, {
+				attributes: true,
+				subtree: true,
+				attributeFilter: ['required', 'pattern', 'minlength', 'maxlength', 'min', 'max', 'step', 'type', 'disabled', 'readonly']
+			});
 		return () => {
 			root?.removeEventListener('input', schedule);
 			root?.removeEventListener('change', schedule);
@@ -168,6 +186,7 @@ export function formControl(host: HTMLElement, config: FormControlConfig): void 
 }
 
 /** First element in the host's shadow root that matches `selector`. */
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- callers name the element type they expect
 export function inShadow<E extends Element>(host: HTMLElement, selector: string): E | null {
 	return host.shadowRoot?.querySelector<E>(selector) ?? null;
 }

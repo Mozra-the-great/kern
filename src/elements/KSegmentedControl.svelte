@@ -1,4 +1,20 @@
-<svelte:options customElement={{ props: { label: { type: 'String' }, groupLabel: { type: 'String', attribute: 'group-label' }, hint: { type: 'String' }, error: { type: 'String' }, options: { type: 'Array' }, value: { type: 'String', reflect: true }, name: { type: 'String' }, disabled: { type: 'Boolean' }, block: { type: 'Boolean' } }, extend: formAssociated }} />
+<svelte:options
+	customElement={{
+		props: {
+			label: { type: 'String' },
+			groupLabel: { type: 'String', attribute: 'group-label' },
+			hint: { type: 'String' },
+			error: { type: 'String' },
+			options: { type: 'Array' },
+			value: { type: 'String', reflect: true },
+			name: { type: 'String' },
+			disabled: { type: 'Boolean' },
+			block: { type: 'Boolean' }
+		},
+		extend: formAssociated
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * Single choice as a row of segments. `group-label`: accessible name when there is no visible label.
@@ -17,6 +33,22 @@
 		disabled: () => disabled
 	});
 	$effect(() => setFormValue(host, value || null));
-	$effect(() => { const r = () => (value = initial); host.addEventListener('k-reset', r); return () => host.removeEventListener('k-reset', r); });
+	$effect(() => {
+		const r = () => (value = initial);
+		host.addEventListener('k-reset', r);
+		return () => host.removeEventListener('k-reset', r);
+	});
 </script>
-<SegmentedControl {label} ariaLabel={groupLabel} {hint} {error} {options} bind:value {name} {disabled} {block} onchange={(v) => emit(host, 'change', v)} />
+
+<SegmentedControl
+	{label}
+	ariaLabel={groupLabel}
+	{hint}
+	{error}
+	{options}
+	bind:value
+	{name}
+	{disabled}
+	{block}
+	onchange={(v) => emit(host, 'change', v)}
+/>

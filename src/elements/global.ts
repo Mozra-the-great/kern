@@ -5,7 +5,9 @@ import { toast, dismissToast } from '../lib/components/toast.svelte.js';
 import type { KernGlobal } from './types.js';
 
 declare global {
-	interface Window { kern?: KernGlobal }
+	interface Window {
+		kern?: KernGlobal;
+	}
 }
 
 export function installGlobal(): void {

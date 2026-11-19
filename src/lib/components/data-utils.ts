@@ -33,3 +33,17 @@ export function dateFormat(locale: string | undefined, options: Intl.DateTimeFor
 		return new Intl.DateTimeFormat(undefined, options);
 	}
 }
+
+/**
+ * `defaults` with every key of `overrides` whose value is not `undefined`. Unlike a spread, an
+ * explicit `undefined` (allowed for optional fields) keeps the default instead of replacing it.
+ */
+export function withDefaults<T extends object>(defaults: T, overrides: { [K in keyof T]?: T[K] | undefined } | undefined): T {
+	const out = { ...defaults };
+	if (!overrides) return out;
+	for (const key of Object.keys(overrides) as (keyof T)[]) {
+		const value = overrides[key];
+		if (value !== undefined) out[key] = value;
+	}
+	return out;
+}

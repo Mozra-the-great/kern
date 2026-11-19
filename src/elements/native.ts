@@ -36,9 +36,38 @@ export type NativeAttr =
 /** Attributes that are switched on by presence (`readonly`, `readonly=""`); all others carry text. */
 export const BOOLEAN_ATTRS: readonly NativeAttr[] = ['readonly', 'required', 'multiple'];
 
-export const INPUT_ATTRS = ['maxlength', 'minlength', 'pattern', 'readonly', 'autocapitalize', 'spellcheck', 'enterkeyhint', 'min', 'max', 'step', 'size', 'multiple', 'title', 'aria-label', 'aria-description'] as const satisfies readonly NativeAttr[];
+export const INPUT_ATTRS = [
+	'maxlength',
+	'minlength',
+	'pattern',
+	'readonly',
+	'autocapitalize',
+	'spellcheck',
+	'enterkeyhint',
+	'min',
+	'max',
+	'step',
+	'size',
+	'multiple',
+	'title',
+	'aria-label',
+	'aria-description'
+] as const satisfies readonly NativeAttr[];
 
-export const TEXTAREA_ATTRS = ['maxlength', 'minlength', 'readonly', 'autocomplete', 'autocapitalize', 'spellcheck', 'enterkeyhint', 'cols', 'wrap', 'title', 'aria-label', 'aria-description'] as const satisfies readonly NativeAttr[];
+export const TEXTAREA_ATTRS = [
+	'maxlength',
+	'minlength',
+	'readonly',
+	'autocomplete',
+	'autocapitalize',
+	'spellcheck',
+	'enterkeyhint',
+	'cols',
+	'wrap',
+	'title',
+	'aria-label',
+	'aria-description'
+] as const satisfies readonly NativeAttr[];
 
 export const SELECT_ATTRS = ['size', 'autocomplete', 'title', 'aria-label', 'aria-description'] as const satisfies readonly NativeAttr[];
 

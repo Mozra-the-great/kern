@@ -84,7 +84,10 @@ const NON_TEXT: [string, string, string][] = [
 describe('theme files', () => {
 	it('define at least one variant per brand', () => {
 		for (const brand of ['stuffcloud', 'flower', 'pop']) {
-			expect(variants.some((v) => v.startsWith(brand)), brand).toBe(true);
+			expect(
+				variants.some((v) => v.startsWith(brand)),
+				brand
+			).toBe(true);
 		}
 	});
 

@@ -48,7 +48,11 @@
 			{#if loading}
 				<div class="media-row">
 					<Skeleton variant="circle" width={48} />
-					<div class="grow"><Skeleton width="60%" height={14} /><div class="gap"></div><Skeleton width="40%" height={12} /></div>
+					<div class="grow">
+						<Skeleton width="60%" height={14} />
+						<div class="gap"></div>
+						<Skeleton width="40%" height={12} />
+					</div>
 				</div>
 				<Skeleton lines={3} />
 				<Skeleton variant="rect" height={96} />
@@ -195,23 +199,85 @@
 </section>
 
 <style>
-	section { display: grid; gap: var(--k-space-5); padding: var(--k-space-8) 0; border-bottom: var(--k-border-w) solid var(--k-line); }
-	section:last-child { border-bottom: 0; }
-	h2 { margin: 0; font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); color: var(--k-fg-muted); }
-	.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-3); }
-	.stack { display: grid; gap: var(--k-space-4); align-content: start; }
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--k-space-5); }
-	.m0 { margin: 0; }
-	.muted { color: var(--k-fg-muted); }
-	.media-row { display: flex; align-items: center; gap: var(--k-space-3); }
-	.grow { flex: 1; min-width: 0; }
-	.gap { height: var(--k-space-2); }
-	.narrow { max-width: 320px; }
-	.frame-demo { min-height: 64px; border: var(--k-border-w) solid var(--k-line); }
-	.frame-demo.narrow { min-height: 240px; }
-	.carousel-wrap { max-width: 560px; }
-	.slide { display: grid; gap: var(--k-space-3); justify-items: start; align-content: center; min-height: 200px; padding: var(--k-space-6); border: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-card); color: var(--k-fg); }
+	section {
+		display: grid;
+		gap: var(--k-space-5);
+		padding: var(--k-space-8) 0;
+		border-bottom: var(--k-border-w) solid var(--k-line);
+	}
+	section:last-child {
+		border-bottom: 0;
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		color: var(--k-fg-muted);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--k-space-3);
+	}
+	.stack {
+		display: grid;
+		gap: var(--k-space-4);
+		align-content: start;
+	}
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--k-space-5);
+	}
+	.m0 {
+		margin: 0;
+	}
+	.muted {
+		color: var(--k-fg-muted);
+	}
+	.media-row {
+		display: flex;
+		align-items: center;
+		gap: var(--k-space-3);
+	}
+	.grow {
+		flex: 1;
+		min-width: 0;
+	}
+	.gap {
+		height: var(--k-space-2);
+	}
+	.narrow {
+		max-width: 320px;
+	}
+	.frame-demo {
+		min-height: 64px;
+		border: var(--k-border-w) solid var(--k-line);
+	}
+	.frame-demo.narrow {
+		min-height: 240px;
+	}
+	.carousel-wrap {
+		max-width: 560px;
+	}
+	.slide {
+		display: grid;
+		gap: var(--k-space-3);
+		justify-items: start;
+		align-content: center;
+		min-height: 200px;
+		padding: var(--k-space-6);
+		border: var(--k-border-w) solid var(--k-line);
+		border-radius: var(--k-radius-card);
+		color: var(--k-fg);
+	}
 	@media (max-width: 760px) {
-		.grid2 { grid-template-columns: 1fr; }
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

@@ -1,0 +1,23 @@
+{
+	// A consumer app with stuffcloud's compiler flags (#22). It imports the BUILT package through
+	// package.json "exports" (self-reference), so run `npm run build` first; `npm run test:consumer`
+	// type-checks it with `svelte-check --fail-on-warnings`. skipLibCheck is off, so the generated
+	// .d.ts files in dist/ are checked with these flags too.
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"exactOptionalPropertyTypes": true,
+		"noUncheckedIndexedAccess": true,
+		"verbatimModuleSyntax": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUnusedLocals": true,
+		"isolatedModules": true,
+		"skipLibCheck": false,
+		"noEmit": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"types": ["svelte"]
+	},
+	"include": ["*.ts", "*.svelte"]
+}

@@ -43,9 +43,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   checkout); refresh with `npm run assets:manifest` (see `assets/README.md`).
 - Playwright tests of `<k-mascot>` under a strict CSP (`npm run test:mascot`, in the `build` job)
   and Vitest tests of the catalogue, the name mapping and the stylesheet rules.
+- CI type-checks a Svelte app with stuffcloud's compiler flags (`strict`,
+  `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`,
+  `noPropertyAccessFromIndexSignature`, `noUnusedLocals`, `svelte-check --fail-on-warnings`)
+  against the built package, using every component (`npm run test:consumer`), and fails on the
+  type `any` in the published `.d.ts` files (`npm run check:dts`).
+- ESLint (typescript-eslint strict and strict-type-checked, eslint-plugin-svelte,
+  `no-explicit-any` as an error) and Prettier with prettier-plugin-svelte; `npm run lint` runs
+  in CI, `npm run format` formats (#23). The code base is formatted once; the commit is listed
+  in `.git-blame-ignore-revs`.
 
 ### Changed
 - The demo build no longer inlines SVGs as `data:` URIs (`build.assetsInlineLimit`).
+- The last uses of `any` are gone (`Button` link branch, `formAssociated()`, the menu element
+  wrappers); kern itself now compiles with `exactOptionalPropertyTypes`.
+
+### Fixed
+- Strict TypeScript consumers (#22): every optional prop of every component, every optional
+  field of the exported types (`TabItem`, `SelectOption`, `MenuEntry`, `ToastInput`, the element
+  types …) and the `statusLabels` maps accept an explicit `undefined`, so apps compiled with
+  `exactOptionalPropertyTypes` can pass `string | undefined` values. `undefined` behaves like a
+  prop that is left out.
+- Bindable props can be bound to state that is `undefined` (`bind:value={x}` with
+  `x: string | undefined`, also `checked`, `open`, `page`, `files`, `selected` …). Before, the
+  components gave these props a fallback, and Svelte throws `props_invalid_value` for such a
+  binding; now the default applies where the value is read and the bound variable stays
+  `undefined` until the user changes something.
+- `toast({ duration: undefined })` (or `tone: undefined`) keeps the default instead of a toast
+  that never closes.
 
 ## [0.3.0] - 2026-11-19
 

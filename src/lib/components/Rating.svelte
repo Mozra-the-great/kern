@@ -4,30 +4,30 @@
 
 	interface Props {
 		/** Name of the group. */
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** Number of stars chosen, 0 = none. In `readonly` mode fractions show partly filled stars. */
-		value?: number;
+		value?: number | undefined;
 		/** Number of stars. */
-		max?: number;
+		max?: number | undefined;
 		/** Show the value as an image with text instead of a control. */
-		readonly?: boolean;
-		disabled?: boolean;
+		readonly?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Form field name (native radios). */
-		name?: string;
-		required?: boolean;
+		name?: string | undefined;
+		required?: boolean | undefined;
 		/** Name of each star and of the readonly image; `{value}` and `{max}` are replaced. */
-		starLabel?: string;
+		starLabel?: string | undefined;
 		/** Called when the user picks a value. */
-		onchange?: (value: number) => void;
-		class?: string;
+		onchange?: ((value: number) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(0),
+		value = $bindable(),
 		max = 5,
 		readonly = false,
 		disabled = false,
@@ -40,7 +40,7 @@
 
 	const uid = $props.id();
 	const count = $derived(Math.max(1, Math.min(20, Math.floor(Number.isFinite(max) ? max : 5))));
-	const current = $derived(Math.max(0, Math.min(count, Number.isFinite(value) ? value : 0)));
+	const current = $derived(Math.max(0, Math.min(count, Number.isFinite(value) ? (value ?? 0) : 0)));
 	const groupName = $derived(name ?? `${uid}-rating`);
 	let hover = $state(0);
 	let group: HTMLElement | undefined = $state();
@@ -60,7 +60,7 @@
 	}
 	function pick(v: number) {
 		if (disabled || readonly) return;
-		if (v !== value) {
+		if (v !== (value ?? 0)) {
 			value = v;
 			onchange?.(v);
 		}
@@ -76,7 +76,12 @@
 	{#snippet children({ describedby, invalid })}
 		{#if label}<Label as="span" id="{uid}-label" text={label} required={required && !readonly} />{/if}
 		{#if readonly}
-			<span class="k-rating readonly" role="img" aria-label={label ? `${label}: ${text(current)}` : text(current)} aria-describedby={describedby}>
+			<span
+				class="k-rating readonly"
+				role="img"
+				aria-label={label ? `${label}: ${text(current)}` : text(current)}
+				aria-describedby={describedby}
+			>
 				{#each { length: count } as _, k (k)}
 					{@const f = fillOf(k + 1, current)}
 					<span class="star" aria-hidden="true">
@@ -100,16 +105,14 @@
 			>
 				{#each { length: count } as _, k (k)}
 					{@const n = k + 1}
-					<label class="star" class:on={n <= shown} onpointerenter={() => { if (!disabled) hover = n; }}>
-						<input
-							type="radio"
-							name={groupName}
-							value={n}
-							checked={n === current}
-							{disabled}
-							{required}
-							onchange={() => pick(n)}
-						/>
+					<label
+						class="star"
+						class:on={n <= shown}
+						onpointerenter={() => {
+							if (!disabled) hover = n;
+						}}
+					>
+						<input type="radio" name={groupName} value={n} checked={n === current} {disabled} {required} onchange={() => pick(n)} />
 						<span class="sr">{text(n)}</span>
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d={STAR} /></svg>
 					</label>
@@ -120,7 +123,14 @@
 </Field>
 
 <style>
-	.k-rating { display: flex; flex-wrap: wrap; align-items: center; gap: 0; width: fit-content; max-width: 100%; }
+	.k-rating {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0;
+		width: fit-content;
+		max-width: 100%;
+	}
 	.star {
 		position: relative;
 		display: grid;
@@ -131,10 +141,28 @@
 		color: var(--k-accent-text);
 		cursor: pointer;
 	}
-	.star svg { grid-area: 1 / 1; width: 28px; height: 28px; overflow: visible; }
-	.star path { fill: transparent; stroke: var(--k-border); stroke-width: 1.6; stroke-linejoin: round; transition: fill var(--k-dur) var(--k-ease), stroke var(--k-dur) var(--k-ease); }
-	.star.on path { fill: currentColor; stroke: currentColor; }
-	.k-rating:not(.readonly):not(.disabled) .star:hover:not(.on) path { stroke: var(--k-fg); }
+	.star svg {
+		grid-area: 1 / 1;
+		width: 28px;
+		height: 28px;
+		overflow: visible;
+	}
+	.star path {
+		fill: transparent;
+		stroke: var(--k-border);
+		stroke-width: 1.6;
+		stroke-linejoin: round;
+		transition:
+			fill var(--k-dur) var(--k-ease),
+			stroke var(--k-dur) var(--k-ease);
+	}
+	.star.on path {
+		fill: currentColor;
+		stroke: currentColor;
+	}
+	.k-rating:not(.readonly):not(.disabled) .star:hover:not(.on) path {
+		stroke: var(--k-fg);
+	}
 	.star input {
 		position: absolute;
 		inset: 0;
@@ -144,11 +172,39 @@
 		opacity: 0;
 		cursor: inherit;
 	}
-	.star:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	.disabled .star { cursor: not-allowed; opacity: 0.5; }
-	[aria-invalid='true'] .star:not(.on) path { stroke: var(--k-danger); }
-	.readonly .star { width: 28px; height: 28px; cursor: default; }
-	.readonly .star svg { width: 24px; height: 24px; }
-	.readonly .full path { fill: currentColor; stroke: currentColor; }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+	.star:has(input:focus-visible) {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	.disabled .star {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+	[aria-invalid='true'] .star:not(.on) path {
+		stroke: var(--k-danger);
+	}
+	.readonly .star {
+		width: 28px;
+		height: 28px;
+		cursor: default;
+	}
+	.readonly .star svg {
+		width: 24px;
+		height: 24px;
+	}
+	.readonly .full path {
+		fill: currentColor;
+		stroke: currentColor;
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+		border: 0;
+	}
 </style>

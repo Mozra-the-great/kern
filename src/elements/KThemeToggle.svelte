@@ -1,4 +1,16 @@
-<svelte:options customElement={{ props: { themes: { type: 'Array' }, value: { type: 'String', reflect: true }, target: { type: 'String' }, persist: { type: 'String' }, followSystem: { type: 'Boolean', attribute: 'follow-system' }, label: { type: 'String' } } }} />
+<svelte:options
+	customElement={{
+		props: {
+			themes: { type: 'Array' },
+			value: { type: 'String', reflect: true },
+			target: { type: 'String' },
+			persist: { type: 'String' },
+			followSystem: { type: 'Boolean', attribute: 'follow-system' },
+			label: { type: 'String' }
+		}
+	}}
+/>
+
 <script lang="ts">
 	/**
 	 * @prop themes {ThemeOption[]}
@@ -11,4 +23,5 @@
 	let { themes, value = $bindable(), target, persist, followSystem = false, label } = $props();
 	const host = $host();
 </script>
+
 <ThemeToggle {themes} bind:value {target} {persist} {followSystem} {label} onchange={(id: string) => emit(host, 'change', id)} />

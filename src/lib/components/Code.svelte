@@ -4,26 +4,26 @@
 
 	interface Props {
 		/** The code as text. Needed for line numbers and the copy button; `children` can replace it for plain content. */
-		code?: string;
+		code?: string | undefined;
 		/** `<pre><code>` box instead of inline `<code>`. */
-		block?: boolean;
+		block?: boolean | undefined;
 		/** Name of the language. Shown in the header and set as `language-…` class and `data-language` for outside highlighters. */
-		language?: string;
+		language?: string | undefined;
 		/** Block only, needs `code`. The numbers are not selectable and hidden from assistive technology. */
-		lineNumbers?: boolean;
+		lineNumbers?: boolean | undefined;
 		/** Number of the first line. */
-		startLine?: number;
+		startLine?: number | undefined;
 		/** Block only: shows a button that copies the code. */
-		copy?: boolean;
-		copyLabel?: string;
-		copiedLabel?: string;
-		copyErrorLabel?: string;
+		copy?: boolean | undefined;
+		copyLabel?: string | undefined;
+		copiedLabel?: string | undefined;
+		copyErrorLabel?: string | undefined;
 		/** Accessible name of the block when it can scroll. Defaults to "<language> code" or "Code". */
-		label?: string;
+		label?: string | undefined;
 		/** Called with the code after it was copied. */
-		oncopy?: (text: string) => void;
-		class?: string;
-		children?: Snippet;
+		oncopy?: ((text: string) => void) | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let {
 		code,
@@ -99,12 +99,16 @@
 		>
 			<div class="inner" bind:this={inner}>
 				{#if numbers}<span class="gutter" aria-hidden="true">{numbers}</span>{/if}
-				<pre><code bind:this={codeEl} class={langClass} data-language={language}>{#if text !== undefined}{text}{:else}{@render children?.()}{/if}</code></pre>
+				<pre><code bind:this={codeEl} class={langClass} data-language={language}
+						>{#if text !== undefined}{text}{:else}{@render children?.()}{/if}</code
+					></pre>
 			</div>
 		</div>
 	</div>
 {:else}
-	<code class="k-code inline {cls}" data-language={language}>{#if text !== undefined}{text}{:else}{@render children?.()}{/if}</code>
+	<code class="k-code inline {cls}" data-language={language}>
+		{#if text !== undefined}{text}{:else}{@render children?.()}{/if}
+	</code>
 {/if}
 
 <style>
@@ -163,13 +167,35 @@
 		letter-spacing: var(--k-label-tracking);
 		text-transform: var(--k-label-transform);
 	}
-	.head :global(.copy) { margin-inline-start: auto; }
+	.head :global(.copy) {
+		margin-inline-start: auto;
+	}
 
-	.scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
-	.scroll:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
-	.inner { display: flex; width: max-content; min-width: 100%; }
-	pre { flex: 1 0 auto; margin: 0; padding: var(--k-space-4); font: inherit; white-space: pre; tab-size: 2; }
-	code { font: inherit; }
+	.scroll {
+		overflow-x: auto;
+		overflow-y: hidden;
+		overscroll-behavior-x: contain;
+	}
+	.scroll:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
+	}
+	.inner {
+		display: flex;
+		width: max-content;
+		min-width: 100%;
+	}
+	pre {
+		flex: 1 0 auto;
+		margin: 0;
+		padding: var(--k-space-4);
+		font: inherit;
+		white-space: pre;
+		tab-size: 2;
+	}
+	code {
+		font: inherit;
+	}
 	.gutter {
 		position: sticky;
 		left: 0;
@@ -185,5 +211,7 @@
 		user-select: none;
 		-webkit-user-select: none;
 	}
-	.gutter + pre { padding-left: var(--k-space-4); }
+	.gutter + pre {
+		padding-left: var(--k-space-4);
+	}
 </style>

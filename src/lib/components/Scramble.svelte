@@ -5,16 +5,16 @@
 		/** The text that is revealed. It is also what assistive technology reads, never the random glyphs. */
 		text: string;
 		/** Milliseconds until the last character is resolved. */
-		duration?: number;
+		duration?: number | undefined;
 		/** Glyphs the unresolved characters cycle through. */
-		glyphs?: string;
+		glyphs?: string | undefined;
 		/** Milliseconds between glyph changes. */
-		interval?: number;
+		interval?: number | undefined;
 		/** Play again on pointer hover. */
-		hover?: boolean;
+		hover?: boolean | undefined;
 		/** Fires when the text is fully resolved. */
-		oncomplete?: () => void;
-		class?: string;
+		oncomplete?: (() => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		text,
@@ -98,13 +98,23 @@
 <span class="k-scramble {cls}" bind:this={host}>
 	<span class="sr">{text}</span>
 	<!-- Each character keeps the room of its real glyph, so the width never changes. -->
-	<span class="vis" aria-hidden="true">{#each chars as ch, i (i)}<span class="c"><span class="f" class:cover={cover[i] != null}>{ch}</span>{#if cover[i] != null}<span class="g">{cover[i]}</span>{/if}</span>{/each}</span>
+	<span class="vis" aria-hidden="true">
+		{#each chars as ch, i (i)}<span class="c">
+				<span class="f" class:cover={cover[i] != null}>{ch}</span>{#if cover[i] != null}<span class="g">{cover[i]}</span>{/if}
+			</span>{/each}
+	</span>
 </span>
 
 <style>
-	.k-scramble { display: inline; }
-	.c { position: relative; }
-	.f.cover { visibility: hidden; }
+	.k-scramble {
+		display: inline;
+	}
+	.c {
+		position: relative;
+	}
+	.f.cover {
+		visibility: hidden;
+	}
 	.g {
 		position: absolute;
 		top: 0;

@@ -5,41 +5,48 @@
 		id: string;
 		title: string;
 		/** ISO date or date-time (rendered as `<time>`), or free text. */
-		time?: string;
-		description?: string;
+		time?: string | undefined;
+		description?: string | undefined;
 		/** Default `done`. */
-		status?: TimelineStatus;
+		status?: TimelineStatus | undefined;
 	}
 </script>
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { dateFormat } from './data-utils.js';
+	import { dateFormat, withDefaults } from './data-utils.js';
 
 	interface Props {
 		items: TimelineItem[];
 		/** Accessible name of the list. */
-		label?: string;
+		label?: string | undefined;
 		/** Spoken status before each title. */
-		statusLabels?: Partial<Record<TimelineStatus, string>>;
+		statusLabels?: { [K in TimelineStatus]?: string | undefined } | undefined;
 		/** Locale of the dates. */
-		locale?: string;
+		locale?: string | undefined;
 		/** Custom body of an entry, replacing title, time and description. */
-		item?: Snippet<[{ item: TimelineItem; index: number }]>;
-		class?: string;
+		item?: Snippet<[{ item: TimelineItem; index: number }]> | undefined;
+		class?: string | undefined;
 	}
 	let { items, label, statusLabels, locale, item, class: cls = '' }: Props = $props();
 
-	const names = $derived<Record<TimelineStatus, string>>({
-		done: 'Done',
-		current: 'Current',
-		upcoming: 'Upcoming',
-		error: 'Failed',
-		...statusLabels
-	});
+	const names = $derived(
+		withDefaults<Record<TimelineStatus, string>>(
+			{
+				done: 'Done',
+				current: 'Current',
+				upcoming: 'Upcoming',
+				error: 'Failed'
+			},
+			statusLabels
+		)
+	);
 
 	const ISO = /^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/;
-	interface Stamp { text: string; iso: string | null }
+	interface Stamp {
+		text: string;
+		iso: string | null;
+	}
 	function stamp(t: string | undefined): Stamp | null {
 		if (!t) return null;
 		if (!ISO.test(t)) return { text: t, iso: null };
@@ -83,9 +90,23 @@
 </ol>
 
 <style>
-	.k-timeline { --size: 28px; margin: 0; padding: 0; list-style: none; color: var(--k-fg); }
-	li { position: relative; display: grid; grid-template-columns: var(--size) minmax(0, 1fr); gap: var(--k-space-4); padding-bottom: var(--k-space-6); }
-	li:last-child { padding-bottom: 0; }
+	.k-timeline {
+		--size: 28px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		color: var(--k-fg);
+	}
+	li {
+		position: relative;
+		display: grid;
+		grid-template-columns: var(--size) minmax(0, 1fr);
+		gap: var(--k-space-4);
+		padding-bottom: var(--k-space-6);
+	}
+	li:last-child {
+		padding-bottom: 0;
+	}
 	/* Connector to the next entry: solid after finished steps, dashed before open ones. */
 	li:not(:last-child)::before {
 		content: '';
@@ -96,10 +117,17 @@
 		width: 0;
 		border-left: 2px solid var(--k-line);
 	}
-	li[data-status='done']:not(:last-child)::before { border-left-color: var(--k-ok); }
+	li[data-status='done']:not(:last-child)::before {
+		border-left-color: var(--k-ok);
+	}
 	li[data-status='current']:not(:last-child)::before,
-	li[data-status='upcoming']:not(:last-child)::before { border-left-style: dashed; border-left-color: var(--k-border); }
-	li[data-status='error']:not(:last-child)::before { border-left-color: var(--k-danger); }
+	li[data-status='upcoming']:not(:last-child)::before {
+		border-left-style: dashed;
+		border-left-color: var(--k-border);
+	}
+	li[data-status='error']:not(:last-child)::before {
+		border-left-color: var(--k-danger);
+	}
 	.marker {
 		position: relative;
 		display: grid;
@@ -111,18 +139,74 @@
 		background: var(--k-bg-raised);
 		color: var(--c, var(--k-border));
 	}
-	.marker svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; }
-	.marker .fill { fill: currentColor; stroke: none; }
-	[data-status='done'] { --c: var(--k-ok); }
-	[data-status='current'] { --c: var(--k-accent-text); }
-	[data-status='error'] { --c: var(--k-danger); }
-	[data-status='upcoming'] { --c: var(--k-fg-muted); }
-	[data-status='upcoming'] .marker { border-style: dashed; }
-	[data-status='current'] .marker { box-shadow: 0 0 0 3px color-mix(in srgb, var(--k-accent) 28%, transparent); }
-	.body { display: grid; gap: var(--k-space-1); align-content: start; min-width: 0; padding-top: 2px; }
-	.title { margin: 0; font-weight: var(--k-weight-heading); line-height: 1.4; overflow-wrap: anywhere; }
-	[data-status='upcoming'] .title { color: var(--k-fg-muted); }
-	.time { color: var(--k-fg-muted); font-family: var(--k-font-mono); font-size: var(--k-text-xs); font-variant-numeric: tabular-nums; }
-	.desc { margin: 0; color: var(--k-fg-muted); font-size: var(--k-text-sm); line-height: 1.5; text-wrap: pretty; }
-	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+	.marker svg {
+		width: 16px;
+		height: 16px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: square;
+	}
+	.marker .fill {
+		fill: currentColor;
+		stroke: none;
+	}
+	[data-status='done'] {
+		--c: var(--k-ok);
+	}
+	[data-status='current'] {
+		--c: var(--k-accent-text);
+	}
+	[data-status='error'] {
+		--c: var(--k-danger);
+	}
+	[data-status='upcoming'] {
+		--c: var(--k-fg-muted);
+	}
+	[data-status='upcoming'] .marker {
+		border-style: dashed;
+	}
+	[data-status='current'] .marker {
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--k-accent) 28%, transparent);
+	}
+	.body {
+		display: grid;
+		gap: var(--k-space-1);
+		align-content: start;
+		min-width: 0;
+		padding-top: 2px;
+	}
+	.title {
+		margin: 0;
+		font-weight: var(--k-weight-heading);
+		line-height: 1.4;
+		overflow-wrap: anywhere;
+	}
+	[data-status='upcoming'] .title {
+		color: var(--k-fg-muted);
+	}
+	.time {
+		color: var(--k-fg-muted);
+		font-family: var(--k-font-mono);
+		font-size: var(--k-text-xs);
+		font-variant-numeric: tabular-nums;
+	}
+	.desc {
+		margin: 0;
+		color: var(--k-fg-muted);
+		font-size: var(--k-text-sm);
+		line-height: 1.5;
+		text-wrap: pretty;
+	}
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
 </style>

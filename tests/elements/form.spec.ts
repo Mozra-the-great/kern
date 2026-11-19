@@ -10,7 +10,18 @@ async function flags(page: Page, id: string): Promise<Flags> {
 	return page.evaluate((id) => {
 		const el = document.getElementById(id) as HTMLElement & { validity: ValidityState };
 		const out: Record<string, boolean> = {};
-		for (const k of ['valueMissing', 'typeMismatch', 'patternMismatch', 'tooLong', 'tooShort', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'badInput', 'customError'] as const) {
+		for (const k of [
+			'valueMissing',
+			'typeMismatch',
+			'patternMismatch',
+			'tooLong',
+			'tooShort',
+			'rangeUnderflow',
+			'rangeOverflow',
+			'stepMismatch',
+			'badInput',
+			'customError'
+		] as const) {
 			if (el.validity[k]) out[k] = true;
 		}
 		return out;
@@ -18,9 +29,12 @@ async function flags(page: Page, id: string): Promise<Flags> {
 }
 
 async function setProp(page: Page, id: string, prop: string, value: unknown) {
-	await page.evaluate(([id, prop, value]) => {
-		(document.getElementById(id as string) as unknown as Record<string, unknown>)[prop as string] = value;
-	}, [id, prop, value] as const);
+	await page.evaluate(
+		([id, prop, value]) => {
+			(document.getElementById(id as string) as unknown as Record<string, unknown>)[prop as string] = value;
+		},
+		[id, prop, value] as const
+	);
 }
 
 test.beforeEach(async ({ page }) => {
@@ -29,7 +43,12 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('native attributes are forwarded to the inner control', async ({ page }) => {
-	await page.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<k-input id="m3" maxlength="3" spellcheck="false" enterkeyhint="send" aria-label="Short"></k-input>'));
+	await page.evaluate(() =>
+		document.body.insertAdjacentHTML(
+			'beforeend',
+			'<k-input id="m3" maxlength="3" spellcheck="false" enterkeyhint="send" aria-label="Short"></k-input>'
+		)
+	);
 	const inner = page.locator('#m3 input');
 	await inner.pressSequentially('abcd');
 	await expect(inner).toHaveValue('abc');
@@ -43,9 +62,9 @@ test('native attributes are forwarded to the inner control', async ({ page }) =>
 	await expect(page.locator('#bio textarea')).toHaveAttribute('maxlength', '5');
 
 	// Attribute changes after upgrade follow, removal removes.
-	await page.evaluate(() => document.getElementById('m3')!.setAttribute('maxlength', '5'));
+	await page.evaluate(() => document.getElementById('m3')?.setAttribute('maxlength', '5'));
 	await expect(inner).toHaveAttribute('maxlength', '5');
-	await page.evaluate(() => document.getElementById('m3')!.removeAttribute('maxlength'));
+	await page.evaluate(() => document.getElementById('m3')?.removeAttribute('maxlength'));
 	await expect(inner).not.toHaveAttribute('maxlength');
 });
 
@@ -64,7 +83,9 @@ test('constraint validation reflects into ElementInternals', async ({ page }) =>
 
 	await page.locator('#user input').pressSequentially('AB');
 	expect(await flags(page, 'user')).toEqual({ patternMismatch: true, tooShort: true });
-	expect(await page.evaluate(() => (document.getElementById('user') as HTMLElement & { validationMessage: string }).validationMessage)).not.toBe('');
+	expect(
+		await page.evaluate(() => (document.getElementById('user') as HTMLElement & { validationMessage: string }).validationMessage)
+	).not.toBe('');
 
 	await setProp(page, 'age', 'value', '5');
 	expect(await flags(page, 'age')).toEqual({ rangeUnderflow: true });
@@ -86,10 +107,16 @@ test('constraint validation reflects into ElementInternals', async ({ page }) =>
 	await setProp(page, 'pin', 'value', '12');
 	expect(await flags(page, 'pin')).toEqual({ patternMismatch: true });
 
-	await page.evaluate(() => (document.getElementById('color') as HTMLElement & { setCustomValidity(m: string): void }).setCustomValidity('Pick a brand colour'));
+	await page.evaluate(() =>
+		(document.getElementById('color') as HTMLElement & { setCustomValidity(m: string): void }).setCustomValidity('Pick a brand colour')
+	);
 	expect(await flags(page, 'color')).toEqual({ customError: true });
-	expect(await page.evaluate(() => (document.getElementById('color') as HTMLElement & { validationMessage: string }).validationMessage)).toBe('Pick a brand colour');
-	await page.evaluate(() => (document.getElementById('color') as HTMLElement & { setCustomValidity(m: string): void }).setCustomValidity(''));
+	expect(
+		await page.evaluate(() => (document.getElementById('color') as HTMLElement & { validationMessage: string }).validationMessage)
+	).toBe('Pick a brand colour');
+	await page.evaluate(() =>
+		(document.getElementById('color') as HTMLElement & { setCustomValidity(m: string): void }).setCustomValidity('')
+	);
 	expect(await flags(page, 'color')).toEqual({});
 
 	// reportValidity() focuses the inner control (the anchor).
@@ -159,7 +186,9 @@ test('a form of kern elements submits all values', async ({ page }) => {
 	// form.reset() restores the initial values through formResetCallback.
 	await page.evaluate(() => (document.getElementById('f') as HTMLFormElement).reset());
 	await expect
-		.poll(() => page.evaluate(() => [...new FormData(document.getElementById('f') as HTMLFormElement).entries()].map(([k, v]) => `${k}=${String(v)}`)))
+		.poll(() =>
+			page.evaluate(() => [...new FormData(document.getElementById('f') as HTMLFormElement).entries()].map(([k, v]) => `${k}=${String(v)}`))
+		)
 		.toEqual(['user=', 'age=', 'bio=', 'size=', 'day=', 'vol=40', 'city=', 'pin=', 'view=grid', 'outside=far']);
 });
 
