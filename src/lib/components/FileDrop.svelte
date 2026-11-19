@@ -232,7 +232,7 @@
 		width: 100%;
 		min-height: 140px;
 		padding: var(--k-space-6) var(--k-space-4);
-		border: var(--k-border-w) dashed var(--k-border);
+		border: var(--k-border-w) dashed var(--k-line-dashed);
 		border-radius: var(--k-radius-card);
 		background: var(--k-bg-sunken);
 		color: var(--k-fg);
@@ -247,8 +247,8 @@
 	.zone:disabled { opacity: 0.55; cursor: not-allowed; }
 	.zone.invalid { border-color: var(--k-danger); }
 	/* dragging: solid line and inset ring on top of the colour change */
-	.zone.dragging { border-style: solid; border-color: var(--k-accent); background: var(--k-selected); box-shadow: inset 0 0 0 var(--k-border-w) var(--k-accent); }
-	.icon { width: 28px; height: 28px; color: var(--k-fg-muted); transition: transform var(--k-dur) var(--k-ease); }
+	.zone.dragging { border-style: solid; border-color: var(--k-accent-mark); background: var(--k-surface-selected); box-shadow: inset 0 0 0 var(--k-border-w) var(--k-accent-mark); }
+	.icon { width: 28px; height: 28px; color: var(--k-fg-hint); transition: transform var(--k-dur) var(--k-ease); }
 	.dragging .icon { transform: translateY(-4px); color: var(--k-accent-text); }
 	.prompt { font-family: var(--k-label-font); font-size: var(--k-label-size); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); overflow-wrap: anywhere; }
 	/* The real input is invisible and stays under the zone, so native validation bubbles point at it. */

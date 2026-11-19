@@ -22,7 +22,7 @@
 </div>
 
 <style>
-	.k-switch { display: flex; gap: var(--k-space-3); align-items: flex-start; }
+	.k-switch { position: relative; display: flex; gap: var(--k-space-3); align-items: flex-start; padding-block: calc(max(0px, var(--k-tap-target) - 26px) / 2); }
 	.labelFirst { flex-direction: row-reverse; justify-content: space-between; }
 	input {
 		appearance: none;
@@ -54,5 +54,7 @@
 	input:disabled { opacity: 0.5; cursor: not-allowed; }
 	.text { display: grid; gap: 2px; padding-top: 1px; }
 	label { cursor: pointer; }
+	/* The whole row, padded to the tap target, toggles the control through its label. */
+	label::after { content: ''; position: absolute; inset: 0; }
 	.hint { font-size: var(--k-text-sm); color: var(--k-fg-muted); }
 </style>

@@ -105,9 +105,13 @@ test('a form of kern elements submits all values', async ({ page }) => {
 	await page.locator('#user input').fill('moritz');
 	await page.locator('#bio textarea').pressSequentially('hello world');
 	await page.locator('#size select').selectOption('l');
-	await page.locator('#terms input').check();
-	await page.locator('#news input').check();
-	await page.locator('#plan input[value="pro"]').check();
+	// Rows toggle through their label (it covers the row for the 44px touch target).
+	await page.locator('#terms').getByText('Terms').click();
+	await page.locator('#news').getByText('News').click();
+	await page.locator('#plan').getByText('Pro').click();
+	await expect(page.locator('#terms input')).toBeChecked();
+	await expect(page.locator('#news input')).toBeChecked();
+	await expect(page.locator('#plan input[value="pro"]')).toBeChecked();
 	await page.locator('#qty input[role="spinbutton"]').fill('3');
 	await page.locator('#qty input[role="spinbutton"]').press('Tab');
 	await setProp(page, 'day', 'value', '2026-03-04');

@@ -70,6 +70,14 @@
 	--k-control-h: 44px;
 	--k-control-h-sm: 34px;
 	--k-control-h-lg: 52px;
+	/* Touch targets (WCAG 2.5.5/2.5.8). Every interactive part is at least
+	 * --k-tap-target tall and wide, visually or through an invisible hit area.
+	 * --k-tap-target is 0 on fine pointers and --k-tap-min on coarse ones (see
+	 * below); a theme whose design asks for 44px targets for the mouse as well
+	 * sets --k-tap-target: var(--k-tap-min). Icon-only buttons use --k-tap-icon. */
+	--k-tap-min: 44px;
+	--k-tap-icon: 44px;
+	--k-tap-target: 0px;
 
 	/* space */
 	--k-space-1: 4px;
@@ -81,12 +89,55 @@
 	--k-space-7: 32px;
 	--k-space-8: 40px;
 	--k-space-9: 56px;
+	/* half steps between the scale above (10, 14 and 28px) */
+	--k-space-2-5: 10px;
+	--k-space-3-5: 14px;
+	--k-space-6-5: 28px;
 
 	/* focus and motion */
 	--k-focus-w: 2px;
 	--k-focus-offset: 2px;
 	--k-dur: 120ms;
 	--k-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Derived tokens. They default to another token, so a theme only sets them where
+ * its design differs. Declared on [data-theme] as well as :root so the reference
+ * resolves against the theme of the nearest data-theme box, not the page root. */
+:root,
+[data-theme] {
+	/* non-text accent: progress and slider fill, current-tab and nav markers,
+	 * selected and focused borders. Must reach 3:1 on bg, bg-raised and bg-sunken;
+	 * --k-accent stays the fill behind --k-on-accent text. */
+	--k-accent-mark: var(--k-accent);
+	/* edge of floating and framed surfaces: Card, Modal, Drawer, Toast, Popover */
+	--k-line-strong: var(--k-line);
+	/* dashed edge of drop zones */
+	--k-line-dashed: var(--k-border);
+	/* background of a whole state region (Alert, Toast, drop zone while dragging,
+	 * selected item); the -soft tokens stay the tint behind small coloured text */
+	--k-surface-info: var(--k-info-soft);
+	--k-surface-ok: var(--k-ok-soft);
+	--k-surface-warn: var(--k-warn-soft);
+	--k-surface-danger: var(--k-danger-soft);
+	--k-surface-selected: var(--k-selected);
+	/* code blocks and logs (Code); inline code stays on bg-sunken */
+	--k-bg-code: var(--k-bg-raised);
+	--k-fg-code: var(--k-fg);
+	/* hints under fields and in drop zones; long running copy; disabled items */
+	--k-fg-hint: var(--k-fg-muted);
+	--k-fg-soft: var(--k-fg);
+	--k-fg-disabled: color-mix(in srgb, var(--k-fg) 45%, transparent);
+	/* small floating pieces (Toast); --k-shadow-overlay is for dialogs and popovers */
+	--k-shadow-sm: var(--k-shadow-overlay);
+}
+
+/* Coarse pointers (touch) always get 44px targets. */
+@media (pointer: coarse) {
+	:root,
+	[data-theme] {
+		--k-tap-target: var(--k-tap-min);
+	}
 }
 
 [data-theme] {

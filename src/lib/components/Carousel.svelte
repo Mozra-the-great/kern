@@ -311,8 +311,8 @@
 	.tab {
 		display: inline-grid;
 		place-items: center;
-		width: 40px;
-		height: 40px;
+		width: max(40px, var(--k-tap-target));
+		height: max(40px, var(--k-tap-target));
 		padding: 0;
 		border: 0;
 		border-radius: var(--k-radius-control);

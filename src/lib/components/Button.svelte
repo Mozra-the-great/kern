@@ -51,10 +51,12 @@
 <style>
 	.k-button {
 		display: inline-flex;
+		box-sizing: border-box;
 		align-items: center;
 		justify-content: center;
 		gap: var(--k-space-2);
 		min-height: var(--k-control-h);
+		min-width: var(--k-tap-target);
 		padding: 0 var(--k-space-5);
 		border: var(--k-border-w) solid transparent;
 		border-radius: var(--k-radius-control);
@@ -82,7 +84,7 @@
 	.k-button:disabled { cursor: not-allowed; opacity: 0.5; }
 	.block { display: flex; width: 100%; }
 
-	[data-size='sm'] { min-height: var(--k-control-h-sm); padding: 0 var(--k-space-3); }
+	[data-size='sm'] { min-height: max(var(--k-control-h-sm), var(--k-tap-target)); padding: 0 var(--k-space-3); }
 	[data-size='lg'] { min-height: var(--k-control-h-lg); padding: 0 var(--k-space-7); }
 
 	[data-variant='primary'] { background: var(--k-primary); color: var(--k-on-primary); }

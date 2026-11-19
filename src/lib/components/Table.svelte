@@ -84,7 +84,8 @@
 	caption { padding: var(--k-space-4); text-align: left; font-weight: var(--k-weight-heading); }
 	.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 	th { padding: var(--k-space-3) var(--k-space-4); background: var(--k-bg-sunken); color: var(--k-fg-muted); text-align: left; font-family: var(--k-label-font); font-size: var(--k-text-xs); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); white-space: nowrap; border-bottom: var(--k-border-w) solid var(--k-line); }
-	th button { display: inline-flex; align-items: center; gap: var(--k-space-1); padding: 0; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+	th button { position: relative; display: inline-flex; align-items: center; gap: var(--k-space-1); padding: 0; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+	th button::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
 	th button:hover { color: var(--k-fg); }
 	th button:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 2px; }
 	th svg { width: 12px; height: 12px; opacity: 0.35; transition: transform var(--k-dur) var(--k-ease); }

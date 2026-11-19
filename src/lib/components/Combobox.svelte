@@ -328,13 +328,14 @@
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
 	.k-combobox:hover { border-color: var(--k-fg-muted); }
-	.k-combobox:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.k-combobox:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.invalid { border-color: var(--k-danger); }
 	.disabled { opacity: 0.55; }
 	input {
 		flex: 1;
 		min-width: 0;
-		min-height: calc(var(--k-control-h) - 2 * var(--k-border-w));
+		min-height: var(--k-control-h);
+		margin-block: calc(var(--k-border-w) * -1);
 		padding: 0;
 		border: 0;
 		outline: 0;
@@ -346,6 +347,7 @@
 	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
 	input:disabled { cursor: not-allowed; }
 	.toggle {
+		position: relative;
 		flex: none;
 		display: grid;
 		place-items: center;
@@ -358,6 +360,7 @@
 		color: var(--k-fg-muted);
 		cursor: pointer;
 	}
+	.toggle::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
 	.toggle:hover:not(:disabled) { color: var(--k-fg); background: var(--k-bg-sunken); }
 	.toggle:disabled { cursor: not-allowed; }
 	.toggle svg { width: 16px; height: 16px; transition: transform var(--k-dur) var(--k-ease); }
@@ -370,7 +373,7 @@
 		flex-direction: column;
 		max-height: min(320px, var(--avail-h, 320px));
 		padding: var(--k-space-1);
-		border: var(--k-border-w) solid var(--k-line);
+		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: min(var(--k-radius-overlay), 16px);
 		background: var(--k-bg-raised);
 		color: var(--k-fg);
@@ -385,7 +388,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: var(--k-space-3);
-		min-height: 40px;
+		min-height: max(40px, var(--k-tap-target));
 		padding: var(--k-space-2) var(--k-space-3);
 		box-sizing: border-box;
 		border-radius: min(var(--k-radius-control), 10px);
@@ -397,10 +400,9 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: calc(var(--k-focus-w) * -1);
 	}
-	[role='option'][aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+	[role='option'][aria-disabled='true'] { color: var(--k-fg-disabled); cursor: not-allowed; }
 	.check { flex: none; width: 16px; height: 16px; color: var(--k-accent-text); }
 	.empty { margin: 0; padding: var(--k-space-2) var(--k-space-3); color: var(--k-fg-muted); font-size: var(--k-text-sm); }
 	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
-	@media (pointer: coarse) { [role='option'] { min-height: 44px; } }
 </style>

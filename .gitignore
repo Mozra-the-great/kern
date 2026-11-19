@@ -51,6 +51,6 @@ __pycache__/
 .venv-lint/
 .ruff_cache/
 
-# Playwright (element tests)
+# Playwright output
 test-results/
 playwright-report/

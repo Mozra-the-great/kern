@@ -93,14 +93,14 @@
 		height: var(--track);
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: var(--k-radius-badge);
-		background: linear-gradient(to right, var(--k-accent) var(--fill), var(--k-bg-sunken) var(--fill));
+		background: linear-gradient(to right, var(--k-accent-mark) var(--fill), var(--k-bg-sunken) var(--fill));
 	}
 	input::-moz-range-track {
 		box-sizing: border-box;
 		height: var(--track);
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: var(--k-radius-badge);
-		background: linear-gradient(to right, var(--k-accent) var(--fill), var(--k-bg-sunken) var(--fill));
+		background: linear-gradient(to right, var(--k-accent-mark) var(--fill), var(--k-bg-sunken) var(--fill));
 	}
 	input::-webkit-slider-thumb {
 		-webkit-appearance: none;

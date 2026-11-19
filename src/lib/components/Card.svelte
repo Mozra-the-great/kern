@@ -43,7 +43,7 @@
 		flex-direction: column;
 		gap: var(--k-space-4);
 		padding: var(--k-space-6);
-		border: var(--k-border-w) solid var(--k-line);
+		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: var(--k-radius-card);
 		background: var(--k-bg-raised);
 		color: var(--k-fg);
@@ -61,7 +61,7 @@
 	.title a:focus-visible { outline: none; }
 	.linked:has(a:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
 	.linked { transition: border-color var(--k-dur) var(--k-ease), transform var(--k-dur) var(--k-ease); }
-	.linked:hover { border-color: var(--k-accent); }
+	.linked:hover { border-color: var(--k-accent-mark); }
 	.desc { margin: 0; color: var(--k-fg-muted); font-size: var(--k-text-sm); }
 	.body { display: grid; gap: var(--k-space-3); }
 	footer { display: flex; flex-wrap: wrap; gap: var(--k-space-3); margin-top: auto; position: relative; z-index: 1; }

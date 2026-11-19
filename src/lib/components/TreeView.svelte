@@ -236,7 +236,7 @@
 		display: flex;
 		align-items: center;
 		gap: var(--k-space-1);
-		min-height: 40px;
+		min-height: max(40px, var(--k-tap-target));
 		padding: 0 var(--k-space-3) 0 calc((var(--level) - 1) * var(--k-space-6));
 		box-sizing: border-box;
 		border-radius: min(var(--k-radius-control), 10px);
@@ -247,15 +247,15 @@
 	}
 	.row:hover { background: var(--k-bg-sunken); }
 	.row.selected {
-		background: var(--k-selected);
-		box-shadow: inset 3px 0 0 var(--k-accent);
+		background: var(--k-surface-selected);
+		box-shadow: inset 3px 0 0 var(--k-accent-mark);
 		font-weight: var(--k-weight-heading);
 	}
 	li:focus-visible > .row { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
 	li[aria-disabled='true'] > .row { opacity: 0.45; cursor: not-allowed; }
-	.twisty { flex: none; display: grid; place-items: center; width: 32px; height: 40px; color: var(--k-fg-muted); }
+	.twisty { flex: none; display: grid; place-items: center; width: 32px; height: max(40px, var(--k-tap-target)); color: var(--k-fg-muted); }
 	.twisty svg { width: 14px; height: 14px; transition: transform var(--k-dur) var(--k-ease); }
 	li[aria-expanded='true'] > .row .twisty svg { transform: rotate(90deg); }
 	.text { flex: 1; min-width: 0; padding: var(--k-space-2) 0; overflow-wrap: anywhere; }
-	@media (pointer: coarse) { .row { min-height: 44px; } .twisty { width: 40px; height: 44px; } }
+	@media (pointer: coarse) { .twisty { width: 40px; } }
 </style>

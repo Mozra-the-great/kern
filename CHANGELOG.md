@@ -24,6 +24,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Per-brand theme entries `@mozra-the-great/kern/themes/stuffcloud.css`, `…/flower.css`,
+  `…/pop.css`: base tokens plus one brand, so a consumer build ships only its brand
+  (`themes.css` keeps all of them). Theme rules moved to `themes/brands/<brand>.css`; the old
+  two-line import (`themes/base.css` + `themes/stuffcloud.css`) still works.
+- `npm test` (Vitest): a contrast test that reads the theme CSS and checks text pairs (4.5:1)
+  and borders, focus and accent marks (3:1) for every `data-theme` variant, and a test that
+  builds each brand entry with Vite and fails when another brand's selectors or colours are in it.
+- `npm run test:targets` (Playwright): measures every interactive element of the demo at 375px
+  with a coarse pointer (and at 1280px for Stuffcloud and Pop) and fails below 44px.
+- Tokens: `--k-accent-mark`, `--k-line-strong`, `--k-line-dashed`,
+  `--k-surface-info|ok|warn|danger|selected`, `--k-bg-code`, `--k-fg-code`, `--k-fg-hint`,
+  `--k-fg-soft`, `--k-fg-disabled`, `--k-shadow-sm`, `--k-space-2-5|3-5|6-5` (10/14/28px),
+  `--k-tap-min` (44px), `--k-tap-icon`, `--k-tap-target` (0 for the mouse, 44px on touch).
+  Mapping of every stuffcloud variable in `docs/themes.md`.
 - Custom elements forward native attributes to their inner control (#31): `k-input`
   (`maxlength`, `minlength`, `pattern`, `readonly`, `min`, `max`, `step`, `size`, `multiple`,
   `autocapitalize`, `spellcheck`, `enterkeyhint`, `title`, `aria-label`, `aria-description`),
@@ -52,6 +66,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `scripts/ci/size-baseline.json` fails).
 
 ### Changed
+- Every interactive part is at least `--k-tap-target`: on touch 44px (small buttons, icon
+  buttons, pagination, breadcrumb, carousel dots, rating, menu items and options, tabs, field
+  buttons, table sort headers through an invisible hit area, dismiss/remove buttons of Alert,
+  Toast and Tag through an invisible hit area). Checkbox, Radio and Switch rows are padded to
+  the target and the whole row toggles the control. Several components replace their own
+  `pointer: coarse` rules with the token.
+- Button, IconButton, Input, Select, DropdownMenu/Popover triggers, Pagination and the Marquee
+  pause button use `box-sizing: border-box`: their height is now exactly `--k-control-h`
+  (before, the border added 2–3px).
+- IconButton and CopyButton are `--k-tap-icon` square (base 44px, unchanged for Flower).
+  Dialog and Drawer close buttons are `--k-tap-icon` (were 36px).
+- Progress, Slider, Tabs marker, Navbar/TreeView/DataTable markers, Stepper, Breadcrumb current,
+  selected Tag and Card hover border, and the focused border of fields use `--k-accent-mark`.
+- Card, Modal, Drawer, Toast, Popover and menus draw their edge with `--k-line-strong`; Alert
+  backgrounds use `--k-surface-*`; warning and danger Toasts get their surface tint; Toast uses
+  `--k-shadow-sm`; FileDrop uses `--k-line-dashed`, `--k-surface-selected` and `--k-fg-hint`;
+  Field hints use `--k-fg-hint`; Code blocks use `--k-bg-code`/`--k-fg-code`; disabled menu items
+  and options use `--k-fg-disabled` instead of opacity.
+- Theme values that change a theme's look:
+  - Stuffcloud (all variants): `--k-control-h` 44 → 52px (56px below 760px),
+    `--k-control-h-sm` 34 → 44px, `--k-control-h-lg` 52 → 56px, `--k-tap-icon` 48px,
+    44px targets for the mouse as well, `--k-shadow-sm` `4px 4px 0 rgba(0,0,0,.4)`.
+  - Stuffcloud dark: `--k-line-strong` `#3a3a42` (cards were `#26262b`), `--k-surface-danger`
+    `#2a0f1a`, `--k-surface-warn` `#2a200a`, `--k-surface-selected` `#1a1220` (were `#17171a`),
+    `--k-fg-hint` `#c7c7cf` (was `#a2a2ab`), `--k-fg-code` `#e8e8ee`, `--k-fg-soft` `#d8d8de`,
+    `--k-fg-disabled` `#6a6a74`, `--k-line-dashed` `#6b5a8f` (was `#6e6e78`); code blocks on
+    surface-code `#0c0c0e` (were `#17171a`). Light/paper: `--k-line-strong` `#bdbbc3` / `#b5b5b5`,
+    code blocks on `#f1f0ee` / `#f4f3f1`.
+  - Pop: `--k-tap-icon` 48px (icon buttons were 56px), 44px targets for the mouse as well.
+  - Pop light: `--k-accent-mark` `#0e9413` (marks were `#10a916`, 2.8:1 → 3.6:1 on bg, 2.5 → 3.1:1
+    on the track); `--k-danger-soft` `#ffe3ee` → `#ffe5ef` (danger text on it 4.46 → 4.52:1).
+  - Flower creme: `--k-accent-mark` `#d06557` (marks were `#d77b6f`, 2.66 → 3.25:1 on bg, 2.49 →
+    3.05:1 on the track). Flower wald: `--k-accent-mark` `#dd887a` (2.82 → 3.19:1 on raised),
+    `--k-warn` `#e1ad57` → `#e4b76a` (4.18 → 4.57:1 on raised).
 - **BREAKING:** form elements now take part in constraint validation like native fields. A form
   with an empty `<k-input required>` (or a `pattern`/`min`/`max` mismatch, an empty required
   `k-checkbox`, `k-select`, `k-combobox`, `k-tag-input` …, or a half-filled `k-pin-input`) no

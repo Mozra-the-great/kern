@@ -268,7 +268,7 @@
 	.copy {
 		margin-inline-start: auto;
 		flex: none;
-		min-height: 28px;
+		min-height: max(28px, var(--k-tap-target));
 		padding: 0 var(--k-space-3);
 		border: 1px solid var(--t-edge);
 		border-radius: min(var(--k-radius-control), 14px);

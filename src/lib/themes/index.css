@@ -1,5 +1,8 @@
+/* Every theme, for the demo and for pages that switch brands at runtime.
+ * A consumer that ships one brand imports its own entry instead
+ * (themes/stuffcloud.css, themes/flower.css, themes/pop.css). */
 @import './base.css';
-@import './stuffcloud.css';
-@import './flower.css';
-@import './pop.css';
+@import './brands/stuffcloud.css';
+@import './brands/flower.css';
+@import './brands/pop.css';
 /* The Kagi-based theme is added when its design is ready. */

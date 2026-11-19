@@ -102,11 +102,12 @@
 	li { display: inline-flex; }
 	.btn {
 		display: inline-flex;
+		box-sizing: border-box;
 		align-items: center;
 		justify-content: center;
 		gap: var(--k-space-2);
-		min-width: 40px;
-		min-height: 40px;
+		min-width: max(40px, var(--k-tap-target));
+		min-height: max(40px, var(--k-tap-target));
 		padding: 0 var(--k-space-3);
 		border: var(--k-border-w) solid transparent;
 		border-radius: var(--k-radius-control);

@@ -49,6 +49,7 @@
 <style>
 	.k-input {
 		display: flex;
+		box-sizing: border-box;
 		align-items: center;
 		gap: var(--k-space-2);
 		min-height: var(--k-control-h);
@@ -60,13 +61,14 @@
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
 	.k-input:hover { border-color: var(--k-fg-muted); }
-	.k-input:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.k-input:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.invalid { border-color: var(--k-danger); }
 	input {
 		flex: 1;
 		min-width: 0;
 		height: 100%;
-		min-height: calc(var(--k-control-h) - 2 * var(--k-border-w));
+		min-height: var(--k-control-h);
+		margin-block: calc(var(--k-border-w) * -1);
 		padding: 0;
 		border: 0;
 		outline: 0;

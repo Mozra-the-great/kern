@@ -55,9 +55,9 @@
 		font-family: var(--k-font-sans);
 	}
 	.k-drawer::backdrop { background: var(--k-backdrop); }
-	[data-side='right'] { inset: 0 0 0 auto; width: min(420px, 100vw); height: 100dvh; border-left: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-overlay) 0 0 var(--k-radius-overlay); }
-	[data-side='left'] { inset: 0 auto 0 0; width: min(420px, 100vw); height: 100dvh; border-right: var(--k-border-w) solid var(--k-line); border-radius: 0 var(--k-radius-overlay) var(--k-radius-overlay) 0; }
-	[data-side='bottom'] { inset: auto 0 0 0; width: 100vw; max-height: 85dvh; border-top: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-overlay) var(--k-radius-overlay) 0 0; }
+	[data-side='right'] { inset: 0 0 0 auto; width: min(420px, 100vw); height: 100dvh; border-left: var(--k-border-w) solid var(--k-line-strong); border-radius: var(--k-radius-overlay) 0 0 var(--k-radius-overlay); }
+	[data-side='left'] { inset: 0 auto 0 0; width: min(420px, 100vw); height: 100dvh; border-right: var(--k-border-w) solid var(--k-line-strong); border-radius: 0 var(--k-radius-overlay) var(--k-radius-overlay) 0; }
+	[data-side='bottom'] { inset: auto 0 0 0; width: 100vw; max-height: 85dvh; border-top: var(--k-border-w) solid var(--k-line-strong); border-radius: var(--k-radius-overlay) var(--k-radius-overlay) 0 0; }
 	[data-side='right'][open] { animation: k-from-right 200ms var(--k-ease); }
 	[data-side='left'][open] { animation: k-from-left 200ms var(--k-ease); }
 	[data-side='bottom'][open] { animation: k-from-bottom 200ms var(--k-ease); }
@@ -66,7 +66,7 @@
 	h2 { margin: 0; font-size: var(--k-text-lg); font-weight: var(--k-weight-heading); }
 	.body { flex: 1; overflow: auto; padding: var(--k-space-6); }
 	footer { display: flex; gap: var(--k-space-3); justify-content: flex-end; padding: var(--k-space-4) var(--k-space-6); border-top: var(--k-border-w) solid var(--k-line); }
-	.x { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: var(--k-radius-control); background: transparent; color: var(--k-fg-muted); cursor: pointer; }
+	.x { display: grid; place-items: center; width: var(--k-tap-icon); height: var(--k-tap-icon); margin: calc(18px - var(--k-tap-icon) / 2); padding: 0; border: 0; border-radius: var(--k-radius-control); background: transparent; color: var(--k-fg-muted); cursor: pointer; }
 	.x:hover { color: var(--k-fg); background: var(--k-bg-sunken); }
 	.x:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 0; }
 	.x svg { width: 16px; height: 16px; }

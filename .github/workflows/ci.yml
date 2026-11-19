@@ -56,6 +56,8 @@ jobs:
       - name: Build
         # svelte-package (dist/), custom elements (dist-elements/ + typings), demo (demo-dist/)
         run: npm run build
+      - name: Unit tests (theme contrast, brand entries)
+        run: npm test
       - name: Custom Elements Manifest is up to date
         # The build regenerates custom-elements.json from src/elements; commit the result.
         run: git diff --exit-code custom-elements.json
@@ -63,8 +65,10 @@ jobs:
         run: npm run test:types
       - name: Size budget (custom elements)
         run: npm run size
-      - name: Install Chromium for element tests
+      - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
+      - name: Touch targets (Playwright, built demo)
+        run: npm run test:targets
       - name: Element tests (Playwright, built dist-elements/)
         run: npm run test:elements
 
@@ -81,6 +85,8 @@ jobs:
         run: npm run check
       - name: Build (Node 24)
         run: npm run build
+      - name: Unit tests (Node 24)
+        run: npm test
 
       # ── Svelte range: lowest supported and newest 5.x ─────────────────────────
       # peerDependencies.svelte is the lowest version the components compile on

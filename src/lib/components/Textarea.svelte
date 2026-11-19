@@ -47,7 +47,7 @@
 		resize: vertical;
 	}
 	.k-textarea:hover { border-color: var(--k-fg-muted); }
-	.k-textarea:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.k-textarea:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.k-textarea::placeholder { color: var(--k-fg-muted); opacity: 1; }
 	.invalid { border-color: var(--k-danger); }
 	.autosize { field-sizing: content; min-height: calc(var(--k-control-h) * 2); }

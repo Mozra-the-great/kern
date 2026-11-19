@@ -49,7 +49,7 @@
 		color: var(--k-fg);
 	}
 	.req { color: var(--k-danger); }
-	.desc { margin: 0; font-size: var(--k-text-sm); color: var(--k-fg-muted); line-height: 1.4; }
+	.desc { margin: 0; font-size: var(--k-text-sm); color: var(--k-fg-hint); line-height: 1.4; }
 	.error { display: flex; gap: var(--k-space-2); align-items: flex-start; color: var(--k-danger); }
 	.error svg { flex: none; width: 16px; height: 16px; margin-top: 1px; }
 </style>

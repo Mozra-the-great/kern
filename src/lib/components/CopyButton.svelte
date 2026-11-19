@@ -139,8 +139,11 @@
 	.btn {
 		display: inline-grid;
 		place-items: center;
-		width: var(--k-control-h);
-		height: var(--k-control-h);
+		box-sizing: border-box;
+		width: var(--k-tap-icon);
+		height: var(--k-tap-icon);
+		min-width: var(--k-tap-target);
+		min-height: var(--k-tap-target);
 		padding: 0;
 		border: var(--k-border-w) solid transparent;
 		border-radius: var(--k-radius-control);
@@ -150,9 +153,6 @@
 		transition: background-color var(--k-dur) var(--k-ease), color var(--k-dur) var(--k-ease), border-color var(--k-dur) var(--k-ease);
 	}
 	.btn[data-size='sm'] { width: max(var(--k-control-h-sm), 40px); height: max(var(--k-control-h-sm), 40px); }
-	@media (pointer: coarse) {
-		.btn { min-width: 44px; min-height: 44px; }
-	}
 	.btn[data-variant='secondary'] { border-color: var(--k-border); }
 	.btn:hover:not(:disabled) { background: var(--k-bg-sunken); }
 	.btn:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
