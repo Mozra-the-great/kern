@@ -370,4 +370,30 @@
 		width: 16px;
 		height: 16px;
 	}
+	@media (forced-colors: active) {
+		.k-number:focus-within {
+			border-color: Highlight;
+		}
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.step {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+		.step:disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		input::placeholder {
+			color: GrayText;
+		}
+	}
 </style>

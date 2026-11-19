@@ -55,6 +55,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   console error or warning. They run in `npm run test:elements` (which builds the app first, `npm run build:react-app`);
   `npm run test:types` also type-checks the app. New devDependencies: `react`, `react-dom`, `@types/react-dom`.
 - README: "React 19" section with a tested example and the rules for properties, attributes, events and forms.
+- Forced colors (Windows high contrast) in every component (#27): under `@media (forced-colors: active)` each
+  control keeps a visible edge (border or outline in `ButtonText`/`CanvasText`), the focus ring is `Highlight`,
+  selected, current, checked, pressed, open and invalid states differ in more than colour (inverted
+  `Highlight`/`HighlightText`, a shape, a heavier or double edge), disabled parts are `GrayText` at full opacity,
+  SVG icons take a system colour, and fills drawn only by `background` or `box-shadow` (Switch, Radio, Slider,
+  Progress ring, Heatmap, HistoryBar, Stepper, Timeline, TreeView and DataTable selection, Carousel dots,
+  Highlight, Caret, Skeleton, Resizable, Sparkline, Spinner, Terminal, Toaster dots, DownloadButton icon, overlays) are redrawn in system
+  colours. `base.css` sets the edge, focus, accent, shadow and disabled tokens to system colours with `!important`
+  inside the media query, so a theme cannot defeat them. ColorPicker keeps the colours of its swatches. Normal
+  rendering is unchanged (all rules sit inside the media query; the visual-regression baselines are untouched).
+- Tests: `tests/elements/forced-colors.spec.ts` (a table with one entry per custom element: edge, focus ring after
+  keyboard focus, state differences without the background colour, `GrayText`; opened overlays; no theme colour in
+  five themes and both system palettes at 1280 and 375 px; axe without serious or critical violations in Code and
+  Flower), forced-colors screenshots in `visual.spec.ts` (`fc-*`, dark and light palette), and
+  `tests/unit/forced-colors.test.ts` (a styled component needs a forced-colors rule or a documented exemption).
+  The PR template has a checklist item for it. `tests/elements/axe.ts` can leave rules out (`disable`).
 - Component behaviour tests (#24, stage 1): a second Vitest project (`dom`, jsdom with
   `@testing-library/svelte` and `user-event`) next to the node tests. A smoke test renders every
   component exported from `src/lib/index.ts` (and fails when a new export has no entry); behaviour suites
@@ -83,6 +99,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   and matched `:enabled`. `disabled` is reflected to the attribute, so the host is disabled like a native field.
 - `form="id"` on a kern form element threw `Cannot set property form … which has only a getter` in React 19 (it sets
   the property because the element has one) and unmounted the tree. `form` accepts the id now and sets the attribute.
+- Under forced colors the checkbox mark, Switch thumb, Radio dot, Slider fill, ProgressRing arc, Spinner arc, Heatmap
+  cells, HistoryBar bars, Stepper connectors, tree and table row selection, the current Navbar link and the
+  selected segment, day and pagination page were invisible or looked like their unselected neighbour.
 
 ## [0.8.0] - 2026-11-19
 

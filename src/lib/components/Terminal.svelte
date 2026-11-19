@@ -352,4 +352,29 @@
 		clip-path: inset(50%);
 		white-space: nowrap;
 	}
+	@media (forced-colors: active) {
+		/* The terminal draws its own palette on a background: give it an edge and keep the rule under the bar. */
+		.k-terminal {
+			border: 1px solid CanvasText;
+		}
+		.bar {
+			border-bottom-color: CanvasText;
+		}
+		.dots i {
+			border: 1px solid CanvasText;
+			box-sizing: border-box;
+		}
+		.title,
+		.prompt,
+		.out {
+			color: CanvasText;
+		}
+		.copy {
+			border-color: ButtonText;
+			color: ButtonText;
+		}
+		.copy:focus-visible {
+			outline-color: Highlight;
+		}
+	}
 </style>

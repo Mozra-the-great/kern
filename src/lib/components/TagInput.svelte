@@ -584,4 +584,28 @@
 			transform: translateY(-4px);
 		}
 	}
+	@media (forced-colors: active) {
+		.k-tags:has(input:focus-visible) {
+			border-color: Highlight;
+		}
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.x {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+		[role='option'].active {
+			outline-color: Highlight;
+		}
+		input::placeholder {
+			color: GrayText;
+		}
+	}
 </style>

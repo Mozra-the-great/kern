@@ -46,4 +46,11 @@
 			animation-duration: 2s;
 		}
 	}
+	@media (forced-colors: active) {
+		/* The arc is the border colour that differs from the rest of the ring: forced colours would make it uniform. */
+		.ring {
+			border-color: GrayText;
+			border-top-color: Highlight;
+		}
+	}
 </style>

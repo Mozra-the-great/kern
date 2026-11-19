@@ -664,4 +664,61 @@
 			transform: translateY(-4px);
 		}
 	}
+	@media (forced-colors: active) {
+		/* The colours themselves are the content: chips, swatches, the colour area and the hue and alpha
+		 * strips keep their colour; the edges around them come from the system palette. */
+		.chip,
+		.swatch,
+		.area,
+		.range {
+			forced-color-adjust: none;
+		}
+		.chip,
+		.swatch {
+			border-color: ButtonText;
+		}
+		.chip svg,
+		.swatch svg {
+			color: inherit;
+		}
+		.swatch[aria-pressed='true'] {
+			border-width: 4px;
+			border-color: Highlight;
+			box-shadow: none;
+		}
+		.area {
+			box-shadow: none;
+			outline: 1px solid CanvasText;
+		}
+		.area:focus-visible .thumb {
+			outline-color: Highlight;
+		}
+		.range:focus-visible {
+			outline-color: Highlight;
+		}
+		.range::-webkit-slider-runnable-track {
+			border-color: CanvasText;
+		}
+		.range::-moz-range-track {
+			border-color: CanvasText;
+		}
+		.k-color:has(input:focus-visible) {
+			border-color: Highlight;
+		}
+		.invalid {
+			border-style: double;
+			border-width: 3px;
+		}
+		.disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.swatch-btn {
+			border: 1px solid ButtonText;
+		}
+		input[type='text']::placeholder {
+			color: GrayText;
+		}
+	}
 </style>

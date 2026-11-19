@@ -150,4 +150,16 @@
 			transition: none;
 		}
 	}
+	@media (forced-colors: active) {
+		.trigger > svg {
+			color: ButtonText;
+		}
+		.trigger:disabled {
+			opacity: 1;
+			color: GrayText;
+		}
+		.trigger:disabled > svg {
+			color: GrayText;
+		}
+	}
 </style>

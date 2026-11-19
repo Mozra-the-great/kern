@@ -261,4 +261,14 @@
 		white-space: nowrap;
 		border: 0;
 	}
+	@media (forced-colors: active) {
+		/* The icon is an SVG: the result colours (ok, danger) would stay as authored; the label text carries the result. */
+		svg,
+		[data-variant='ghost'][data-status='started'] svg,
+		[data-variant='secondary'][data-status='started'] svg,
+		[data-variant='ghost'][data-status='error'] svg,
+		[data-variant='secondary'][data-status='error'] svg {
+			color: ButtonText;
+		}
+	}
 </style>

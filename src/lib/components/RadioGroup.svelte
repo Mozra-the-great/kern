@@ -141,4 +141,30 @@
 		color: var(--k-danger);
 		font-size: var(--k-text-sm);
 	}
+	@media (forced-colors: active) {
+		input {
+			forced-color-adjust: none;
+			border-color: ButtonText;
+			background: Canvas;
+		}
+		input::after {
+			background: Highlight;
+		}
+		input:checked {
+			border-color: Highlight;
+		}
+		.opt:hover input:not(:disabled) {
+			border-color: Highlight;
+		}
+		input:disabled {
+			opacity: 1;
+			border-color: GrayText;
+		}
+		input:disabled::after {
+			background: GrayText;
+		}
+		.err {
+			color: CanvasText;
+		}
+	}
 </style>

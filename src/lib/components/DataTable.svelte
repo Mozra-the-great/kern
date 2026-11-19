@@ -691,4 +691,54 @@
 			border-bottom: 0;
 		}
 	}
+	@media (forced-colors: active) {
+		th button {
+			text-decoration: underline;
+			text-underline-offset: 3px;
+		}
+		th svg {
+			opacity: 1;
+		}
+		th svg:not(.active) {
+			opacity: 0.5;
+		}
+		/* Selected row: inverted instead of a tint and an inset bar (both dropped). */
+		tbody tr.selected td {
+			forced-color-adjust: none;
+			background: Highlight;
+			color: HighlightText;
+			box-shadow: none;
+			border-bottom-color: HighlightText;
+		}
+		tbody tr.selected td:first-child {
+			box-shadow: none;
+		}
+		.stack tbody tr.selected {
+			border-width: 3px;
+			border-color: Highlight;
+		}
+		.stack tbody tr.selected td {
+			background: Canvas;
+			color: CanvasText;
+		}
+		tbody tr:hover td {
+			outline: 1px solid Highlight;
+			outline-offset: -1px;
+		}
+		.chk input:checked,
+		.chk input:indeterminate {
+			border-color: Highlight;
+		}
+		/* the selected row opts out of forced colours (its fill is Highlight); the checkbox in it must not inherit that, or it keeps the theme fill under a system-coloured mark */
+		.chk {
+			forced-color-adjust: auto;
+		}
+		.chk svg {
+			stroke: CanvasText;
+		}
+		.chk input:disabled {
+			opacity: 1;
+			border-color: GrayText;
+		}
+	}
 </style>

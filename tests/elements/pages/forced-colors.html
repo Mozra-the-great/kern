@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en" data-theme="code">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: forced colors</title>
+		<script>
+			// ?theme=flower picks the theme before the CSS applies.
+			const params = new URLSearchParams(location.search);
+			document.documentElement.dataset.theme = params.get('theme') || 'code';
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+				background: var(--k-bg);
+				color: var(--k-fg);
+				font-family: var(--k-font-sans);
+			}
+			main {
+				display: grid;
+				gap: 20px;
+				max-width: 760px;
+			}
+			section {
+				display: grid;
+				gap: 12px;
+				padding: 12px;
+				border: 1px solid var(--k-line);
+			}
+			h1,
+			h2 {
+				margin: 0;
+				font-size: 16px;
+			}
+			.row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				align-items: center;
+			}
+			.narrow {
+				max-width: 300px;
+			}
+		</style>
+	</head>
+	<body>
+		<k-skip-link id="skip" target="main" label="Skip to content"></k-skip-link>
+		<main id="main">
+			<h1>Forced colors: every element</h1>
+
+			<section id="s-actions" aria-label="Actions">
+				<h2>Buttons and links</h2>
+				<div class="row">
+					<k-button id="btn-primary">Primary</k-button>
+					<k-button id="btn-secondary" variant="secondary">Secondary</k-button>
+					<k-button id="btn-ghost" variant="ghost">Ghost</k-button>
+					<k-button id="btn-accent" variant="accent">Accent</k-button>
+					<k-button id="btn-danger" variant="danger">Danger</k-button>
+					<k-button id="btn-disabled" disabled>Disabled</k-button>
+					<k-button id="btn-loading" loading>Loading</k-button>
+					<k-button id="btn-link" href="#target" variant="secondary">As a link</k-button>
+				</div>
+				<div class="row">
+					<k-icon-button id="ib" label="Search"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2" /><path d="M16 16l5 5" stroke="currentColor" stroke-width="2" /></svg></k-icon-button>
+					<k-icon-button id="ib-disabled" label="Search disabled" disabled><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2" /><path d="M16 16l5 5" stroke="currentColor" stroke-width="2" /></svg></k-icon-button>
+					<k-copy-button id="copy" value="npm i kern" label="Copy install command"></k-copy-button>
+					<k-copy-button id="copy-disabled" value="x" label="Copy disabled" disabled></k-copy-button>
+					<k-download-button id="download" text="hello" name="hello.txt" label="Download" show-label variant="secondary"></k-download-button>
+					<k-download-button id="download-disabled" text="x" name="x.txt" label="Download disabled" disabled></k-download-button>
+					<k-link id="link" href="#target">Plain link</k-link>
+					<k-link id="link-ext" href="https://example.com" external>External link</k-link>
+					<k-theme-toggle id="theme-toggle" target="#tbox" label="Theme"></k-theme-toggle>
+					<span id="tbox" data-theme="code"></span>
+				</div>
+			</section>
+
+			<section id="s-fields" aria-label="Fields">
+				<h2>Fields</h2>
+				<form id="form" class="narrow" style="display: grid; gap: 14px">
+					<k-input id="input" name="name" label="Name" hint="Your full name" placeholder="Mara Lind"></k-input>
+					<k-input id="input-invalid" name="mail" label="Email" value="nope" error="Enter a valid email."></k-input>
+					<k-input id="input-disabled" name="locked" label="Locked" value="Read only" disabled></k-input>
+					<k-textarea id="textarea" name="note" label="Note" placeholder="Write here"></k-textarea>
+					<k-textarea id="textarea-disabled" name="note3" label="Note disabled" value="Read only" disabled></k-textarea>
+					<k-textarea id="textarea-invalid" name="note2" label="Note with error" error="Too short."></k-textarea>
+					<k-select id="select" name="size" label="Size" value="m" options='[{"value":"s","label":"Small"},{"value":"m","label":"Medium"},{"value":"l","label":"Large"}]'></k-select>
+					<k-select id="select-disabled" name="size2" label="Size disabled" disabled value="s" options='[{"value":"s","label":"Small"}]'></k-select>
+					<k-checkbox id="check-off" name="a" label="Unchecked"></k-checkbox>
+					<k-checkbox id="check-on" name="b" label="Checked" checked></k-checkbox>
+					<k-checkbox id="check-mixed" name="c" label="Indeterminate" indeterminate></k-checkbox>
+					<k-checkbox id="check-disabled" name="d" label="Disabled" disabled checked></k-checkbox>
+					<k-radio-group id="radio" name="ship" label="Shipping" value="standard" options='[{"value":"standard","label":"Standard"},{"value":"express","label":"Express"},{"value":"pickup","label":"Pickup","disabled":true}]'></k-radio-group>
+					<k-switch id="switch-off" name="s1" label="Off"></k-switch>
+					<k-switch id="switch-on" name="s2" label="On" checked></k-switch>
+					<k-switch id="switch-disabled" name="s3" label="Disabled" disabled checked></k-switch>
+					<k-slider id="slider" name="volume" label="Volume" value="40" show-value unit=" %"></k-slider>
+					<k-slider id="slider-disabled" name="volume2" label="Volume disabled" value="70" disabled></k-slider>
+					<k-number-input id="number" name="qty" label="Quantity" value="2" min="0" max="10"></k-number-input>
+					<k-pin-input id="pin" name="code" label="Code" length="4"></k-pin-input>
+					<k-rating id="rating" name="stars" label="Rating" value="3"></k-rating>
+					<k-rating id="rating-ro" label="Average" value="4" readonly></k-rating>
+					<k-segmented-control id="segmented" name="view" label="View" value="list" options='[{"value":"grid","label":"Grid"},{"value":"list","label":"List"},{"value":"map","label":"Map"}]'></k-segmented-control>
+					<k-tag-input id="taginput" name="tags" label="Tags" value='["Gel","Matt"]' suggestions='["Gel","Matt","Holo"]'></k-tag-input>
+					<k-color-picker id="color" name="color" label="Colour" value="#d77b6f" swatches='["#2c4f38","#d77b6f","#f5c518"]'></k-color-picker>
+					<k-combobox id="combobox" name="fruit" label="Fruit" options='[{"value":"apple","label":"Apple"},{"value":"banana","label":"Banana"},{"value":"cherry","label":"Cherry"}]'></k-combobox>
+					<k-date-picker id="date" name="date" label="Date" value="2026-11-19" locale="en-GB"></k-date-picker>
+					<div><k-label id="label" for="plain" required>Plain label</k-label> <input id="plain" name="plain" /></div>
+					<k-file-drop id="filedrop" name="docs" label="Files" multiple></k-file-drop>
+					<k-file-drop id="filedrop-disabled" name="docs2" label="Files disabled" disabled></k-file-drop>
+				</form>
+			</section>
+
+			<section id="s-nav" aria-label="Navigation">
+				<h2>Navigation</h2>
+				<k-navbar id="navbar" label="Main" menu-label="Menu" items='[{"label":"Collection","href":"#a","current":true},{"label":"Help","href":"#b"}]'>
+					<span slot="brand">kern</span>
+					<k-button slot="actions" size="sm" variant="secondary">Sign in</k-button>
+				</k-navbar>
+				<k-breadcrumb id="breadcrumb" label="Breadcrumb" items='[{"label":"Home","href":"#"},{"label":"Collection","href":"#"},{"label":"Item"}]'></k-breadcrumb>
+				<k-tabs id="tabs" label="Sections" tabs='[{"id":"one","label":"One"},{"id":"two","label":"Two"},{"id":"three","label":"Three","disabled":true}]'>
+					<div data-tab="one">First panel</div>
+					<div data-tab="two">Second panel</div>
+					<div data-tab="three">Third panel</div>
+				</k-tabs>
+				<k-tabs id="tabs-pill" label="Pills" look="pill" tabs='[{"id":"a","label":"Alpha","badge":3,"badgeLabel":"3 new"},{"id":"b","label":"Beta","dot":true,"badgeLabel":"Sync error","badgeTone":"danger"}]'></k-tabs>
+				<k-tab-links id="tablinks" label="Tools" links='[{"href":"#one","label":"One","current":true},{"href":"#two","label":"Two"}]'></k-tab-links>
+				<k-tab-links id="tablinks-pill" label="Views" look="pill" links='[{"href":"#grid","label":"Grid","current":true},{"href":"#list","label":"List"}]'></k-tab-links>
+				<k-pagination id="pagination" page="3" page-count="12" label="Pages"></k-pagination>
+				<k-stepper id="stepper" clickable current="2" label="Progress" steps='[{"id":"a","label":"Cart"},{"id":"b","label":"Address"},{"id":"c","label":"Payment"},{"id":"d","label":"Done"}]'></k-stepper>
+				<k-tree-view id="tree" label="Folders" expanded='["photos"]' nodes='[{"id":"photos","label":"Photos","children":[{"id":"2025","label":"2025"},{"id":"2026","label":"2026"}]},{"id":"docs","label":"Documents","children":[{"id":"bills","label":"Bills"}]},{"id":"notes","label":"notes.md"}]'></k-tree-view>
+				<k-accordion id="accordion">
+					<k-accordion-item title="Open item" open>Content.</k-accordion-item>
+					<k-accordion-item title="Closed item">Content.</k-accordion-item>
+				</k-accordion>
+				<k-collapsible id="collapsible-open" label="Open collapsible" open><p>Body.</p></k-collapsible>
+				<k-collapsible id="collapsible-closed" label="Closed collapsible"><p>Body.</p></k-collapsible>
+				<k-carousel id="carousel" label="Colours">
+					<div style="height: 80px; padding: 16px; background: var(--k-accent-soft)">Mint</div>
+					<div style="height: 80px; padding: 16px; background: var(--k-bg-sunken)">Berry</div>
+					<div style="height: 80px; padding: 16px; background: var(--k-info-soft)">Navy</div>
+				</k-carousel>
+			</section>
+
+			<section id="s-feedback" aria-label="Feedback">
+				<h2>Feedback</h2>
+				<div class="row">
+					<k-badge id="badge-neutral">Neutral</k-badge>
+					<k-badge id="badge-ok" tone="ok">Available</k-badge>
+					<k-badge id="badge-warn" tone="warn" look="outline">Warning</k-badge>
+					<k-badge id="badge-danger" tone="danger" look="solid">Danger</k-badge>
+					<k-tag id="tag">Pastel</k-tag>
+					<k-tag id="tag-removable" removable>Removable</k-tag>
+					<k-tag id="tag-selected" selected>Selected</k-tag>
+					<k-avatar id="avatar" name="Mara Lind"></k-avatar>
+					<k-status-dot id="dot-ok" status="ok" status-labels='{"ok":"OK"}'>Database</k-status-dot>
+					<k-status-dot id="dot-down" status="down" status-labels='{"down":"Down"}'>API</k-status-dot>
+					<k-status-dot id="dot-warn" status="warn" status-labels='{"warn":"Degraded"}'>Queue</k-status-dot>
+					<k-spinner id="spinner"></k-spinner>
+				</div>
+				<k-alert id="alert-info" tone="info" title="Info">Something to know.</k-alert>
+				<k-alert id="alert-warn" tone="warn" title="Storage almost full" dismissible>1.2 GB left.</k-alert>
+				<k-alert id="alert-danger" tone="danger" title="Upload failed">Try again.</k-alert>
+				<k-alert id="alert-ok" tone="ok" title="Saved">All good.</k-alert>
+				<k-progress id="progress" label="Storage" value="64" show-value></k-progress>
+				<k-progress id="progress-warn" label="Storage full" value="100" tone="warn"></k-progress>
+				<k-progress id="progress-indeterminate" label="Syncing"></k-progress>
+				<div class="row">
+					<k-progress-ring id="ring" label="Storage" value="64" show-value size="80"></k-progress-ring>
+					<k-progress-ring id="ring-indeterminate" label="Loading" size="80"></k-progress-ring>
+				</div>
+				<k-skeleton id="skeleton" lines="3"></k-skeleton>
+				<k-empty-state id="empty" title="Nothing here" description="Add your first item.">
+					<k-button slot="actions">Add</k-button>
+				</k-empty-state>
+				<k-status-message id="status" kind="status"></k-status-message>
+				<k-status-message id="status-alert" kind="alert"></k-status-message>
+				<k-online-status id="online" offline-title="Offline" offline-text="Open pages keep working." online-text="Back online"></k-online-status>
+			</section>
+
+			<section id="s-overlays" aria-label="Overlays">
+				<h2>Overlays</h2>
+				<div class="row">
+					<k-button id="open-modal" variant="secondary">Open modal</k-button>
+					<k-button id="open-drawer" variant="secondary">Open drawer</k-button>
+					<k-button id="open-palette" variant="secondary">Open palette</k-button>
+					<k-popover id="popover" label="Filter">
+						<k-input label="Name contains" placeholder="e.g. holiday"></k-input>
+					</k-popover>
+					<k-tooltip id="tooltip" text="More actions">
+						<k-dropdown-menu id="dropdown" label="More" items='[{"id":"rename","label":"Rename"},{"id":"copy","label":"Copy","disabled":true},{"type":"separator"},{"id":"delete","label":"Delete","danger":true}]'></k-dropdown-menu>
+					</k-tooltip>
+				</div>
+				<k-context-menu id="context" label="File actions" area-label="File holiday.zip" items='[{"id":"open","label":"Open"},{"id":"rename","label":"Rename","shortcut":"F2"},{"type":"separator"},{"id":"delete","label":"Delete","danger":true}]'>
+					<div style="padding: 24px; border: 1px dashed var(--k-border)">holiday.zip: right-click, long press or Shift+F10</div>
+				</k-context-menu>
+			</section>
+
+			<section id="s-data" aria-label="Data">
+				<h2>Data</h2>
+				<k-table id="table" caption="Files" columns='[{"key":"name","label":"Name","sortable":true},{"key":"size","label":"MB","align":"end","mono":true}]' rows='[{"name":"a.zip","size":12},{"name":"b.pdf","size":0.3}]'></k-table>
+				<k-data-table id="datatable" caption="Polishes" selectable row-key="name" page-size="3" search-label="Filter polishes" columns='[{"key":"name","label":"Name","sortable":true},{"key":"n","label":"Count","align":"end","mono":true,"sortable":true}]' rows='[{"name":"Mint","n":3},{"name":"Red","n":12},{"name":"Blue","n":7},{"name":"Gold","n":1}]'></k-data-table>
+				<k-stat id="stat" label="Visits" value="12480" delta="12.4" delta-label="vs last week">
+					<k-sparkline slot="spark" id="sparkline" variant="area" values="[40,43,41,48,52,50,58,64]" label="Visits rose"></k-sparkline>
+				</k-stat>
+				<k-heatmap id="heatmap" label="Activity" start="2026-10-01" end="2026-11-18" data='[{"date":"2026-11-01","value":3},{"date":"2026-11-02","value":9},{"date":"2026-11-10","value":1}]'></k-heatmap>
+				<k-history-bar id="history" label="Uptime" items='[{"label":"Mon","status":"ok"},{"label":"Tue","status":"warn","detail":"slow"},{"label":"Wed","status":"down"},{"label":"Thu","status":"none"},{"label":"Fri","status":"ok"}]'></k-history-bar>
+				<k-timeline id="timeline" label="Order" items='[{"id":"a","title":"Received","time":"2026-11-14","status":"done"},{"id":"b","title":"Shipped","status":"current"},{"id":"c","title":"Delivered","status":"upcoming"}]'></k-timeline>
+			</section>
+
+			<section id="s-content" aria-label="Content">
+				<h2>Content</h2>
+				<ul class="row" aria-label="Polishes" style="list-style: none; margin: 0; padding: 0">
+					<k-card id="card" as="li" title="Ruby Red" description="Essie"><span slot="badges">2x</span></k-card>
+					<k-card id="card-link" as="li" title="Linked card" description="Whole card is a link" href="#target"></k-card>
+					<k-card id="card-button" as="li" title="Button card" description="Whole card is a button" clickable action-label="Open Button card"></k-card>
+					<k-card id="card-outline" as="li" title="Outline card" look="outline" muted></k-card>
+				</ul>
+				<k-tile-grid id="tilegrid" as="ul" aria-label="Tools">
+					<k-tile id="tile" as="li" href="#pdf"><strong>PDF</strong><span>Merge and split</span></k-tile>
+					<k-tile id="tile-plain" as="li"><strong>Soon</strong><span>More tools</span></k-tile>
+				</k-tile-grid>
+				<p>Inline <k-code id="code-inline">npm i kern</k-code> and <k-kbd id="kbd" keys='["mod","K"]'></k-kbd> and <k-highlight id="highlight">highlighted text</k-highlight> plus <k-caret id="caret"></k-caret></p>
+				<k-code id="code-block" block language="ts" line-numbers copy>
+					import { toast } from 'kern';
+
+					toast.ok('Saved.');
+				</k-code>
+				<k-code-block id="codeblock" label="Command">kern deploy ./dist --expires 7d</k-code-block>
+				<k-terminal id="terminal" title="bash" copy lines='[{"text":"npm install kern","output":"added 1 package"}]'></k-terminal>
+				<k-prose id="prose" text="Hello, see https://example.com for details.&#10;&#10;A second paragraph."></k-prose>
+				<k-divider id="divider" label="or"></k-divider>
+				<k-grid-background id="grid-bg" variant="dots" size="20" style="border: 1px solid var(--k-line)"><div style="padding: 24px; text-align: center">Dots</div></k-grid-background>
+				<k-marquee id="marquee" label="Colours" speed="60"><span style="padding: 8px 16px">Mint</span><span style="padding: 8px 16px">Berry</span><span style="padding: 8px 16px">Navy</span></k-marquee>
+				<k-reveal id="reveal"><k-card title="Reveal">Slides into place.</k-card></k-reveal>
+				<k-scroll-area id="scroll" max-height="80" fade label="Polish list">
+					<p>One</p><p>Two</p><p>Three</p><p>Four</p><p>Five</p><p>Six</p>
+				</k-scroll-area>
+				<k-resizable id="resizable" height="120" sizes="[30,70]" handle-label="Resize: {panel}">
+					<div data-panel="nav" data-label="Navigation" style="padding: 12px">Navigation</div>
+					<div data-panel="main" data-label="Content" style="padding: 12px">Content</div>
+				</k-resizable>
+				<k-sortable-list id="sortable" label="Files to merge"></k-sortable-list>
+				<k-select-grid id="selectgrid" label="Pages" min="90px" reorderable></k-select-grid>
+				<p>
+					Count <k-count-up id="countup" value="1248" duration="0"></k-count-up>, odometer <k-odometer id="odometer" value="2026" format='{"useGrouping":false}'></k-odometer>,
+					<k-typewriter id="typewriter" text='["Collect colours."]'></k-typewriter>, <k-scramble id="scramble">Mint 14</k-scramble>,
+					<k-relative-time id="reltime" value="1700000000000" now="1700000300000" locale="en"></k-relative-time>
+				</p>
+				<k-mascot id="mascot" name="stuffy" scale="4" label="Stuffy"></k-mascot>
+			</section>
+
+			<p id="target">Link target</p>
+		</main>
+		<k-live-announcer id="announcer"></k-live-announcer>
+		<k-visually-hidden id="vh">Text for assistive technology</k-visually-hidden>
+		<k-modal id="modal" title="Delete folder?" description="214 files go to the bin.">
+			<p>You can undo this for 30 days.</p>
+			<div slot="footer" class="row"><k-button variant="secondary" id="cancel">Cancel</k-button><k-button variant="danger" id="confirm">Delete</k-button></div>
+		</k-modal>
+		<k-drawer id="drawer" title="Filter">
+			<p>Show images only.</p>
+			<k-button slot="footer" id="apply">Apply</k-button>
+		</k-drawer>
+		<k-command-palette id="palette" hotkey="mod+k" label="Command palette" commands='[{"id":"new","label":"New file","group":"Files","shortcut":"Ctrl+N"},{"id":"share","label":"Share link","group":"Files"},{"id":"theme","label":"Switch theme","group":"View"}]'></k-command-palette>
+		<k-toaster id="toaster" label="Notifications"></k-toaster>
+		<script type="module">
+			const $ = (s) => document.querySelector(s);
+			const splice = (items, from, to) => {
+				const next = [...items];
+				next.splice(to, 0, next.splice(from, 1)[0]);
+				return next;
+			};
+			$('#sortable').items = [
+				{ id: 1, label: 'Invoice.pdf', description: '3 pages' },
+				{ id: 2, label: 'Contract.pdf', description: '12 pages' },
+				{ id: 3, label: 'Notes.pdf', description: '2 pages' }
+			];
+			const page = (n) =>
+				'data:image/svg+xml,' +
+				encodeURIComponent(
+					`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 120"><rect width="90" height="120" fill="#fff" stroke="#888"/><text x="45" y="70" font-size="30" text-anchor="middle" fill="#333">${n}</text></svg>`
+				);
+			const grid = $('#selectgrid');
+			grid.items = Array.from({ length: 4 }, (_, i) => ({ id: i + 1, label: `Page ${i + 1}`, src: page(i + 1) }));
+			grid.selected = [2];
+			grid.addEventListener('move', (e) => (grid.items = splice(grid.items, e.detail.from, e.detail.to)));
+			$('#sortable').addEventListener('move', (e) => ($('#sortable').items = splice($('#sortable').items, e.detail.from, e.detail.to)));
+			$('#open-modal').addEventListener('click', () => ($('#modal').open = true));
+			$('#open-drawer').addEventListener('click', () => ($('#drawer').open = true));
+			$('#open-palette').addEventListener('click', () => ($('#palette').open = true));
+			$('#cancel').addEventListener('click', () => ($('#modal').open = false));
+			$('#apply').addEventListener('click', () => ($('#drawer').open = false));
+			$('#status').message = 'Saved.';
+			$('#status-alert').message = 'Could not save.';
+			$('#form').addEventListener('submit', (e) => e.preventDefault());
+		</script>
+	</body>
+</html>

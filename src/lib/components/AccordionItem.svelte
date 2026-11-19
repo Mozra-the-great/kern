@@ -64,4 +64,13 @@
 	.content :global(p:last-child) {
 		margin-bottom: 0;
 	}
+	@media (forced-colors: active) {
+		summary > svg {
+			color: ButtonText;
+		}
+		summary:hover {
+			outline: 1px solid Highlight;
+			outline-offset: -1px;
+		}
+	}
 </style>

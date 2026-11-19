@@ -417,4 +417,22 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
 	}
+	@media (forced-colors: active) {
+		.nav {
+			color: ButtonText;
+		}
+		.nav[aria-disabled='true'] {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.dot {
+			border-color: ButtonText;
+		}
+		.tab[aria-selected='true'] .dot {
+			forced-color-adjust: none;
+			border-color: Highlight;
+			background: Highlight;
+		}
+	}
 </style>

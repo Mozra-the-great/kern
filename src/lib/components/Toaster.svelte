@@ -367,6 +367,24 @@
 		.dot {
 			forced-color-adjust: none;
 			background: CanvasText;
+			/* square, whatever radius the theme gives a badge (Flower, Pop and Line round it into a circle) */
+			border-radius: 0;
+		}
+		/* the tone dot differs by shape as well as colour: ok = circle, warn = diamond, others = square */
+		[data-tone='ok'] .dot {
+			border-radius: 50%;
+		}
+		[data-tone='warn'] .dot {
+			transform: rotate(45deg);
+		}
+		/* the dismiss and action buttons are borderless: give them an edge */
+		.x,
+		.act {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+		button:focus-visible {
+			outline-color: Highlight;
 		}
 	}
 </style>

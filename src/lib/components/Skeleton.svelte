@@ -73,4 +73,13 @@
 			animation: none;
 		}
 	}
+	@media (forced-colors: active) {
+		/* A placeholder is only a shape: show it as a dashed outline, without the shimmer. */
+		.shape {
+			box-sizing: border-box;
+			border: 1px dashed GrayText;
+			background-image: none;
+			animation: none;
+		}
+	}
 </style>

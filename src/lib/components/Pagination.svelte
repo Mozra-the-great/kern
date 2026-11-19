@@ -218,4 +218,25 @@
 			flex: 1;
 		}
 	}
+	@media (forced-colors: active) {
+		/* Current page: inverted, with the underline and the heavier weight it already has. */
+		.page[aria-current='page'],
+		.page[aria-current='page']:hover {
+			forced-color-adjust: none;
+			border-color: Highlight;
+			background: Highlight;
+			color: HighlightText;
+		}
+		.step[aria-disabled='true'] {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
+		.btn:hover:not([aria-disabled='true']) {
+			border-color: Highlight;
+		}
+		.gap {
+			color: CanvasText;
+		}
+	}
 </style>

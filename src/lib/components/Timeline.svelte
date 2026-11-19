@@ -201,4 +201,11 @@
 		white-space: nowrap;
 		border: 0;
 	}
+	@media (forced-colors: active) {
+		/* The ring around the current marker is a shadow: give the marker a double edge instead. */
+		[data-status='current'] .marker {
+			border-width: 4px;
+			border-style: double;
+		}
+	}
 </style>

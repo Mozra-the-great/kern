@@ -127,4 +127,17 @@
 		width: 14px;
 		height: 14px;
 	}
+	@media (forced-colors: active) {
+		/* The tone colour is dropped: the icon shape and the title carry the meaning, danger gets a heavy edge. */
+		[data-tone='danger'] {
+			border-width: 3px;
+		}
+		.icon {
+			color: CanvasText;
+		}
+		.x {
+			border: 1px solid ButtonText;
+			color: ButtonText;
+		}
+	}
 </style>

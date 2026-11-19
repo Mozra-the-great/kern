@@ -227,4 +227,19 @@
 			margin-left: auto;
 		}
 	}
+	@media (forced-colors: active) {
+		.toggle {
+			color: ButtonText;
+		}
+		/* Current page: inverted (the tint and the inset bar are dropped). */
+		a[aria-current='page'] {
+			forced-color-adjust: none;
+			background: Highlight;
+			color: HighlightText;
+			box-shadow: none;
+		}
+		a:hover {
+			outline: 1px solid Highlight;
+		}
+	}
 </style>

@@ -52,4 +52,10 @@
 			animation: none;
 		}
 	}
+	@media (forced-colors: active) {
+		.k-caret {
+			forced-color-adjust: none;
+			background: CanvasText;
+		}
+	}
 </style>

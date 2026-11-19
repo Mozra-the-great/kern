@@ -117,4 +117,13 @@
 		height: 16px;
 		margin-top: 1px;
 	}
+	@media (forced-colors: active) {
+		/* The error keeps its icon and text; only the red is dropped. */
+		.error {
+			color: CanvasText;
+		}
+		.error svg {
+			color: CanvasText;
+		}
+	}
 </style>
