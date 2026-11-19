@@ -38,6 +38,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `--k-fg-soft`, `--k-fg-disabled`, `--k-shadow-sm`, `--k-space-2-5|3-5|6-5` (10/14/28px),
   `--k-tap-min` (44px), `--k-tap-icon`, `--k-tap-target` (0 for the mouse, 44px on touch).
   Mapping of every stuffcloud variable in `docs/themes.md`.
+- Custom elements forward native attributes to their inner control (#31): `k-input`
+  (`maxlength`, `minlength`, `pattern`, `readonly`, `min`, `max`, `step`, `size`, `multiple`,
+  `autocapitalize`, `spellcheck`, `enterkeyhint`, `title`, `aria-label`, `aria-description`),
+  `k-textarea` (also `autocomplete`, `cols`, `wrap`), `k-select` (`size`, `autocomplete`),
+  `k-checkbox`/`k-switch`/`k-slider` (`title`, `aria-*`; `k-switch` also `required`). One typed
+  mechanism (`src/elements/native.ts`, `control.svelte.ts`) instead of per-wrapper code.
+- Constraint validation of every form element reflects into `ElementInternals`:
+  `form.checkValidity()`/`reportValidity()`, the submit-time check and `:invalid` work; the
+  browser's message points at the inner control. Elements get `validity`, `validationMessage`,
+  `willValidate`, `checkValidity()`, `reportValidity()` and `setCustomValidity()`; `autofocus`
+  focuses the inner control. `k-radio-group` gets `required`.
+- TypeScript declarations for the elements (#32): `@mozra-the-great/kern/elements` types
+  `HTMLElementTagNameMap`, per-tag element interfaces with typed `addEventListener`, event maps
+  with typed `detail`, data shapes (`TabItem`, `SelectOption`, `MenuEntry` …) and `window.kern`.
+  React 19 JSX types via `import type {} from '@mozra-the-great/kern/elements/react'`
+  (`on<event>` handlers typed per element).
+- `custom-elements.json` (Custom Elements Manifest 2.1) in the package, generated from the
+  wrappers by `scripts/elements-manifest.mjs`; CI checks it is up to date.
+- Per-element entry points (#33): `@mozra-the-great/kern/elements/<name>` registers one tag
+  (`elements/accordion` also `k-accordion-item`; `elements/toaster` exports `toast`/`dismissToast`).
+  Shared code lives in chunks; five elements load 38 kB gzip instead of 146 kB.
+  `kern-elements.js` stays one self-contained file.
+- CI: Playwright tests of the built elements (`npm run test:elements`: native attributes,
+  validity, a full `<form>` submit with `FormData`, reset, entry points), a strict TS + React 19
+  typings fixture (`npm run test:types`) and a size budget (`npm run size`, +10 % over
+  `scripts/ci/size-baseline.json` fails).
 
 ### Changed
 - Every interactive part is at least `--k-tap-target`: on touch 44px (small buttons, icon
@@ -74,6 +100,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   - Flower creme: `--k-accent-mark` `#d06557` (marks were `#d77b6f`, 2.66 → 3.25:1 on bg, 2.49 →
     3.05:1 on the track). Flower wald: `--k-accent-mark` `#dd887a` (2.82 → 3.19:1 on raised),
     `--k-warn` `#e1ad57` → `#e4b76a` (4.18 → 4.57:1 on raised).
+- **BREAKING:** form elements now take part in constraint validation like native fields. A form
+  with an empty `<k-input required>` (or a `pattern`/`min`/`max` mismatch, an empty required
+  `k-checkbox`, `k-select`, `k-combobox`, `k-tag-input` …, or a half-filled `k-pin-input`) no
+  longer submits; the browser shows its message. To keep the old behaviour, drop the constraint
+  or set `novalidate` on the form.
+- Tags are registered through one idempotent `define()`: loading two entry points or two copies
+  of kern registers each tag once (first wins); a `k-*` tag owned by another library is left
+  alone with a console warning. The `k-` prefix is fixed and reserved for kern.
+- `window.kern` is set only when it is not set yet.
+
+### Fixed
+- `form.reset()` now also resets `k-checkbox`, `k-switch`, `k-radio-group` and `k-select`.
 
 ## [0.2.0] - 2026-11-19
 

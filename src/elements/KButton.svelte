@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-button', props: { variant: { type: 'String' }, size: { type: 'String' }, block: { type: 'Boolean' }, loading: { type: 'Boolean' }, disabled: { type: 'Boolean' }, href: { type: 'String' }, type: { type: 'String' } }, extend: formAssociated }} />
+<svelte:options customElement={{ props: { variant: { type: 'String' }, size: { type: 'String' }, block: { type: 'Boolean' }, loading: { type: 'Boolean' }, disabled: { type: 'Boolean' }, href: { type: 'String' }, type: { type: 'String' } }, extend: formAssociated }} />
 <script lang="ts">
 	import Button from '../lib/components/Button.svelte';
 	import { formAssociated } from './form.js';

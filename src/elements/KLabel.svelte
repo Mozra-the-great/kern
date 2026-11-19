@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-label', props: { for: { type: 'String' }, required: { type: 'Boolean' } } }} />
+<svelte:options customElement={{ props: { for: { type: 'String' }, required: { type: 'Boolean' } } }} />
 <script lang="ts">
 	import Label from '../lib/components/Label.svelte';
 	/* A <label for> inside a shadow root cannot reach a control outside it. So the element

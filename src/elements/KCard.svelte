@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-card', props: { title: { type: "String" }, description: { type: "String" }, level: { type: "Number" }, look: { type: "String" }, href: { type: "String" } } }} />
+<svelte:options customElement={{ props: { title: { type: "String" }, description: { type: "String" }, level: { type: "Number" }, look: { type: "String" }, href: { type: "String" } } }} />
 <script lang="ts">
 	import Card from '../lib/components/Card.svelte';
 	import { hasSlot } from './form.js';

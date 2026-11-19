@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-empty-state', props: { title: { type: "String" }, description: { type: "String" }, level: { type: "Number" } } }} />
+<svelte:options customElement={{ props: { title: { type: "String" }, description: { type: "String" }, level: { type: "Number" } } }} />
 <script lang="ts">
 	import EmptyState from '../lib/components/EmptyState.svelte';
 	import { hasSlot } from './form.js';

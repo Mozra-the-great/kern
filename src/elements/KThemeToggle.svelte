@@ -1,5 +1,9 @@
-<svelte:options customElement={{ tag: 'k-theme-toggle', props: { themes: { type: 'Array' }, value: { type: 'String', reflect: true }, target: { type: 'String' }, persist: { type: 'String' }, followSystem: { type: 'Boolean', attribute: 'follow-system' }, label: { type: 'String' } } }} />
+<svelte:options customElement={{ props: { themes: { type: 'Array' }, value: { type: 'String', reflect: true }, target: { type: 'String' }, persist: { type: 'String' }, followSystem: { type: 'Boolean', attribute: 'follow-system' }, label: { type: 'String' } } }} />
 <script lang="ts">
+	/**
+	 * @prop themes {ThemeOption[]}
+	 * @event change {string} Id of the theme the user picked.
+	 */
 	import ThemeToggle from '../lib/components/ThemeToggle.svelte';
 	import { emit } from './form.js';
 	/* themes: JSON list of {id,label}; default = light/dark pair of the current brand.

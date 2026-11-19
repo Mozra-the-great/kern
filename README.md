@@ -13,8 +13,10 @@ Die Seite wird bei jedem Push auf `main` neu gebaut.
 Es gibt zwei Builds:
 
 - **Svelte 5** (`dist/`): Komponenten mit Runes, Snippets und `bind:`.
-- **Custom Elements** (`dist-elements/kern-elements.js`): `<k-button>`, `<k-modal>` usw.,
-  für jede Seite ohne Svelte. Formularfelder nehmen über `ElementInternals` an `<form>` teil.
+- **Custom Elements** (`dist-elements/`): `<k-button>`, `<k-modal>` usw., für jede Seite ohne
+  Svelte, als eine Datei mit allen Tags oder pro Element einzeln. Formularfelder nehmen über
+  `ElementInternals` an `<form>` teil (Werte, Reset, Validierung). Mit TypeScript-Typen,
+  React-19-JSX-Typen und `custom-elements.json`.
 
 Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 
@@ -223,6 +225,127 @@ Eintrag pro Schlagwort (wiederholter `name`). Marquee, Reveal, Highlight und Gri
 Standard-Slot. Alle Effekte zeigen bei „Bewegung reduzieren“ sofort ihren Endzustand. Texte wie `prev-label`, `menu-label` oder `no-results` lassen sich
 per Attribut übersetzen; die Vorgaben sind englisch.
 
+### Einzelne Elemente laden
+
+`kern-elements.js` registriert alle Tags in einer Datei. Wer nur einige braucht, lädt sie einzeln;
+jeder Einstiegspunkt registriert genau sein Element, gemeinsamer Code (Svelte-Laufzeit, Bausteine)
+liegt in geteilten Chunks und wird nur einmal geladen:
+
+```js
+import '@mozra-the-great/kern/elements/button';      // <k-button>
+import '@mozra-the-great/kern/elements/input';       // <k-input>
+import '@mozra-the-great/kern/elements/date-picker'; // <k-date-picker>
+import { toast } from '@mozra-the-great/kern/elements/toaster'; // <k-toaster> + window.kern
+```
+
+Der Name ist der Tag ohne `k-` (`k-segmented-control` → `elements/segmented-control`).
+`elements/accordion` registriert auch `<k-accordion-item>`; `elements/toaster` exportiert `toast`
+und `dismissToast` und setzt `window.kern`. Ohne Bundler liegen die Dateien unter
+`dist-elements/elements/<name>.js`. Beide Wege lassen sich mischen (die Registrierung ist
+idempotent), dann lädt die Seite aber zwei Kopien der Laufzeit; besser einen Weg wählen.
+
+| Bundle (gemessen beim Einführen, je Datei gzip) | roh | gzip |
+|---|---:|---:|
+| `kern-elements.js` (alle 74 Tags) | 674 kB | 146 kB |
+| 5 Elemente (button, input, select, modal, tabs) | 118 kB | 38 kB |
+| 1 Element (button) | 85 kB | 26 kB |
+
+CI misst die Größen (`npm run size`) und schlägt fehl, wenn eine um mehr als 10 % über
+`scripts/ci/size-baseline.json` wächst.
+
+**Tag-Präfix und Kollisionen:** Das Präfix `k-` ist für kern reserviert und fest (Svelte kompiliert
+jede Element-Klasse einmal, und eine Klasse lässt sich nur unter einem Namen registrieren). Die
+Registrierung ist idempotent (`customElements.get(tag)` vor `define`): mehrere Einstiegspunkte oder
+zwei kern-Kopien auf einer Seite registrieren jeden Tag einmal, die erste gewinnt. Gehört ein
+`k-*`-Tag schon einer anderen Bibliothek, lässt kern ihn in Ruhe und warnt einmal in der Konsole.
+
+### Formulare: native Attribute und Validierung
+
+Die Formular-Elemente reichen native Attribute an ihr inneres Feld weiter; Änderungen nach dem
+Laden folgen, Entfernen entfernt sie auch innen:
+
+| Element | weitergereichte Attribute (zusätzlich zu den eigenen Props) |
+|---|---|
+| `k-input` | `maxlength`, `minlength`, `pattern`, `readonly`, `autocapitalize`, `spellcheck`, `enterkeyhint`, `min`, `max`, `step`, `size`, `multiple`, `title`, `aria-label`, `aria-description` |
+| `k-textarea` | `maxlength`, `minlength`, `readonly`, `autocomplete`, `autocapitalize`, `spellcheck`, `enterkeyhint`, `cols`, `wrap`, `title`, `aria-label`, `aria-description` (`rows` ist Prop) |
+| `k-select` | `size`, `autocomplete`, `title`, `aria-label`, `aria-description` (`multiple` nicht: der Wert ist ein String; dafür `k-tag-input` oder Checkboxen) |
+| `k-checkbox`, `k-slider` | `title`, `aria-label`, `aria-description` |
+| `k-switch` | `required`, `title`, `aria-label`, `aria-description` |
+| NumberInput, DatePicker | `min`, `max`, `readonly` (NumberInput) als Props; NumberInput-`step` ist die Pfeil-Schrittweite, keine Bedingung |
+
+Für alle Formular-Elemente gilt außerdem: `autofocus` fokussiert das innere Feld, `form="id"`
+verknüpft mit einem Formular außerhalb, `disabled` nimmt das Element aus Validierung und Versand
+(beides nativ über `ElementInternals`). ID-Verweise (`aria-labelledby`, `aria-describedby`,
+`list`) reichen nicht durch die Shadow-Grenze; dafür gibt es `label`, `hint` und `error`.
+
+Die Validierung läuft wie bei nativen Feldern: `required`, `pattern`, `minlength`, `maxlength`,
+`min`, `max` und `step` landen in `ElementInternals`, also wirken `form.checkValidity()`,
+`form.reportValidity()`, die Prüfung beim Absenden, `:invalid`/`:user-invalid` und die Meldung des
+Browsers am inneren Feld. Jedes Formular-Element hat `validity`, `validationMessage`,
+`checkValidity()`, `reportValidity()` und `setCustomValidity()` wie ein natives Feld.
+NumberInput und DatePicker prüfen `min`/`max`, RadioGroup (neu: `required`), Rating, Combobox,
+ColorPicker, TagInput (mindestens ein Schlagwort) und FileDrop `required`; ein halb gefüllter
+PinInput ist ungültig. Nach `el.value = …` sind `el.validity` und `el.checkValidity()` sofort aktuell;
+`form.checkValidity()` im selben Task sieht die Änderung erst nach einem Mikrotask.
+`form.reset()` setzt alle Felder auf ihren Anfangswert zurück.
+
+### Autofill und Passwort-Manager
+
+Geprüft mit Chrome 157 (Windows) und den Autofill-Diagnose-Schaltern
+(`--show-autofill-type-predictions`, `--show-autofill-signatures`): Chrome erkennt die Felder in
+`<k-input>` genauso wie native Felder. `autocomplete="username"`, `current-password`, `email` und
+`one-time-code` ergeben dieselben Typen; der Passwort-Manager markiert Benutzername- und
+Passwortfeld (`username_element`, `password_element`), und die Felder eines `<form>` aus
+kern-Elementen bilden ein gemeinsames Formular. `autocomplete` und `name` gehen ans innere Feld,
+`<k-pin-input>` setzt `one-time-code` selbst. Nicht geprüft: Firefox, Safari und
+Passwort-Manager-Erweiterungen (die meisten durchsuchen offene Shadow Roots). Erkennt ein Manager
+die Felder nicht, für Login, Registrierung und Passwort-Reset native `<input>` mit den Theme-Tokens
+verwenden; die Werte gehen dann ohnehin direkt ins Formular.
+
+### TypeScript und React 19
+
+Das Paket bringt Typen mit: `import '@mozra-the-great/kern/elements'` (oder ein einzelnes Element)
+ergänzt `HTMLElementTagNameMap`, also ist `document.querySelector('k-input')` ein `KInputElement`
+mit typisierten Props, `addEventListener('change', e => e.detail)` und `window.kern`. Datenformen wie
+`TabItem`, `SelectOption` oder `MenuEntry` und pro Tag `K…Props`/`K…Events` sind exportiert.
+Für JSX in React 19 einmal in der App:
+
+```tsx
+import '@mozra-the-great/kern/elements';
+import type {} from '@mozra-the-great/kern/elements/react';
+
+<k-input label="Name" value={name} required maxlength={60} onchange={(e) => setName(e.detail)} />
+<k-modal open={open} title="Löschen?" onclose={() => setOpen(false)}>
+	<p>…</p>
+	<div slot="footer"><k-button onclick={() => setOpen(false)}>OK</k-button></div>
+</k-modal>
+<k-tabs tabs={tabs} value={tab} onchange={(e) => setTab(e.detail)} />
+```
+
+- **Properties vs. Attribute:** React 19 setzt eine Prop als Property, wenn das Element sie kennt
+  (alle kern-Props, auch Arrays und Objekte wie `tabs` oder `options`), sonst als Attribut
+  (`maxlength`, `pattern`, `aria-*`). JSON-Strings gehen auch, sind in React aber unnötig.
+- **Ereignisse:** `on` plus exakter Ereignisname, klein geschrieben: `onchange` → `change`,
+  `onclose`, `oncopy-error`; für die kern-Ereignisse kennen die Typen nur diese Schreibweise (`onChange` usw. sind dort weggelassen).
+  Der Wert steht in `event.detail` und ist typisiert; native Ereignisse gehen klein geschrieben
+  auch (`onclick`, `oninput`).
+- **Slots:** Kinder mit `slot="footer"` usw.; Tab-Inhalte mit `data-tab`.
+- **Kontrollierte Felder:** `value={x}` plus `onchange`. Ereignisse feuern nur bei
+  Nutzereingaben, nie beim Setzen von `value`; das läuft also nicht in eine Schleife. `change`
+  kommt beim Bestätigen (Blur/Enter), für jeden Tastendruck das native `oninput` nutzen und
+  den Wert aus `e.currentTarget.value` lesen.
+- **Formulare:** die Elemente sind echte Formularfelder (`name`, `FormData`, Reset, Validierung,
+  `form`-Attribut); ein `<form onSubmit>` sieht sie wie native Felder. Absenden mit
+  `<k-button type="submit">`.
+
+### Manifest
+
+`custom-elements.json` (Custom Elements Manifest 2.1, im Paket und als
+`@mozra-the-great/kern/custom-elements.json`) beschreibt alle Tags mit Attributen, Properties,
+Typen, Ereignissen samt `detail`-Typ und Slots, z. B. für Editor-Unterstützung und Doku-Werkzeuge.
+`scripts/elements-manifest.mjs` erzeugt es und die Typen aus den Wrappern in `src/elements/`;
+CI prüft, dass die eingecheckte Datei aktuell ist.
+
 ## Komponenten (Kern-Set)
 
 Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
@@ -247,10 +370,13 @@ verschiebt deshalb ihre Position.
 npm ci
 npm run dev        # Demo: /index.html (Svelte) und /elements.html (Custom Elements)
 npm run check      # svelte-check
-npm run build      # dist/, dist-elements/, demo-dist/
+npm run build      # dist/, dist-elements/ (+ Typen, custom-elements.json), demo-dist/
 npm test           # Vitest: Theme-Kontrast und Marken-Einstiege
 npx playwright install chromium   # einmalig
 npm run test:targets              # Playwright: Touch-Ziele in der gebauten Demo (nach npm run build)
+npm run test:elements             # Playwright: gebaute Custom Elements (nach npm run build)
+npm run test:types                # Element-Typen gegen eine strikte React-19-Fixture (nach dem Build)
+npm run size                      # Größenbudget der Custom Elements
 ```
 
 `npm ci` baut über `prepare` bereits `dist/` und `dist-elements/`. Release: `version` in

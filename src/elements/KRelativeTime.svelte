@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-relative-time', props: { value: { type: 'String' }, locale: { type: 'String' }, numeric: { type: 'String' }, formatStyle: { type: 'String', attribute: 'format-style' }, now: { type: 'String' }, fallback: { type: 'String' } } }} />
+<svelte:options customElement={{ props: { value: { type: 'String' }, locale: { type: 'String' }, numeric: { type: 'String' }, formatStyle: { type: 'String', attribute: 'format-style' }, now: { type: 'String' }, fallback: { type: 'String' } } }} />
 <script lang="ts">
 	import RelativeTime from '../lib/components/RelativeTime.svelte';
 	/* value, now: ISO 8601 text or epoch milliseconds. format-style: long | short | narrow (`style` is the HTML style attribute). */

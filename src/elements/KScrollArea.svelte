@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-scroll-area', props: { maxHeight: { type: 'String', attribute: 'max-height' }, direction: { type: 'String' }, fade: { type: 'Boolean' }, fadeSize: { type: 'Number', attribute: 'fade-size' }, label: { type: 'String' } } }} />
+<svelte:options customElement={{ props: { maxHeight: { type: 'String', attribute: 'max-height' }, direction: { type: 'String' }, fade: { type: 'Boolean' }, fadeSize: { type: 'Number', attribute: 'fade-size' }, label: { type: 'String' } } }} />
 <script lang="ts">
 	import ScrollArea from '../lib/components/ScrollArea.svelte';
 	/* max-height: any CSS length; a bare number means pixels. The light-DOM children scroll. */

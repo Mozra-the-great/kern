@@ -1,5 +1,9 @@
-<svelte:options customElement={{ tag: 'k-context-menu', props: { items: { type: "Array" }, label: { type: "String" }, areaLabel: { type: 'String', attribute: 'area-label' }, focusable: { type: "String" }, longPress: { type: 'Number', attribute: 'long-press' }, disabled: { type: "Boolean" } } }} />
+<svelte:options customElement={{ props: { items: { type: "Array" }, label: { type: "String" }, areaLabel: { type: 'String', attribute: 'area-label' }, focusable: { type: "String" }, longPress: { type: 'Number', attribute: 'long-press' }, disabled: { type: "Boolean" } } }} />
 <script lang="ts">
+	/**
+	 * @prop items {MenuEntry[]}
+	 * @event select {string} Id of the chosen item.
+	 */
 	import ContextMenu from '../lib/components/ContextMenu.svelte';
 	import { emit } from './form.js';
 	/* Default slot = target area. items: JSON list like k-dropdown-menu; choosing an item fires "select" with its id.

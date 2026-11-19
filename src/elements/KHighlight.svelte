@@ -1,4 +1,4 @@
-<svelte:options customElement={{ tag: 'k-highlight', props: { inView: { type: 'String', attribute: 'in-view' }, delay: { type: "Number" } } }} />
+<svelte:options customElement={{ props: { inView: { type: 'String', attribute: 'in-view' }, delay: { type: "Number" } } }} />
 <script lang="ts">
 	import Highlight from '../lib/components/Highlight.svelte';
 	/* in-view defaults to on; in-view="false" draws the marker right after mount. */

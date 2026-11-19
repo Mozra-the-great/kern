@@ -54,14 +54,23 @@ jobs:
       - name: Type check
         run: npm run check
       - name: Build
-        # svelte-package (dist/), custom elements (dist-elements/), demo (demo-dist/)
+        # svelte-package (dist/), custom elements (dist-elements/ + typings), demo (demo-dist/)
         run: npm run build
       - name: Unit tests (theme contrast, brand entries)
         run: npm test
+      - name: Custom Elements Manifest is up to date
+        # The build regenerates custom-elements.json from src/elements; commit the result.
+        run: git diff --exit-code custom-elements.json
+      - name: Element typings (strict TS + React 19 fixture)
+        run: npm run test:types
+      - name: Size budget (custom elements)
+        run: npm run size
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
       - name: Touch targets (Playwright, built demo)
         run: npm run test:targets
+      - name: Element tests (Playwright, built dist-elements/)
+        run: npm run test:elements
 
       # ── Node 24 (current LTS) ─────────────────────────────────────────────────
       # Same job on purpose: the required check `build` then means "green on Node 22

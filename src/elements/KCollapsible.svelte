@@ -1,5 +1,8 @@
-<svelte:options customElement={{ tag: 'k-collapsible', props: { open: { type: 'Boolean', reflect: true }, label: { type: 'String' }, disabled: { type: 'Boolean' }, look: { type: 'String' } } }} />
+<svelte:options customElement={{ props: { open: { type: 'Boolean', reflect: true }, label: { type: 'String' }, disabled: { type: 'Boolean' }, look: { type: 'String' } } }} />
 <script lang="ts">
+	/**
+	 * @event toggle {boolean} Open state after the user toggled it.
+	 */
 	import Collapsible from '../lib/components/Collapsible.svelte';
 	import { emit, hasSlot } from './form.js';
 	/* Default slot = content. Slot "trigger" replaces the label inside the trigger button. */
