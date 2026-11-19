@@ -1,0 +1,5 @@
+/* Self-contained code entry: the base tokens plus only the Code theme.
+ * Import this instead of themes.css when a build should ship this one brand.
+ * `@mozra-the-great/kern/themes/stuffcloud.css` is a deprecated alias of this file (until 1.0). */
+@import './base.css';
+@import './brands/code.css';

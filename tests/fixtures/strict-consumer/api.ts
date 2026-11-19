@@ -59,4 +59,5 @@ export function pair(current: string | undefined): [ThemeOption, ThemeOption] {
 	return themePair(current, {});
 }
 
-export const dark: boolean = isDarkTheme('stuffcloud');
+export const dark: boolean = isDarkTheme('code');
+export const darkOld: boolean = isDarkTheme('stuffcloud'); // deprecated id, works until 1.0

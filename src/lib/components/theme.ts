@@ -1,6 +1,6 @@
 /*
  * Theme helpers shared by ThemeToggle and the before-paint script. A kern "family"
- * is the part of a theme id before the first dash (`stuffcloud`, `flower`, `pop`, `line`);
+ * is the part of a theme id before the first dash (`code`, `flower`, `pop`, `line`);
  * each family has one light and one dark theme that a two-state toggle switches between.
  * Nothing here touches `window` at module level, so it stays SSR-safe.
  */
@@ -14,6 +14,8 @@ export interface ThemeOption {
 
 /** Light and dark theme of each built-in family. */
 export const THEME_FAMILIES: Readonly<Record<string, { light: string; dark: string }>> = {
+	code: { light: 'code-light', dark: 'code' },
+	/** @deprecated The theme `stuffcloud` is called `code` (#85); the old ids work until 1.0 and stay in their own family. */
 	stuffcloud: { light: 'stuffcloud-light', dark: 'stuffcloud' },
 	flower: { light: 'flower', dark: 'flower-wald' },
 	pop: { light: 'pop', dark: 'pop-dark' },
@@ -21,9 +23,13 @@ export const THEME_FAMILIES: Readonly<Record<string, { light: string; dark: stri
 };
 
 /** Family used when the current theme is unknown or not a built-in one. */
-const FALLBACK_FAMILY = 'stuffcloud';
+const FALLBACK_FAMILY = 'code';
 
 const DARK_THEMES: ReadonlySet<string> = new Set([
+	'code',
+	'code-dark',
+	'code-contrast',
+	// deprecated aliases of the three above (#85), removed in 1.0
 	'stuffcloud',
 	'stuffcloud-dark',
 	'stuffcloud-contrast',
@@ -32,7 +38,7 @@ const DARK_THEMES: ReadonlySet<string> = new Set([
 	'line'
 ]);
 
-/** `stuffcloud-light` → `stuffcloud`. Empty for a missing id. */
+/** `code-light` → `code`. Empty for a missing id. */
 export function themeFamily(id: string | null | undefined): string {
 	return (id ?? '').split('-')[0] ?? '';
 }
@@ -49,7 +55,7 @@ export interface ThemePairLabels {
 
 /**
  * The light/dark pair of the family of `current`, light first.
- * Unknown families fall back to Stuffcloud.
+ * Unknown families fall back to Code.
  */
 export function themePair(current: string | null | undefined, labels: ThemePairLabels = {}): [ThemeOption, ThemeOption] {
 	const family = THEME_FAMILIES[themeFamily(current)] ?? THEME_FAMILIES[FALLBACK_FAMILY];
@@ -99,7 +105,7 @@ export function writeStoredTheme(key: string, id: string): void {
 export interface ThemeScriptOptions {
 	/**
 	 * Without a stored choice, follow `prefers-color-scheme`: pick the dark or light theme
-	 * of the family that `<html data-theme>` already names (Stuffcloud when it names none).
+	 * of the family that `<html data-theme>` already names (Code when it names none).
 	 */
 	followSystem?: boolean | undefined;
 }

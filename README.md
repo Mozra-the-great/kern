@@ -3,7 +3,7 @@
 **Kern**-Komponenten für Svelte 5: ein Satz zugänglicher Bausteine, viele Marken.
 Ein Theme setzt über `--k-*`-CSS-Variablen nicht nur Farben, sondern auch Form
 (Radien, Randbreite), Tiefe (Schatten), Schrift und Bewegung. Dieselben
-Komponenten sehen deshalb in Stuffcloud eckig mit Pixel-Schatten aus und in
+Komponenten sehen deshalb in Code eckig mit Pixel-Schatten aus und in
 Flower-Designs weich mit Pillen.
 
 **Vorschau:** [alle Komponenten](https://mozra-the-great.github.io/kern/) ·
@@ -24,20 +24,38 @@ Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 
 | `data-theme` | Quelle |
 | --- | --- |
-| `stuffcloud` (= `stuffcloud-dark`), `stuffcloud-light`, `stuffcloud-paper`, `stuffcloud-contrast` | Stuffcloud-Designsystem |
+| `code` (= `code-dark`), `code-light`, `code-paper`, `code-contrast` | Code-Designsystem (zuerst für stuffcloud gezeichnet) |
 | `flower` (= `flower-creme`), `flower-wald` | Flower-Designs |
 | `pop` (= `pop-light`), `pop-dark` | Pop-Designsystem (Look von stuffcloud) |
 | `line` (= `line-dark`), `line-light` | Line-Designsystem (Kagi-basierte Richtung) |
 
-Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono und
+**Umbenannt (#85):** das Theme `stuffcloud` heißt jetzt `code` (kerns Themes sind allgemeine Standard-Designs; die
+stuffcloud-App nutzt Code weiter). Die alten Namen bleiben **bis 1.0 als veraltete Aliase** erhalten und liefern genau
+dieselben Tokens: `data-theme="stuffcloud"` (= `code`), `stuffcloud-dark`, `stuffcloud-light`, `stuffcloud-paper`,
+`stuffcloud-contrast`, jeweils samt `@media`-Regeln wie der 56-px-Höhe unter 760 px;
+`@mozra-the-great/kern/themes/stuffcloud.css` zeigt auf dieselbe Datei wie `themes/code.css` (`dist/themes/stuffcloud.css` bleibt als Einzeiler-`@import` für Pfade ohne Bundler). Neu schreiben:
+
+| bisher | neu |
+| --- | --- |
+| `data-theme="stuffcloud"`, `stuffcloud-dark`, `-light`, `-paper`, `-contrast` | `code`, `code-dark`, `code-light`, `code-paper`, `code-contrast` |
+| `@mozra-the-great/kern/themes/stuffcloud.css` | `@mozra-the-great/kern/themes/code.css` |
+| `@mozra-the-great/kern/assets/stuffcloud/…` | `@mozra-the-great/kern/assets/code/…` |
+| `STUFFCLOUD_ART`, `StuffcloudArt`, `isStuffcloudArt` | `CODE_ART`, `CodeArt`, `isCodeArt` |
+
+Ein im Browser gespeichertes `stuffcloud`-Theme (ThemeToggle, `createThemeScript`) bleibt gültig und wechselt
+weiter innerhalb der alten Schreibweise (`stuffcloud` ↔ `stuffcloud-light`).
+
+Schriften werden nicht mitgeliefert. Code braucht Inter, JetBrains Mono und
 Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono, Line Outfit 400–700, Inter und JetBrains Mono (siehe `index.html`).
 
 Zu jeder Marke gehören Grafiken unter `@mozra-the-great/kern/assets/<marke>/…`, siehe [`assets/README.md`](assets/README.md):
-Stuffcloud Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen, Saison-Deko, 115 Dateien),
+Code Pixel-Art aus den stuffcloud-Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen, Saison-Deko, 115 Dateien),
 Pop Vektor-Maskottchen, Outfits, Accessoires, Tool-Icons und Saison-Abzeichen (88), Line Strich-Maskottchen,
 Outfits, Tool-Icons, Saison-Deko und Illustrationen (48), Flower Blüten, Blätter und Bäume (46). Die Komponenten
-laden keine davon; du bindest sie per `<img alt="">` ein. Die Stuffcloud-Pixel-Art zeigt auch `Mascot`
-(siehe [Mascot](#mascot-pixel-art)).
+laden keine davon; du bindest sie per `<img alt="">` ein. Die Code-Pixel-Art zeigt auch `Mascot`
+(siehe [Mascot](#mascot-pixel-art)). Der Ordner der Pixel-Art heißt `assets/code/` (bis zur Umbenennung #85:
+`assets/stuffcloud/`); `@mozra-the-great/kern/assets/stuffcloud/…` löst bis 1.0 weiter auf dieselben Dateien auf
+(Alias in `exports`, kein zweiter Satz Dateien im Paket; gilt für Imports, nicht für Dateipfade in `node_modules`).
 
 Gegen das Aufblitzen des falschen Themes beim Laden liefert `createThemeScript('kern-theme', { followSystem: true })`
 ein kleines Inline-Script für `<head>` (Schlüssel = `persist` des ThemeToggle; unter strenger CSP mit Nonce).
@@ -50,21 +68,21 @@ Laufzeit wechseln). Eine App mit einer Marke importiert stattdessen deren Einsti
 Basis-Tokens mit und sonst nichts:
 
 ```js
-import '@mozra-the-great/kern/themes/stuffcloud.css'; // oder flower.css, pop.css, line.css
+import '@mozra-the-great/kern/themes/code.css'; // oder flower.css, pop.css, line.css
 ```
 
-Für Custom Elements ohne Bundler dasselbe als `<link rel="stylesheet" href="…/dist/themes/stuffcloud.css">`
-(die Datei lädt `base.css` und `brands/stuffcloud.css` per `@import`). `npm test` baut jeden Einstieg mit
+Für Custom Elements ohne Bundler dasselbe als `<link rel="stylesheet" href="…/dist/themes/code.css">`
+(die Datei lädt `base.css` und `brands/code.css` per `@import`). `npm test` baut jeden Einstieg mit
 Vite und prüft, dass kein Selektor und keine Farbe einer anderen Marke darin landet. Komponenten
 werden einzeln importiert (`import { Button } from '@mozra-the-great/kern'`): ein Svelte-Bundler
-kompiliert nur die benutzten. Die Pixel-Art unter `assets/stuffcloud/` bleibt im Paket als einzelne
+kompiliert nur die benutzten. Die Pixel-Art unter `assets/code/` bleibt im Paket als einzelne
 Dateien: keine Komponente importiert sie, sie landet also nur in einem Bundle, wenn du sie selbst
 importierst (Entscheidung in #39, neu bewerten mit der Theme-Quelle in #37).
 
 **Touch-Ziele.** Jedes bedienbare Teil ist mindestens `--k-tap-target` groß, sichtbar oder über eine
 unsichtbare Trefferfläche: 44 px (`--k-tap-min`) bei grobem Zeiger (`pointer: coarse`), bei der Maus 0,
-außer das Theme verlangt es (Stuffcloud und Pop: 44 px für jeden Zeiger, Icon-Buttons
-`--k-tap-icon` 48 px; Stuffcloud-Buttons und -Felder 52 px, unter 760 px 56 px). Alle Höhen sind
+außer das Theme verlangt es (Code und Pop: 44 px für jeden Zeiger, Icon-Buttons
+`--k-tap-icon` 48 px; Code-Buttons und -Felder 52 px, unter 760 px 56 px). Alle Höhen sind
 Außenmaße, der Rand zählt mit.
 
 **Tokens für Marken.** Neben Farbe, Form, Schrift und Größe gibt es abgeleitete Tokens, die ohne
@@ -169,10 +187,10 @@ Fixture). Optionale Props nehmen auch `undefined`, das wie eine weggelassene Pro
 ## Custom Elements
 
 ```html
-<!-- Mit Bundler: import '@mozra-the-great/kern/themes.css' (oder nur eine Marke: themes/stuffcloud.css)
+<!-- Mit Bundler: import '@mozra-the-great/kern/themes.css' (oder nur eine Marke: themes/code.css)
      und '@mozra-the-great/kern/elements'.
      Ohne Bundler die Dateien aus node_modules ausliefern (Pfade hier relativ zur Seite). -->
-<html data-theme="stuffcloud">
+<html data-theme="code">
 <link rel="stylesheet" href="node_modules/@mozra-the-great/kern/dist/themes/index.css" />
 <script type="module" src="node_modules/@mozra-the-great/kern/dist-elements/kern-elements.js"></script>
 
@@ -250,7 +268,7 @@ zuerst. Der Toaster hat von Anfang an zwei Live-Regionen (`role="status"`, dange
 Tastatur geht der Fokus zum nächsten Toast, sonst dorthin zurück, wo er herkam. Positionen:
 `bottom-right` (Vorgabe), `bottom-left`, `bottom-center`, `top-right`, `top-left`, `top-center`;
 Abstand zum Rand `--k-toaster-offset`, unten unter 760 px `--k-toaster-offset-mobile`
-(stuffcloud: 76 px über der Tab-Leiste). In Svelte rendert `<Toaster queue={createToastQueue()} />`
+(Code: 76 px über der Tab-Leiste). In Svelte rendert `<Toaster queue={createToastQueue()} />`
 eine eigene Warteschlange, etwa für Tests; ohne `queue` die gemeinsame.
 
 Dialoge, die beantwortet werden müssen: `dismissible={false}` (Element: `dismissible="false"`
@@ -269,7 +287,7 @@ App über `open = false`, kommt kein Ereignis. Ein kontrollierter Wrapper (React
 Progress: `tone="warn"` (Speicher voll), `valueText` (`value-text`, gesprochen statt der Zahl,
 etwa „3 von 12 Dateien“), `hideLabel` (`hide-label`, Beschriftung nur für Screenreader). Werte
 werden auf 0 … `max` begrenzt, `NaN` zählt als 0, ein `max` ≤ 0 als 100. Ohne `value` laufen
-Streifen (stuffcloud: `steps(4)`, nur `transform`), bei „Bewegung reduzieren“ stehen sie still;
+Streifen (Code: `steps(4)`, nur `transform`), bei „Bewegung reduzieren“ stehen sie still;
 Themes stellen `--k-progress-period`, `--k-progress-loop` und `--k-progress-ease` ein. Im
 Kontrastmodus (`forced-colors`) bleibt der Balken in `Highlight` sichtbar.
 
@@ -409,9 +427,9 @@ CI prüft, dass die eingecheckte Datei aktuell ist.
 
 ## Mascot (Pixel-Art)
 
-Die Laufzeit für Stuffclouds Pixel-Art liegt in kern (Entscheidung in #55; Verhalten nach
+Die Laufzeit für die Pixel-Art von Code (gezeichnet für stuffcloud) liegt in kern (Entscheidung in #55; Verhalten nach
 stuffclouds ADR 0008). `Mascot` (Custom Element `<k-mascot>`) zeigt **jede** mitgelieferte SVG aus
-`assets/stuffcloud/` (oder eine eigene) als `<img>`:
+`assets/code/` (oder eine eigene) als `<img>`:
 
 - nur ganzzahlige Skalen: `scale` (Standard 8) und `compactScale` unter 760 px; Bruchteile werden
   abgeschnitten, alles unter 1 wird 1. `width`/`height` reservieren die Box, bevor das Bild lädt
@@ -427,17 +445,17 @@ stuffclouds ADR 0008). `Mascot` (Custom Element `<k-mascot>`) zeigt **jede** mit
 ```svelte
 <script>
   import { Mascot } from '@mozra-the-great/kern';
-  import axo from '@mozra-the-great/kern/assets/stuffcloud/mascots/axo.svg?url';
+  import axo from '@mozra-the-great/kern/assets/code/mascots/axo.svg?url';
 </script>
 
 <Mascot name="stuffy" src={axo} scale={16} compactScale={10} />
-<Mascot name="tool-stickers/sticker-qr" base="/art/stuffcloud" scale={4} animated={false} />
+<Mascot name="tool-stickers/sticker-qr" base="/art/code" scale={4} animated={false} />
 <Mascot src="/eigene/art.svg" cols={12} rows={9} label="Seite abgelaufen" />
 ```
 
-`name` ist ein Stuffcloud-Name oder ein Pfad unter `assets/stuffcloud/` ohne `.svg`; daraus kommt
-das Pixelraster (`STUFFCLOUD_ART`). Die URL kommt aus `src` oder aus `base` (wo du den Ordner
-`assets/stuffcloud/` ausspielst) plus Pfad. Für Art außerhalb des Katalogs `cols`/`rows` angeben.
+`name` ist ein Maskottchen-Name oder ein Pfad unter `assets/code/` ohne `.svg`; daraus kommt
+das Pixelraster (`CODE_ART`). Die URL kommt aus `src` oder aus `base` (wo du den Ordner
+`assets/code/` ausspielst) plus Pfad. Für Art außerhalb des Katalogs `cols`/`rows` angeben.
 
 **CSP:** Die Bilder müssen Dateien vom eigenen Origin sein (`img-src 'self'`), keine `data:`-URIs.
 Vite inlined kleine Assets per Standard als `data:` – die SVGs sind alle unter 4 kB. Deshalb entweder
@@ -448,11 +466,12 @@ SVGs nie inlinen:
 export default { build: { assetsInlineLimit: (file) => (file.endsWith('.svg') ? false : undefined) } };
 ```
 
-oder den Ordner `node_modules/@mozra-the-great/kern/assets/stuffcloud/` beim Build nach `public/`
-kopieren und `base` setzen. Ohne Bundler: `<k-mascot name="stuffy" base="/art/stuffcloud"></k-mascot>`.
+oder den Ordner `node_modules/@mozra-the-great/kern/assets/code/` beim Build nach `public/`
+kopieren und `base` setzen. Ohne Bundler: `<k-mascot name="stuffy" base="/art/code"></k-mascot>`.
 
 Namen für den 1:1-Umstieg aus stuffcloud (`MASCOT_SOURCES`, gleiche Felder `file`/`animal`/`cols`/`rows`,
-dazu `art`):
+dazu `art`). Der alte Pfad `@mozra-the-great/kern/assets/stuffcloud/*` löst bis 1.0 weiter auf `assets/code/*` auf (Alias in `exports`); `base` ist deine
+eigene URL und bleibt, wie sie ist:
 
 | Name | Datei | Tier |
 | --- | --- | --- |
@@ -498,14 +517,14 @@ bekommt die Grafik in ihrer `viewBox`-Größe; andere Größen gehen damit nicht
 | `Button variant="primary"`   | `Button` (Vorgabe `primary`)                                                             |
 | `variant="ghost"`            | `variant="secondary"` (mit Rahmen; kerns `ghost` hat keinen)                             |
 | `variant="danger"`           | `variant="danger"`                                                                       |
-| `size="compact"` (44 px)     | `size="sm"` (`--k-control-h-sm`, im stuffcloud-Theme 44 px, nie unter `--k-tap-target`)  |
+| `size="compact"` (44 px)     | `size="sm"` (`--k-control-h-sm`, im Code-Theme 44 px, nie unter `--k-tap-target`)  |
 | `size="icon"` (48 px)        | `size="icon"` (Quadrat `--k-tap-icon`, mit `aria-label`) oder `IconButton`               |
 | `wide`                       | `wide` (volle Breite, Text links, letztes Kind rechts)                                   |
 | `LinkButton href`            | `Button href` (dazu `target`, `rel`, `download`, `hreflang`, `referrerpolicy`)           |
 
 Ein Link mit `disabled` oder `loading` bleibt ein `<a>`: ohne `href`, mit `role="link"` und
 `aria-disabled="true"`, nicht im Tab-Fokus und nicht klickbar. Die gesperrte Optik kommt aus
-`--k-disabled-opacity` (Basis 0,5, stuffcloud 0,4); im Kontrastmodus (`forced-colors`) GrayText.
+`--k-disabled-opacity` (Basis 0,5, Code 0,4); im Kontrastmodus (`forced-colors`) GrayText.
 
 **Card:** `as` wählt das Wurzelelement: `article` (Vorgabe), `section`, `div` oder `li` (Karten
 direkt in einer `<ul>`). Ohne `title` gibt es keine Überschrift. `id`, `aria-*`, `data-*` und

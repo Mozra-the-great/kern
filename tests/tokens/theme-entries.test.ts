@@ -1,6 +1,6 @@
 /**
  * Brand isolation (issue #39): a consumer that imports one theme entry
- * (`@mozra-the-great/kern/themes/stuffcloud.css`) must get the base tokens and that
+ * (`@mozra-the-great/kern/themes/code.css`) must get the base tokens and that
  * brand only. Builds a fixture per entry with Vite, the bundler the consumers use,
  * and inspects the emitted CSS.
  */
@@ -10,7 +10,7 @@ import { build, type Rollup } from 'vite';
 import { describe, expect, it } from 'vitest';
 
 const THEMES = resolve('src/lib/themes');
-const BRANDS = ['stuffcloud', 'flower', 'pop', 'line'] as const;
+const BRANDS = ['code', 'flower', 'pop', 'line'] as const;
 
 /** Bundles `import '<entry>'` and returns the CSS Vite emits for it. */
 async function bundleCss(entry: string): Promise<string> {

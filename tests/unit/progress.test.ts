@@ -103,8 +103,8 @@ describe('Progress stylesheet (indeterminate stripes)', () => {
 		expect(forced).toMatch(/\.indeterminate \{\s*background: repeating-linear-gradient\(\s*90deg,\s*Highlight 0/);
 	});
 
-	it('stuffcloud steps the stripes in four steps', () => {
-		const brand = readFileSync(resolve(import.meta.dirname, '../../src/lib/themes/brands/stuffcloud.css'), 'utf8');
+	it('Code steps the stripes in four steps', () => {
+		const brand = readFileSync(resolve(import.meta.dirname, '../../src/lib/themes/brands/code.css'), 'utf8');
 		expect(brand).toContain('--k-progress-ease: steps(4);');
 		expect(brand).toContain('--k-progress-period: 32px;');
 	});

@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   The focus returns to the Tab stop when the focused item goes away.
 - `moveItem(items, from, to)` and the types `SortableItem`, `SelectGridItem` and `ItemKey`; catalogue entries
   `sortableList` and `selectGrid` with a complete German translation.
-- Brand artwork for Pop, Line and Flower (#84), shipped like the stuffcloud pixel art under
+- Brand artwork for Pop, Line and Flower (#84), shipped like the Code pixel art under
   `@mozra-the-great/kern/assets/<brand>/…` (covered by the existing `./assets/*` export): `assets/pop/`
   (88 SVGs: logo, 11 mascots with dark twins of the floaters, 18 Stuffy outfits, 5 accessories,
   31 tool icons, 22 seasonal badges, Advent wreaths and a tree), `assets/line/` (48: logo in ink and
@@ -60,6 +60,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   the pixel grid or the `viewBox`), and the check also fails on unsafe SVG constructs (scripts,
   handlers, `<foreignObject>`, `<image>`, external references, `data:` URIs, `<style>`) and on an
   unknown brand folder. `npm run assets:manifest` rewrites all manifests.
+- The **stuffcloud** design is now called **Code** (#85): kern's themes are general standard designs, and
+  the stuffcloud app keeps using this one under the new name. The theme (`data-theme="code"`,
+  `code-dark`, `code-light`, `code-paper`, `code-contrast`; `themes/brands/code.css`; entry
+  `@mozra-the-great/kern/themes/code.css`), the pixel art (`assets/code/`, with its manifest and
+  `@mozra-the-great/kern/assets/code/*`) and the art catalogue (`CODE_ART`, `CodeArt`, `isCodeArt`;
+  file `code-art.ts`) carry the new name. The demo, `ThemeToggle` and `createThemeScript` fall back
+  to `code` (a stored `stuffcloud` theme still works and toggles within the old spelling). Nothing
+  looks different. The old names keep working until 1.0, see Deprecated. `Mascot` and `<k-mascot>`
+  behave as before (`base` is your own URL); `artUrl` now reports `unknown Code art "…"`.
+
+### Deprecated
+- Every old **stuffcloud** name of the rename above (#85) is a deprecated alias, removed in 1.0.
+  Nothing has to change to keep working; migrate when convenient:
+
+  | Old (deprecated) | New |
+  | --- | --- |
+  | `data-theme="stuffcloud"` (= `stuffcloud-dark`) | `data-theme="code"` (= `code-dark`) |
+  | `data-theme="stuffcloud-light"` | `data-theme="code-light"` |
+  | `data-theme="stuffcloud-paper"` | `data-theme="code-paper"` |
+  | `data-theme="stuffcloud-contrast"` | `data-theme="code-contrast"` |
+  | `[data-theme^='stuffcloud']` in your own CSS | `[data-theme^='code']` (both are matched by kern's rules) |
+  | `import '@mozra-the-great/kern/themes/stuffcloud.css'` | `import '@mozra-the-great/kern/themes/code.css'` |
+  | `<link href="…/dist/themes/stuffcloud.css">` | `<link href="…/dist/themes/code.css">` (`dist/themes/stuffcloud.css` stays as a one-line `@import` of `code.css`) |
+  | `@mozra-the-great/kern/assets/stuffcloud/*` | `@mozra-the-great/kern/assets/code/*` |
+  | `node_modules/@mozra-the-great/kern/assets/stuffcloud/` (a build step that copies the folder) | `node_modules/@mozra-the-great/kern/assets/code/`. This one is **not** aliased: the `exports` alias covers imports only, the folder on disk is gone, so change the path now |
+  | `STUFFCLOUD_ART` | `CODE_ART` |
+  | `StuffcloudArt` (type) | `CodeArt` |
+  | `isStuffcloudArt()` | `isCodeArt()` |
+  | `themePair()` / `THEME_FAMILIES.stuffcloud` | `THEME_FAMILIES.code` (both families exist) |
+
+  How the aliases work: every rule of `brands/code.css` names both spellings (`[data-theme^='code'],
+  [data-theme^='stuffcloud']`, likewise each variant), so the old values resolve to exactly the same
+  tokens, `@media` rules included; `exports` maps `./themes/stuffcloud.css` to `dist/themes/code.css`
+  and `./assets/stuffcloud/*` to `assets/code/*` (one copy of the files in the package; the plain file
+  `dist/themes/stuffcloud.css` is a one-line `@import` of `code.css`); the old
+  TypeScript names are `@deprecated` re-exports of the new ones. A test proves that both
+  spellings compute identical tokens in a browser. Not renamed: the stuffcloud app itself (the
+  `consumer/stuffcloud` label, "stuffcloud's TS flags" in the strict-consumer fixture, links to its
+  repository and the parity notes).
 
 ## [0.6.0] - 2026-11-19
 

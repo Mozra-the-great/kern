@@ -88,7 +88,7 @@
 	 * Unknown length: stripes half a period wide, painted once on a bar one period wider than the
 	 * track that starts one period to the left. The loop moves it by exactly one period with
 	 * `transform` only, so it is seamless and runs on the compositor. Themes pick the period, the
-	 * loop time and the easing (stuffcloud: steps(4), pixel stripes that step along).
+	 * loop time and the easing (Code: steps(4), pixel stripes that step along).
 	 */
 	.indeterminate {
 		position: absolute;

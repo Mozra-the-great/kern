@@ -1,8 +1,8 @@
 export const themes = [
-	{ id: 'stuffcloud', label: 'Stuffcloud · Dark' },
-	{ id: 'stuffcloud-light', label: 'Stuffcloud · Light' },
-	{ id: 'stuffcloud-paper', label: 'Stuffcloud · Paper' },
-	{ id: 'stuffcloud-contrast', label: 'Stuffcloud · Contrast' },
+	{ id: 'code', label: 'Code · Dark' },
+	{ id: 'code-light', label: 'Code · Light' },
+	{ id: 'code-paper', label: 'Code · Paper' },
+	{ id: 'code-contrast', label: 'Code · Contrast' },
 	{ id: 'flower', label: 'Flower · Creme' },
 	{ id: 'flower-wald', label: 'Flower · Wald' },
 	{ id: 'pop', label: 'Pop · Light' },

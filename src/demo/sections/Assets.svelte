@@ -22,8 +22,8 @@
 	}
 	const brands: Brand[] = [
 		{
-			id: 'stuffcloud',
-			title: 'Stuffcloud',
+			id: 'code',
+			title: 'Code',
 			text: 'Pixel-Art aus den Stuffcloud-Moodboards. Immer in ganzzahligen Vielfachen zeigen, dann bleiben die Pixel scharf.'
 		},
 		{
@@ -169,7 +169,7 @@
 		min-width: 0;
 	}
 	/* Fixed grounds on purpose: the art keeps its colours in every theme, so each brand sits on
-	 * the ground it was drawn for (stuffcloud's dark panel, Pop's light ground, Line's paper,
+	 * the ground it was drawn for (Code's dark panel, Pop's light ground, Line's paper,
 	 * Flower's cream); dark twins get a dark tile. */
 	.tile {
 		display: grid;
@@ -197,7 +197,7 @@
 		height: 72px;
 		object-fit: contain;
 	}
-	[data-brand='stuffcloud'] img {
+	[data-brand='code'] img {
 		width: 64px;
 		height: 64px;
 		image-rendering: pixelated;

@@ -5,11 +5,12 @@ with neutral values; a brand file under `src/lib/themes/brands/` overrides what 
 differs in. Derived tokens (`--k-accent-mark`, `--k-line-strong`, `--k-surface-*`, ...) point at
 another token by default, so a theme only sets them when its design has its own value.
 
-## Stuffcloud variables and their kern tokens
+## stuffcloud variables and their kern tokens (theme `code`)
 
 Source: stuffcloud's `web/apps/web/src/styles/tokens.css` + `theme.css` (dark theme, from
-`docs/design/prototypes/stuff.css`) and the Stuffcloud design system (`tokens.json`). Values are
-for `data-theme="stuffcloud"` (= `stuffcloud-dark`).
+`docs/design/prototypes/stuff.css`) and the stuffcloud design system (`tokens.json`). The design is the kern theme `code` (called
+`stuffcloud` until #85; the old `data-theme` values stay as aliases until 1.0). Values are for
+`data-theme="code"` (= `code-dark`).
 
 | stuffcloud | value | kern token | kern value | note |
 | --- | --- | --- | --- | --- |

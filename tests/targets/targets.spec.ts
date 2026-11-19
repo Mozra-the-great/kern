@@ -27,7 +27,7 @@ async function openDemo(page: Page, theme: string): Promise<void> {
 		try {
 			localStorage.setItem('kern-theme', t);
 		} catch {
-			/* storage blocked: the demo falls back to stuffcloud */
+			/* storage blocked: the demo falls back to code */
 		}
 	}, theme);
 	await page.goto('index.html');
@@ -221,7 +221,7 @@ async function check(page: Page): Promise<void> {
 }
 
 test.describe('touch (pointer: coarse, 375px)', () => {
-	for (const theme of ['stuffcloud', 'flower', 'pop', 'line', 'line-light']) {
+	for (const theme of ['code', 'flower', 'pop', 'line', 'line-light']) {
 		test(`every target is >= ${TAP}px in ${theme}`, async ({ page }) => {
 			await openDemo(page, theme);
 			expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
@@ -232,7 +232,7 @@ test.describe('touch (pointer: coarse, 375px)', () => {
 
 test.describe('mouse (pointer: fine, 1280px), themes whose design sets 44px for every pointer', () => {
 	test.use({ isMobile: false, hasTouch: false, viewport: { width: 1280, height: 900 } });
-	for (const theme of ['stuffcloud', 'pop', 'line', 'line-light']) {
+	for (const theme of ['code', 'pop', 'line', 'line-light']) {
 		test(`every target is >= ${TAP}px in ${theme}`, async ({ page }) => {
 			await openDemo(page, theme);
 			expect(await page.evaluate(() => matchMedia('(pointer: fine)').matches)).toBe(true);
@@ -257,8 +257,8 @@ async function buttonSizes(page: Page): Promise<{ md: number; sm: number; icon: 
 }
 
 test.describe('sizes of the design', () => {
-	test('stuffcloud on a phone: button 56px, compact 44px, icon 48px', async ({ page }) => {
-		await openDemo(page, 'stuffcloud');
+	test('code on a phone: button 56px, compact 44px, icon 48px', async ({ page }) => {
+		await openDemo(page, 'code');
 		expect(await buttonSizes(page)).toEqual({ md: 56, sm: 44, icon: [48, 48] });
 	});
 	test('pop on a phone: button 56px, compact 44px, icon 48px', async ({ page }) => {
@@ -271,8 +271,8 @@ test.describe('sizes of the design', () => {
 	});
 	test.describe('desktop', () => {
 		test.use({ isMobile: false, hasTouch: false, viewport: { width: 1280, height: 900 } });
-		test('stuffcloud: button 52px, compact 44px, icon 48px', async ({ page }) => {
-			await openDemo(page, 'stuffcloud');
+		test('code: button 52px, compact 44px, icon 48px', async ({ page }) => {
+			await openDemo(page, 'code');
 			expect(await buttonSizes(page)).toEqual({ md: 52, sm: 44, icon: [48, 48] });
 		});
 		test('line: button 52px, compact 44px, icon 44px', async ({ page }) => {

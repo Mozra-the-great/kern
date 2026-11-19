@@ -30,7 +30,7 @@ tests/elements/       Playwright: custom elements in forms, attributes, validity
 tests/fixtures/react-jsx/  strict TS + React 19 fixture for the element typings
 tests/fixtures/strict-consumer/  Svelte app with stuffcloud's strict TS flags, uses every component from dist/
 src/demo/             demo app (App.svelte + sections/), themes.ts
-assets/<brand>/       optional brand artwork (stuffcloud pixel art), exported as @mozra-the-great/kern/assets/*
+assets/<brand>/       optional brand artwork (Code pixel art), exported as @mozra-the-great/kern/assets/*
 index.html            Svelte demo · elements.html: custom-elements demo
 ```
 
@@ -61,13 +61,16 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
 
 ## Notes
 - Components read only `--k-*` tokens. Every component must look right in
-  Stuffcloud (square, hard offset shadows, mono uppercase labels, `steps()` easing)
+  Code (square, hard offset shadows, mono uppercase labels, `steps()` easing)
   and Flower (soft, pills); check both themes, light and dark, desktop and 320 px.
 - A new theme = `themes/brands/<name>.css` overriding the tokens of `base.css` for
   `[data-theme^='name']`, an entry `themes/<name>.css`, an `@import` in `themes/index.css`
   and an `exports` entry; it must pass `npm test` (contrast). Interactive parts use
-  `--k-tap-target` (min size or invisible `::after` hit area). Themes: stuffcloud,
-  flower, pop, line (each from its design-system artifact; line is the Kagi-based one).
+  `--k-tap-target` (min size or invisible `::after` hit area). Themes: code,
+  flower, pop, line (each from its design-system artifact; line is the Kagi-based one). `code` was called
+  `stuffcloud` until #85: the old `data-theme` values, `themes/stuffcloud.css`, `assets/stuffcloud/*` and the
+  `*StuffcloudArt` / `STUFFCLOUD_ART` exports are deprecated aliases until 1.0 (no new code uses them; the
+  stuffcloud app itself stays "stuffcloud").
 - The `K*.svelte` wrappers are not in `tsconfig.include`, so `npm run check` does not see
   them; `npm run build` compiles them. Every `emit()` in a wrapper needs an `@event`
   comment with the detail type, otherwise the manifest generator fails. Elements fire

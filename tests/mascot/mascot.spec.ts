@@ -86,7 +86,7 @@ test.describe('markup', () => {
 		const s = await snap(page, 'main');
 		expect(s).toMatchObject({
 			mascot: 'stuffy',
-			src: '/assets/stuffcloud/mascots/axo.svg',
+			src: '/assets/code/mascots/axo.svg',
 			alt: '',
 			hidden: 'true',
 			draggable: 'false',
@@ -95,12 +95,12 @@ test.describe('markup', () => {
 		// stuffy is 16 x 11 art pixels; scale 16 → 256 x 176, reserved by attributes and CSS.
 		expect([s.imgWidth, s.imgHeight, s.width, s.height]).toEqual(['256', '176', 256, 176]);
 		const far = await snap(page, 'far');
-		expect(far.src).toBe('/assets/stuffcloud/mascots/mascot-ghost.svg');
+		expect(far.src).toBe('/assets/code/mascots/mascot-ghost.svg');
 	});
 
 	test('a label makes it a named image', async ({ page }) => {
 		await open(page);
-		const id = await add(page, { name: 'boo', base: '/assets/stuffcloud', label: 'Page expired' });
+		const id = await add(page, { name: 'boo', base: '/assets/code', label: 'Page expired' });
 		const s = await snap(page, id);
 		expect([s.alt, s.hidden]).toEqual(['Page expired', null]);
 		await expect(page.getByRole('img', { name: 'Page expired' })).toBeVisible();
@@ -108,19 +108,19 @@ test.describe('markup', () => {
 
 	test('takes any shipped file by path, and src wins over base', async ({ page }) => {
 		await open(page);
-		const sticker = await snap(page, await add(page, { name: 'tool-stickers/sticker-qr', base: '/assets/stuffcloud', scale: '3' }));
-		expect(sticker.src).toBe('/assets/stuffcloud/tool-stickers/sticker-qr.svg');
-		const own = await snap(page, await add(page, { src: '/assets/stuffcloud/seasonal/deco-sun.svg', cols: '11', rows: '11', scale: '2' }));
-		expect([own.src, own.width, own.height]).toEqual(['/assets/stuffcloud/seasonal/deco-sun.svg', 22, 22]);
+		const sticker = await snap(page, await add(page, { name: 'tool-stickers/sticker-qr', base: '/assets/code', scale: '3' }));
+		expect(sticker.src).toBe('/assets/code/tool-stickers/sticker-qr.svg');
+		const own = await snap(page, await add(page, { src: '/assets/code/seasonal/deco-sun.svg', cols: '11', rows: '11', scale: '2' }));
+		expect([own.src, own.width, own.height]).toEqual(['/assets/code/seasonal/deco-sun.svg', 22, 22]);
 	});
 
 	test('cuts fractional and invalid scales to whole pixels', async ({ page }) => {
 		await open(page);
-		const fractional = await snap(page, await add(page, { name: 'cumulo', base: '/assets/stuffcloud', scale: '5.8' }));
+		const fractional = await snap(page, await add(page, { name: 'cumulo', base: '/assets/code', scale: '5.8' }));
 		expect([fractional.imgWidth, fractional.width]).toEqual(['70', 70]);
-		const invalid = await snap(page, await add(page, { name: 'cumulo', base: '/assets/stuffcloud', scale: '-2' }));
+		const invalid = await snap(page, await add(page, { name: 'cumulo', base: '/assets/code', scale: '-2' }));
 		expect([invalid.imgWidth, invalid.width]).toEqual(['14', 14]);
-		const fallback = await snap(page, await add(page, { name: 'bun', base: '/assets/stuffcloud' }));
+		const fallback = await snap(page, await add(page, { name: 'bun', base: '/assets/code' }));
 		expect(fallback.width).toBe(96); // default scale 8
 	});
 
@@ -130,7 +130,7 @@ test.describe('markup', () => {
 		const s = await snap(page, 'main');
 		// compact-scale 10 → 160 x 110; the attributes keep the desktop size, CSS draws the box.
 		expect([s.width, s.height]).toEqual([160, 110]);
-		const same = await snap(page, await add(page, { name: 'hop', base: '/assets/stuffcloud', scale: '6' }));
+		const same = await snap(page, await add(page, { name: 'hop', base: '/assets/code', scale: '6' }));
 		expect(same.width).toBe(84);
 	});
 });
@@ -216,7 +216,7 @@ test.describe('motion', () => {
 			const w = window as unknown as { observed: number; listeners: number };
 			return [w.observed, w.listeners];
 		});
-		const s = await snap(page, await add(page, { name: 'stuffy', base: '/assets/stuffcloud', animated: 'false' }));
+		const s = await snap(page, await add(page, { name: 'stuffy', base: '/assets/code', animated: 'false' }));
 		expect([s.motion, s.animations.length]).toEqual(['still', 0]);
 		expect(
 			await page.evaluate(() => {
@@ -311,7 +311,7 @@ test('keeps running where IntersectionObserver does not exist', async ({ page })
 test('reserves its box: the image arriving moves nothing', async ({ page }) => {
 	let release: () => void = () => {};
 	const gate = new Promise<void>((r) => (release = r));
-	await page.route('**/assets/stuffcloud/mascots/axo.svg', async (route) => {
+	await page.route('**/assets/code/mascots/axo.svg', async (route) => {
 		await gate;
 		await route.continue();
 	});

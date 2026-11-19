@@ -141,7 +141,7 @@ test('wide puts the label at the start and the trailing content at the end; icon
 	expect(btn?.width).toBeCloseTo(host?.width ?? 0, 0);
 	const icon = page.getByRole('button', { name: 'Add' });
 	const box = await icon.boundingBox();
-	expect(box?.width).toBe(48); // stuffcloud --k-tap-icon
+	expect(box?.width).toBe(48); // Code --k-tap-icon
 	expect(box?.height).toBe(48);
 });
 

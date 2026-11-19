@@ -51,7 +51,7 @@ const cases: Case[] = [
 		}
 	}
 ];
-const themes = ['stuffcloud', 'stuffcloud-light', 'flower', 'pop-dark', 'line'];
+const themes = ['code', 'code-light', 'flower', 'pop-dark', 'line'];
 
 for (const { name, prepare, label } of cases) {
 	for (const theme of themes) {

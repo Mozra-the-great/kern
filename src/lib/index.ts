@@ -1,5 +1,5 @@
 // kern — Svelte 5 component kit. Import a theme: `import '@mozra-the-great/kern/themes.css'`
-// and set data-theme="stuffcloud" | "flower" | … on <html>.
+// and set data-theme="code" | "flower" | … on <html>.
 export { default as Button } from './components/Button.svelte';
 export { default as IconButton } from './components/IconButton.svelte';
 export { default as Link } from './components/Link.svelte';
@@ -147,14 +147,17 @@ export type { TimeInput } from './components/RelativeTime.svelte';
 export type { DotStatus } from './components/StatusDot.svelte';
 export { default as Mascot } from './components/Mascot.svelte';
 export type { MascotArt, MascotMotion } from './components/Mascot.svelte';
+/* eslint-disable @typescript-eslint/no-deprecated -- the old stuffcloud names are re-exported on purpose until 1.0 (#85) */
 export {
 	MASCOT_NAMES,
 	MASCOT_SOURCES,
+	CODE_ART,
 	STUFFCLOUD_ART,
 	BOB_PERIOD_MS,
 	BOB_OFFSET_PX,
 	COMPACT_MAX_WIDTH_PX,
 	isMascotName,
+	isCodeArt,
 	isStuffcloudArt,
 	artPath,
 	artUrl,
@@ -162,4 +165,5 @@ export {
 	integerScale,
 	mascotSize
 } from './components/mascots.js';
-export type { MascotName, MascotSource, PixelGrid, StuffcloudArt } from './components/mascots.js';
+export type { CodeArt, MascotName, MascotSource, PixelGrid, StuffcloudArt } from './components/mascots.js';
+/* eslint-enable @typescript-eslint/no-deprecated */

@@ -152,7 +152,7 @@
 	const steps: StepItem[] = $derived([{ id: 's', label: 'S', description: maybeString }]);
 	const tabs: TabItem[] = $derived([{ id: 't', label: 'T', disabled: maybeBoolean }]);
 	const lines: TerminalLine[] = $derived([{ text: 'ls', prompt: maybeString, output: undefined }]);
-	const themes: ThemeOption[] = [{ id: 'stuffcloud', label: 'Stuffcloud' }];
+	const themes: ThemeOption[] = [{ id: 'code', label: 'Code' }];
 	const timeline: TimelineItem[] = $derived([{ id: 'e', title: 'E', time: maybeString, description: maybeString, status: undefined }]);
 	const tree: TreeNode[] = $derived([{ id: 'n', label: 'N', children: undefined, disabled: maybeBoolean }]);
 	const heat: HeatmapDatum[] = [{ date: '2026-01-01', value: 1 }];

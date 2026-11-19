@@ -55,7 +55,7 @@ test.describe('Progress (#42)', () => {
 		await expect(page.locator('#p-det .label')).toHaveText('Upload');
 	});
 
-	test('the indeterminate bar animates only transform, in steps, with stripes (stuffcloud)', async ({ page }) => {
+	test('the indeterminate bar animates only transform, in steps, with stripes (Code)', async ({ page }) => {
 		const info = await page.locator('#p-ind .bar').evaluate((bar) => {
 			const anims = bar.getAnimations();
 			const cs = getComputedStyle(bar);

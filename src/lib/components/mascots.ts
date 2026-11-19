@@ -1,33 +1,38 @@
 /*
- * Pixel-art runtime (#55): the stuffcloud mascot cast, the integer-scale rules and the idle
+ * Pixel-art runtime (#55): the Code mascot cast, the integer-scale rules and the idle
  * motion constants of stuffcloud's ADR 0008 ("Pixel-art animation runtime"). The art itself is
- * shipped as plain files under `assets/stuffcloud/`; `STUFFCLOUD_ART` lists every file with its
+ * shipped as plain files under `assets/code/`; `CODE_ART` lists every file with its
  * pixel grid. Nothing here touches `window`, so it is SSR-safe.
  */
-import { STUFFCLOUD_ART, type PixelGrid, type StuffcloudArt } from './stuffcloud-art.js';
+import { CODE_ART, type CodeArt, type PixelGrid } from './code-art.js';
 
-export { STUFFCLOUD_ART };
-export type { PixelGrid, StuffcloudArt };
+export { CODE_ART };
+export type { CodeArt, PixelGrid };
 
-/** The stuffcloud mascot names, main mascot first. */
+/** @deprecated Renamed to `CODE_ART` (#85); the old name is removed in 1.0. */
+export const STUFFCLOUD_ART: typeof CODE_ART = CODE_ART;
+/** @deprecated Renamed to `CodeArt` (#85); the old name is removed in 1.0. */
+export type StuffcloudArt = CodeArt;
+
+/** The mascot names (the stuffcloud cast), main mascot first. */
 export const MASCOT_NAMES = ['stuffy', 'mochi', 'hop', 'bun', 'bloop', 'waddle', 'ember', 'boo', 'cumulo'] as const;
 
 export type MascotName = (typeof MASCOT_NAMES)[number];
 
 /** Where a mascot's art lives: `file` as in stuffcloud's `MASCOT_SOURCES`, `art` as in kern's assets. */
 export interface MascotSource extends PixelGrid {
-	/** File name without `.svg` (stuffcloud `docs/design/prototypes`, kern `assets/stuffcloud/mascots`). */
+	/** File name without `.svg` (stuffcloud `docs/design/prototypes`, kern `assets/code/mascots`). */
 	readonly file: string;
-	/** Path under `assets/stuffcloud/`, without `.svg`. */
-	readonly art: StuffcloudArt;
+	/** Path under `assets/code/`, without `.svg`. */
+	readonly art: CodeArt;
 	readonly animal: string;
 }
 
-function source(art: StuffcloudArt & `mascots/${string}`, animal: string): MascotSource {
-	return { file: art.slice('mascots/'.length), art, animal, ...STUFFCLOUD_ART[art] };
+function source(art: CodeArt & `mascots/${string}`, animal: string): MascotSource {
+	return { file: art.slice('mascots/'.length), art, animal, ...CODE_ART[art] };
 }
 
-/** stuffcloud mascot name → kern asset (the same mapping as stuffcloud's `MASCOT_SOURCES`). */
+/** Mascot name → kern asset (the same mapping as stuffcloud's `MASCOT_SOURCES`). */
 export const MASCOT_SOURCES: Readonly<Record<MascotName, MascotSource>> = {
 	stuffy: source('mascots/axo', 'axolotl'),
 	mochi: source('mascots/mascot-cat', 'cat'),
@@ -51,23 +56,28 @@ export function isMascotName(name: string): name is MascotName {
 	return (MASCOT_NAMES as readonly string[]).includes(name);
 }
 
-export function isStuffcloudArt(name: string): name is StuffcloudArt {
-	return Object.hasOwn(STUFFCLOUD_ART, name);
+export function isCodeArt(name: string): name is CodeArt {
+	return Object.hasOwn(CODE_ART, name);
+}
+
+/** @deprecated Renamed to `isCodeArt` (#85); the old name is removed in 1.0. */
+export function isStuffcloudArt(name: string): name is CodeArt {
+	return isCodeArt(name);
 }
 
 /** Asset path (`mascots/axo`) of a mascot name or of a path; undefined for anything unknown. */
-export function artPath(name: string): StuffcloudArt | undefined {
+export function artPath(name: string): CodeArt | undefined {
 	if (isMascotName(name)) return MASCOT_SOURCES[name].art;
-	return isStuffcloudArt(name) ? name : undefined;
+	return isCodeArt(name) ? name : undefined;
 }
 
 /**
  * URL of a shipped SVG inside `base`, the URL where the consumer serves the
- * `assets/stuffcloud/` folder: `artUrl('/art/stuffcloud', 'stuffy')` → `/art/stuffcloud/mascots/axo.svg`.
+ * `assets/code/` folder: `artUrl('/art/code', 'stuffy')` → `/art/code/mascots/axo.svg`.
  */
-export function artUrl(base: string, name: MascotName | StuffcloudArt): string {
+export function artUrl(base: string, name: MascotName | CodeArt): string {
 	const path = artPath(name);
-	if (path === undefined) throw new Error(`kern: unknown stuffcloud art "${name}"`);
+	if (path === undefined) throw new Error(`kern: unknown Code art "${name}"`);
 	return `${base.endsWith('/') ? base : `${base}/`}${path}.svg`;
 }
 

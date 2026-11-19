@@ -16,11 +16,11 @@
 
 <script lang="ts">
 	/**
-	 * Stuffcloud pixel art (a mascot or any shipped SVG) through <img>, at whole-number scales,
+	 * Code pixel art (a mascot or any shipped SVG) through <img>, at whole-number scales,
 	 * with a transform-only idle bob that pauses off-screen, in hidden tabs and under reduced motion.
-	 * @prop name A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo) or a path under assets/stuffcloud/ without .svg (tool-stickers/sticker-qr).
+	 * @prop name A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo) or a path under assets/code/ without .svg (tool-stickers/sticker-qr).
 	 * @prop src URL of the SVG file (same origin); wins over base.
-	 * @prop base URL where the assets/stuffcloud/ folder is served; with name it gives the file URL.
+	 * @prop base URL where the assets/code/ folder is served; with name it gives the file URL.
 	 * @prop cols Art pixels across (viewBox width); needed for art outside the catalogue.
 	 * @prop rows Art pixels down (viewBox height).
 	 * @prop scale Whole CSS pixels per art pixel (default 8).

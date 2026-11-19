@@ -3,8 +3,8 @@
 Optional artwork per brand, shipped with the package as plain files
 (`@mozra-the-great/kern/assets/<brand>/<group>/<file>.svg`). The components never load them;
 use them in your own pages, for example as an `EmptyState` icon or seasonal decoration. The
-stuffcloud pixel art can also be drawn with the `Mascot` component (`<k-mascot>`), which takes any
-file of `stuffcloud/` by name (`stuffy`, `tool-stickers/sticker-qr`) and the URL you serve it from
+Code pixel art can also be drawn with the `Mascot` component (`<k-mascot>`), which takes any
+file of `code/` by name (`stuffy`, `tool-stickers/sticker-qr`) and the URL you serve it from
 (README, "Mascot"). The pop, line and flower art is vector art: show it with a plain `<img>` at any
 size (README, "Mascot", last part).
 
@@ -22,12 +22,13 @@ Rules for every brand:
 - **Same-origin files.** Serve them as files (`img-src 'self'`), not as `data:` URIs (README,
   "Mascot", CSP). The largest flower files are 60 to 135 kB: load them with `loading="lazy"`.
 
-## stuffcloud
+## code
 
-Pixel art from the stuffcloud moodboards, also recorded in the Stuffcloud design
-system. One square per pixel, `shape-rendering="crispEdges"`: show each file through
+Pixel art from the stuffcloud moodboards, also recorded in the stuffcloud design
+system; the kern theme it belongs to is `code` (the folder was called `stuffcloud/` until #85, and
+`@mozra-the-great/kern/assets/stuffcloud/*` still resolves here through an `exports` alias until 1.0). One square per pixel, `shape-rendering="crispEdges"`: show each file through
 `<img>` at whole-number scales (`image-rendering: pixelated`) so it stays sharp.
-The colours are fixed and do not follow the theme; the art is drawn for stuffcloud's dark panel.
+The colours are fixed and do not follow the theme; the art is drawn for the dark panel of the Code theme.
 
 | Group | Files | Use |
 | --- | --- | --- |
@@ -106,12 +107,12 @@ originals (`rosa-bluete.svg` → `blossoms/pink-blossom.svg`, `olivbaum.svg` →
 ## Drift check and refresh
 
 Each brand folder has a `manifest.json` that lists every file with its size and sha256, plus the
-pixel grid (stuffcloud) or the `viewBox` (pop, line, flower). It is the contract with the art's
+pixel grid (code) or the `viewBox` (pop, line, flower). It is the contract with the art's
 source: CI cannot reach the stuffcloud repository or the claude.ai artifacts, so the `build` job runs
 `npm run assets:check`. It fails on a missing, extra or changed file, on an SVG without `xmlns` or
 `viewBox`, on an unsafe construct (list above) and on a brand folder it does not know, and it checks
-that `src/lib/components/stuffcloud-art.ts` (the grid catalogue behind `Mascot`) matches the
-stuffcloud SVGs.
+that `src/lib/components/code-art.ts` (the grid catalogue behind `Mascot`) matches the
+code SVGs.
 
 When stuffcloud's art changes:
 

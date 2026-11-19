@@ -50,9 +50,10 @@
 	let theme = $state(readTheme());
 	function readTheme() {
 		try {
-			return localStorage.getItem('kern-theme') ?? 'stuffcloud';
+			// A choice stored before the rename (#85) maps to the new id so the picker still shows it.
+			return (localStorage.getItem('kern-theme') ?? 'code').replace(/^stuffcloud(?=-|$)/, 'code');
 		} catch {
-			return 'stuffcloud';
+			return 'code';
 		}
 	}
 	$effect(() => {
