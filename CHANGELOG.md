@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-19
+
 ### Added
 - `CodeBlock` and `<k-code-block>` (#46): stuffcloud's code block on top of `Code` (block mode): text
   copy button when `copyLabel` is set (or `copy`; `showCopyLabel={false}` / `copy-icon` for an
