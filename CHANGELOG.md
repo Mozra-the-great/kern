@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-19
+
 ### Added
 - Theme `line` (= `line-dark`) and `line-light` from the Line-Designsystem (#77): pill controls, 1.5px
   borders, no shadows, Outfit / Inter / JetBrains Mono, 44px targets for every pointer, buttons 52px.
