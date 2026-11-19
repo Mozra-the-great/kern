@@ -69,6 +69,26 @@ export interface TabLinkItem {
 	/** Colour of the badge or dot. Default `accent`. */
 	badgeTone?: 'accent' | 'danger' | undefined;
 }
+/** Item of <k-sortable-list>. */
+export interface SortableItem {
+	/** Identifies the item while it moves. */
+	id: string | number;
+	/** The item's name: visible text, and part of the accessible name of its buttons. */
+	label: string;
+	/** Second, muted line under the name. */
+	description?: string | undefined;
+}
+/** Item of <k-select-grid>. */
+export interface SelectGridItem {
+	/** Identifies the item: what `selected` lists, and what stays with it when it moves. */
+	id: string | number;
+	/** The item's name: its accessible name and the caption under the picture. */
+	label: string;
+	/** URL of the picture. */
+	src?: string | undefined;
+	/** Second, muted line under the caption. */
+	description?: string | undefined;
+}
 export interface BreadcrumbItem {
 	label: string;
 	/** Without `href` the item is plain text. */

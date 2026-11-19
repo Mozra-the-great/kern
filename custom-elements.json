@@ -10585,6 +10585,168 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/select-grid.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-select-grid",
+					"name": "KSelectGridElement",
+					"description": "Grid of pictures as a multi-select listbox (one Tab stop, arrow keys by one place and one row, Home/End/PageUp/PageDown, Space/Enter toggle, Shift extends, Ctrl/Cmd+A all, Esc clears). With `reorderable`, Alt+arrow keys and dragging move the focused item; the element does not reorder `items` itself: set `items` again in the `move` handler (`splice` the item from `from` to `to`; Svelte: `moveItem`). An item shows `src` as a picture and its `label` and `description` as a caption (other pictures, e.g. a canvas: the Svelte component's `item` snippet).",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "items",
+							"type": {
+								"text": "SelectGridItem[]"
+							},
+							"default": "[]",
+							"attribute": "items",
+							"description": "`{ id, label, src?, description? }`."
+						},
+						{
+							"kind": "field",
+							"name": "selected",
+							"type": {
+								"text": "Array<string | number>"
+							},
+							"default": "[]",
+							"attribute": "selected",
+							"description": "The `id`s of the selected items."
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label"
+						},
+						{
+							"kind": "field",
+							"name": "min",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "min",
+							"description": "Smallest column width (CSS length). Default `150px`."
+						},
+						{
+							"kind": "field",
+							"name": "reorderable",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "reorderable"
+						},
+						{
+							"kind": "field",
+							"name": "caption",
+							"type": {
+								"text": "boolean | 'true' | 'false' | undefined"
+							},
+							"attribute": "caption",
+							"description": "`false` hides the caption (label and description) under the picture. Default true."
+						},
+						{
+							"kind": "field",
+							"name": "reorderHint",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "reorder-hint"
+						}
+					],
+					"attributes": [
+						{
+							"name": "items",
+							"type": {
+								"text": "SelectGridItem[] (JSON)"
+							},
+							"default": "[]",
+							"fieldName": "items"
+						},
+						{
+							"name": "selected",
+							"type": {
+								"text": "Array<string | number> (JSON)"
+							},
+							"default": "[]",
+							"fieldName": "selected"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
+						},
+						{
+							"name": "min",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "min"
+						},
+						{
+							"name": "reorderable",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "reorderable"
+						},
+						{
+							"name": "caption",
+							"type": {
+								"text": "boolean | 'true' | 'false'"
+							},
+							"fieldName": "caption"
+						},
+						{
+							"name": "reorder-hint",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "reorderHint"
+						}
+					],
+					"events": [
+						{
+							"name": "change",
+							"type": {
+								"text": "CustomEvent<Array<string | number>>"
+							},
+							"description": "The `id`s of the selected items after the user changed the selection (not for `selected` set from code)."
+						},
+						{
+							"name": "move",
+							"type": {
+								"text": "CustomEvent<{ from: number; to: number }>"
+							},
+							"description": "The user moved the item at `from` so that it should end up at `to`."
+						}
+					],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-select-grid",
+					"declaration": {
+						"name": "KSelectGridElement",
+						"module": "dist-elements/elements/select-grid.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/skeleton.js",
 			"declarations": [
 				{
@@ -11065,6 +11227,208 @@
 					"declaration": {
 						"name": "KSliderElement",
 						"module": "dist-elements/elements/slider.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
+			"path": "dist-elements/elements/sortable-list.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-sortable-list",
+					"name": "KSortableListElement",
+					"description": "Ordered list whose items move with Up, Down and Remove buttons (drag and drop is an extra). The element does not reorder `items` itself: set `items` again in the `move` and `remove` handlers (`splice` the item from `from` to `to`; Svelte: `moveItem`). Focus stays on the pressed button, or moves to its partner when that one is disabled at an end of the list. Say what happened with `announce()` (README). An item shows its `label` and `description` (richer content: the Svelte component's `item` snippet).",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "items",
+							"type": {
+								"text": "SortableItem[]"
+							},
+							"default": "[]",
+							"attribute": "items",
+							"description": "`{ id, label, description? }`, in their current order."
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label"
+						},
+						{
+							"kind": "field",
+							"name": "upText",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "up-text"
+						},
+						{
+							"kind": "field",
+							"name": "downText",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "down-text"
+						},
+						{
+							"kind": "field",
+							"name": "removeText",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "remove-text"
+						},
+						{
+							"kind": "field",
+							"name": "upLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "up-label"
+						},
+						{
+							"kind": "field",
+							"name": "downLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "down-label"
+						},
+						{
+							"kind": "field",
+							"name": "removeLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "remove-label"
+						},
+						{
+							"kind": "field",
+							"name": "removable",
+							"type": {
+								"text": "boolean | 'true' | 'false' | undefined"
+							},
+							"attribute": "removable",
+							"description": "`false` (property or attribute) hides the Remove buttons. Default true."
+						},
+						{
+							"kind": "field",
+							"name": "dragDrop",
+							"type": {
+								"text": "boolean | 'true' | 'false' | undefined"
+							},
+							"attribute": "drag-drop",
+							"description": "`false` turns off dragging. Default true."
+						}
+					],
+					"attributes": [
+						{
+							"name": "items",
+							"type": {
+								"text": "SortableItem[] (JSON)"
+							},
+							"default": "[]",
+							"fieldName": "items"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
+						},
+						{
+							"name": "up-text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "upText"
+						},
+						{
+							"name": "down-text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "downText"
+						},
+						{
+							"name": "remove-text",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "removeText"
+						},
+						{
+							"name": "up-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "upLabel"
+						},
+						{
+							"name": "down-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "downLabel"
+						},
+						{
+							"name": "remove-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "removeLabel"
+						},
+						{
+							"name": "removable",
+							"type": {
+								"text": "boolean | 'true' | 'false'"
+							},
+							"fieldName": "removable"
+						},
+						{
+							"name": "drag-drop",
+							"type": {
+								"text": "boolean | 'true' | 'false'"
+							},
+							"fieldName": "dragDrop"
+						}
+					],
+					"events": [
+						{
+							"name": "move",
+							"type": {
+								"text": "CustomEvent<{ from: number; to: number }>"
+							},
+							"description": "The user moved the item at `from` so that it should end up at `to`."
+						},
+						{
+							"name": "remove",
+							"type": {
+								"text": "CustomEvent<{ index: number }>"
+							},
+							"description": "The user asked to remove the item at `index`."
+						}
+					],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-sortable-list",
+					"declaration": {
+						"name": "KSortableListElement",
+						"module": "dist-elements/elements/sortable-list.js"
 					}
 				}
 			]
@@ -15111,6 +15475,14 @@
 				},
 				{
 					"kind": "custom-element-definition",
+					"name": "k-select-grid",
+					"declaration": {
+						"name": "KSelectGridElement",
+						"module": "dist-elements/elements/select-grid.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
 					"name": "k-skeleton",
 					"declaration": {
 						"name": "KSkeletonElement",
@@ -15131,6 +15503,14 @@
 					"declaration": {
 						"name": "KSliderElement",
 						"module": "dist-elements/elements/slider.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-sortable-list",
+					"declaration": {
+						"name": "KSortableListElement",
+						"module": "dist-elements/elements/sortable-list.js"
 					}
 				},
 				{

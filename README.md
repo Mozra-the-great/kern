@@ -616,6 +616,135 @@ bzw. `role="listitem"` auf sich); weitere Attribute gehen an das Wurzelelement.
 	<Tile as="li" href="/pdf"><PdfIcon /><span>PDF</span></Tile>
 	<Tile as="li"><span>Bald mehr</span></Tile>
 </TileGrid>
+```
+
+## Sortieren und Auswählen: Abgleich mit stuffcloud
+
+| stuffcloud                                      | kern                                                                    |
+| ----------------------------------------------- | ----------------------------------------------------------------------- |
+| `ReorderList` (Hoch, Runter, Entfernen, Ziehen) | `SortableList`, Element `<k-sortable-list>`                             |
+| `PageGrid` (Bilder als Mehrfachauswahl)         | `SelectGrid`, Element `<k-select-grid>`                                 |
+| `keyOf`, `texts.upLabel(item)` …                | `key`, `itemLabel` und `upLabel="Move {name} up"` (Katalog en/de)       |
+| `pageLabel(page, position)`                     | `itemLabel(item, index)`                                                |
+| `selected: Set<number>`, `onselect(set)`        | `bind:selected` / `onchange` mit einer Liste von Schlüsseln (`ItemKey[]`) |
+| `onmove` nur mit `onmove`-Prop                  | `reorderable` und `onmove(from, to)`                                    |
+
+**SortableList:** eine Liste, deren Einträge Knöpfe zum Verschieben und Entfernen haben. Die Liste
+sortiert nie selbst: `onmove(from, to)` und `onremove(index)` melden den Wunsch, die App ändert `items`
+(Svelte: `moveItem(items, from, to)`). Jeder Knopf zeigt einen sichtbaren Text („Up“, „Nach oben“) und
+trägt einen zugänglichen Namen mit dem Eintragsnamen, der den sichtbaren Text enthält (WCAG 2.5.3):
+„Move Report.pdf up“, „Report.pdf nach oben verschieben“. Texte: Props (`upText`, `downText`,
+`removeText`, `upLabel`, `downLabel`, `removeLabel` mit `{name}`) oder der Katalog (`sortableList`).
+Der Fokus bleibt nach einer Verschiebung auf dem gedrückten Knopf; wird er am Listenende deaktiviert,
+wandert er zum Partner (Hoch/Runter). Nach „Entfernen“ geht der Fokus zum Knopf des nachrückenden Eintrags
+(am Ende zum neuen letzten); ist die Liste leer, entscheidet die App. Wendet die App die Änderung
+erst später an (Framework-Rendering, Serveraufruf), gilt der Fokuswunsch bis zu 1,5 s; lehnt die App
+ab, bleibt der Fokus unberührt. `removable={false}` blendet „Entfernen“ aus, `dragDrop={false}` schaltet
+das Ziehen ab: Ziehen mit der Maus ist nur ein Extra, die Knöpfe sind der Weg für Tastatur, Touch und
+Screenreader. Ohne `item`-Snippet zeigt ein Eintrag `label` (fett) und `description`; `key` (Vorgabe:
+`item.id`, sonst der Index) und `itemLabel` (Vorgabe: `item.label`) erlauben beliebige Typen.
+
+**Ansagen sind Sache der App.** Die Liste spricht nicht selbst, weil nur die App weiß, wie die neue
+Reihenfolge heißt: ein `<LiveAnnouncer />` in die Seite und `announce()` im Handler:
+
+```svelte
+<script lang="ts">
+	import { SortableList, announce, moveItem } from '@mozra-the-great/kern';
+	let files = $state([
+		{ id: 1, label: 'Rechnung.pdf', description: '3 Seiten' },
+		{ id: 2, label: 'Vertrag.pdf', description: '12 Seiten' }
+	]);
+	function move(from: number, to: number): void {
+		const name = files[from]?.label;
+		files = moveItem(files, from, to);
+		announce(`${name} verschoben, Position ${to + 1} von ${files.length}`);
+	}
+</script>
+
+<SortableList items={files} label="Dateien" onmove={move} onremove={(i: number) => (files = files.filter((_, n) => n !== i))} />
+```
+
+```tsx
+// React 19: Element, Handler ersetzt `items`; announce kommt aus dem Elemente-Paket
+<k-sortable-list
+	items={files}
+	label="Dateien"
+	up-text="Nach oben"
+	up-label="{name} nach oben verschieben"
+	onmove={(e) => {
+		setFiles(move(files, e.detail.from, e.detail.to));
+		announce(`${files[e.detail.from].label} verschoben, Position ${e.detail.to + 1} von ${files.length}`);
+	}}
+	onremove={(e) => setFiles(files.filter((_, i) => i !== e.detail.index))}
+/>
+```
+
+Das Element liest `items` als `{ id, label, description? }`; Inhalte darüber hinaus (Vorschaubild, eigene
+Zeile) gehen nur über das `item`-Snippet der Svelte-Komponente, weil ein Element keine Snippets kennt.
+Attribute: `label`, `up-text`, `down-text`, `remove-text`, `up-label`, `down-label`, `remove-label`,
+`removable="false"`, `drag-drop="false"`. Ereignisse: `move` (`{ from, to }`) und `remove` (`{ index }`),
+beide nur bei Nutzereingaben, nie beim Setzen von `items`.
+
+**SelectGrid:** Bilder als Mehrfachauswahl (`role="listbox"`, `aria-multiselectable`, jede Auswahl mit
+`aria-selected`). Ein Tab-Stopp (roving tabindex), Tab verlässt das Raster, Umschalt+Tab kehrt zum zuletzt
+fokussierten Bild zurück.
+
+| Taste                          | Wirkung                                                                              |
+| ------------------------------ | ------------------------------------------------------------------------------------ |
+| Pfeil links/rechts             | ein Bild weiter (in `dir="rtl"` vertauscht)                                          |
+| Pfeil auf/ab                   | eine Zeile weiter; die Spaltenzahl wird aus dem Layout gemessen, am Rand passiert nichts |
+| Pos1/Ende, Bild auf/ab         | erstes/letztes Bild, fünf Zeilen weiter                                              |
+| Leertaste, Enter               | Bild wählen/abwählen; Klick tut dasselbe                                             |
+| Umschalt+Pfeil, Umschalt+Leertaste, Umschalt+Klick | Bereich ab dem Ankerbild wählen (ersetzt die Auswahl)        |
+| Strg/Cmd+A, Esc                | alle wählen, Auswahl leeren (Esc ohne Auswahl wird nicht abgefangen)                 |
+| Alt+Pfeil (mit `reorderable`)  | fokussiertes Bild um einen Platz oder eine Zeile verschieben, der Fokus geht mit     |
+
+Pfeiltasten ändern die Auswahl nie; die Auswahl hält Schlüssel statt Positionen und folgt dem Bild
+beim Verschieben. `reorderable` aktiviert Alt+Pfeil und Ziehen (nur das fokussierte bzw. gezogene Bild,
+ein Extra für die Maus) und meldet `onmove(from, to)`; jedes Bild verweist dann per `aria-describedby`
+auf einen unsichtbaren Hinweis (`reorderHint`, Katalog `selectGrid.reorderHint`). Ohne `reorderable`
+bleibt Alt+Pfeil beim Browser („Zurück“). Verschwindet das fokussierte Bild, geht der Fokus zum Tab-Stopp
+zurück statt auf die Seite zu fallen. Die Auswahl zeigt sich nicht nur durch Farbe: jedes Bild hat
+oben rechts ein Kästchen, das ausgewählt ein Häkchen trägt, dazu Rahmen und Fläche in der Akzentfarbe;
+im Kontrastmodus (`forced-colors`) wird daraus ein 4 px dicker `Highlight`-Rahmen und ein `Highlight`-Haken.
+Übergänge laufen über `--k-dur` und stehen bei `prefers-reduced-motion` still. Ohne Bilder rendert das
+Raster nichts (eine leere Listbox wäre ungültig).
+
+```svelte
+<script lang="ts">
+	import { SelectGrid, moveItem } from '@mozra-the-great/kern';
+	let pages = $state([
+		{ id: 1, label: 'Seite 1', src: '/thumbs/1.png' },
+		{ id: 2, label: 'Seite 2', src: '/thumbs/2.png' }
+	]);
+	let selected = $state<(string | number)[]>([]);
+</script>
+
+<SelectGrid items={pages} bind:selected label="Seiten" min="120px" reorderable onmove={(from, to) => (pages = moveItem(pages, from, to))} />
+
+<!-- eigene Bilder, z. B. ein Canvas: -->
+<SelectGrid items={pages} itemLabel={(p, i) => `Position ${i + 1}: ${p.label}`} bind:selected>
+	{#snippet item(page, index, isSelected)}<MyThumb {page} {isSelected} />{/snippet}
+</SelectGrid>
+```
+
+```tsx
+<k-select-grid
+	items={pages}
+	selected={selected}
+	label="Seiten"
+	reorderable
+	onchange={(e) => setSelected(e.detail)}
+	onmove={(e) => setPages(move(pages, e.detail.from, e.detail.to))}
+/>
+```
+
+Das Element liest `items` als `{ id, label, src?, description? }` (`src` als Bild, `label` und `description`
+als Bildunterschrift; `caption="false"` blendet sie aus) und `selected` als Liste der `id`. Attribute:
+`label`, `min` (kleinste Spaltenbreite, Vorgabe `150px`), `reorderable`, `caption`, `reorder-hint`.
+Ereignisse: `change` (Liste der `id` in der Reihenfolge von `items`) und `move` (`{ from, to }`), beide nur
+bei Nutzereingaben. Das Seitenverhältnis des Bildfelds ist über `--k-select-grid-ratio` (Vorgabe `1 / 1`)
+einstellbar. Auch hier gilt: Das Element sortiert nicht selbst, der `move`-Handler setzt `items` neu.
 
 ## Texte, Sprache und Barrierefreiheit
 
@@ -759,7 +888,7 @@ Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, Conte
 Status: Badge, Tag, Avatar, StatusDot, StatusMessage, Spinner, Progress, ProgressRing, Skeleton, Alert, Toaster/`toast()` ·
 Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
 Inhalt: Card, Tile/TileGrid, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel, Code, CodeBlock, Kbd, RelativeTime,
-Collapsible, ScrollArea, Resizable (Paneele mit tastaturbedienbaren Trennern) ·
+Collapsible, ScrollArea, Resizable (Paneele mit tastaturbedienbaren Trennern), SortableList, SelectGrid ·
 Daten: DataTable (Filter, Sortierung, Seiten, Zeilenauswahl), Stat, Sparkline, Heatmap, HistoryBar, Timeline ·
 Overlays: Modal, Drawer, Tooltip, Popover ·
 Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, TabLinks, Accordion/AccordionItem, TreeView ·

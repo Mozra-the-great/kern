@@ -23,6 +23,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `SortableList` and `<k-sortable-list>` (#68): an ordered list whose items have Up, Down and Remove buttons with the
+  item name in their accessible name (`Move {name} up`; it contains the visible text, WCAG 2.5.3, English
+  and German in the catalogue). The focus stays on the pressed button after a move, moves to its partner when
+  that button is disabled at an end of the list, and after a removal goes to the next item. The list never
+  reorders itself: `onmove(from, to)` / `onremove(index)` (element: `move` with `{ from, to }`, `remove` with
+  `{ index }`, user input only), a host that applies the change later (a framework re-render) keeps the focus
+  rules for up to 1.5 s. Props `items`, `key`, `itemLabel`, `label`, `upText`, `downText`, `removeText`,
+  `upLabel`, `downLabel`, `removeLabel`, `removable`, `dragDrop` (dragging with the mouse is an extra) and an
+  `item` snippet; the element reads `{ id, label, description? }` items. Announcing a move is the host's job
+  with `announce()` (README, demo).
+- `SelectGrid` and `<k-select-grid>` (#68): pictures as a multi-select `role="listbox"` (`aria-multiselectable`) with
+  one Tab stop (roving tabindex), arrow keys by one place and by one row (columns measured from the layout,
+  Left and Right swap in `dir="rtl"`), Home, End, PageUp, PageDown, Space and Enter toggle, Shift+arrow and
+  Shift+Space extend, Ctrl/Cmd+A selects all, Esc clears, Alt+arrow reorders with `reorderable` (plus
+  dragging); the selection shows as a check mark and heavier outline, not by colour alone, and in
+  `forced-colors`. `bind:selected` / `onchange` (keys in the order of `items`; element: `selected` and `change`),
+  `onmove(from, to)` (element: `move`), `key`, `itemLabel`, `min`, `caption`, `reorderHint`, an `item` snippet
+  (picture, with the selected state) and `--k-select-grid-ratio`. The element reads `{ id, label, src?, description? }`.
+  The focus returns to the Tab stop when the focused item goes away.
+- `moveItem(items, from, to)` and the types `SortableItem`, `SelectGridItem` and `ItemKey`; catalogue entries
+  `sortableList` and `selectGrid` with a complete German translation.
+
 ## [0.6.0] - 2026-11-19
 
 ### Added

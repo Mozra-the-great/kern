@@ -148,7 +148,25 @@ const catalogue = {
 	rating: { starLabel: '{value} of {max} stars' },
 	resizable: { handleLabel: 'Resize {panel}' },
 	scrollArea: { label: 'Scrollable content' },
+	selectGrid: {
+		/** Accessible name of the grid when `label` is not set. */
+		label: 'Selectable items',
+		/** Read with every option while the grid can be reordered. */
+		reorderHint: 'Hold Alt and press an arrow key to move the focused item.'
+	},
 	skipLink: { label: 'Skip to main content' },
+	sortableList: {
+		/** Accessible name of the list when `label` is not set. */
+		label: 'Items',
+		/** Visible texts of the three buttons of an item. */
+		upText: 'Up',
+		downText: 'Down',
+		removeText: 'Remove',
+		/** Accessible names of the buttons; they contain the visible text (WCAG 2.5.3). `{name}` is the item's name. */
+		upLabel: 'Move {name} up',
+		downLabel: 'Move {name} down',
+		removeLabel: 'Remove {name}'
+	},
 	sparkline: { label: 'Trend: first {first}, last {last}, min {min}, max {max}', emptyLabel: 'No data' },
 	spinner: { label: 'Loading' },
 	stat: { upLabel: 'up {value}', downLabel: 'down {value}', flatLabel: 'unchanged' },
