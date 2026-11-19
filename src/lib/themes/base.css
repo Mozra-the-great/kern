@@ -97,6 +97,9 @@
 	line-height: 1.5;
 }
 
+/* Themes set --k-dur on [data-theme^='…'], which has the same specificity as :root and
+ * loads later, so a plain rule here would lose. !important keeps reduced motion in force
+ * for every theme, any import order and nested data-theme boxes. */
 @media (prefers-reduced-motion: reduce) {
-	:root { --k-dur: 0ms; }
+	:root, [data-theme] { --k-dur: 0ms !important; }
 }

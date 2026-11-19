@@ -10,6 +10,8 @@
 	import Widgets from './sections/Widgets.svelte';
 	import FormsMore from './sections/FormsMore.svelte';
 	import Effects from './sections/Effects.svelte';
+	import Primitives from './sections/Primitives.svelte';
+	import Layout from './sections/Layout.svelte';
 	import Assets from './sections/Assets.svelte';
 	import Data from './sections/Data.svelte';
 
@@ -235,6 +237,8 @@
 	<Widgets />
 	<FormsMore />
 	<Data />
+	<Primitives />
+	<Layout />
 	<Effects />
 	<Assets />
 </main>

@@ -34,6 +34,12 @@ Zu Stuffcloud gehört Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Stic
 Saison-Deko) unter `kern-ui/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
 Die Komponenten laden sie nie; sie sind für eigene Seiten gedacht.
 
+Gegen das Aufblitzen des falschen Themes beim Laden liefert `createThemeScript('kern-theme', { followSystem: true })`
+ein kleines Inline-Script für `<head>` (Schlüssel = `persist` des ThemeToggle; unter strenger CSP mit Nonce).
+`<k-theme-toggle target="#id">` wirkt auf ein Element statt auf `<html>`. `<k-resizable>`-Paneele sind Kinder mit
+`data-panel` (bis zu 8); unter 520 px Containerbreite stapeln sie sich. `<k-relative-time>` nennt die Stilvariante
+`format-style`, weil `style` das HTML-Attribut ist.
+
 Ein neues Theme ist eine CSS-Datei, die die Variablen aus `src/lib/themes/base.css`
 für `[data-theme^='name']` überschreibt, plus ein `@import` in `themes/index.css`.
 
@@ -73,10 +79,11 @@ npm i kern-ui
 ```
 
 Listen (`options`, `items`, `tabs`, `columns`, `rows`, `commands`, `nodes`, `expanded`, `steps`,
-`suggestions`, `swatches`, `lines`, `format`, `values`, `data`, `status-labels`, bei TagInput `value`, bei Typewriter `text`) werden als
+`suggestions`, `swatches`, `lines`, `format`, `values`, `data`, `status-labels`, `keys`, `labels`, `themes`, `sizes`,
+`panels`, bei TagInput `value`, bei Typewriter `text`) werden als
 JSON-Attribut übergeben. Attribute mit Vorgabe `true` (`pausable`, `pause-on-hover`, `once`, `in-view`,
 `caret`, `blink` …) schaltet `="false"` ab; bei den Daten-Elementen heißen sie umgekehrt (`no-search`,
-`no-stack`, `no-legend`, `no-last-dot`, `rising-is-bad`). `<k-stat>` nimmt eine `<k-sparkline>` im Slot `spark`.
+`no-stack`, `no-legend`, `no-last-dot`, `rising-is-bad`, `no-pulse`). `<k-stat>` nimmt eine `<k-sparkline>` im Slot `spark`.
 
 Ereignisse:
 
@@ -89,6 +96,8 @@ Ereignisse:
 - `select`: DropdownMenu, ContextMenu, CommandPalette, TreeView (`detail` = id), DataTable (`detail` =
   gewählte Schlüssel nach `row-key`), Heatmap (`detail` = `{date, value}`)
 - `sort`: DataTable (`detail` = `{key, dir}`)
+- `copy`: CopyButton und Code (`detail` = kopierter Text) · `copy-error`: CopyButton
+- `change` außerdem: ThemeToggle (Theme-Id), Resizable (Größen in %, `number[]`) · `toggle` außerdem: Collapsible
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
 - `files`: FileDrop (`detail` = `File[]`, auch als `el.files`)
 - `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
@@ -106,10 +115,11 @@ per Attribut übersetzen; die Vorgaben sind englisch.
 
 ## Komponenten (Kern-Set)
 
-Aktionen: Button, IconButton, Link, DropdownMenu, ContextMenu, CommandPalette ·
-Status: Badge, Tag, Avatar, Spinner, Progress, Skeleton, Alert, Toaster/`toast()` ·
+Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
+Status: Badge, Tag, Avatar, StatusDot, Spinner, Progress, ProgressRing, Skeleton, Alert, Toaster/`toast()` ·
 Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
-Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel ·
+Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel, Code, Kbd, RelativeTime,
+Collapsible, ScrollArea, Resizable (Paneele mit tastaturbedienbaren Trennern) ·
 Daten: DataTable (Filter, Sortierung, Seiten, Zeilenauswahl), Stat, Sparkline, Heatmap, HistoryBar, Timeline ·
 Overlays: Modal, Drawer, Tooltip, Popover ·
 Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, Accordion/AccordionItem, TreeView ·
