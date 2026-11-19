@@ -4,26 +4,26 @@
 
 	interface Props {
 		/** The code as text. Needed for line numbers and the copy button; `children` can replace it for plain content. */
-		code?: string;
+		code?: string | undefined;
 		/** `<pre><code>` box instead of inline `<code>`. */
-		block?: boolean;
+		block?: boolean | undefined;
 		/** Name of the language. Shown in the header and set as `language-…` class and `data-language` for outside highlighters. */
-		language?: string;
+		language?: string | undefined;
 		/** Block only, needs `code`. The numbers are not selectable and hidden from assistive technology. */
-		lineNumbers?: boolean;
+		lineNumbers?: boolean | undefined;
 		/** Number of the first line. */
-		startLine?: number;
+		startLine?: number | undefined;
 		/** Block only: shows a button that copies the code. */
-		copy?: boolean;
-		copyLabel?: string;
-		copiedLabel?: string;
-		copyErrorLabel?: string;
+		copy?: boolean | undefined;
+		copyLabel?: string | undefined;
+		copiedLabel?: string | undefined;
+		copyErrorLabel?: string | undefined;
 		/** Accessible name of the block when it can scroll. Defaults to "<language> code" or "Code". */
-		label?: string;
+		label?: string | undefined;
 		/** Called with the code after it was copied. */
-		oncopy?: (text: string) => void;
-		class?: string;
-		children?: Snippet;
+		oncopy?: ((text: string) => void) | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let {
 		code,

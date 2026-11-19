@@ -3,25 +3,25 @@
 
 	interface Props {
 		/** 0..max. `null` or undefined shows an indeterminate ring. */
-		value?: number | null;
-		max?: number;
+		value?: number | null | undefined;
+		max?: number | undefined;
 		/** Accessible name, e.g. "Upload". */
 		label: string;
 		/** Outer diameter in px. */
-		size?: number;
+		size?: number | undefined;
 		/** Stroke width in px. */
-		thickness?: number;
+		thickness?: number | undefined;
 		/** Shows the percentage in the centre (needs a ring of about 48 px or more). */
-		showValue?: boolean;
+		showValue?: boolean | undefined;
 		/** Replaces the spoken value, e.g. "3 of 5 files". Default: the percentage. */
-		valueText?: string;
+		valueText?: string | undefined;
 		/** Formats the percentage for the centre and for screen readers. */
-		format?: (percent: number) => string;
+		format?: ((percent: number) => string) | undefined;
 		/** Text for the indeterminate state: spoken, and shown in the centre under reduced motion. */
-		loadingText?: string;
-		class?: string;
+		loadingText?: string | undefined;
+		class?: string | undefined;
 		/** Content for the centre. Screen readers get `valueText` instead. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 	}
 	let {
 		value = null,

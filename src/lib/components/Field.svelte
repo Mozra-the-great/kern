@@ -4,15 +4,15 @@
 
 	interface Props {
 		/** Visible label. */
-		label?: string;
+		label?: string | undefined;
 		/** Help text under the control. */
-		hint?: string;
+		hint?: string | undefined;
 		/** Error text. Replaces the hint and marks the control invalid. */
-		error?: string;
-		required?: boolean | null;
+		error?: string | undefined;
+		required?: boolean | null | undefined;
 		/** Id of the control the label points to. */
-		for?: string;
-		class?: ClassValue | null;
+		for?: string | undefined;
+		class?: ClassValue | null | undefined;
 		/** Receives the ids for aria-describedby. */
 		children: Snippet<[{ describedby: string | undefined; invalid: boolean }]>;
 	}

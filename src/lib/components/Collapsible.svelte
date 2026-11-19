@@ -2,20 +2,20 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		open?: boolean;
+		open?: boolean | undefined;
 		/** Text of the trigger button. Use `trigger` for richer content. */
-		label?: string;
+		label?: string | undefined;
 		/** Content of the trigger button; replaces `label`. */
-		trigger?: Snippet;
-		disabled?: boolean;
+		trigger?: Snippet | undefined;
+		disabled?: boolean | undefined;
 		/** `boxed` = bordered surface, `plain` = only a line below. */
-		look?: 'boxed' | 'plain';
+		look?: 'boxed' | 'plain' | undefined;
 		/** Called when the user opens or closes it. */
-		ontoggle?: (open: boolean) => void;
-		class?: string;
-		children?: Snippet;
+		ontoggle?: ((open: boolean) => void) | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
-	let { open = $bindable(false), label, trigger, disabled = false, look = 'boxed', ontoggle, class: cls = '', children }: Props = $props();
+	let { open = $bindable(), label, trigger, disabled = false, look = 'boxed', ontoggle, class: cls = '', children }: Props = $props();
 	const uid = $props.id();
 
 	function toggle(): void {
@@ -25,7 +25,7 @@
 </script>
 
 <div class="k-collapsible {cls}" data-look={look} class:open>
-	<button type="button" class="trigger" id="{uid}-trigger" aria-expanded={open} aria-controls="{uid}-content" {disabled} onclick={toggle}>
+	<button type="button" class="trigger" id="{uid}-trigger" aria-expanded={open ?? false} aria-controls="{uid}-content" {disabled} onclick={toggle}>
 		<span class="text">{#if trigger}{@render trigger()}{:else}{label}{/if}</span>
 		<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg>
 	</button>

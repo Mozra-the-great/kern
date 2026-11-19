@@ -2,19 +2,19 @@
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	interface Props extends Omit<HTMLInputAttributes, 'type'> {
-		checked?: boolean;
+		checked?: boolean | undefined;
 		label: string;
-		hint?: string;
+		hint?: string | undefined;
 		/** Put the label before the switch. */
-		labelFirst?: boolean;
+		labelFirst?: boolean | undefined;
 	}
-	let { checked = $bindable(false), label, hint, labelFirst = false, id, class: cls = '', ...rest }: Props = $props();
+	let { checked = $bindable(), label, hint, labelFirst = false, id, class: cls = '', ...rest }: Props = $props();
 	const uid = $props.id();
 	const swId = $derived(id ?? `${uid}-sw`);
 </script>
 
 <div class="k-switch {cls}" class:labelFirst>
-	<input type="checkbox" role="switch" id={swId} bind:checked aria-checked={checked} aria-describedby={hint ? `${swId}-hint` : undefined} {...rest} />
+	<input type="checkbox" role="switch" id={swId} bind:checked={() => checked ?? false, (v) => (checked = v)} aria-checked={checked ?? false} aria-describedby={hint ? `${swId}-hint` : undefined} {...rest} />
 	<span class="text">
 		<label for={swId}>{label}</label>
 		{#if hint}<span class="hint" id="{swId}-hint">{hint}</span>{/if}

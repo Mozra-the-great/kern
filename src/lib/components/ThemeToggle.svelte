@@ -7,23 +7,23 @@
 		 * Themes to switch between. Two entries give a toggle button, more give a menu.
 		 * Default: the light/dark pair of the family of the current `data-theme`.
 		 */
-		themes?: ThemeOption[];
+		themes?: ThemeOption[] | undefined;
 		/** Id of the active theme (`data-theme` of the target). */
-		value?: string;
+		value?: string | undefined;
 		/**
 		 * Element whose `data-theme` is switched: an element, or a CSS selector looked up in
 		 * the document. Default `document.documentElement`; `null` = none yet (waits).
 		 */
-		target?: HTMLElement | string | null;
+		target?: HTMLElement | string | null | undefined;
 		/** localStorage key that remembers the user's choice. Pair it with `themeScript`. */
-		persist?: string;
+		persist?: string | undefined;
 		/** Until the user chooses, follow the system light/dark setting. */
-		followSystem?: boolean;
+		followSystem?: boolean | undefined;
 		/** Accessible name. Default: "Dark mode" (toggle) or "Theme" (menu). */
-		label?: string;
+		label?: string | undefined;
 		/** Called when the user picks a theme (not when the system or the page changes it). */
-		onchange?: (id: string) => void;
-		class?: string;
+		onchange?: ((id: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let { themes, value = $bindable(), target, persist, followSystem = false, label, onchange, class: cls = '' }: Props = $props();
 

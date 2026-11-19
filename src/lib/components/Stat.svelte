@@ -7,26 +7,26 @@
 		/** Text is shown as it is, numbers are formatted with `locale`. */
 		value: string | number;
 		/** Unit after the value, e.g. "ms" or "€". */
-		unit?: string;
+		unit?: string | undefined;
 		/** Change against the reference period. The sign sets the direction. */
-		delta?: number;
+		delta?: number | undefined;
 		/** Unit of the change. */
-		deltaUnit?: string;
+		deltaUnit?: string | undefined;
 		/** What the change refers to, e.g. "vs. last week". */
-		deltaLabel?: string;
+		deltaLabel?: string | undefined;
 		/** `false` when a rising number is bad (error rate, latency). */
-		positiveIsGood?: boolean;
+		positiveIsGood?: boolean | undefined;
 		/** Spoken text of the change. {value} is the amount with its unit. */
-		upLabel?: string;
-		downLabel?: string;
-		flatLabel?: string;
-		description?: string;
-		locale?: string;
+		upLabel?: string | undefined;
+		downLabel?: string | undefined;
+		flatLabel?: string | undefined;
+		description?: string | undefined;
+		locale?: string | undefined;
 		/** `raised` = on bg-raised, `sunken` = recessed, `outline` = border only. */
-		look?: 'raised' | 'sunken' | 'outline';
+		look?: 'raised' | 'sunken' | 'outline' | undefined;
 		/** Small chart below the value, e.g. a Sparkline. */
-		spark?: Snippet;
-		class?: string;
+		spark?: Snippet | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,

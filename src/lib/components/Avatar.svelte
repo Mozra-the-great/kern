@@ -2,9 +2,9 @@
 	interface Props {
 		/** Person or item name: used for alt text and initials. */
 		name: string;
-		src?: string;
-		size?: number;
-		class?: string;
+		src?: string | undefined;
+		size?: number | undefined;
+		class?: string | undefined;
 	}
 	let { name, src, size = 40, class: cls = '' }: Props = $props();
 	let failed = $state(false);

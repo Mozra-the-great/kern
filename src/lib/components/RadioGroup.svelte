@@ -2,23 +2,23 @@
 	export interface RadioOption {
 		value: string;
 		label: string;
-		hint?: string;
-		disabled?: boolean;
+		hint?: string | undefined;
+		disabled?: boolean | undefined;
 	}
 	interface Props {
 		/** Group label (legend). */
 		label: string;
 		options: RadioOption[];
-		value?: string;
-		name?: string;
+		value?: string | undefined;
+		name?: string | undefined;
 		/** Lay options out in a row. */
-		inline?: boolean;
-		error?: string;
+		inline?: boolean | undefined;
+		error?: string | undefined;
 		/** Called when the user picks an option, not when `value` is set from outside. */
-		onchange?: (value: string) => void;
-		class?: string;
+		onchange?: ((value: string) => void) | undefined;
+		class?: string | undefined;
 	}
-	let { label, options, value = $bindable(''), name, inline = false, error, onchange, class: cls = '' }: Props = $props();
+	let { label, options, value = $bindable(), name, inline = false, error, onchange, class: cls = '' }: Props = $props();
 	const uid = $props.id();
 	const groupName = $derived(name ?? `${uid}-radio`);
 </script>

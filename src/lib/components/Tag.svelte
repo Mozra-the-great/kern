@@ -3,12 +3,12 @@
 
 	interface Props {
 		/** When set, shows a remove button that calls it. */
-		onremove?: () => void;
+		onremove?: (() => void) | undefined;
 		/** Accessible name of the remove button. */
-		removeLabel?: string;
-		selected?: boolean;
-		class?: string;
-		children?: Snippet;
+		removeLabel?: string | undefined;
+		selected?: boolean | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { onremove, removeLabel = 'Remove', selected = false, class: cls = '', children }: Props = $props();
 </script>

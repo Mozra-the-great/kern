@@ -3,11 +3,11 @@
 
 	interface Props {
 		/** Meaning. Status tones must still carry a word. */
-		tone?: 'neutral' | 'accent' | 'ok' | 'warn' | 'danger' | 'info';
+		tone?: 'neutral' | 'accent' | 'ok' | 'warn' | 'danger' | 'info' | undefined;
 		/** `soft` = tinted fill, `outline` = border only, `solid` = filled. */
-		look?: 'soft' | 'outline' | 'solid';
-		class?: string;
-		children?: Snippet;
+		look?: 'soft' | 'outline' | 'solid' | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { tone = 'neutral', look = 'soft', class: cls = '', children }: Props = $props();
 </script>

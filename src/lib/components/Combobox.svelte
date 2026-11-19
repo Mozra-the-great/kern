@@ -5,37 +5,37 @@
 	export interface ComboboxOption {
 		value: string;
 		label: string;
-		disabled?: boolean;
+		disabled?: boolean | undefined;
 	}
 	interface Props {
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** Value of the selected option ('' = none). With `allowCustom`, any typed text. */
-		value?: string;
+		value?: string | undefined;
 		options: ComboboxOption[];
-		placeholder?: string;
+		placeholder?: string | undefined;
 		/** Form field name; a hidden input carries `value`. */
-		name?: string;
-		required?: boolean;
-		disabled?: boolean;
+		name?: string | undefined;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Accept free text that matches no option. */
-		allowCustom?: boolean;
+		allowCustom?: boolean | undefined;
 		/** Shown when the filter matches nothing. */
-		noResults?: string;
+		noResults?: string | undefined;
 		/** Accessible name of the button that opens the list. */
-		toggleLabel?: string;
-		autocomplete?: HTMLInputElement['autocomplete'];
-		id?: string;
+		toggleLabel?: string | undefined;
+		autocomplete?: HTMLInputElement['autocomplete'] | undefined;
+		id?: string | undefined;
 		/** Called when the user commits a new value. */
-		onchange?: (value: string) => void;
-		class?: string;
+		onchange?: ((value: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(''),
+		value = $bindable(),
 		options,
 		placeholder,
 		name,
@@ -52,6 +52,7 @@
 
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);
+	const currentValue = $derived(value ?? '');
 	const listId = `${uid}-list`;
 
 	let query = $state('');
@@ -81,10 +82,10 @@
 	// Show the label of the current value whenever the value (or its label) changes from outside.
 	let syncedKey: string | undefined;
 	$effect.pre(() => {
-		const key = `${value}\u0000${labelFor(value)}`;
+		const key = `${currentValue}\u0000${labelFor(currentValue)}`;
 		if (key === syncedKey) return;
 		syncedKey = key;
-		query = labelFor(value);
+		query = labelFor(currentValue);
 		filtering = false;
 	});
 
@@ -98,7 +99,7 @@
 	});
 
 	function setValue(v: string) {
-		if (v === value) return;
+		if (v === currentValue) return;
 		value = v;
 		onchange?.(v);
 	}
@@ -109,7 +110,7 @@
 		if (focus === 'first') active = enabled[0] ?? -1;
 		else if (focus === 'last') active = enabled[enabled.length - 1] ?? -1;
 		else if (focus === 'selected') {
-			const i = filtered.findIndex((o) => o.value === value && !o.disabled);
+			const i = filtered.findIndex((o) => o.value === currentValue && !o.disabled);
 			active = i >= 0 ? i : (enabled[0] ?? -1);
 		} else active = -1;
 	}
@@ -133,7 +134,7 @@
 			if (hit) setValue(hit.value);
 			else if (allowCustom) setValue(text);
 		}
-		query = labelFor(value);
+		query = labelFor(currentValue);
 		filtering = false;
 		closeList();
 	}
@@ -279,7 +280,7 @@
 			>
 				<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg>
 			</button>
-			{#if name}<input type="hidden" {name} {value} />{/if}
+			{#if name}<input type="hidden" {name} value={currentValue} />{/if}
 		</div>
 		<div class="popup" hidden={!expanded} bind:this={popup}>
 			<ul
@@ -300,7 +301,7 @@
 							class:active={i === active}
 						>
 							<span>{o.label}</span>
-							{#if o.value === value}
+							{#if o.value === currentValue}
 								<svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" /></svg>
 							{/if}
 						</li>

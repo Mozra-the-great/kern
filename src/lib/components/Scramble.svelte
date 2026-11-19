@@ -5,16 +5,16 @@
 		/** The text that is revealed. It is also what assistive technology reads, never the random glyphs. */
 		text: string;
 		/** Milliseconds until the last character is resolved. */
-		duration?: number;
+		duration?: number | undefined;
 		/** Glyphs the unresolved characters cycle through. */
-		glyphs?: string;
+		glyphs?: string | undefined;
 		/** Milliseconds between glyph changes. */
-		interval?: number;
+		interval?: number | undefined;
 		/** Play again on pointer hover. */
-		hover?: boolean;
+		hover?: boolean | undefined;
 		/** Fires when the text is fully resolved. */
-		oncomplete?: () => void;
-		class?: string;
+		oncomplete?: (() => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		text,

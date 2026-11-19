@@ -1,10 +1,10 @@
 /** A form-associated kern host: `formAssociated()` attaches the internals in its constructor. */
 export interface FormHost extends HTMLElement {
-	internals?: ElementInternals;
+	internals?: ElementInternals | undefined;
 	/** Message set with `setCustomValidity()`; '' when none. */
-	kernCustomValidity?: string;
+	kernCustomValidity?: string | undefined;
 	/** Set by `formControl()`: applies pending prop changes and recomputes the validity now. */
-	kernSyncValidity?: () => void;
+	kernSyncValidity?: (() => void) | undefined;
 }
 
 /**

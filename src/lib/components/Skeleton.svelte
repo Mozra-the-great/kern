@@ -1,14 +1,14 @@
 <script lang="ts">
 	interface Props {
 		/** `text` = one or more lines, `rect` = block, `circle` = round (avatar). */
-		variant?: 'text' | 'rect' | 'circle';
+		variant?: 'text' | 'rect' | 'circle' | undefined;
 		/** CSS length, or a number of pixels. */
-		width?: string | number;
+		width?: string | number | undefined;
 		/** CSS length, or a number of pixels. For `text` it is the height of each line. */
-		height?: string | number;
+		height?: string | number | undefined;
 		/** Number of lines of the `text` variant. The last of several lines is shorter. */
-		lines?: number;
-		class?: string;
+		lines?: number | undefined;
+		class?: string | undefined;
 	}
 	let { variant = 'text', width, height, lines = 1, class: cls = '' }: Props = $props();
 

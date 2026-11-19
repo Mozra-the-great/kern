@@ -6,23 +6,23 @@
 		/** Text to type. With several strings each one is typed, held, erased and replaced by the next. */
 		text: string | string[];
 		/** Milliseconds per typed character. */
-		speed?: number;
+		speed?: number | undefined;
 		/** Milliseconds per erased character. Defaults to half of `speed`. */
-		eraseSpeed?: number;
+		eraseSpeed?: number | undefined;
 		/** Milliseconds before typing starts. */
-		delay?: number;
+		delay?: number | undefined;
 		/** Milliseconds a finished string stays before it is erased. */
-		hold?: number;
+		hold?: number | undefined;
 		/** Keep cycling (and erase the last string too). Without it the last string stays. */
-		loop?: boolean;
+		loop?: boolean | undefined;
 		/** Show a caret after the text. */
-		caret?: boolean;
-		caretShape?: 'block' | 'bar' | 'underline';
+		caret?: boolean | undefined;
+		caretShape?: 'block' | 'bar' | 'underline' | undefined;
 		/** Text for assistive technology. Defaults to all strings, joined with ". ". */
-		label?: string;
+		label?: string | undefined;
 		/** Fires once when the last string is typed (never with `loop`). */
-		oncomplete?: () => void;
-		class?: string;
+		oncomplete?: (() => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		text,

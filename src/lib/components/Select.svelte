@@ -5,18 +5,18 @@
 	export interface SelectOption {
 		value: string;
 		label: string;
-		disabled?: boolean;
+		disabled?: boolean | undefined;
 	}
 	interface Props extends Omit<HTMLSelectAttributes, 'value'> {
-		label?: string;
-		hint?: string;
-		error?: string;
-		value?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
+		value?: string | undefined;
 		options: SelectOption[];
 		/** Text of an empty first option. */
-		placeholder?: string;
+		placeholder?: string | undefined;
 	}
-	let { label, hint, error, value = $bindable(''), options, placeholder, id, required, class: cls = '', ...rest }: Props = $props();
+	let { label, hint, error, value = $bindable(), options, placeholder, id, required, class: cls = '', ...rest }: Props = $props();
 	const uid = $props.id();
 	const selId = $derived(id ?? `${uid}-select`);
 </script>
@@ -24,7 +24,7 @@
 <Field {label} {hint} {error} {required} for={selId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-select" class:invalid>
-			<select id={selId} bind:value {required} aria-invalid={invalid || undefined} aria-describedby={describedby} {...rest}>
+			<select id={selId} bind:value={() => value ?? '', (v) => (value = v)} {required} aria-invalid={invalid || undefined} aria-describedby={describedby} {...rest}>
 				{#if placeholder}<option value="" disabled={required}>{placeholder}</option>{/if}
 				{#each options as o (o.value)}
 					<option value={o.value} disabled={o.disabled}>{o.label}</option>

@@ -2,41 +2,41 @@
 	import Field from './Field.svelte';
 
 	interface Props {
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** The number, or null when the field is empty. */
-		value?: number | null;
-		min?: number;
-		max?: number;
+		value?: number | null | undefined;
+		min?: number | undefined;
+		max?: number | undefined;
 		/** Amount of one arrow step; PageUp/PageDown move ten steps. */
-		step?: number;
+		step?: number | undefined;
 		/**
 		 * Locale-aware display while the field is not focused, e.g.
 		 * `{ style: 'currency', currency: 'EUR' }`. While editing, the plain number is shown.
 		 */
-		format?: Intl.NumberFormatOptions;
+		format?: Intl.NumberFormatOptions | undefined;
 		/** BCP 47 locale for `format` and the decimal separator; default: the browser's. */
-		locale?: string;
+		locale?: string | undefined;
 		/** Form field name; a hidden input carries the plain number. */
-		name?: string;
-		required?: boolean;
-		disabled?: boolean;
-		readonly?: boolean;
-		placeholder?: string;
+		name?: string | undefined;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
+		readonly?: boolean | undefined;
+		placeholder?: string | undefined;
 		/** Accessible names of the step buttons. */
-		decrementLabel?: string;
-		incrementLabel?: string;
-		id?: string;
+		decrementLabel?: string | undefined;
+		incrementLabel?: string | undefined;
+		id?: string | undefined;
 		/** Called when the user commits a new value (blur, Enter, step keys or buttons). */
-		onchange?: (value: number | null) => void;
-		class?: string;
+		onchange?: ((value: number | null) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(null),
+		value = $bindable(),
 		min,
 		max,
 		step = 1,

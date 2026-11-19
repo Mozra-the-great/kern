@@ -2,15 +2,15 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		tone?: 'info' | 'ok' | 'warn' | 'danger';
-		title?: string;
+		tone?: 'info' | 'ok' | 'warn' | 'danger' | undefined;
+		title?: string | undefined;
 		/** Shows a close button that calls it. */
-		ondismiss?: () => void;
-		dismissLabel?: string;
+		ondismiss?: (() => void) | undefined;
+		dismissLabel?: string | undefined;
 		/** Buttons or links under the text. */
-		actions?: Snippet;
-		class?: string;
-		children?: Snippet;
+		actions?: Snippet | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { tone = 'info', title, ondismiss, dismissLabel = 'Dismiss', actions, class: cls = '', children }: Props = $props();
 	const icons: Record<string, string> = {

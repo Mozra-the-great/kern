@@ -41,25 +41,25 @@
 <script lang="ts">
 	interface Props {
 		/** Text to copy. */
-		value?: string;
+		value?: string | undefined;
 		/** Reads the text at click time. Wins over `value`; may be async. */
-		getValue?: () => string | Promise<string>;
+		getValue?: (() => string | Promise<string>) | undefined;
 		/** Accessible name of the button. */
-		label?: string;
+		label?: string | undefined;
 		/** Spoken after a successful copy. */
-		copiedLabel?: string;
+		copiedLabel?: string | undefined;
 		/** Spoken when copying fails. */
-		errorLabel?: string;
-		variant?: 'ghost' | 'secondary';
-		size?: 'sm' | 'md';
+		errorLabel?: string | undefined;
+		variant?: 'ghost' | 'secondary' | undefined;
+		size?: 'sm' | 'md' | undefined;
 		/** Milliseconds the success or error state stays before it resets. */
-		resetAfter?: number;
-		disabled?: boolean;
+		resetAfter?: number | undefined;
+		disabled?: boolean | undefined;
 		/** Called with the copied text after a successful copy. */
-		oncopy?: (text: string) => void;
+		oncopy?: ((text: string) => void) | undefined;
 		/** Called when reading or writing the text failed. */
-		onerror?: (error: unknown) => void;
-		class?: string;
+		onerror?: ((error: unknown) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		value,

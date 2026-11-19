@@ -6,15 +6,15 @@
 	interface Props {
 		items: MenuEntry[];
 		/** Accessible name of the menu. */
-		label?: string;
+		label?: string | undefined;
 		/** Accessible name of the target area (role="group"). Recommended when the area is focusable. */
-		areaLabel?: string;
+		areaLabel?: string | undefined;
 		/** Make the target area itself focusable so keyboard users can open the menu. Turn off when it holds focusable content. */
-		focusable?: boolean;
+		focusable?: boolean | undefined;
 		/** Long-press delay on touch, in ms. */
-		longPress?: number;
-		disabled?: boolean;
-		class?: string;
+		longPress?: number | undefined;
+		disabled?: boolean | undefined;
+		class?: string | undefined;
 		/** The target area. */
 		children: Snippet;
 	}

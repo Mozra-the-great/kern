@@ -5,10 +5,10 @@
 		id: string;
 		title: string;
 		/** ISO date or date-time (rendered as `<time>`), or free text. */
-		time?: string;
-		description?: string;
+		time?: string | undefined;
+		description?: string | undefined;
 		/** Default `done`. */
-		status?: TimelineStatus;
+		status?: TimelineStatus | undefined;
 	}
 </script>
 
@@ -19,14 +19,14 @@
 	interface Props {
 		items: TimelineItem[];
 		/** Accessible name of the list. */
-		label?: string;
+		label?: string | undefined;
 		/** Spoken status before each title. */
-		statusLabels?: Partial<Record<TimelineStatus, string>>;
+		statusLabels?: Partial<Record<TimelineStatus, string>> | undefined;
 		/** Locale of the dates. */
-		locale?: string;
+		locale?: string | undefined;
 		/** Custom body of an entry, replacing title, time and description. */
-		item?: Snippet<[{ item: TimelineItem; index: number }]>;
-		class?: string;
+		item?: Snippet<[{ item: TimelineItem; index: number }]> | undefined;
+		class?: string | undefined;
 	}
 	let { items, label, statusLabels, locale, item, class: cls = '' }: Props = $props();
 

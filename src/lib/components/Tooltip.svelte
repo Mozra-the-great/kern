@@ -4,8 +4,8 @@
 	interface Props {
 		/** Tooltip text. Supplements, never replaces, a visible or accessible name. */
 		text: string;
-		placement?: 'top' | 'bottom' | 'left' | 'right';
-		class?: string;
+		placement?: 'top' | 'bottom' | 'left' | 'right' | undefined;
+		class?: string | undefined;
 		/** The trigger. It should be focusable. */
 		children: Snippet;
 	}

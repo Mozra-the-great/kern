@@ -5,9 +5,9 @@
 	interface Props extends HTMLButtonAttributes {
 		/** Accessible name. Required: the button has no visible text. */
 		label: string;
-		variant?: 'ghost' | 'secondary' | 'primary';
-		size?: 'sm' | 'md';
-		children?: Snippet;
+		variant?: 'ghost' | 'secondary' | 'primary' | undefined;
+		size?: 'sm' | 'md' | undefined;
+		children?: Snippet; // same type as the inherited HTML attribute
 	}
 	let { label, variant = 'ghost', size = 'md', type = 'button', class: cls = '', children, ...rest }: Props = $props();
 </script>

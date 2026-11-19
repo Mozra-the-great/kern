@@ -8,46 +8,46 @@
 		/** Any accepted hex form. */
 		value: string;
 		/** Accessible name; default: the hex value. */
-		label?: string;
+		label?: string | undefined;
 	}
 	interface Props {
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** Hex colour, `#rrggbb` (or `#rrggbbaa` with `alpha`); '' = none. */
-		value?: string;
+		value?: string | undefined;
 		/** Offer an opacity slider; the value then carries alpha when not opaque. */
-		alpha?: boolean;
+		alpha?: boolean | undefined;
 		/** Preset colours in the panel. */
-		swatches?: (string | ColorSwatch)[];
+		swatches?: (string | ColorSwatch)[] | undefined;
 		/** Form field name; a hidden input carries `value`. */
-		name?: string;
-		required?: boolean;
-		disabled?: boolean;
-		placeholder?: string;
+		name?: string | undefined;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
+		placeholder?: string | undefined;
 		/** Name of the swatch button and the panel. */
-		pickerLabel?: string;
+		pickerLabel?: string | undefined;
 		/** Name of the saturation/brightness area. */
-		areaLabel?: string;
+		areaLabel?: string | undefined;
 		/** Value text of the area; `{color}`, `{saturation}` and `{brightness}` (percent) are replaced. */
-		areaText?: string;
-		hueLabel?: string;
-		alphaLabel?: string;
-		swatchesLabel?: string;
+		areaText?: string | undefined;
+		hueLabel?: string | undefined;
+		alphaLabel?: string | undefined;
+		swatchesLabel?: string | undefined;
 		/** Shown when the typed text is not a hex colour. */
-		invalidText?: string;
+		invalidText?: string | undefined;
 		/** Names a colour for screen readers; default: short English names ("dark blue"). */
-		describe?: (hsv: Hsv) => string;
-		id?: string;
+		describe?: ((hsv: Hsv) => string) | undefined;
+		id?: string | undefined;
 		/** Called when the user commits a new colour. */
-		onchange?: (value: string) => void;
-		class?: string;
+		onchange?: ((value: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(''),
+		value = $bindable(),
 		alpha = false,
 		swatches = [],
 		name,
@@ -114,7 +114,7 @@
 	// Follow the value when it changes from outside.
 	let syncedKey: string | undefined;
 	$effect.pre(() => {
-		const key = `${value}\u0000${alpha}`;
+		const key = `${value ?? ''}\u0000${alpha}`;
 		if (key === syncedKey) return;
 		syncedKey = key;
 		const hex = normalizeHex(value ?? '', alpha);

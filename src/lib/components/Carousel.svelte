@@ -3,31 +3,31 @@
 
 	interface Props {
 		/** Data of the slides; each one is rendered with the `slide` snippet. */
-		items?: T[];
-		slide?: Snippet<[T, number]>;
+		items?: T[] | undefined;
+		slide?: Snippet<[T, number]> | undefined;
 		/** Alternative to `items`/`slide`: slides as direct child elements, one element per slide. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 		/** Index of the visible slide. */
-		index?: number;
+		index?: number | undefined;
 		/** Accessible name of the carousel (`aria-roledescription="carousel"`). */
-		label?: string;
-		prevLabel?: string;
-		nextLabel?: string;
+		label?: string | undefined;
+		prevLabel?: string | undefined;
+		nextLabel?: string | undefined;
 		/** Accessible name of the row of slide buttons. */
-		dotsLabel?: string;
+		dotsLabel?: string | undefined;
 		/** Prefix of the slide buttons' accessible names: "Go to slide 2". */
-		slideLabel?: string;
+		slideLabel?: string | undefined;
 		/** The word in each slide's name: "2 of 5". */
-		ofLabel?: string;
+		ofLabel?: string | undefined;
 		/** Called when the user moves to another slide (buttons, dots, keys, swipe), not when `index` is set from outside. */
-		onchange?: (index: number) => void;
-		class?: string;
+		onchange?: ((index: number) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		items,
 		slide,
 		children,
-		index = $bindable(0),
+		index = $bindable(),
 		label = 'Carousel',
 		prevLabel = 'Previous slide',
 		nextLabel = 'Next slide',
@@ -42,6 +42,8 @@
 	let track: HTMLElement | undefined = $state();
 	let tablist: HTMLElement | undefined = $state();
 	let slotted = $state(0);
+	// No fallback in $bindable(): `bind:index={undefined}` must behave like an omitted prop.
+	const current = $derived(index ?? 0);
 	const total = $derived(items ? items.length : slotted);
 	const dots = $derived(Array.from({ length: total }, (_, i) => i));
 
@@ -64,7 +66,7 @@
 		return track && getComputedStyle(track).direction === 'rtl' ? -1 : 1;
 	}
 	function scrolledIndex(): number {
-		if (!track || !track.clientWidth || total === 0) return index;
+		if (!track || !track.clientWidth || total === 0) return current;
 		return clamp(Math.round(Math.abs(track.scrollLeft) / track.clientWidth), 0, total - 1);
 	}
 	function reducedMotion(): boolean {
@@ -79,7 +81,7 @@
 		settleTimer = setTimeout(() => (settling = false), ms);
 	}
 	function setIndex(i: number) {
-		if (i === index) return;
+		if (i === current) return;
 		index = i;
 		onchange?.(i);
 	}
@@ -95,7 +97,7 @@
 		if (!track) return;
 		lastWidth = track.clientWidth;
 		settle(120);
-		track.scrollLeft = sign() * index * lastWidth;
+		track.scrollLeft = sign() * current * lastWidth;
 	}
 	function onscroll() {
 		if (!track) return;
@@ -114,8 +116,8 @@
 	function onTabKey(e: KeyboardEvent) {
 		const flip = sign();
 		let n = -1;
-		if (e.key === 'ArrowRight') n = flip === 1 ? index + 1 : index - 1;
-		else if (e.key === 'ArrowLeft') n = flip === 1 ? index - 1 : index + 1;
+		if (e.key === 'ArrowRight') n = flip === 1 ? current + 1 : current - 1;
+		else if (e.key === 'ArrowLeft') n = flip === 1 ? current - 1 : current + 1;
 		else if (e.key === 'Home') n = 0;
 		else if (e.key === 'End') n = total - 1;
 		else return;
@@ -129,8 +131,8 @@
 		if (total < 2 || e.altKey || e.ctrlKey || e.metaKey) return;
 		const flip = sign();
 		let n = -1;
-		if (e.key === 'ArrowRight') n = index + flip;
-		else if (e.key === 'ArrowLeft') n = index - flip;
+		if (e.key === 'ArrowRight') n = current + flip;
+		else if (e.key === 'ArrowLeft') n = current - flip;
 		else if (e.key === 'Home') n = 0;
 		else if (e.key === 'End') n = total - 1;
 		else return;
@@ -158,7 +160,7 @@
 	$effect(() => {
 		const els = slideEls();
 		const n = total;
-		const active = index;
+		const active = current;
 		els.forEach((el, i) => {
 			el.setAttribute('role', 'tabpanel');
 			el.setAttribute('aria-roledescription', 'slide');
@@ -169,7 +171,7 @@
 
 	/* An index set from outside scrolls the track to that slide. */
 	$effect(() => {
-		const i = index;
+		const i = current;
 		if (!track || total === 0) return;
 		if (i > total - 1 || i < 0 || !Number.isInteger(i)) {
 			index = clamp(Number.isFinite(i) ? Math.round(i) : 0, 0, total - 1);
@@ -181,7 +183,7 @@
 	/* Announce the active slide once it has settled, not every step of a swipe. */
 	let announced = -1;
 	$effect(() => {
-		const i = index;
+		const i = current;
 		const n = total;
 		const of = ofLabel;
 		if (n < 2) return;
@@ -236,7 +238,7 @@
 	<div class="sr" aria-live="polite" aria-atomic="true">{announcement}</div>
 	{#if total > 1}
 		<div class="controls">
-			<button type="button" class="nav" aria-label={prevLabel} aria-disabled={index <= 0} onclick={() => index > 0 && goTo(index - 1)}>
+			<button type="button" class="nav" aria-label={prevLabel} aria-disabled={current <= 0} onclick={() => current > 0 && goTo(current - 1)}>
 				<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
 			</button>
 			<div class="dots" role="tablist" aria-label={dotsLabel} tabindex="-1" bind:this={tablist} onkeydown={onTabKey}>
@@ -246,14 +248,14 @@
 						role="tab"
 						class="tab"
 						aria-label="{slideLabel} {i + 1}"
-						aria-selected={i === index}
+						aria-selected={i === current}
 						aria-controls={items ? `${uid}-slide-${i}` : undefined}
-						tabindex={i === index ? 0 : -1}
+						tabindex={i === current ? 0 : -1}
 						onclick={() => goTo(i)}
 					><span class="dot"></span></button>
 				{/each}
 			</div>
-			<button type="button" class="nav" aria-label={nextLabel} aria-disabled={index >= total - 1} onclick={() => index < total - 1 && goTo(index + 1)}>
+			<button type="button" class="nav" aria-label={nextLabel} aria-disabled={current >= total - 1} onclick={() => current < total - 1 && goTo(current + 1)}>
 				<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
 			</button>
 		</div>

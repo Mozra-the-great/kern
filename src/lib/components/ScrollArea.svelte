@@ -3,17 +3,17 @@
 
 	interface Props {
 		/** Maximum height before the content scrolls: px as a number, or any CSS length. */
-		maxHeight?: number | string;
+		maxHeight?: number | string | undefined;
 		/** Which axes may scroll. */
-		direction?: 'vertical' | 'horizontal' | 'both';
+		direction?: 'vertical' | 'horizontal' | 'both' | undefined;
 		/** Fades the content out at the edges that have more to scroll to. */
-		fade?: boolean;
+		fade?: boolean | undefined;
 		/** Size of the fade in px. */
-		fadeSize?: number;
+		fadeSize?: number | undefined;
 		/** Accessible name, used while the area scrolls (it is then a focusable region). */
-		label?: string;
-		class?: string;
-		children?: Snippet;
+		label?: string | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { maxHeight, direction = 'vertical', fade = false, fadeSize = 28, label = 'Scrollable content', class: cls = '', children }: Props = $props();
 

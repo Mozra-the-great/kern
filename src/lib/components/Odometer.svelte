@@ -5,12 +5,12 @@
 		/** The number shown. When it changes the digits roll, up or down. */
 		value: number;
 		/** Milliseconds a digit takes to roll. */
-		duration?: number;
+		duration?: number | undefined;
 		/** `Intl.NumberFormat` options, e.g. `{ minimumIntegerDigits: 4 }`. Only the digits 0-9 roll. */
-		format?: Intl.NumberFormatOptions;
+		format?: Intl.NumberFormatOptions | undefined;
 		/** BCP 47 locale of the number format. Defaults to the browser's. */
-		locale?: string;
-		class?: string;
+		locale?: string | undefined;
+		class?: string | undefined;
 	}
 	let { value, duration = 700, format, locale, class: cls = '' }: Props = $props();
 

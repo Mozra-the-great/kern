@@ -6,7 +6,7 @@
 		label: string;
 		status: HistoryStatus;
 		/** Extra text, e.g. "2 min outage". */
-		detail?: string;
+		detail?: string | undefined;
 	}
 </script>
 
@@ -19,19 +19,19 @@
 		/** Accessible name of the bars. */
 		label: string;
 		/** Summary above the bars. Placeholders: {percent} {ok} {total}. */
-		summaryLabel?: string;
+		summaryLabel?: string | undefined;
 		/** Summary when no period has data. */
-		noDataLabel?: string;
+		noDataLabel?: string | undefined;
 		/** Status names for tooltip, speech and legend. */
-		statusLabels?: Partial<Record<HistoryStatus, string>>;
+		statusLabels?: Partial<Record<HistoryStatus, string>> | undefined;
 		/** Show the legend that names the four bar shapes. */
-		legend?: boolean;
+		legend?: boolean | undefined;
 		/** Text under the first and the last bar, e.g. "90 days ago" and "Today". */
-		startLabel?: string;
-		endLabel?: string;
+		startLabel?: string | undefined;
+		endLabel?: string | undefined;
 		/** Locale of the percentage. */
-		locale?: string;
-		class?: string;
+		locale?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		items,

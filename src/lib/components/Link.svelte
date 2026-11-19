@@ -4,8 +4,8 @@
 
 	interface Props extends HTMLAnchorAttributes {
 		/** Opens in a new tab with rel="noopener noreferrer". */
-		external?: boolean;
-		children?: Snippet;
+		external?: boolean | undefined;
+		children?: Snippet; // same type as the inherited HTML attribute
 	}
 	let { external = false, class: cls = '', children, ...rest }: Props = $props();
 </script>

@@ -5,23 +5,23 @@
 <script lang="ts">
 	interface Props {
 		/** Current page, 1-based. */
-		page?: number;
+		page?: number | undefined;
 		pageCount: number;
 		/** Pages shown on each side of the current one. */
-		siblings?: number;
+		siblings?: number | undefined;
 		/** Accessible name of the navigation landmark. */
-		label?: string;
-		prevLabel?: string;
-		nextLabel?: string;
+		label?: string | undefined;
+		prevLabel?: string | undefined;
+		nextLabel?: string | undefined;
 		/** Prefix of the page buttons' accessible names: "Page 3". */
-		pageLabel?: string;
+		pageLabel?: string | undefined;
 		/** The word between current page and total in the compact view: "Page 3 of 12". */
-		ofLabel?: string;
-		onchange?: (page: number) => void;
-		class?: string;
+		ofLabel?: string | undefined;
+		onchange?: ((page: number) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
-		page = $bindable(1),
+		page = $bindable(),
 		pageCount,
 		siblings = 1,
 		label = 'Pagination',
@@ -34,7 +34,7 @@
 	}: Props = $props();
 
 	const total = $derived(Math.max(1, Math.floor(pageCount) || 1));
-	const current = $derived(Math.min(total, Math.max(1, Math.floor(page) || 1)));
+	const current = $derived(Math.min(total, Math.max(1, Math.floor(page ?? 1) || 1)));
 	const range = (from: number, to: number): PaginationSlot[] =>
 		Array.from({ length: Math.max(0, to - from + 1) }, (_, i) => ({ type: 'page', page: from + i }));
 

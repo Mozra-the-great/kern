@@ -2,12 +2,12 @@
 	export interface DataColumn<R> {
 		key: keyof R & string;
 		label: string;
-		align?: 'start' | 'end' | 'center';
+		align?: 'start' | 'end' | 'center' | undefined;
 		/** Set in the mono family: numbers, ids. */
-		mono?: boolean;
-		sortable?: boolean;
+		mono?: boolean | undefined;
+		sortable?: boolean | undefined;
 		/** Text of a cell. Also what the filter searches. Default: the raw value. */
-		format?: (value: unknown, row: R) => string;
+		format?: ((value: unknown, row: R) => string) | undefined;
 	}
 	export type DataRowKey = string | number;
 	export type DataSortDir = 'asc' | 'desc';
@@ -26,62 +26,62 @@
 		/** Table caption; also its accessible name. */
 		caption: string;
 		/** Hide the caption visually. */
-		captionHidden?: boolean;
+		captionHidden?: boolean | undefined;
 		/** Field whose value identifies a row. Default: the position in `rows`. */
-		rowKey?: keyof Row & string;
+		rowKey?: keyof Row & string | undefined;
 		/** Show a checkbox column. */
-		selectable?: boolean;
+		selectable?: boolean | undefined;
 		/** Keys of the selected rows (see `rowKey`). Kept across filter, sort and pages. */
-		selected?: DataRowKey[];
+		selected?: DataRowKey[] | undefined;
 		/** Column whose text names a row for the checkbox. Default: the first column. */
-		rowLabelKey?: keyof Row & string;
+		rowLabelKey?: keyof Row & string | undefined;
 		/** Show the filter field. */
-		searchable?: boolean;
+		searchable?: boolean | undefined;
 		/** Filter text. Words must all occur in the row's cells. */
-		query?: string;
-		sortKey?: string | null;
-		sortDir?: DataSortDir;
+		query?: string | undefined;
+		sortKey?: string | null | undefined;
+		sortDir?: DataSortDir | undefined;
 		/** Rows per page. 0 shows all rows. */
-		pageSize?: number;
+		pageSize?: number | undefined;
 		/** Current page, 1-based. */
-		page?: number;
+		page?: number | undefined;
 		/** Show placeholder rows instead of the data. */
-		loading?: boolean;
+		loading?: boolean | undefined;
 		/** Number of placeholder rows. Default: the page size, at most 10. */
-		loadingRows?: number;
+		loadingRows?: number | undefined;
 		/** Below the breakpoint, show rows as stacked cards. */
-		stack?: boolean;
+		stack?: boolean | undefined;
 		/** Custom cell rendering. */
-		cell?: Snippet<[{ row: Row; column: DataColumn<Row>; value: unknown }]>;
-		onselect?: (keys: DataRowKey[]) => void;
-		onsort?: (sort: { key: string; dir: DataSortDir }) => void;
+		cell?: Snippet<[{ row: Row; column: DataColumn<Row>; value: unknown }]> | undefined;
+		onselect?: ((keys: DataRowKey[]) => void) | undefined;
+		onsort?: ((sort: { key: string; dir: DataSortDir }) => void) | undefined;
 
 		/* Texts. Placeholders in braces. */
-		searchLabel?: string;
-		searchPlaceholder?: string;
-		empty?: string;
+		searchLabel?: string | undefined;
+		searchPlaceholder?: string | undefined;
+		empty?: string | undefined;
 		/** {query} */
-		emptyFiltered?: string;
+		emptyFiltered?: string | undefined;
 		/** {count} {total} */
-		resultsLabel?: string;
+		resultsLabel?: string | undefined;
 		/** {count} {total}; used while a filter is active. */
-		filteredLabel?: string;
+		filteredLabel?: string | undefined;
 		/** {count} */
-		selectedLabel?: string;
+		selectedLabel?: string | undefined;
 		/** {column} {direction} */
-		sortedLabel?: string;
-		ascendingLabel?: string;
-		descendingLabel?: string;
-		loadingLabel?: string;
-		selectAllLabel?: string;
+		sortedLabel?: string | undefined;
+		ascendingLabel?: string | undefined;
+		descendingLabel?: string | undefined;
+		loadingLabel?: string | undefined;
+		selectAllLabel?: string | undefined;
 		/** {row} */
-		selectRowLabel?: string;
-		paginationLabel?: string;
-		prevLabel?: string;
-		nextLabel?: string;
-		pageLabel?: string;
-		ofLabel?: string;
-		class?: string;
+		selectRowLabel?: string | undefined;
+		paginationLabel?: string | undefined;
+		prevLabel?: string | undefined;
+		nextLabel?: string | undefined;
+		pageLabel?: string | undefined;
+		ofLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		columns,
@@ -90,14 +90,14 @@
 		captionHidden = false,
 		rowKey,
 		selectable = false,
-		selected = $bindable([]),
+		selected = $bindable(),
 		rowLabelKey,
 		searchable = true,
-		query = $bindable(''),
-		sortKey = $bindable(null),
-		sortDir = $bindable('asc'),
+		query = $bindable(),
+		sortKey = $bindable(),
+		sortDir = $bindable(),
 		pageSize = 10,
-		page = $bindable(1),
+		page = $bindable(),
 		loading = false,
 		loadingRows,
 		stack = true,
@@ -132,7 +132,11 @@
 		return c.format ? c.format(v, row) : v === null || v === undefined ? '' : String(v);
 	};
 
-	const words = $derived(query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean));
+	// The bindable props have no fallback (binding `undefined` = prop left out); these are the values in effect.
+	const selectedKeys = $derived(selected ?? []);
+	const search = $derived(query ?? '');
+	const sortOrder = $derived(sortDir ?? 'asc');
+	const words = $derived(search.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean));
 	const filtered = $derived.by((): Entry[] => {
 		const all = rows.map((row, index) => ({ row, index }));
 		if (words.length === 0) return all;
@@ -144,7 +148,7 @@
 	const sorted = $derived.by((): Entry[] => {
 		const k = sortKey;
 		if (!k) return filtered;
-		const dir = sortDir === 'desc' ? -1 : 1;
+		const dir = sortOrder === 'desc' ? -1 : 1;
 		return [...filtered].sort((a, b) => {
 			const x = a.row[k], y = b.row[k];
 			if (typeof x === 'number' && typeof y === 'number') return (x - y) * dir;
@@ -154,7 +158,7 @@
 
 	const size = $derived(Math.max(0, Math.floor(pageSize) || 0));
 	const pageCount = $derived(size ? Math.max(1, Math.ceil(sorted.length / size)) : 1);
-	const current = $derived(Math.min(pageCount, Math.max(1, Math.floor(page) || 1)));
+	const current = $derived(Math.min(pageCount, Math.max(1, Math.floor(page ?? 1) || 1)));
 	const visible = $derived(size ? sorted.slice((current - 1) * size, current * size) : sorted);
 
 	const keyOf = (e: Entry): DataRowKey => {
@@ -162,7 +166,7 @@
 		const v = e.row[rowKey];
 		return typeof v === 'number' ? v : String(v);
 	};
-	const sel = $derived(new Set(selected));
+	const sel = $derived(new Set(selectedKeys));
 	const pageKeys = $derived(visible.map(keyOf));
 	const pageSelected = $derived(pageKeys.filter((k) => sel.has(k)).length);
 	const allOnPage = $derived(pageKeys.length > 0 && pageSelected === pageKeys.length);
@@ -179,16 +183,16 @@
 	}
 	function toggleAll(on: boolean) {
 		const keys = new Set(pageKeys);
-		commit(on ? [...selected, ...pageKeys.filter((k) => !sel.has(k))] : selected.filter((k) => !keys.has(k)));
+		commit(on ? [...selectedKeys, ...pageKeys.filter((k) => !sel.has(k))] : selectedKeys.filter((k) => !keys.has(k)));
 	}
 	function toggleRow(k: DataRowKey, on: boolean) {
-		commit(on ? (sel.has(k) ? selected : [...selected, k]) : selected.filter((x) => x !== k));
+		commit(on ? (sel.has(k) ? selectedKeys : [...selectedKeys, k]) : selectedKeys.filter((x) => x !== k));
 	}
 	function sortBy(key: string) {
-		if (sortKey === key) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+		if (sortKey === key) sortDir = sortOrder === 'asc' ? 'desc' : 'asc';
 		else { sortKey = key; sortDir = 'asc'; }
 		page = 1;
-		onsort?.({ key, dir: sortDir });
+		onsort?.({ key, dir: sortOrder });
 	}
 
 	const labelCol = $derived(columns.find((c) => c.key === rowLabelKey) ?? columns[0]);
@@ -198,11 +202,11 @@
 	const status = $derived.by((): string => {
 		if (loading) return loadingLabel;
 		const parts = [fill(words.length ? filteredLabel : resultsLabel, { count: sorted.length, total: rows.length })];
-		if (selectable && selected.length) parts.push(fill(selectedLabel, { count: selected.length }));
+		if (selectable && selectedKeys.length) parts.push(fill(selectedLabel, { count: selectedKeys.length }));
 		return parts.join(' · ');
 	});
 	const sortStatus = $derived(
-		sortCol ? fill(sortedLabel, { column: sortCol.label, direction: sortDir === 'asc' ? ascendingLabel : descendingLabel }) : ''
+		sortCol ? fill(sortedLabel, { column: sortCol.label, direction: sortOrder === 'asc' ? ascendingLabel : descendingLabel }) : ''
 	);
 
 	const skeletonRows = $derived(Array.from({ length: Math.max(1, Math.floor(loadingRows ?? Math.min(size || 10, 10))) }, (_, i) => i));
@@ -247,12 +251,12 @@
 							scope="col"
 							class:sortable={c.sortable}
 							data-align={c.align ?? 'start'}
-							aria-sort={sortKey === c.key ? (sortDir === 'asc' ? 'ascending' : 'descending') : c.sortable ? 'none' : undefined}
+							aria-sort={sortKey === c.key ? (sortOrder === 'asc' ? 'ascending' : 'descending') : c.sortable ? 'none' : undefined}
 						>
 							{#if c.sortable}
 								<button type="button" onclick={() => sortBy(c.key)}>
 									{c.label}
-									<svg viewBox="0 0 16 16" aria-hidden="true" class:active={sortKey === c.key} class:desc={sortKey === c.key && sortDir === 'desc'}><path d="M4 10l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+									<svg viewBox="0 0 16 16" aria-hidden="true" class:active={sortKey === c.key} class:desc={sortKey === c.key && sortOrder === 'desc'}><path d="M4 10l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg>
 								</button>
 							{:else}{c.label}{/if}
 						</th>
@@ -293,7 +297,7 @@
 							{/each}
 						</tr>
 					{:else}
-						<tr><td class="empty" colspan={span}>{words.length ? fill(emptyFiltered, { query: query.trim() }) : empty}</td></tr>
+						<tr><td class="empty" colspan={span}>{words.length ? fill(emptyFiltered, { query: search.trim() }) : empty}</td></tr>
 					{/each}
 				{/if}
 			</tbody>

@@ -3,30 +3,30 @@
 		id: string;
 		label: string;
 		/** Heading the command is listed under. */
-		group?: string;
+		group?: string | undefined;
 		/** Extra search terms. */
-		keywords?: string[];
+		keywords?: string[] | undefined;
 		/** Shortcut hint shown on the right, e.g. "Ctrl+S". */
-		shortcut?: string;
-		onselect?: () => void;
+		shortcut?: string | undefined;
+		onselect?: (() => void) | undefined;
 	}
 	interface Props {
-		open?: boolean;
+		open?: boolean | undefined;
 		commands: Command[];
 		/** Accessible name of the dialog and the search field. */
-		label?: string;
-		placeholder?: string;
+		label?: string | undefined;
+		placeholder?: string | undefined;
 		/** Shown when nothing matches. */
-		empty?: string;
-		closeLabel?: string;
+		empty?: string | undefined;
+		closeLabel?: string | undefined;
 		/** Global shortcut that toggles the palette, e.g. "mod+k" (mod = Ctrl, or Cmd on Apple). Off by default. */
-		hotkey?: string;
+		hotkey?: string | undefined;
 		/** Called after a command was chosen and the palette closed. */
-		onselect?: (id: string) => void;
-		onclose?: () => void;
+		onselect?: ((id: string) => void) | undefined;
+		onclose?: (() => void) | undefined;
 	}
 	let {
-		open = $bindable(false),
+		open = $bindable(),
 		commands,
 		label = 'Command palette',
 		placeholder = 'Type a command or search…',

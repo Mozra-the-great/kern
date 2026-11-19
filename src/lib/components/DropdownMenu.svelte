@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 
 	export type MenuEntry =
-		| { type?: 'item'; id: string; label: string; onselect?: () => void; href?: string; danger?: boolean; disabled?: boolean; shortcut?: string }
+		| { type?: 'item' | undefined; id: string; label: string; onselect?: (() => void) | undefined; href?: string | undefined; danger?: boolean | undefined; disabled?: boolean | undefined; shortcut?: string | undefined }
 		| { type: 'separator' }
 		| { type: 'label'; label: string };
 
@@ -10,11 +10,11 @@
 		/** Text of the trigger button. */
 		label: string;
 		items: MenuEntry[];
-		align?: 'start' | 'end';
+		align?: 'start' | 'end' | undefined;
 		/** Custom trigger content; `label` stays the accessible name. */
-		trigger?: Snippet;
-		triggerVariant?: 'secondary' | 'ghost';
-		class?: string;
+		trigger?: Snippet | undefined;
+		triggerVariant?: 'secondary' | 'ghost' | undefined;
+		class?: string | undefined;
 	}
 	let { label, items, align = 'start', trigger, triggerVariant = 'secondary', class: cls = '' }: Props = $props();
 	const uid = $props.id();

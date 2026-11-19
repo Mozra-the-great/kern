@@ -2,7 +2,7 @@
 	export interface BreadcrumbItem {
 		label: string;
 		/** Without `href` the item is plain text. */
-		href?: string;
+		href?: string | undefined;
 	}
 </script>
 
@@ -12,13 +12,13 @@
 	interface Props {
 		items: BreadcrumbItem[];
 		/** Accessible name of the navigation landmark. */
-		label?: string;
+		label?: string | undefined;
 		/** Show at most this many items (first, an ellipsis button, the last ones). Without it,
 		 *  trails of four or more items collapse on narrow containers only. */
-		max?: number;
+		max?: number | undefined;
 		/** Accessible name of the ellipsis button. */
-		expandLabel?: string;
-		class?: string;
+		expandLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let { items, label = 'Breadcrumb', max, expandLabel = 'Show hidden items', class: cls = '' }: Props = $props();
 

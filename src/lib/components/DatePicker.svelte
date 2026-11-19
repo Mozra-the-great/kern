@@ -4,41 +4,41 @@
 	import { anchorTo, activeElementOf, eventWithin } from './anchor.js';
 
 	interface Props {
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** Selected date as ISO `yyyy-mm-dd`, or ''. */
-		value?: string;
+		value?: string | undefined;
 		/** Earliest selectable date, ISO. */
-		min?: string;
+		min?: string | undefined;
 		/** Latest selectable date, ISO. */
-		max?: string;
+		max?: string | undefined;
 		/** BCP 47 locale for names and the typed format; default: the browser's. */
-		locale?: string;
+		locale?: string | undefined;
 		/** First day of the week, 0 = Sunday … 6 = Saturday; default: from the locale, else Monday. */
-		weekStart?: number;
+		weekStart?: number | undefined;
 		/** Form field name; a hidden input carries the ISO value. */
-		name?: string;
-		required?: boolean;
-		disabled?: boolean;
+		name?: string | undefined;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Default: the locale's date pattern, e.g. dd.mm.yyyy. */
-		placeholder?: string;
+		placeholder?: string | undefined;
 		/** Name of the calendar button and dialog. */
-		calendarLabel?: string;
-		prevMonthLabel?: string;
-		nextMonthLabel?: string;
+		calendarLabel?: string | undefined;
+		prevMonthLabel?: string | undefined;
+		nextMonthLabel?: string | undefined;
 		/** Shown when the typed text is not a date or is out of range. */
-		invalidText?: string;
-		id?: string;
+		invalidText?: string | undefined;
+		id?: string | undefined;
 		/** Called when the user commits a new value. */
-		onchange?: (value: string) => void;
-		class?: string;
+		onchange?: ((value: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(''),
+		value = $bindable(),
 		min,
 		max,
 		locale,
@@ -99,7 +99,7 @@
 
 	/* ---------- locale ---------- */
 	interface WeekInfo { firstDay: number }
-	type LocaleWithWeek = Intl.Locale & { getWeekInfo?: () => WeekInfo; weekInfo?: WeekInfo };
+	type LocaleWithWeek = Intl.Locale & { getWeekInfo?: (() => WeekInfo) | undefined; weekInfo?: WeekInfo | undefined };
 
 	const loc = $derived.by(() => {
 		try {
@@ -196,7 +196,7 @@
 	// Show the formatted value when the value or the locale changes.
 	let syncedKey: string | undefined;
 	$effect.pre(() => {
-		const key = `${value}\u0000${loc}`;
+		const key = `${value ?? ''}\u0000${loc}`;
 		if (key === syncedKey) return;
 		syncedKey = key;
 		text = format(parseIso(value));
@@ -226,7 +226,7 @@
 	});
 
 	function setValue(v: string) {
-		if (v === value) return;
+		if (v === (value ?? '')) return;
 		// The text was set by the caller; keep the sync effect from overwriting it.
 		syncedKey = `${v}\u0000${loc}`;
 		value = v;
@@ -364,7 +364,7 @@
 			>
 				<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="1.5" /><path d="M3 8.5h14M7 2.5v4M13 2.5v4" /></svg>
 			</button>
-			{#if name}<input type="hidden" {name} {value} />{/if}
+			{#if name}<input type="hidden" {name} value={value ?? ''} />{/if}
 		</div>
 		{#if expanded}
 			<div

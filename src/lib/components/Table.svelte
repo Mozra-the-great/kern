@@ -2,10 +2,10 @@
 	export interface Column<R> {
 		key: keyof R & string;
 		label: string;
-		align?: 'start' | 'end' | 'center';
+		align?: 'start' | 'end' | 'center' | undefined;
 		/** Set in the mono family: numbers, ids. */
-		mono?: boolean;
-		sortable?: boolean;
+		mono?: boolean | undefined;
+		sortable?: boolean | undefined;
 	}
 </script>
 
@@ -16,15 +16,15 @@
 		columns: Column<Row>[];
 		rows: Row[];
 		/** Table caption; also its accessible name. */
-		caption?: string;
+		caption?: string | undefined;
 		/** Hide the caption visually. */
-		captionHidden?: boolean;
+		captionHidden?: boolean | undefined;
 		/** Custom cell rendering. */
-		cell?: Snippet<[{ row: Row; column: Column<Row>; value: unknown }]>;
+		cell?: Snippet<[{ row: Row; column: Column<Row>; value: unknown }]> | undefined;
 		/** Below the breakpoint, show rows as stacked cards. */
-		stack?: boolean;
-		empty?: string;
-		class?: string;
+		stack?: boolean | undefined;
+		empty?: string | undefined;
+		class?: string | undefined;
 	}
 	let { columns, rows, caption, captionHidden = false, cell, stack = true, empty = 'No entries', class: cls = '' }: Props = $props();
 

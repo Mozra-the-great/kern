@@ -4,11 +4,11 @@
 
 	interface Props {
 		/** Draw the marker when the text is scrolled into view. Without it, right after mount. */
-		inView?: boolean;
+		inView?: boolean | undefined;
 		/** Milliseconds before the marker is drawn. */
-		delay?: number;
-		class?: string;
-		children?: Snippet;
+		delay?: number | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { inView = true, delay = 0, class: cls = '', children }: Props = $props();
 

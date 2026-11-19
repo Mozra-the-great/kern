@@ -2,15 +2,15 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		open?: boolean;
+		open?: boolean | undefined;
 		title: string;
-		side?: 'right' | 'left' | 'bottom';
-		closeLabel?: string;
-		onclose?: () => void;
-		footer?: Snippet;
-		children?: Snippet;
+		side?: 'right' | 'left' | 'bottom' | undefined;
+		closeLabel?: string | undefined;
+		onclose?: (() => void) | undefined;
+		footer?: Snippet | undefined;
+		children?: Snippet | undefined;
 	}
-	let { open = $bindable(false), title, side = 'right', closeLabel = 'Close', onclose, footer, children }: Props = $props();
+	let { open = $bindable(), title, side = 'right', closeLabel = 'Close', onclose, footer, children }: Props = $props();
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();
 

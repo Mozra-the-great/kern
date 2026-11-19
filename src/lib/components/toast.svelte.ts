@@ -3,11 +3,11 @@ export type ToastTone = 'info' | 'ok' | 'warn' | 'danger';
 export interface ToastItem {
 	id: number;
 	message: string;
-	title?: string;
+	title?: string | undefined;
 	tone: ToastTone;
 	/** Milliseconds; 0 keeps it until dismissed. */
 	duration: number;
-	action?: { label: string; onclick: () => void };
+	action?: { label: string; onclick: () => void } | undefined;
 }
 
 export type ToastInput = Partial<Omit<ToastItem, 'id' | 'message'>> & { message: string };

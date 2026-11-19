@@ -3,39 +3,39 @@
 	import Field from './Field.svelte';
 
 	interface Props {
-		label?: string;
-		hint?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
 		/** Error text from outside, e.g. a failed upload. Rejected files add their own message. */
-		error?: string;
+		error?: string | undefined;
 		/** Same syntax as `<input accept>`: `.pdf`, `image/*`, `image/png`. Also enforced for dropped files. */
-		accept?: string;
-		multiple?: boolean;
+		accept?: string | undefined;
+		multiple?: boolean | undefined;
 		/** Largest allowed file in bytes. */
-		maxSize?: number;
+		maxSize?: number | undefined;
 		/** The chosen files. */
-		files?: File[];
+		files?: File[] | undefined;
 		/** Called with the full list of chosen files after every change. */
-		onfiles?: (files: File[]) => void;
+		onfiles?: ((files: File[]) => void) | undefined;
 		/** Form field name; the files are submitted with the form. */
-		name?: string;
-		disabled?: boolean;
-		required?: boolean;
-		id?: string;
+		name?: string | undefined;
+		disabled?: boolean | undefined;
+		required?: boolean | undefined;
+		id?: string | undefined;
 		/** Text in the drop zone. */
-		dropLabel?: string;
+		dropLabel?: string | undefined;
 		/** Prefix of the remove buttons' accessible names: "Remove report.pdf". */
-		removeLabel?: string;
+		removeLabel?: string | undefined;
 		/** Accessible name of the list of chosen files. */
-		listLabel?: string;
+		listLabel?: string | undefined;
 		/** Message for a file that is too large. `{name}` and `{max}` are replaced. */
-		sizeError?: string;
+		sizeError?: string | undefined;
 		/** Message for a file of a type that is not accepted. `{name}` is replaced. */
-		typeError?: string;
+		typeError?: string | undefined;
 		/** Message when several files were offered but only one is allowed. */
-		countError?: string;
+		countError?: string | undefined;
 		/** Announced after a change. `{count}` is replaced. */
-		statusLabel?: string;
-		class?: string;
+		statusLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
@@ -44,7 +44,7 @@
 		accept,
 		multiple = false,
 		maxSize,
-		files = $bindable([]),
+		files = $bindable(),
 		onfiles,
 		name,
 		disabled = false,
@@ -62,6 +62,8 @@
 	const uid = $props.id();
 	const zoneId = $derived(id ?? `${uid}-zone`);
 	const promptId = $derived(`${uid}-prompt`);
+	// `files` has no fallback, so binding `undefined` behaves like leaving the prop out.
+	const fileList = $derived(files ?? []);
 	const prompt = $derived(dropLabel ?? (multiple ? 'Drop files here or click to choose' : 'Drop a file here or click to choose'));
 
 	let input: HTMLInputElement | undefined = $state();
@@ -97,7 +99,7 @@
 	function syncInput() {
 		if (!input || typeof DataTransfer === 'undefined') return;
 		const dt = new DataTransfer();
-		for (const f of files) dt.items.add(f);
+		for (const f of fileList) dt.items.add(f);
 		input.files = dt.files;
 	}
 	$effect(() => {
@@ -129,7 +131,7 @@
 			status = msgs.join(' ');
 			return;
 		}
-		const next = multiple ? [...files, ...ok.filter((f) => !files.some((g) => sameFile(f, g)))] : ok;
+		const next = multiple ? [...fileList, ...ok.filter((f) => !fileList.some((g) => sameFile(f, g)))] : ok;
 		status = msgs.length ? msgs.join(' ') : fill(statusLabel, { count: String(next.length) });
 		commit(next);
 	}
@@ -142,7 +144,7 @@
 
 	async function remove(i: number) {
 		problems = [];
-		const next = files.filter((_, j) => j !== i);
+		const next = fileList.filter((_, j) => j !== i);
 		status = fill(statusLabel, { count: String(next.length) });
 		commit(next);
 		await tick();
@@ -203,9 +205,9 @@
 					onchange={onpick}
 				/>
 			</div>
-			{#if files.length}
+			{#if fileList.length}
 				<ul class="files" aria-label={listLabel} bind:this={listEl}>
-					{#each files as f, i (i)}
+					{#each fileList as f, i (i)}
 						<li>
 							<span class="fname">{f.name}</span>
 							<span class="fsize">{formatSize(f.size)}</span>

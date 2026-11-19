@@ -8,7 +8,7 @@
 	/** True on macOS, iOS and iPadOS. False where there is no `navigator` (SSR). */
 	function isApple(): boolean {
 		if (typeof navigator === 'undefined') return false;
-		const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
+		const nav = navigator as Navigator & { userAgentData?: { platform?: string | undefined } | undefined };
 		const platform = nav.userAgentData?.platform ?? navigator.platform ?? '';
 		return /mac|iphone|ipad|ipod/i.test(platform) || /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent ?? '');
 	}
@@ -87,17 +87,17 @@
 		 * The keys of one shortcut, e.g. `['mod', 'K']`. Names like `mod`, `ctrl`, `alt`, `shift`,
 		 * `enter`, `esc`, `up` become symbols with a spoken name; anything else is shown as it is.
 		 */
-		keys?: string[];
+		keys?: string[] | undefined;
 		/** Drawn between the keys. Empty string for none. */
-		separator?: string;
-		size?: 'sm' | 'md';
+		separator?: string | undefined;
+		size?: 'sm' | 'md' | undefined;
 		/** `auto` reads the platform in the browser; `mac` and `other` force it (`mod` = ⌘ or Ctrl). */
-		platform?: 'auto' | 'mac' | 'other';
+		platform?: 'auto' | 'mac' | 'other' | undefined;
 		/** Spoken names by key name (lower case), e.g. `{ mod: 'Befehl' }`. */
-		labels?: Record<string, string>;
-		class?: string;
+		labels?: Record<string, string> | undefined;
+		class?: string | undefined;
 		/** A single key, used when `keys` is not set. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 	}
 	let { keys, separator = '+', size = 'md', platform = 'auto', labels, class: cls = '', children }: Props = $props();
 

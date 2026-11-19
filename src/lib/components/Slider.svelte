@@ -3,18 +3,18 @@
 	import Field from './Field.svelte';
 
 	interface Props extends Omit<HTMLInputAttributes, 'value' | 'type' | 'min' | 'max' | 'step' | 'size' | 'required'> {
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** Defaults to the middle of the range, snapped to `step`. */
-		value?: number;
-		min?: number;
-		max?: number;
-		step?: number;
+		value?: number | undefined;
+		min?: number | undefined;
+		max?: number | undefined;
+		step?: number | undefined;
 		/** Shows the current value next to the slider. */
-		showValue?: boolean;
+		showValue?: boolean | undefined;
 		/** Formats the value for the display and for screen readers, e.g. `(v) => `${v} %``. */
-		format?: (value: number) => string;
+		format?: ((value: number) => string) | undefined;
 	}
 	let {
 		label,

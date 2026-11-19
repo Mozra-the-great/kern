@@ -4,46 +4,46 @@
 	import { anchorTo } from './anchor.js';
 
 	interface Props {
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** The tags. */
-		value?: string[];
-		placeholder?: string;
+		value?: string[] | undefined;
+		placeholder?: string | undefined;
 		/** Form field name; one hidden input per tag (repeated name). */
-		name?: string;
+		name?: string | undefined;
 		/** At least one tag is needed. */
-		required?: boolean;
-		disabled?: boolean;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Most tags allowed. */
-		max?: number;
+		max?: number | undefined;
 		/** Treat "Gel" and "gel" as different tags. Default: duplicates are found ignoring case. */
-		caseSensitive?: boolean;
+		caseSensitive?: boolean | undefined;
 		/** Offered while typing (listbox autocomplete); free text stays allowed. */
-		suggestions?: string[];
+		suggestions?: string[] | undefined;
 		/** Turn leftover text into a tag when the field loses focus. */
-		addOnBlur?: boolean;
+		addOnBlur?: boolean | undefined;
 		/** Accessible name of each remove button; `{tag}` is replaced. */
-		removeLabel?: string;
+		removeLabel?: string | undefined;
 		/** Screen-reader instructions for the text field. */
-		instructions?: string;
+		instructions?: string | undefined;
 		/** Announcements (polite live region); `{tag}` and `{max}` are replaced. */
-		addedText?: string;
-		removedText?: string;
-		duplicateText?: string;
-		maxText?: string;
+		addedText?: string | undefined;
+		removedText?: string | undefined;
+		duplicateText?: string | undefined;
+		maxText?: string | undefined;
 		/** Accessible name of the tag list. */
-		listLabel?: string;
-		id?: string;
+		listLabel?: string | undefined;
+		id?: string | undefined;
 		/** Called with the new list after every add or remove. */
-		onchange?: (value: string[]) => void;
-		class?: string;
+		onchange?: ((value: string[]) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable([]),
+		value = $bindable(),
 		placeholder,
 		name,
 		required = false,

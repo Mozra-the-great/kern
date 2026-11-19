@@ -1,18 +1,18 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	interface Props extends HTMLButtonAttributes {
 		/** Visual weight. One `primary` per view. */
-		variant?: 'primary' | 'secondary' | 'ghost' | 'accent' | 'danger';
-		size?: 'sm' | 'md' | 'lg';
+		variant?: 'primary' | 'secondary' | 'ghost' | 'accent' | 'danger' | undefined;
+		size?: 'sm' | 'md' | 'lg' | undefined;
 		/** Full width. */
-		block?: boolean;
+		block?: boolean | undefined;
 		/** Shows a spinner and blocks clicks. */
-		loading?: boolean;
+		loading?: boolean | undefined;
 		/** Renders an `<a>` instead of a `<button>`. */
-		href?: string;
-		children?: Snippet;
+		href?: string | undefined;
+		children?: Snippet; // same type as the inherited HTML attribute
 	}
 	let {
 		variant = 'primary',
@@ -29,7 +29,7 @@
 </script>
 
 {#if href && !disabled}
-	<a class="k-button {cls}" data-variant={variant} data-size={size} class:block {href} {...rest as any}>
+	<a class="k-button {cls}" data-variant={variant} data-size={size} class:block {href} {...(rest as HTMLAnchorAttributes)}>
 		{@render children?.()}
 	</a>
 {:else}

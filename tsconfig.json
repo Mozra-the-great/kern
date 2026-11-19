@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES2022", "module": "ESNext", "moduleResolution": "bundler",
-		"strict": true, "skipLibCheck": true, "verbatimModuleSyntax": true,
+		"strict": true, "exactOptionalPropertyTypes": true, "skipLibCheck": true, "verbatimModuleSyntax": true,
 		"isolatedModules": true, "noEmit": true, "lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"types": ["svelte", "vite/client"]
 	},

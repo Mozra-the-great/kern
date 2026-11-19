@@ -7,35 +7,35 @@
 
 	interface Props {
 		/** Name of the whole group. */
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** The entered characters (gaps are left out). */
-		value?: string;
+		value?: string | undefined;
 		/** Number of boxes. */
-		length?: number;
+		length?: number | undefined;
 		/** `numeric` = digits only (numeric keyboard), `alphanumeric` = letters and digits. */
-		type?: PinInputType;
+		type?: PinInputType | undefined;
 		/** Hide the characters like a password. */
-		mask?: boolean;
+		mask?: boolean | undefined;
 		/** Form field name; a hidden input carries `value`. */
-		name?: string;
-		required?: boolean;
-		disabled?: boolean;
+		name?: string | undefined;
+		required?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Accessible name of each box; `{index}` and `{length}` are replaced. */
-		digitLabel?: string;
-		id?: string;
+		digitLabel?: string | undefined;
+		id?: string | undefined;
 		/** Called when the value changes by user input. */
-		onchange?: (value: string) => void;
+		onchange?: ((value: string) => void) | undefined;
 		/** Called when every box is filled. */
-		oncomplete?: (value: string) => void;
-		class?: string;
+		oncomplete?: ((value: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(''),
+		value = $bindable(),
 		length = 6,
 		type = 'numeric',
 		mask = false,
@@ -66,10 +66,10 @@
 	// Rebuild the boxes when the value (or the length) changes from outside.
 	let syncedKey: string | undefined;
 	$effect.pre(() => {
-		const key = `${value}\u0000${count}\u0000${type}`;
+		const key = `${value ?? ''}\u0000${count}\u0000${type}`;
 		if (key === syncedKey) return;
 		syncedKey = key;
-		if (chars.join('') === value && chars.length === count) return;
+		if (chars.join('') === (value ?? '') && chars.length === count) return;
 		const next = clean(value ?? '').slice(0, count);
 		chars = Array.from({ length: count }, (_, i) => next[i] ?? '');
 	});
@@ -78,7 +78,7 @@
 		chars = next;
 		const joined = next.join('');
 		syncedKey = `${joined}\u0000${count}\u0000${type}`;
-		if (joined === value) return;
+		if (joined === (value ?? '')) return;
 		value = joined;
 		onchange?.(joined);
 		if (joined.length === count) oncomplete?.(joined);
@@ -200,7 +200,7 @@
 				/>
 			{/each}
 		</div>
-		{#if name}<input type="hidden" {name} {value} />{/if}
+		{#if name}<input type="hidden" {name} value={value ?? ''} />{/if}
 	{/snippet}
 </Field>
 

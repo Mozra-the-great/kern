@@ -1,9 +1,9 @@
 <script lang="ts">
 	interface Props {
 		/** Optional label in the middle of the line. */
-		label?: string;
-		vertical?: boolean;
-		class?: string;
+		label?: string | undefined;
+		vertical?: boolean | undefined;
+		class?: string | undefined;
 	}
 	let { label, vertical = false, class: cls = '' }: Props = $props();
 </script>

@@ -1,12 +1,12 @@
 <script lang="ts">
 	interface Props {
 		/** 0..max. Leave undefined for an indeterminate bar. */
-		value?: number;
-		max?: number;
+		value?: number | undefined;
+		max?: number | undefined;
 		label: string;
 		/** Show the percentage next to the label. */
-		showValue?: boolean;
-		class?: string;
+		showValue?: boolean | undefined;
+		class?: string | undefined;
 	}
 	let { value, max = 100, label, showValue = false, class: cls = '' }: Props = $props();
 	const pct = $derived(value === undefined ? undefined : Math.max(0, Math.min(100, (value / max) * 100)));

@@ -4,21 +4,21 @@
 	export interface TabItem {
 		id: string;
 		label: string;
-		disabled?: boolean;
+		disabled?: boolean | undefined;
 	}
 	interface Props {
 		tabs: TabItem[];
 		/** Id of the active tab. */
-		value?: string;
+		value?: string | undefined;
 		/** Accessible name of the tab list. */
-		label?: string;
+		label?: string | undefined;
 		/** `line` = underline marker, `pill` = filled segment. */
-		look?: 'line' | 'pill';
+		look?: 'line' | 'pill' | undefined;
 		/** Renders the panel of the given tab id. */
 		panel: Snippet<[string]>;
 		/** Called when the user picks another tab (click or arrow keys), not when `value` is set from outside. */
-		onchange?: (id: string) => void;
-		class?: string;
+		onchange?: ((id: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let { tabs, value = $bindable(), label, look = 'line', panel, onchange, class: cls = '' }: Props = $props();
 	const uid = $props.id();

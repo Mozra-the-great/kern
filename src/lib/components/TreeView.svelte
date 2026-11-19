@@ -4,9 +4,9 @@
 	export interface TreeNode {
 		id: string;
 		label: string;
-		children?: TreeNode[];
+		children?: TreeNode[] | undefined;
 		/** Can be focused and expanded, but not selected. */
-		disabled?: boolean;
+		disabled?: boolean | undefined;
 	}
 	export interface TreeItemState {
 		level: number;
@@ -17,23 +17,23 @@
 	interface Props {
 		nodes: TreeNode[];
 		/** Id of the selected node. */
-		selected?: string;
+		selected?: string | undefined;
 		/** Ids of the expanded nodes. */
-		expanded?: string[];
+		expanded?: string[] | undefined;
 		/** Accessible name of the tree. */
-		label?: string;
+		label?: string | undefined;
 		/** Custom node content; the default is the label. */
-		item?: Snippet<[TreeNode, TreeItemState]>;
+		item?: Snippet<[TreeNode, TreeItemState]> | undefined;
 		/** Called when the user selects a node. */
-		onselect?: (id: string) => void;
+		onselect?: ((id: string) => void) | undefined;
 		/** Called when the user expands or collapses a node. */
-		ontoggle?: (id: string, expanded: boolean) => void;
-		class?: string;
+		ontoggle?: ((id: string, expanded: boolean) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		nodes,
 		selected = $bindable(),
-		expanded = $bindable([]),
+		expanded = $bindable(),
 		label,
 		item,
 		onselect,
@@ -98,7 +98,7 @@
 	}
 	function setExpanded(id: string, value: boolean) {
 		if (open.has(id) === value) return;
-		expanded = value ? [...expanded, id] : expanded.filter((x) => x !== id);
+		expanded = value ? [...(expanded ?? []), id] : (expanded ?? []).filter((x) => x !== id);
 		ontoggle?.(id, value);
 	}
 	function select(node: TreeNode) {
@@ -155,7 +155,7 @@
 			case '*': {
 				const add = entry.siblings.filter((n) => hasKids(n) && !open.has(n.id)).map((n) => n.id);
 				if (add.length) {
-					expanded = [...expanded, ...add];
+					expanded = [...(expanded ?? []), ...add];
 					for (const a of add) ontoggle?.(a, true);
 				}
 				break;

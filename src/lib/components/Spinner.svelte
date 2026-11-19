@@ -1,9 +1,9 @@
 <script lang="ts">
 	interface Props {
 		/** Accessible label, read by screen readers. */
-		label?: string;
-		size?: number;
-		class?: string;
+		label?: string | undefined;
+		size?: number | undefined;
+		class?: string | undefined;
 	}
 	let { label = 'Loading', size = 20, class: cls = '' }: Props = $props();
 </script>

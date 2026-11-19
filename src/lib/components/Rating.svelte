@@ -4,30 +4,30 @@
 
 	interface Props {
 		/** Name of the group. */
-		label?: string;
-		hint?: string;
-		error?: string;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		/** Number of stars chosen, 0 = none. In `readonly` mode fractions show partly filled stars. */
-		value?: number;
+		value?: number | undefined;
 		/** Number of stars. */
-		max?: number;
+		max?: number | undefined;
 		/** Show the value as an image with text instead of a control. */
-		readonly?: boolean;
-		disabled?: boolean;
+		readonly?: boolean | undefined;
+		disabled?: boolean | undefined;
 		/** Form field name (native radios). */
-		name?: string;
-		required?: boolean;
+		name?: string | undefined;
+		required?: boolean | undefined;
 		/** Name of each star and of the readonly image; `{value}` and `{max}` are replaced. */
-		starLabel?: string;
+		starLabel?: string | undefined;
 		/** Called when the user picks a value. */
-		onchange?: (value: number) => void;
-		class?: string;
+		onchange?: ((value: number) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(0),
+		value = $bindable(),
 		max = 5,
 		readonly = false,
 		disabled = false,
@@ -40,7 +40,7 @@
 
 	const uid = $props.id();
 	const count = $derived(Math.max(1, Math.min(20, Math.floor(Number.isFinite(max) ? max : 5))));
-	const current = $derived(Math.max(0, Math.min(count, Number.isFinite(value) ? value : 0)));
+	const current = $derived(Math.max(0, Math.min(count, Number.isFinite(value) ? (value ?? 0) : 0)));
 	const groupName = $derived(name ?? `${uid}-rating`);
 	let hover = $state(0);
 	let group: HTMLElement | undefined = $state();
@@ -60,7 +60,7 @@
 	}
 	function pick(v: number) {
 		if (disabled || readonly) return;
-		if (v !== value) {
+		if (v !== (value ?? 0)) {
 			value = v;
 			onchange?.(v);
 		}

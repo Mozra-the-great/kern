@@ -2,19 +2,19 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		open?: boolean;
+		open?: boolean | undefined;
 		title: string;
-		description?: string;
-		size?: 'sm' | 'md' | 'lg';
+		description?: string | undefined;
+		size?: 'sm' | 'md' | 'lg' | undefined;
 		/** Close when the backdrop is clicked. */
-		closeOnBackdrop?: boolean;
-		closeLabel?: string;
-		onclose?: () => void;
-		footer?: Snippet;
-		children?: Snippet;
+		closeOnBackdrop?: boolean | undefined;
+		closeLabel?: string | undefined;
+		onclose?: (() => void) | undefined;
+		footer?: Snippet | undefined;
+		children?: Snippet | undefined;
 	}
 	let {
-		open = $bindable(false),
+		open = $bindable(),
 		title,
 		description,
 		size = 'md',

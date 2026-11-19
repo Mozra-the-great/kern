@@ -6,18 +6,18 @@
 		/** Target number. A new value counts on from the number currently shown. */
 		value: number;
 		/** Start number of the first run. */
-		from?: number;
+		from?: number | undefined;
 		/** Milliseconds the count takes. */
-		duration?: number;
+		duration?: number | undefined;
 		/** `Intl.NumberFormat` options, e.g. `{ style: 'currency', currency: 'EUR' }`. */
-		format?: Intl.NumberFormatOptions;
+		format?: Intl.NumberFormatOptions | undefined;
 		/** BCP 47 locale of the number format. Defaults to the browser's. */
-		locale?: string;
+		locale?: string | undefined;
 		/** Wait until the number is scrolled into view. */
-		startInView?: boolean;
+		startInView?: boolean | undefined;
 		/** Fires when a count reaches its value. */
-		oncomplete?: () => void;
-		class?: string;
+		oncomplete?: (() => void) | undefined;
+		class?: string | undefined;
 	}
 	let { value, from = 0, duration = 1600, format, locale, startInView = true, oncomplete, class: cls = '' }: Props = $props();
 

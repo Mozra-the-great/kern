@@ -4,24 +4,24 @@
 	interface Props {
 		values: number[];
 		/** `line`, `area` (line with a filled area) or `bar`. */
-		variant?: 'line' | 'area' | 'bar';
+		variant?: 'line' | 'area' | 'bar' | undefined;
 		/** Lower end of the scale. Default: the smallest value (bars: 0 or the smallest value if negative). */
-		min?: number;
+		min?: number | undefined;
 		/** Upper end of the scale. Default: the largest value. */
-		max?: number;
+		max?: number | undefined;
 		/** Accessible summary. Placeholders: {first} {last} {min} {max} {count}. */
-		label?: string;
+		label?: string | undefined;
 		/** Accessible text when there are no values. */
-		emptyLabel?: string;
+		emptyLabel?: string | undefined;
 		/** Mark the last value with a dot (line and area). */
-		showLast?: boolean;
+		showLast?: boolean | undefined;
 		/** Height in pixels. The width fills the container unless `width` is set. */
-		height?: number;
+		height?: number | undefined;
 		/** CSS length, or a number of pixels. */
-		width?: string | number;
+		width?: string | number | undefined;
 		/** Locale of the numbers in the summary. */
-		locale?: string;
-		class?: string;
+		locale?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		values,

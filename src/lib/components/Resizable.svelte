@@ -5,32 +5,32 @@
 		/** Unique within the group. */
 		id: string;
 		/** Name of the panel, used in the label of its handle. Default: the id. */
-		label?: string;
+		label?: string | undefined;
 		/** Smallest size in % of the group. Default 10. */
-		min?: number;
+		min?: number | undefined;
 		/** Largest size in %. Default 100. */
-		max?: number;
+		max?: number | undefined;
 	}
 	interface Props {
 		/** The panels in order; a handle sits between each two neighbours. */
 		panels: ResizablePanel[];
 		/** Sizes in %, one per panel, summing to 100. Default: equal shares. */
-		sizes?: number[];
+		sizes?: number[] | undefined;
 		/** `horizontal` = panels side by side, `vertical` = stacked. */
-		direction?: 'horizontal' | 'vertical';
+		direction?: 'horizontal' | 'vertical' | undefined;
 		/** Height of the group: px as a number, or any CSS length. Stacked groups need one (default 20rem). */
-		height?: number | string;
+		height?: number | string | undefined;
 		/** Size change of an Arrow key, in % of the group. */
-		step?: number;
+		step?: number | undefined;
 		/** Size change of Shift + Arrow key. */
-		largeStep?: number;
+		largeStep?: number | undefined;
 		/** Label of a handle. `{panel}` is replaced with the label of the panel before it. */
-		handleLabel?: string;
+		handleLabel?: string | undefined;
 		/** Called when the user finished a change (drag released, key pressed) with the new sizes. */
-		onchange?: (sizes: number[]) => void;
+		onchange?: ((sizes: number[]) => void) | undefined;
 		/** Renders one panel. */
 		panel: Snippet<[ResizablePanel, number]>;
-		class?: string;
+		class?: string | undefined;
 	}
 	let {
 		panels,

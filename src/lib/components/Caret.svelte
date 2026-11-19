@@ -1,12 +1,12 @@
 <script lang="ts">
 	interface Props {
 		/** `block` = full cell like a terminal, `bar` = thin line like a text field, `underline` = DOS style. */
-		shape?: 'block' | 'bar' | 'underline';
+		shape?: 'block' | 'bar' | 'underline' | undefined;
 		/** Blink. Turn it off while text is being typed. */
-		blink?: boolean;
+		blink?: boolean | undefined;
 		/** Blink cycles before the caret stays solid (WCAG 2.2.2: blinking over 5 s needs a way to stop). 0 = blink forever. */
-		cycles?: number;
-		class?: string;
+		cycles?: number | undefined;
+		class?: string | undefined;
 	}
 	let { shape = 'block', blink = true, cycles = 4, class: cls = '' }: Props = $props();
 	const iterations = $derived(cycles > 0 ? String(Math.floor(cycles)) : 'infinite');

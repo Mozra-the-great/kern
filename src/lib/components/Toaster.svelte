@@ -2,10 +2,10 @@
 	import { toasts, dismissToast } from './toast.svelte.js';
 
 	interface Props {
-		position?: 'bottom-right' | 'bottom-center' | 'top-right' | 'top-center';
-		dismissLabel?: string;
+		position?: 'bottom-right' | 'bottom-center' | 'top-right' | 'top-center' | undefined;
+		dismissLabel?: string | undefined;
 		/** Accessible name of the notification region. */
-		label?: string;
+		label?: string | undefined;
 	}
 	let { position = 'bottom-right', dismissLabel = 'Dismiss', label = 'Notifications' }: Props = $props();
 </script>

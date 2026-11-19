@@ -5,21 +5,21 @@
 	export type PopoverPlacement = Placement;
 
 	interface Props {
-		open?: boolean;
+		open?: boolean | undefined;
 		/** Text of the trigger button; also the accessible name of the panel. */
 		label: string;
 		/** Custom trigger content; `label` stays the accessible name. Keep it non-interactive (text, icon). */
-		trigger?: Snippet;
-		triggerVariant?: 'secondary' | 'ghost';
-		placement?: Placement;
+		trigger?: Snippet | undefined;
+		triggerVariant?: 'secondary' | 'ghost' | undefined;
+		placement?: Placement | undefined;
 		/** Called when the user opens or closes the popover, not when `open` is set from outside. */
-		ontoggle?: (open: boolean) => void;
-		class?: string;
+		ontoggle?: ((open: boolean) => void) | undefined;
+		class?: string | undefined;
 		/** Panel content. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 	}
 	let {
-		open = $bindable(false),
+		open = $bindable(),
 		label,
 		trigger,
 		triggerVariant = 'secondary',
@@ -86,7 +86,7 @@
 		class="trigger"
 		data-variant={triggerVariant}
 		aria-haspopup="dialog"
-		aria-expanded={open}
+		aria-expanded={open ?? false}
 		aria-controls="{uid}-panel"
 		aria-label={trigger ? label : undefined}
 		onclick={() => (open ? close(true) : show())}

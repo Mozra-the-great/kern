@@ -5,26 +5,26 @@
 	export interface SegmentOption {
 		value: string;
 		label: string;
-		disabled?: boolean;
+		disabled?: boolean | undefined;
 	}
 	interface Props {
 		/** Name of the group; omit only when the context names it (then pass `ariaLabel`). */
-		label?: string;
+		label?: string | undefined;
 		/** Accessible name without a visible label. */
-		ariaLabel?: string;
-		hint?: string;
-		error?: string;
+		ariaLabel?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
 		options: SegmentOption[];
 		/** Value of the chosen option. */
-		value?: string;
+		value?: string | undefined;
 		/** Form field name (native radios). */
-		name?: string;
-		disabled?: boolean;
+		name?: string | undefined;
+		disabled?: boolean | undefined;
 		/** Stretch over the full width, segments share it equally. */
-		block?: boolean;
+		block?: boolean | undefined;
 		/** Called when the user picks an option. */
-		onchange?: (value: string) => void;
-		class?: string;
+		onchange?: ((value: string) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		label,
@@ -32,7 +32,7 @@
 		hint,
 		error,
 		options,
-		value = $bindable(''),
+		value = $bindable(),
 		name,
 		disabled = false,
 		block = false,
@@ -44,7 +44,7 @@
 	const groupName = $derived(name ?? `${uid}-seg`);
 
 	function pick(v: string) {
-		if (v === value) return;
+		if (v === (value ?? '')) return;
 		value = v;
 		onchange?.(v);
 	}
@@ -65,13 +65,13 @@
 			aria-disabled={disabled || undefined}
 		>
 			{#each options as o, i (o.value)}
-				<label class="seg" class:on={o.value === value}>
+				<label class="seg" class:on={o.value === (value ?? '')}>
 					<input
 						type="radio"
 						id="{uid}-{i}"
 						name={groupName}
 						value={o.value}
-						checked={o.value === value}
+						checked={o.value === (value ?? '')}
 						disabled={disabled || o.disabled}
 						onchange={() => pick(o.value)}
 					/>

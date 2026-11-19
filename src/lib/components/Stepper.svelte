@@ -2,28 +2,28 @@
 	export interface StepItem {
 		id: string;
 		label: string;
-		description?: string;
+		description?: string | undefined;
 	}
 	export type StepState = 'complete' | 'current' | 'upcoming';
 
 	interface Props {
 		steps: StepItem[];
 		/** Index of the current step (0-based). `steps.length` marks every step complete. */
-		current?: number;
-		orientation?: 'horizontal' | 'vertical';
+		current?: number | undefined;
+		orientation?: 'horizontal' | 'vertical' | undefined;
 		/** Accessible name of the list. */
-		label?: string;
+		label?: string | undefined;
 		/** When set, completed steps are buttons that call it with their index. */
-		onstep?: (index: number, step: StepItem) => void;
+		onstep?: ((index: number, step: StepItem) => void) | undefined;
 		/** Screen-reader text after a completed step's label. */
-		completeLabel?: string;
+		completeLabel?: string | undefined;
 		/** Compact text for narrow containers; `{current}`, `{total}` and `{label}` are replaced. */
-		compactLabel?: string;
+		compactLabel?: string | undefined;
 		/** Compact text once every step is complete; `{total}` is replaced. */
-		doneLabel?: string;
+		doneLabel?: string | undefined;
 		/** Compact view with `onstep`: button back to the previous step; `{label}` is replaced. */
-		backLabel?: string;
-		class?: string;
+		backLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		steps,

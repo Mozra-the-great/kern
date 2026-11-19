@@ -3,14 +3,14 @@
 
 	interface Props {
 		title: string;
-		description?: string;
+		description?: string | undefined;
 		/** Heading level of the title. */
-		level?: 2 | 3 | 4;
+		level?: 2 | 3 | 4 | undefined;
 		/** Decorative illustration or icon above the title (hidden from assistive technology). */
-		icon?: Snippet;
+		icon?: Snippet | undefined;
 		/** Call to action below the text, e.g. one or two buttons. */
-		actions?: Snippet;
-		class?: string;
+		actions?: Snippet | undefined;
+		class?: string | undefined;
 	}
 	let { title, description, level = 3, icon, actions, class: cls = '' }: Props = $props();
 </script>

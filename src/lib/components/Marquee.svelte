@@ -4,28 +4,28 @@
 
 	interface Props {
 		/** The content that loops. It is shown once to assistive technology; the repeats are hidden from it. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 		/** Pixels per second. */
-		speed?: number;
+		speed?: number | undefined;
 		/** Direction the content moves. `up` and `down` make a vertical marquee. */
-		direction?: 'left' | 'right' | 'up' | 'down';
+		direction?: 'left' | 'right' | 'up' | 'down' | undefined;
 		/** Pause while the pointer is over the marquee. Keyboard focus inside always pauses it. */
-		pauseOnHover?: boolean;
+		pauseOnHover?: boolean | undefined;
 		/** Show a pause/play button (WCAG 2.2.2: moving content that lasts over 5 s needs one). */
-		pausable?: boolean;
+		pausable?: boolean | undefined;
 		/** Paused by the button. Bindable. */
-		paused?: boolean;
+		paused?: boolean | undefined;
 		/** Space between the repeats. CSS length, or a number of pixels. */
-		gap?: string | number;
+		gap?: string | number | undefined;
 		/** Height of a vertical marquee. CSS length, or a number of pixels. */
-		height?: string | number;
+		height?: string | number | undefined;
 		/** Fade the content out at both ends. */
-		fade?: boolean;
+		fade?: boolean | undefined;
 		/** Accessible name of the region. Without it the marquee is not announced as a group. */
-		label?: string;
-		pauseLabel?: string;
-		playLabel?: string;
-		class?: string;
+		label?: string | undefined;
+		pauseLabel?: string | undefined;
+		playLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let {
 		children,
@@ -33,7 +33,7 @@
 		direction = 'left',
 		pauseOnHover = true,
 		pausable = true,
-		paused = $bindable(false),
+		paused = $bindable(),
 		gap,
 		height = '16rem',
 		fade = false,

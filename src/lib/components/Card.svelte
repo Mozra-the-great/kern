@@ -2,20 +2,20 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		title?: string;
-		description?: string;
+		title?: string | undefined;
+		description?: string | undefined;
 		/** Heading level of the title. */
-		level?: 2 | 3 | 4;
+		level?: 2 | 3 | 4 | undefined;
 		/** `raised` = on bg-raised, `sunken` = recessed, `outline` = border only. */
-		look?: 'raised' | 'sunken' | 'outline';
+		look?: 'raised' | 'sunken' | 'outline' | undefined;
 		/** Makes the whole card a link. */
-		href?: string;
+		href?: string | undefined;
 		/** Content above the title, e.g. an image or motif. */
-		media?: Snippet;
+		media?: Snippet | undefined;
 		/** Row of actions at the bottom. */
-		footer?: Snippet;
-		class?: string;
-		children?: Snippet;
+		footer?: Snippet | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { title, description, level = 3, look = 'raised', href, media, footer, class: cls = '', children }: Props = $props();
 </script>

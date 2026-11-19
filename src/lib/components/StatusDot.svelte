@@ -9,17 +9,17 @@
 		/** `ok` = circle with check, `warn` = triangle, `down` = square with cross, `idle` = empty ring, `busy` = ring with dot. */
 		status: DotStatus;
 		/** What the dot belongs to, e.g. "Database". The status name is spoken after it. Defaults to the status name. */
-		label?: string;
+		label?: string | undefined;
 		/** Hide the text visually. It stays available to assistive technology. */
-		labelHidden?: boolean;
+		labelHidden?: boolean | undefined;
 		/** Names of the five states, for translation. */
-		statusLabels?: Partial<Record<DotStatus, string>>;
-		size?: 'sm' | 'md';
+		statusLabels?: Partial<Record<DotStatus, string>> | undefined;
+		size?: 'sm' | 'md' | undefined;
 		/** Pulse while `busy`. Stops when the user asks for less motion. */
-		pulse?: boolean;
-		class?: string;
+		pulse?: boolean | undefined;
+		class?: string | undefined;
 		/** Replaces `label` as visible text. */
-		children?: Snippet;
+		children?: Snippet | undefined;
 	}
 	let { status, label, labelHidden = false, statusLabels, size = 'md', pulse = true, class: cls = '', children }: Props = $props();
 	const uid = $props.id();

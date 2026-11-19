@@ -4,20 +4,20 @@
 	import Field from './Field.svelte';
 
 	interface Props extends Omit<HTMLInputAttributes, 'value'> {
-		label?: string;
-		hint?: string;
-		error?: string;
-		value?: string | number | null;
+		label?: string | undefined;
+		hint?: string | undefined;
+		error?: string | undefined;
+		value?: string | number | null | undefined;
 		/** Content inside the field before the text, e.g. an icon. */
-		leading?: Snippet;
+		leading?: Snippet | undefined;
 		/** Content inside the field after the text, e.g. a unit or button. */
-		trailing?: Snippet;
+		trailing?: Snippet | undefined;
 	}
 	let {
 		label,
 		hint,
 		error,
-		value = $bindable(''),
+		value = $bindable(),
 		id,
 		required,
 		class: cls = '',
@@ -35,7 +35,7 @@
 			{#if leading}<span class="adorn">{@render leading()}</span>{/if}
 			<input
 				id={inputId}
-				bind:value
+				bind:value={() => (value === undefined ? '' : value), (v) => (value = v)}
 				{required}
 				aria-invalid={invalid || undefined}
 				aria-describedby={describedby}

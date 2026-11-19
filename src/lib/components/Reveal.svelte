@@ -4,15 +4,15 @@
 
 	interface Props {
 		/** Direction the content travels while it appears: `up` = it rises into place from below. `none` only fades. */
-		direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+		direction?: 'up' | 'down' | 'left' | 'right' | 'none' | undefined;
 		/** Milliseconds to wait after the content enters the viewport. */
-		delay?: number;
+		delay?: number | undefined;
 		/** Reveal once. Without it the content hides again when it leaves the viewport and replays. */
-		once?: boolean;
+		once?: boolean | undefined;
 		/** Share of the content that must be visible before it appears (0..1). */
-		threshold?: number;
-		class?: string;
-		children?: Snippet;
+		threshold?: number | undefined;
+		class?: string | undefined;
+		children?: Snippet | undefined;
 	}
 	let { direction = 'up', delay = 0, once = true, threshold = 0.15, class: cls = '', children }: Props = $props();
 

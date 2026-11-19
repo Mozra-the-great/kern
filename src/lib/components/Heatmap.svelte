@@ -15,27 +15,27 @@
 		/** Accessible name of the grid. */
 		label: string;
 		/** First day of the range, ISO. Default: the earliest date in `data`. */
-		start?: string;
+		start?: string | undefined;
 		/** Last day of the range, ISO. Default: the latest date in `data`. */
-		end?: string;
+		end?: string | undefined;
 		/** First weekday row: 0 = Sunday … 6 = Saturday. */
-		weekStart?: number;
+		weekStart?: number | undefined;
 		/** Locale of month names, weekday names, dates and numbers. */
-		locale?: string;
+		locale?: string | undefined;
 		/** Value of the darkest step. Default: the largest value in the range. */
-		max?: number;
+		max?: number | undefined;
 		/** Text of a cell. Placeholders: {date} {value}. Shown on hover or focus and spoken. */
-		cellLabel?: string;
-		legend?: boolean;
-		lessLabel?: string;
-		moreLabel?: string;
+		cellLabel?: string | undefined;
+		legend?: boolean | undefined;
+		lessLabel?: string | undefined;
+		moreLabel?: string | undefined;
 		/** Shown when there is no date range at all. */
-		emptyLabel?: string;
+		emptyLabel?: string | undefined;
 		/** Edge length of a cell in pixels. */
-		cellSize?: number;
+		cellSize?: number | undefined;
 		/** Called on Enter, Space or click on a day. */
-		onselect?: (detail: { date: string; value: number }) => void;
-		class?: string;
+		onselect?: ((detail: { date: string; value: number }) => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		data,

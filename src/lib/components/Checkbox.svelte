@@ -3,21 +3,21 @@
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	interface Props extends Omit<HTMLInputAttributes, 'type'> {
-		checked?: boolean;
-		indeterminate?: boolean;
+		checked?: boolean | undefined;
+		indeterminate?: boolean | undefined;
 		/** Label text; or pass children for richer content. */
-		label?: string;
-		hint?: string;
-		children?: Snippet;
+		label?: string | undefined;
+		hint?: string | undefined;
+		children?: Snippet; // same type as the inherited HTML attribute
 	}
-	let { checked = $bindable(false), indeterminate = $bindable(false), label, hint, id, class: cls = '', children, ...rest }: Props = $props();
+	let { checked = $bindable(), indeterminate = $bindable(), label, hint, id, class: cls = '', children, ...rest }: Props = $props();
 	const uid = $props.id();
 	const boxId = $derived(id ?? `${uid}-cb`);
 </script>
 
 <div class="k-check {cls}">
 	<span class="box">
-		<input type="checkbox" id={boxId} bind:checked bind:indeterminate aria-describedby={hint ? `${boxId}-hint` : undefined} {...rest} />
+		<input type="checkbox" id={boxId} bind:checked={() => checked ?? false, (v) => (checked = v)} bind:indeterminate={() => indeterminate ?? false, (v) => (indeterminate = v)} aria-describedby={hint ? `${boxId}-hint` : undefined} {...rest} />
 		<svg viewBox="0 0 16 16" aria-hidden="true">
 			{#if indeterminate}<path d="M4 8h8" stroke="currentColor" stroke-width="2.2" />{:else}<path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" />{/if}
 		</svg>

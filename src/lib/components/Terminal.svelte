@@ -1,11 +1,11 @@
 <script lang="ts" module>
 	export interface TerminalLine {
 		/** Prompt in front of the command. Defaults to the `prompt` prop. */
-		prompt?: string;
+		prompt?: string | undefined;
 		/** The command that is typed. */
 		text: string;
 		/** What the command prints. One string = one line. */
-		output?: string | string[];
+		output?: string | string[] | undefined;
 	}
 </script>
 
@@ -16,28 +16,28 @@
 	interface Props {
 		lines: TerminalLine[];
 		/** Text in the title bar. */
-		title?: string;
+		title?: string | undefined;
 		/** Default prompt of every line. */
-		prompt?: string;
+		prompt?: string | undefined;
 		/** Type the commands one after another. The complete text is always available to assistive technology. */
-		typewriter?: boolean;
+		typewriter?: boolean | undefined;
 		/** Milliseconds per typed character. */
-		speed?: number;
+		speed?: number | undefined;
 		/** Milliseconds before typing starts. */
-		delay?: number;
+		delay?: number | undefined;
 		/** Milliseconds between a typed command and its output. */
-		linePause?: number;
+		linePause?: number | undefined;
 		/** Wait until the terminal is scrolled into view before typing. */
-		startInView?: boolean;
+		startInView?: boolean | undefined;
 		/** Show a button that copies the commands. */
-		copy?: boolean;
-		copyLabel?: string;
-		copiedLabel?: string;
+		copy?: boolean | undefined;
+		copyLabel?: string | undefined;
+		copiedLabel?: string | undefined;
 		/** Accessible name of the terminal. Defaults to the title, then "Terminal". */
-		label?: string;
+		label?: string | undefined;
 		/** Fires when the last command is typed. */
-		oncomplete?: () => void;
-		class?: string;
+		oncomplete?: (() => void) | undefined;
+		class?: string | undefined;
 	}
 	let {
 		lines,

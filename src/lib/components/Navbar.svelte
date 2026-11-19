@@ -3,7 +3,7 @@
 		label: string;
 		href: string;
 		/** Marks the link of the current page (`aria-current="page"`). */
-		current?: boolean;
+		current?: boolean | undefined;
 	}
 </script>
 
@@ -13,14 +13,14 @@
 	interface Props {
 		items: NavbarItem[];
 		/** Logo or product name, on the left. */
-		brand?: Snippet;
+		brand?: Snippet | undefined;
 		/** Controls on the right, e.g. a theme switch or a sign-in button. Stays in the bar on narrow widths. */
-		actions?: Snippet;
+		actions?: Snippet | undefined;
 		/** Accessible name of the navigation landmark. */
-		label?: string;
+		label?: string | undefined;
 		/** Accessible name of the menu button shown on narrow widths. */
-		menuLabel?: string;
-		class?: string;
+		menuLabel?: string | undefined;
+		class?: string | undefined;
 	}
 	let { items, brand, actions, label = 'Main', menuLabel = 'Menu', class: cls = '' }: Props = $props();
 	const uid = $props.id();
