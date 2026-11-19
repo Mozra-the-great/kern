@@ -30,7 +30,7 @@
 <section>
 	<h2>Marken-Assets</h2>
 	<p class="lead">
-		Pixel-Art aus den Stuffcloud-Moodboards, im Paket unter <code>kern-ui/assets/stuffcloud/…</code>.
+		Pixel-Art aus den Stuffcloud-Moodboards, im Paket unter <code>@mozra-the-great/kern/assets/stuffcloud/…</code>.
 		Immer über <code>&lt;img&gt;</code> und in ganzzahligen Vielfachen zeigen, dann bleiben die Pixel scharf.
 	</p>
 	{#each groups as g (g.key)}

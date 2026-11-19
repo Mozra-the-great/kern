@@ -31,7 +31,7 @@ Schriften werden nicht mitgeliefert. Stuffcloud braucht Inter, JetBrains Mono un
 Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono (siehe `index.html`).
 
 Zu Stuffcloud gehört Pixel-Art aus den Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen,
-Saison-Deko) unter `kern-ui/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
+Saison-Deko) unter `@mozra-the-great/kern/assets/stuffcloud/…`, siehe [`assets/README.md`](assets/README.md).
 Die Komponenten laden sie nie; sie sind für eigene Seiten gedacht.
 
 Gegen das Aufblitzen des falschen Themes beim Laden liefert `createThemeScript('kern-theme', { followSystem: true })`
@@ -43,16 +43,75 @@ ein kleines Inline-Script für `<head>` (Schlüssel = `persist` des ThemeToggle;
 Ein neues Theme ist eine CSS-Datei, die die Variablen aus `src/lib/themes/base.css`
 für `[data-theme^='name']` überschreibt, plus ein `@import` in `themes/index.css`.
 
-## Svelte
+## Installation und Pinning
+
+Das Paket heißt `@mozra-the-great/kern` (der frühere Name ist auf npmjs.com an eine fremde Bibliothek vergeben).
+Es liegt **nicht** auf der npm-Registry, sondern als Tarball an jedem
+[GitHub-Release](https://github.com/Mozra-the-great/kern/releases). Das braucht kein Token,
+und npm wie pnpm schreiben den Integritäts-Hash des Tarballs in die Lock-Datei: `npm ci` und
+`pnpm install --frozen-lockfile` brechen ab, wenn die Datei hinter der URL nicht mehr dieselbe ist.
+Voraussetzungen: Node ≥ 22 und Svelte ≥ 5.20 (Peer-Abhängigkeit, nötig für `$props.id()`).
+
+URL-Muster (Version einsetzen, der Dateiname enthält sie ebenfalls):
+
+```text
+https://github.com/Mozra-the-great/kern/releases/download/v0.2.0/mozra-the-great-kern-0.2.0.tgz
+```
+
+**pnpm** (stuffcloud):
 
 ```bash
-npm i kern-ui
+pnpm add https://github.com/Mozra-the-great/kern/releases/download/v0.2.0/mozra-the-great-kern-0.2.0.tgz
 ```
+
+`package.json` bekommt die URL als Version, `pnpm-lock.yaml` einen Eintrag mit
+`resolution: {integrity: sha512-…, tarball: https://…/mozra-the-great-kern-0.2.0.tgz}`.
+CI installiert mit `pnpm install --frozen-lockfile`. Den `integrity`-Hash schreibt pnpm ab
+Version 10; pnpm 9 speichert für URL-Tarballs nur die URL und prüft nichts.
+
+**npm-Workspace** (nagellacke), im Workspace-Paket, das kern braucht:
+
+```bash
+npm install https://github.com/Mozra-the-great/kern/releases/download/v0.2.0/mozra-the-great-kern-0.2.0.tgz -w <workspace>
+```
+
+`package.json` bekommt die URL als Version, `package-lock.json` unter
+`node_modules/@mozra-the-great/kern` die Felder `version`, `resolved` (die URL) und
+`integrity` (`sha512-…`). CI installiert mit `npm ci`.
+
+**Aktualisieren:** Release-Notizen und [`CHANGELOG.md`](CHANGELOG.md) lesen (unter 1.0 ist jede
+Minor-Version potenziell ein Breaking Change), dann denselben Befehl mit der neuen URL ausführen.
+Der Diff aus `package.json` und Lock-Datei zeigt genau eine neue Version und einen neuen Hash.
+Eine Version nie überschreiben: ein Release wird nicht nachträglich ersetzt, sondern es gibt
+ein neues Patch-Release.
+
+**Hash prüfen:** Jedes Release enthält neben dem Tarball `….tgz.sha256` und `….tgz.sha512`
+sowie den npm-Integritätswert in den Release-Notizen.
+
+```bash
+curl -fLO https://github.com/Mozra-the-great/kern/releases/download/v0.2.0/mozra-the-great-kern-0.2.0.tgz
+curl -fLO https://github.com/Mozra-the-great/kern/releases/download/v0.2.0/mozra-the-great-kern-0.2.0.tgz.sha256
+sha256sum -c mozra-the-great-kern-0.2.0.tgz.sha256
+# Wert der Lock-Datei (ohne das Präfix "sha512-"):
+openssl dgst -sha512 -binary mozra-the-great-kern-0.2.0.tgz | openssl base64 -A
+```
+
+Ein Git-Dependency (`github:Mozra-the-great/kern#v0.2.0`) funktioniert auch, weil `prepare`
+`dist/` und `dist-elements/` baut. Die Lock-Datei hält dann nur den Commit, keinen Hash des
+Inhalts, und die Installation braucht die Dev-Abhängigkeiten; deshalb ist der Tarball der
+empfohlene Weg. Eine Veröffentlichung auf npm (mit Provenance) ist möglich, aber nicht eingerichtet.
+
+**Versionierung:** SemVer, unter 1.0 bedeutet eine neue Minor-Version (`0.2` → `0.3`) mögliche
+Breaking Changes, Patch-Versionen (`0.2.0` → `0.2.1`) enthalten Fixes und rückwärtskompatible
+Ergänzungen. Die Regeln stehen oben in [`CHANGELOG.md`](CHANGELOG.md). Ein Release entsteht durch das
+Tag `vX.Y.Z` auf `main`; der Workflow `release` baut den Tarball und legt das GitHub-Release an.
+
+## Svelte
 
 ```svelte
 <script>
-	import 'kern-ui/themes.css';
-	import { Button, Input, Modal, Toaster, toast } from 'kern-ui';
+	import '@mozra-the-great/kern/themes.css';
+	import { Button, Input, Modal, Toaster, toast } from '@mozra-the-great/kern';
 	let open = $state(false);
 </script>
 
@@ -65,9 +124,11 @@ npm i kern-ui
 ## Custom Elements
 
 ```html
+<!-- Mit Bundler: import '@mozra-the-great/kern/themes.css' und '@mozra-the-great/kern/elements'.
+     Ohne Bundler die Dateien aus node_modules ausliefern (Pfade hier relativ zur Seite). -->
 <html data-theme="stuffcloud">
-<link rel="stylesheet" href="kern-ui/dist/themes/index.css" />
-<script type="module" src="kern-ui/dist-elements/kern-elements.js"></script>
+<link rel="stylesheet" href="node_modules/@mozra-the-great/kern/dist/themes/index.css" />
+<script type="module" src="node_modules/@mozra-the-great/kern/dist-elements/kern-elements.js"></script>
 
 <form>
 	<k-input name="name" label="Name" required></k-input>
@@ -134,11 +195,15 @@ verschiebt deshalb ihre Position.
 ## Entwicklung
 
 ```bash
-npm install
+npm ci
 npm run dev        # Demo: /index.html (Svelte) und /elements.html (Custom Elements)
 npm run check      # svelte-check
 npm run build      # dist/, dist-elements/, demo-dist/
 ```
+
+`npm ci` baut über `prepare` bereits `dist/` und `dist-elements/`. Release: `version` in
+`package.json` anheben, `[Unreleased]` in `CHANGELOG.md` in einen datierten Abschnitt verschieben,
+PR mergen, dann `vX.Y.Z` auf `main` taggen und pushen.
 
 ## Lizenz
 

@@ -32,7 +32,7 @@
 		{ title: 'Tauschbörse', text: 'Biete Lacke an und finde neue Farben.' }
 	];
 	const script: TerminalLine[] = [
-		{ text: 'npm install kern-ui', output: ['added 1 package in 2s'] },
+		{ text: 'npm install @mozra-the-great/kern', output: ['added 1 package in 2s'] },
 		{ text: 'npm run dev', output: ['VITE ready in 312 ms', 'Local: http://localhost:5173/'] }
 	];
 	const plain: TerminalLine[] = [

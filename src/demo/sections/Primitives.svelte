@@ -8,8 +8,8 @@
 	import Card from '../../lib/components/Card.svelte';
 	import Switch from '../../lib/components/Switch.svelte';
 
-	const snippet = `import 'kern-ui/themes.css';
-import { Button, toast } from 'kern-ui';
+	const snippet = `import '@mozra-the-great/kern/themes.css';
+import { Button, toast } from '@mozra-the-great/kern';
 
 // Ein Klick, ein Toast.
 function speichern(): void {
@@ -48,7 +48,7 @@ function speichern(): void {
 <section>
 	<h2>Code</h2>
 	<p class="m0">
-		Mit <Code>npm i kern-ui</Code> installierst du das Paket, <Code>--save-dev</Code> ist nicht nötig. Ein sehr langer Ausdruck im Fließtext wie
+		Mit <Code>npm i @mozra-the-great/kern</Code> installierst du das Paket, <Code>--save-dev</Code> ist nicht nötig. Ein sehr langer Ausdruck im Fließtext wie
 		<Code>document.querySelector('[data-theme]').getAttribute('data-theme-variant-with-a-long-name')</Code> bricht um.
 	</p>
 	<div class="grid2">
@@ -64,9 +64,9 @@ function speichern(): void {
 <section>
 	<h2>CopyButton</h2>
 	<div class="row">
-		<CopyButton value="npm i kern-ui" label="Installationsbefehl kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
-		<CopyButton value="kern-ui" variant="secondary" label="Paketnamen kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
-		<CopyButton value="kern-ui" variant="secondary" size="sm" label="Paketnamen kopieren, klein" copiedLabel="Kopiert" />
+		<CopyButton value="npm i @mozra-the-great/kern" label="Installationsbefehl kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
+		<CopyButton value="@mozra-the-great/kern" variant="secondary" label="Paketnamen kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
+		<CopyButton value="@mozra-the-great/kern" variant="secondary" size="sm" label="Paketnamen kopieren, klein" copiedLabel="Kopiert" />
 		<CopyButton getValue={() => new Date().toISOString()} label="Zeitstempel kopieren" copiedLabel="Kopiert" oncopy={(t) => (lastCopied = t)} />
 		<CopyButton getValue={fail} label="Fehlschlag simulieren" errorLabel="Kopieren fehlgeschlagen" variant="secondary" />
 		<CopyButton value="gesperrt" label="Kopieren" disabled />

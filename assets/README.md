@@ -1,7 +1,7 @@
 # Brand assets
 
 Optional artwork per brand, shipped with the package as plain files
-(`kern-ui/assets/<brand>/<group>/<file>.svg`). The components never load them;
+(`@mozra-the-great/kern/assets/<brand>/<group>/<file>.svg`). The components never load them;
 use them in your own pages, for example as an `EmptyState` icon or seasonal decoration.
 
 ## stuffcloud
