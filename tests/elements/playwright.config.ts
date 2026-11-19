@@ -10,6 +10,10 @@ export default defineConfig({
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 1 : 0,
 	reporter: process.env.CI ? [['list'], ['github']] : 'list',
+	// visual.spec.ts: CI never writes a missing baseline (it would pass on the retry otherwise); locally a
+	// missing one is written and the test fails once. Small tolerance for anti-aliasing only.
+	updateSnapshots: process.env.CI ? 'none' : 'missing',
+	expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: 'disabled', caret: 'hide', scale: 'css' } },
 	use: { baseURL: `http://127.0.0.1:${port}` },
 	projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 	webServer: {

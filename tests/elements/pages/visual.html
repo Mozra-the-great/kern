@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: visual regression</title>
+		<script>
+			// ?theme=code-light picks the theme before the CSS applies; ?overlay=modal|toast shows one overlay.
+			const params = new URLSearchParams(location.search);
+			document.documentElement.dataset.theme = params.get('theme') || 'code';
+			document.documentElement.dataset.overlay = params.get('overlay') || '';
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			@font-face {
+				font-family: 'Inter';
+				font-weight: 100 900;
+				font-display: block;
+				src: url('fonts/inter-latin-wght-normal.woff2') format('woff2');
+			}
+			@font-face {
+				font-family: 'JetBrains Mono';
+				font-weight: 100 800;
+				font-display: block;
+				src: url('fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+			}
+			@font-face {
+				font-family: 'Silkscreen';
+				font-weight: 400;
+				font-display: block;
+				src: url('fonts/silkscreen-latin-400-normal.woff2') format('woff2');
+			}
+			@font-face {
+				font-family: 'Silkscreen';
+				font-weight: 700;
+				font-display: block;
+				src: url('fonts/silkscreen-latin-700-normal.woff2') format('woff2');
+			}
+			body {
+				margin: 0;
+				padding: 16px;
+			}
+			[data-shot] {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 16px;
+				align-items: flex-start;
+				padding: 16px;
+				margin-bottom: 16px;
+				max-width: 760px;
+			}
+			[data-shot] > * {
+				flex: 1 1 240px;
+				min-width: 0;
+			}
+			[data-shot='button'] > *,
+			[data-shot='checkbox'] > * {
+				flex: none;
+			}
+			[data-overlay='modal'] [data-shot],
+			[data-overlay='toast'] [data-shot] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<section data-shot="button">
+			<k-button>Merge PDF</k-button>
+			<k-button variant="secondary">Cancel</k-button>
+			<k-button variant="ghost">Ghost</k-button>
+			<k-button variant="danger">Delete site</k-button>
+			<k-button variant="accent">Accent</k-button>
+			<k-button disabled>Disabled</k-button>
+			<k-button size="sm">Small</k-button>
+		</section>
+		<section data-shot="input">
+			<k-input label="Subdomain" placeholder="my-site" hint="Letters, digits and dashes."></k-input>
+			<k-input label="Password" type="password" value="hunter22" error="That code is not valid. 2 attempts left."></k-input>
+			<k-input label="Disabled" value="read only" disabled></k-input>
+		</section>
+		<section data-shot="select">
+			<k-select
+				label="Expires"
+				value="7"
+				hint="After that the site is deleted."
+				options='[{"value":"1","label":"1 day"},{"value":"7","label":"7 days"},{"value":"30","label":"30 days"}]'
+			></k-select>
+			<k-select label="Zone" placeholder="Choose a zone" error="Pick a zone." options='[{"value":"a","label":"Zone A"}]'></k-select>
+		</section>
+		<section data-shot="checkbox">
+			<k-checkbox label="Hide decorations"></k-checkbox>
+			<k-checkbox label="Keep files for 7 days" checked hint="Then they are deleted."></k-checkbox>
+			<k-checkbox label="Disabled" disabled checked></k-checkbox>
+		</section>
+		<section data-shot="card">
+			<k-card title="API token" description="Created 3 days ago">
+				<p style="margin: 0">Read and write access to your sites.</p>
+				<k-button slot="footer" variant="secondary" size="sm">Revoke</k-button>
+			</k-card>
+			<k-card title="Outline" look="outline"><p style="margin: 0">An outlined card.</p></k-card>
+		</section>
+		<section data-shot="tabs">
+			<k-tabs
+				label="Formats"
+				value="yaml"
+				tabs='[{"id":"json","label":"JSON"},{"id":"yaml","label":"YAML"},{"id":"xml","label":"XML"},{"id":"toml","label":"TOML"}]'
+			>
+				<p style="margin: 0">Panel</p>
+			</k-tabs>
+		</section>
+		<section data-shot="progress">
+			<k-progress label="Upload" value="40" show-value></k-progress>
+			<k-progress label="Storage" value="100" tone="warn"></k-progress>
+			<k-progress label="Working"></k-progress>
+		</section>
+		<section data-shot="filedrop">
+			<k-file-drop label="Files" hint="PDF, up to 20 MB." drop-label="Drop PDFs here" button-label="Choose files" accept=".pdf"></k-file-drop>
+			<k-file-drop label="Image" drop-label="Drop an image or click to choose" accept="image/*"></k-file-drop>
+		</section>
+
+		<k-modal id="modal" title="Delete this site?" description="It goes away for good.">
+			<p style="margin: 0">14 files · 1.2 MB · expires in 7 days</p>
+			<k-button slot="footer" variant="secondary">Cancel</k-button>
+			<k-button slot="footer" variant="danger">Delete site</k-button>
+		</k-modal>
+		<k-toaster position="bottom-left"></k-toaster>
+	</body>
+</html>
