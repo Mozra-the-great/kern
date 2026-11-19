@@ -40,20 +40,32 @@
 </script>
 
 <script lang="ts">
+	import { tick } from 'svelte';
+
 	interface Props {
+		/** Text to copy. Same as `value`; wins when both are set. */
+		text?: string | undefined;
 		/** Text to copy. */
 		value?: string | undefined;
-		/** Reads the text at click time. Wins over `value`; may be async. */
+		/** Reads the text at click time. Wins over `text` and `value`; may be async. */
 		getValue?: (() => string | Promise<string>) | undefined;
-		/** Accessible name of the button. */
+		/**
+		 * Accessible name of the button, e.g. "Copy HEX". Icon-only by default (the label is the
+		 * `aria-label` and tooltip); with `showLabel` it is visible text and the name comes from it.
+		 */
 		label?: string | undefined;
-		/** Spoken after a successful copy. */
+		/** Show `label` as text next to the icon instead of an icon-only button. */
+		showLabel?: boolean | undefined;
+		/**
+		 * Spoken after a successful copy, in a polite live region. It is set fresh on every click (so a
+		 * repeated result is announced again) and stays until the next click.
+		 */
 		copiedLabel?: string | undefined;
-		/** Spoken when copying fails. */
+		/** Spoken when copying fails (no clipboard outside a secure context, permission denied …). */
 		errorLabel?: string | undefined;
 		variant?: 'ghost' | 'secondary' | undefined;
 		size?: 'sm' | 'md' | undefined;
-		/** Milliseconds the success or error state stays before it resets. */
+		/** Milliseconds the success or error icon stays before it resets. The spoken message stays. */
 		resetAfter?: number | undefined;
 		disabled?: boolean | undefined;
 		/** Called with the copied text after a successful copy. */
@@ -63,9 +75,11 @@
 		class?: string | undefined;
 	}
 	let {
+		text: textProp,
 		value,
 		getValue,
 		label = 'Copy',
+		showLabel = false,
 		copiedLabel = 'Copied',
 		errorLabel = 'Copy failed',
 		variant = 'ghost',
@@ -82,28 +96,49 @@
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	$effect(() => () => clearTimeout(timer));
 
-	const announcement = $derived(status === 'copied' ? copiedLabel : status === 'error' ? errorLabel : '');
+	/** The live message: emptied when a click starts, filled with that click's result, kept until the next click. */
+	let message = $state('');
+	/** Counts clicks, so a slow earlier copy cannot overwrite the result of a later one. */
+	let run = 0;
 
+	/** Resets the icon (not the message) after `resetAfter`. */
 	function settle(next: CopyStatus): void {
 		status = next;
 		clearTimeout(timer);
 		timer = setTimeout(() => (status = 'idle'), Math.max(0, resetAfter));
 	}
 
+	/**
+	 * Shows the result of click `id`. The region was emptied when the click started; the text is set
+	 * after the empty state has been rendered and a short pause, so screen readers see a change even
+	 * when the result is the same as last time.
+	 */
+	function report(id: number, next: CopyStatus): void {
+		settle(next);
+		const text = next === 'copied' ? copiedLabel : errorLabel;
+		void tick()
+			.then(() => new Promise((resolve) => setTimeout(resolve, 50)))
+			.then(() => {
+				if (id === run) message = text;
+			});
+	}
+
 	async function copy(): Promise<void> {
+		const id = ++run;
+		message = '';
 		let text: string;
 		try {
-			text = getValue ? await getValue() : (value ?? '');
+			text = getValue ? await getValue() : (textProp ?? value ?? '');
 		} catch (error) {
-			settle('error');
+			report(id, 'error');
 			onerror?.(error);
 			return;
 		}
 		if (await copyText(text, button)) {
-			settle('copied');
+			report(id, 'copied');
 			oncopy?.(text);
 		} else {
-			settle('error');
+			report(id, 'error');
 			onerror?.(new Error('Copying to the clipboard failed'));
 		}
 	}
@@ -114,11 +149,12 @@
 		bind:this={button}
 		type="button"
 		class="btn"
+		class:labelled={showLabel}
 		data-variant={variant}
 		data-size={size}
 		data-status={status}
-		aria-label={label}
-		title={label}
+		aria-label={showLabel ? undefined : label}
+		title={showLabel ? undefined : label}
 		{disabled}
 		onclick={copy}
 	>
@@ -131,8 +167,9 @@
 				<path d="M7 7h10v10H7zM13 7V3H3v10h4" />
 			{/if}
 		</svg>
+		{#if showLabel}<span class="text">{label}</span>{/if}
 	</button>
-	<span class="sr" role="status" aria-live="polite" aria-atomic="true">{announcement}</span>
+	<span class="sr" role="status" aria-live="polite" aria-atomic="true">{message}</span>
 </span>
 
 <style>
@@ -174,17 +211,36 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
 	}
+	/* Visible label: a compact text button, at least as tall as the icon-only one. */
+	.btn.labelled {
+		display: inline-flex;
+		gap: var(--k-space-2);
+		width: auto;
+		min-width: var(--k-tap-icon);
+		padding: 0 var(--k-space-3);
+		font-family: var(--k-label-font);
+		font-size: var(--k-label-size);
+		font-weight: var(--k-weight-label);
+		text-transform: var(--k-label-transform);
+		letter-spacing: var(--k-label-tracking);
+		white-space: nowrap;
+	}
+	.btn.labelled[data-size='sm'] {
+		width: auto;
+	}
 	.btn:disabled {
-		opacity: 0.5;
+		opacity: var(--k-disabled-opacity);
 		cursor: not-allowed;
 	}
-	.btn[data-status='copied'] {
+	/* Only the icon changes colour; a visible label keeps the text colour. */
+	.btn[data-status='copied'] svg {
 		color: var(--k-ok);
 	}
-	.btn[data-status='error'] {
+	.btn[data-status='error'] svg {
 		color: var(--k-danger);
 	}
 	svg {
+		flex: none;
 		width: 20px;
 		height: 20px;
 		fill: none;
@@ -203,5 +259,15 @@
 		clip-path: inset(50%);
 		white-space: nowrap;
 		border: 0;
+	}
+	@media (forced-colors: active) {
+		.btn {
+			border-color: ButtonText;
+		}
+		.btn:disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
 	}
 </style>

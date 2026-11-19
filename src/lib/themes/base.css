@@ -78,6 +78,8 @@
 	--k-tap-min: 44px;
 	--k-tap-icon: 44px;
 	--k-tap-target: 0px;
+	/* Opacity of disabled controls (buttons; forced-colours mode shows GrayText instead). */
+	--k-disabled-opacity: 0.5;
 
 	/* space */
 	--k-space-1: 4px;

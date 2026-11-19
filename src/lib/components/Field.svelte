@@ -1,35 +1,70 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
+	import { joinIds } from './data-utils.js';
+
+	/** What a Field hands to its control. */
+	export interface FieldControlProps {
+		/** Ids for `aria-describedby`: the error first, then the hint; `undefined` when neither is shown. */
+		describedby: string | undefined;
+		/** True while there is an error: set `aria-invalid` on the control. */
+		invalid: boolean;
+		/** The Field's `required`: set it (or `aria-required`) on the control, the visible marker is `aria-hidden`. */
+		required: boolean;
+	}
 
 	interface Props {
 		/** Visible label. */
 		label?: string | undefined;
 		/** Help text under the control. */
 		hint?: string | undefined;
-		/** Error text. Replaces the hint and marks the control invalid. */
+		/**
+		 * Error text. Marks the control invalid and replaces the hint (unless `keepHint`). It is a
+		 * `role="alert"` paragraph: announced once when it appears or its text changes, not on re-render.
+		 */
 		error?: string | undefined;
+		/** Show the hint under the error instead of hiding it; both are referenced, the error first. */
+		keepHint?: boolean | undefined;
+		/** Announce the error (`role="alert"`). Turn off when the control announces it itself. */
+		announce?: boolean | undefined;
 		required?: boolean | null | undefined;
 		/** Id of the control the label points to. */
 		for?: string | undefined;
+		/** Id of the label element, for controls named with `aria-labelledby` (groups). */
+		labelId?: string | undefined;
 		class?: ClassValue | null | undefined;
-		/** Receives the ids for aria-describedby. */
-		children: Snippet<[{ describedby: string | undefined; invalid: boolean }]>;
+		/** Receives the ids for aria-describedby, the invalid state and `required`. */
+		children: Snippet<[FieldControlProps]>;
 	}
-	let { label, hint, error, required = false, for: forId, class: cls = '', children }: Props = $props();
+	let {
+		label,
+		hint,
+		error,
+		keepHint = false,
+		announce = true,
+		required = false,
+		for: forId,
+		labelId,
+		class: cls = '',
+		children
+	}: Props = $props();
 	const uid = $props.id();
-	const descId = $derived(error || hint ? `${uid}-desc` : undefined);
+	const errorId = `${uid}-error`;
+	const hintId = `${uid}-hint`;
+	const hasError = $derived(!!error);
+	const showHint = $derived(!!hint && (!hasError || keepHint));
+	const describedby = $derived(joinIds(hasError ? errorId : undefined, showHint ? hintId : undefined));
 </script>
 
-<div class="k-field {cls}" class:invalid={!!error}>
+<div class="k-field {cls}" class:invalid={hasError}>
 	{#if label}
-		<label class="label" for={forId}>
+		<label class="label" for={forId} id={labelId}>
 			{label}{#if required}<span class="req" aria-hidden="true"> *</span>{/if}
 		</label>
 	{/if}
-	{@render children({ describedby: descId, invalid: !!error })}
-	{#if error}
-		<p class="desc error" id={descId}>
+	{@render children({ describedby, invalid: hasError, required: !!required })}
+	{#if hasError}
+		<p class="desc error" id={errorId} role={announce ? 'alert' : undefined}>
 			<svg viewBox="0 0 16 16" aria-hidden="true">
 				<circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.6" /><path
 					d="M8 4.5v4.2M8 10.8v.7"
@@ -39,8 +74,9 @@
 			</svg>
 			{error}
 		</p>
-	{:else if hint}
-		<p class="desc" id={descId}>{hint}</p>
+	{/if}
+	{#if showHint}
+		<p class="desc" id={hintId}>{hint}</p>
 	{/if}
 </div>
 

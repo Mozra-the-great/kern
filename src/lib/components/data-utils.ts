@@ -47,3 +47,10 @@ export function withDefaults<T extends object>(defaults: T, overrides: { [K in k
 	}
 	return out;
 }
+
+/** Space-separated id list for `aria-describedby`, without empty or repeated ids; `undefined` when none is left. */
+export function joinIds(...ids: readonly (string | null | undefined)[]): string | undefined {
+	const present: string[] = [];
+	for (const list of ids) for (const id of (list ?? '').split(/\s+/)) if (id !== '' && !present.includes(id)) present.push(id);
+	return present.length ? present.join(' ') : undefined;
+}

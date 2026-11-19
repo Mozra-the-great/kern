@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { HTMLSelectAttributes } from 'svelte/elements';
 	import Field from './Field.svelte';
+	import { joinIds } from './data-utils.js';
 
 	export interface SelectOption {
 		value: string;
@@ -11,17 +12,32 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Show the hint under the error instead of hiding it (both are referenced, the error first). */
+		keepHint?: boolean | undefined;
 		value?: string | undefined;
 		options: SelectOption[];
 		/** Text of an empty first option. */
 		placeholder?: string | undefined;
 	}
-	let { label, hint, error, value = $bindable(), options, placeholder, id, required, class: cls = '', ...rest }: Props = $props();
+	let {
+		label,
+		hint,
+		error,
+		keepHint,
+		value = $bindable(),
+		options,
+		placeholder,
+		id,
+		required,
+		class: cls = '',
+		'aria-describedby': ownDescribedby,
+		...rest
+	}: Props = $props();
 	const uid = $props.id();
 	const selId = $derived(id ?? `${uid}-select`);
 </script>
 
-<Field {label} {hint} {error} {required} for={selId} class={cls}>
+<Field {label} {hint} {error} {keepHint} {required} for={selId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-select" class:invalid>
 			<select
@@ -29,8 +45,8 @@
 				bind:value={() => value ?? '', (v: string) => (value = v)}
 				{required}
 				aria-invalid={invalid || undefined}
-				aria-describedby={describedby}
 				{...rest}
+				aria-describedby={joinIds(describedby, ownDescribedby)}
 			>
 				{#if placeholder}<option value="" disabled={required}>{placeholder}</option>{/if}
 				{#each options as o (o.value)}

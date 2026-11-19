@@ -144,6 +144,18 @@
 				<k-status-dot status="busy" label-hidden status-labels='{"busy":"Beschäftigt"}'></k-status-dot>
 				<k-status-dot status="warn" no-pulse label="API" status-labels='{"warn":"Eingeschränkt"}'></k-status-dot>
 			</div>
+			<h2>Karten und Werkzeuge</h2>
+			<ul class="row" aria-label="Lacke" style="list-style:none;margin:0;padding:0">
+				<k-card id="pc" as="li" title="Rubinrot" description="Essie" look="outline" clickable action-label="Rubinrot bearbeiten" action-haspopup="dialog">
+					<span slot="badges">2×</span>
+					<div slot="footer" class="row"><k-button id="pc-photo" size="sm" variant="secondary">Foto</k-button><k-button id="pc-del" size="sm" variant="danger" label="Rubinrot löschen">Löschen</k-button></div>
+				</k-card>
+				<k-card as="li" title="Meeresgrün" description="OPI" look="outline" muted><span slot="badges">Leer</span></k-card>
+			</ul>
+			<k-file-drop id="tool" label="Palette laden" mode="dispatch" accept=".json" button-label="Datei wählen" drop-label="JSON-Datei hierher ziehen" no-reject-messages></k-file-drop>
+			<k-status-message id="tool-status"></k-status-message>
+			<k-status-message id="tool-error" kind="alert"></k-status-message>
+			<div class="row"><code>#FF4F8B</code><k-copy-button text="#FF4F8B" label="HEX kopieren" show-label copied-label="Kopiert"></k-copy-button><k-button wide href="#" disabled>Gesperrter Link</k-button></div>
 			<h2>Maskottchen</h2>
 			<div class="row" style="padding:16px;background:#17171a;border:1px solid var(--k-line)">
 				<k-mascot id="m-stuffy" name="stuffy" scale="8" compact-scale="6" label="Stuffy, das Axolotl"></k-mascot>
@@ -199,6 +211,9 @@
 			$('#pg').addEventListener('change', (e) => window.kern.toast('Seite ' + e.detail));
 			$('#car').addEventListener('change', (e) => window.kern.toast('Folie ' + (e.detail + 1)));
 			$('#fd').addEventListener('files', (e) => window.kern.toast(e.detail.length + ' Datei(en)'));
+			$('#pc').addEventListener('action', () => window.kern.toast('Rubinrot öffnen'));
+			$('#tool').addEventListener('files', (e) => { $('#tool-error').message = ''; $('#tool-status').message = e.detail.map((f) => f.name).join(', ') + ' geladen.'; });
+			$('#tool').addEventListener('reject', (e) => ($('#tool-error').message = e.detail.map((f) => f.name).join(', ') + ': nur JSON-Dateien.'));
 			$('#palette-open').addEventListener('click', () => ($('#palette').open = true));
 			$('#palette').addEventListener('select', (e) => window.kern.toast('Befehl: ' + e.detail));
 			$('k-context-menu').addEventListener('select', (e) => window.kern.toast('Kontextmenü: ' + e.detail));

@@ -67,6 +67,7 @@ export { default as HistoryBar } from './components/HistoryBar.svelte';
 export { default as Timeline } from './components/Timeline.svelte';
 export { default as Code } from './components/Code.svelte';
 export { default as CopyButton } from './components/CopyButton.svelte';
+export { default as StatusMessage } from './components/StatusMessage.svelte';
 export { default as Kbd } from './components/Kbd.svelte';
 export { default as RelativeTime } from './components/RelativeTime.svelte';
 export { default as StatusDot } from './components/StatusDot.svelte';
@@ -104,6 +105,9 @@ export { themeScript, createThemeScript, themePair, isDarkTheme } from './compon
 export type { ThemeOption, ThemeScriptOptions } from './components/theme.js';
 export type { ResizablePanel } from './components/Resizable.svelte';
 export type { CopyStatus } from './components/CopyButton.svelte';
+export { matchesAccept, splitFiles } from './components/accept.js';
+export type { SplitFiles } from './components/accept.js';
+export type { FieldControlProps } from './components/Field.svelte';
 export type { KbdKey } from './components/Kbd.svelte';
 export type { TimeInput } from './components/RelativeTime.svelte';
 export type { DotStatus } from './components/StatusDot.svelte';

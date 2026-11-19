@@ -2,23 +2,39 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import Field from './Field.svelte';
+	import { joinIds } from './data-utils.js';
 
 	interface Props extends Omit<HTMLInputAttributes, 'value'> {
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Show the hint under the error instead of hiding it (both are referenced, the error first). */
+		keepHint?: boolean | undefined;
 		value?: string | number | null | undefined;
 		/** Content inside the field before the text, e.g. an icon. */
 		leading?: Snippet | undefined;
 		/** Content inside the field after the text, e.g. a unit or button. */
 		trailing?: Snippet | undefined;
 	}
-	let { label, hint, error, value = $bindable(), id, required, class: cls = '', leading, trailing, ...rest }: Props = $props();
+	let {
+		label,
+		hint,
+		error,
+		keepHint,
+		value = $bindable(),
+		id,
+		required,
+		class: cls = '',
+		leading,
+		trailing,
+		'aria-describedby': ownDescribedby,
+		...rest
+	}: Props = $props();
 	const uid = $props.id();
 	const inputId = $derived(id ?? `${uid}-input`);
 </script>
 
-<Field {label} {hint} {error} {required} for={inputId} class={cls}>
+<Field {label} {hint} {error} {keepHint} {required} for={inputId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-input" class:invalid>
 			{#if leading}<span class="adorn">{@render leading()}</span>{/if}
@@ -27,8 +43,8 @@
 				bind:value={() => (value === undefined ? '' : value), (v: string | number | null) => (value = v)}
 				{required}
 				aria-invalid={invalid || undefined}
-				aria-describedby={describedby}
 				{...rest}
+				aria-describedby={joinIds(describedby, ownDescribedby)}
 			/>
 			{#if trailing}<span class="adorn">{@render trailing()}</span>{/if}
 		</div>

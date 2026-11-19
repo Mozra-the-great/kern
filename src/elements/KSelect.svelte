@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			keepHint: { type: 'Boolean', attribute: 'keep-hint' },
 			value: { type: 'String', reflect: true },
 			options: { type: 'Array' },
 			placeholder: { type: 'String' },
@@ -25,7 +26,18 @@
 	import { formAssociated, setFormValue, emit } from './form.js';
 	import { forwardAttributes, formControl, inShadow } from './control.svelte.js';
 	import { SELECT_ATTRS } from './native.js';
-	let { label, hint, error, value = $bindable(''), options = [], placeholder, name, required = false, disabled = false } = $props();
+	let {
+		label,
+		hint,
+		error,
+		keepHint = false,
+		value = $bindable(''),
+		options = [],
+		placeholder,
+		name,
+		required = false,
+		disabled = false
+	} = $props();
 	const host = $host();
 	const native = forwardAttributes(host, SELECT_ATTRS);
 	const control = () => inShadow<HTMLSelectElement>(host, 'select');
@@ -43,6 +55,7 @@
 	{label}
 	{hint}
 	{error}
+	{keepHint}
 	bind:value
 	{options}
 	{placeholder}

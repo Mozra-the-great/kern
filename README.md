@@ -206,9 +206,10 @@ es meldet das Ende einer Animation.
   gewählte Schlüssel nach `row-key`), Heatmap (`detail` = `{date, value}`)
 - `sort`: DataTable (`detail` = `{key, dir}`)
 - `copy`: CopyButton und Code (`detail` = kopierter Text) · `copy-error`: CopyButton
+- `action`: Card mit `clickable` (Klick, Enter oder Leertaste auf den Karten-Button)
 - `change` außerdem: ThemeToggle (Theme-Id), Resizable (Größen in %, `number[]`) · `toggle` außerdem: Collapsible
 - `toggle`: Popover (`detail` = offen), TreeView (`detail` = `{id, expanded}`)
-- `files`: FileDrop (`detail` = `File[]`, auch als `el.files`)
+- `files`: FileDrop (`detail` = `File[]`, auch als `el.files`) · `reject`: FileDrop (abgelehnte Dateien, `File[]`)
 - `close`: Modal, Drawer, Popover, CommandPalette · `dismiss`: Alert · `remove`: Tag
 
 Toasts: `toast()` aus `@mozra-the-great/kern` und `window.kern.toast()` aus `kern-elements.js` schreiben in
@@ -220,7 +221,7 @@ doppelt: solange React-Seiten noch da sind `<k-toaster>` im gemeinsamen Layout, 
 schreibgeschützte Live-Liste; ändern nur über `toast()` und `dismissToast()`.
 
 Slots: Tab-Inhalte sind Kinder mit `data-tab="<id>"`, Folien von `<k-carousel>` sind seine
-Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` (Card), `actions` (Alert,
+Kinder. Benannte Slots: `footer` (Modal, Drawer, Card), `media` und `badges` (Card), `actions` (Alert,
 EmptyState, Navbar), `icon` (EmptyState), `brand` (Navbar), `trigger` (Popover, nur Inhalt
 des Buttons). Bei `<k-context-menu>` ist der Standard-Slot die Zielfläche.
 
@@ -415,10 +416,84 @@ Weitere Exporte: `MASCOT_NAMES`, `artPath`, `artUrl(base, name)`, `normaliseScal
 `COMPACT_MAX_WIDTH_PX`. Stuffclouds Benchmark (`bench/`) bleibt in stuffcloud; kern prüft dasselbe
 Verhalten mit Playwright (`tests/mascot/`).
 
+## Formulare und Inhalt: Abgleich mit stuffcloud und nagellacke
+
+**Button / LinkButton (stuffcloud → kern):**
+
+| stuffcloud                   | kern                                                                                     |
+| ---------------------------- | ---------------------------------------------------------------------------------------- |
+| `Button variant="primary"`   | `Button` (Vorgabe `primary`)                                                             |
+| `variant="ghost"`            | `variant="secondary"` (mit Rahmen; kerns `ghost` hat keinen)                             |
+| `variant="danger"`           | `variant="danger"`                                                                       |
+| `size="compact"` (44 px)     | `size="sm"` (`--k-control-h-sm`, im stuffcloud-Theme 44 px, nie unter `--k-tap-target`)  |
+| `size="icon"` (48 px)        | `size="icon"` (Quadrat `--k-tap-icon`, mit `aria-label`) oder `IconButton`               |
+| `wide`                       | `wide` (volle Breite, Text links, letztes Kind rechts)                                   |
+| `LinkButton href`            | `Button href` (dazu `target`, `rel`, `download`, `hreflang`, `referrerpolicy`)           |
+
+Ein Link mit `disabled` oder `loading` bleibt ein `<a>`: ohne `href`, mit `role="link"` und
+`aria-disabled="true"`, nicht im Tab-Fokus und nicht klickbar. Die gesperrte Optik kommt aus
+`--k-disabled-opacity` (Basis 0,5, stuffcloud 0,4); im Kontrastmodus (`forced-colors`) GrayText.
+
+**Card:** `as` wählt das Wurzelelement: `article` (Vorgabe), `section`, `div` oder `li` (Karten
+direkt in einer `<ul>`). Ohne `title` gibt es keine Überschrift. `id`, `aria-*`, `data-*` und
+Ereignisse gehen an das Wurzelelement; `<k-card as="li">` bekommt selbst `role="listitem"`.
+
+Klickbare Karte wie nagellackes `PolishCard`: `onclick` (Element: `clickable` und Ereignis
+`action`) macht den Titel zu einem `<button>`, dessen Trefferfläche die ganze Karte abdeckt.
+Bedienelemente in `footer`, `badges` und im Inhalt bleiben eigene Buttons darüber, nie darin
+verschachtelt; per Tastatur kommt erst die Karte, dann Inhalt, dann Fußzeile. Dazu
+`actionLabel` (Name, soll den Titel enthalten, z. B. „Rubinrot bearbeiten“), `actionHaspopup`
+(z. B. `dialog`), `badges` (in der Ecke über `media`, ohne `media` unter dem Titel) und `muted`
+(gestrichelt, Bild grau, für „leer“ oder „weg“; den Zustand zusätzlich als Text nennen).
+
+```svelte
+<ul class="grid">
+	{#each polishes as p (p.id)}
+		<Card as="li" title={p.name} actionLabel="{p.name} bearbeiten" actionHaspopup="dialog" muted={p.empty} onclick={() => edit(p)}>
+			{#snippet badges()}{#if p.count > 1}<Badge>{p.count}×</Badge>{/if}{/snippet}
+			{#snippet footer()}
+				<Button size="sm" variant="secondary" onclick={() => togglePhoto(p)}>Foto</Button>
+				<Button size="sm" variant="danger" aria-label="{p.name} löschen" onclick={() => remove(p)}>Löschen</Button>
+			{/snippet}
+		</Card>
+	{/each}
+</ul>
+```
+
+**FileDrop:** `mode="dispatch"` ist für Werkzeuge, die Dateien sofort verarbeiten (stuffcloud
+`FileDropzone`): keine Liste, `onfiles` bekommt nur die Dateien dieser Auswahl, dieselbe Datei
+lässt sich erneut wählen, kein Formularwert. `onreject(files)` (Element: `reject`) meldet
+abgelehnte Dateien (Typ, Größe, ohne `multiple` alle außer der ersten), vor den angenommenen.
+`rejectMessages={false}` (Element: `no-reject-messages`), wenn die Seite die Meldung selbst zeigt.
+`buttonLabel` zeigt einen eigenen Button zum Auswählen; die Zone ist dann eine Gruppe aus Label
+und Ablegetext. Leeren: `reset()` (Svelte über `bind:this`, Element `el.reset()`) oder
+`el.files = []`, beides ohne Ereignis. `matchesAccept(file, accept)` und `splitFiles()` sind
+exportiert (Grammatik von `<input accept>`). FileDrop liest nur Name, Typ und Größe einer Datei,
+nie ihren Inhalt, und sendet nichts.
+
+**Field, Input, Select, Textarea:** Ein Fehler ist ein `role="alert"`-Absatz: angesagt, wenn er
+erscheint oder sich ändert, nicht bei jedem Rendern. `keepHint` (Element: `keep-hint`) zeigt
+Hinweis und Fehler zusammen; `aria-describedby` nennt zuerst den Fehler, dann den Hinweis, dann
+ein eigenes `aria-describedby` des Aufrufers (wird nicht mehr überschrieben). Wer `Field` um ein
+eigenes Steuerelement legt, bekommt im Snippet `{ describedby, invalid, required }`.
+
+**CopyButton und StatusMessage:** `text` ist gleichbedeutend mit `value`. `showLabel` zeigt
+`label` als Text („HEX kopieren“), der dann der zugängliche Name ist. Die Meldung
+(`copiedLabel`/`errorLabel`) wird bei jedem Klick geleert und neu gesetzt, also auch beim
+gleichen Ergebnis erneut angesagt, und bleibt bis zum nächsten Klick; nur das Symbol springt
+nach `resetAfter` zurück. `StatusMessage` ist eine sichtbare Live-Region (`kind="status"`
+höflich, `kind="alert"` für Fehler): von Anfang an leer einbinden und nur `message` ändern.
+
+```svelte
+<CopyButton text={hex} label="HEX kopieren" showLabel copiedLabel="{hex} kopiert" />
+<StatusMessage message={result} />
+<StatusMessage message={problem} kind="alert" />
+```
+
 ## Komponenten (Kern-Set)
 
 Aktionen: Button, IconButton, Link, CopyButton, ThemeToggle, DropdownMenu, ContextMenu, CommandPalette ·
-Status: Badge, Tag, Avatar, StatusDot, Spinner, Progress, ProgressRing, Skeleton, Alert, Toaster/`toast()` ·
+Status: Badge, Tag, Avatar, StatusDot, StatusMessage, Spinner, Progress, ProgressRing, Skeleton, Alert, Toaster/`toast()` ·
 Formulare: Field, Label, Input, Textarea, Select, Combobox, DatePicker, NumberInput, PinInput, TagInput, ColorPicker, Slider, Rating, FileDrop, Checkbox, RadioGroup, SegmentedControl, Switch ·
 Inhalt: Card, Divider, EmptyState, Table (sortierbar, auf Mobil als Karten), Carousel, Code, Kbd, RelativeTime,
 Collapsible, ScrollArea, Resizable (Paneele mit tastaturbedienbaren Trennern) ·
@@ -443,7 +518,7 @@ npm run check      # svelte-check
 npm run lint       # ESLint (typescript-eslint strict, eslint-plugin-svelte) + Prettier --check
 npm run format     # Prettier --write + eslint --fix
 npm run build      # dist/, dist-elements/ (+ Typen, custom-elements.json), demo-dist/
-npm test           # Vitest: Theme-Kontrast, Marken-Einstiege, Pixel-Art-Katalog
+npm test           # Vitest: Theme-Kontrast, Marken-Einstiege, Pixel-Art-Katalog, Komponenten-Markup
 npx playwright install chromium   # einmalig
 npm run test:targets              # Playwright: Touch-Ziele in der gebauten Demo (nach npm run build)
 npm run test:elements             # Playwright: gebaute Custom Elements (nach npm run build)

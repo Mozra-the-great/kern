@@ -68,6 +68,7 @@ import KHistoryBar from './KHistoryBar.svelte';
 import KTimeline from './KTimeline.svelte';
 import KCode from './KCode.svelte';
 import KCopyButton from './KCopyButton.svelte';
+import KStatusMessage from './KStatusMessage.svelte';
 import KKbd from './KKbd.svelte';
 import KRelativeTime from './KRelativeTime.svelte';
 import KStatusDot from './KStatusDot.svelte';
@@ -147,6 +148,7 @@ export const elements = {
 	KTimeline,
 	KCode,
 	KCopyButton,
+	KStatusMessage,
 	KKbd,
 	KRelativeTime,
 	KStatusDot,

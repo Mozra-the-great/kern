@@ -1,8 +1,10 @@
 <svelte:options
 	customElement={{
 		props: {
+			text: { type: 'String' },
 			value: { type: 'String' },
 			label: { type: 'String' },
+			showLabel: { type: 'Boolean', attribute: 'show-label' },
 			copiedLabel: { type: 'String', attribute: 'copied-label' },
 			errorLabel: { type: 'String', attribute: 'error-label' },
 			variant: { type: 'String' },
@@ -15,26 +17,29 @@
 
 <script lang="ts">
 	/**
+	 * Copies `text` (or `value`) to the clipboard and announces the result in a polite live region, once
+	 * per click; the message stays until the next click. `show-label` shows `label` as visible text.
 	 * @event copy {string} The copied text.
 	 * @event copy-error Copying failed.
 	 */
 	import CopyButton from '../lib/components/CopyButton.svelte';
 	import { emit } from './form.js';
-	/* Fires `copy` (detail = the copied text) and `copy-error`. */
-	let { value = '', label, copiedLabel, errorLabel, variant, size, resetAfter, disabled = false } = $props();
+	let { text, value = '', label, showLabel = false, copiedLabel, errorLabel, variant, size, resetAfter, disabled = false } = $props();
 	const host = $host();
 </script>
 
 <CopyButton
+	{text}
 	{value}
 	{label}
+	{showLabel}
 	{copiedLabel}
 	{errorLabel}
 	{variant}
 	{size}
 	{resetAfter}
 	{disabled}
-	oncopy={(text: string) => emit(host, 'copy', text)}
+	oncopy={(copied: string) => emit(host, 'copy', copied)}
 	onerror={() => emit(host, 'copy-error')}
 />
 

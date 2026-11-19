@@ -60,7 +60,17 @@
 		outline-offset: var(--k-focus-offset);
 	}
 	.k-icon-button:disabled {
-		opacity: 0.5;
+		opacity: var(--k-disabled-opacity);
 		cursor: not-allowed;
+	}
+	@media (forced-colors: active) {
+		.k-icon-button {
+			border-color: ButtonText;
+		}
+		.k-icon-button:disabled {
+			opacity: 1;
+			border-color: GrayText;
+			color: GrayText;
+		}
 	}
 </style>

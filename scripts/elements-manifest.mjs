@@ -103,9 +103,9 @@ function docTags(script) {
 			: '')
 	).trim();
 	const description = lead.startsWith('@') ? '' : lead.replace(/\s+/g, ' ');
-	const tags = { prop: new Map(), event: new Map(), slot: new Map() };
+	const tags = { prop: new Map(), event: new Map(), slot: new Map(), method: new Map() };
 	for (const part of parts) {
-		const t = /^@(prop|event|slot)\s+([\w-]+)\s*/.exec(part);
+		const t = /^@(prop|event|slot|method)\s+([\w-]+)\s*/.exec(part);
 		if (!t) continue;
 		let rest = part.slice(t[0].length);
 		let type;
@@ -243,11 +243,38 @@ const elements = files.map((file) => {
 		nativeAttrs.push({ name: 'form', type: 'string', description: 'Id of the form owner (native form association).' });
 	}
 	const members = [];
-	if (/Object\.defineProperty\(host, 'files'/.test(source))
-		members.push({ name: 'files', type: 'readonly File[]', readonly: true, description: 'The chosen files.' });
+	const filesProp = /Object\.defineProperty\(host, 'files', \{[\s\S]*?configurable/.exec(source)?.[0];
+	if (filesProp) {
+		const settable = /\bset:/.test(filesProp);
+		members.push({
+			name: 'files',
+			type: settable ? 'File[]' : 'readonly File[]',
+			readonly: !settable,
+			description: settable ? 'The chosen files. Setting it (e.g. to `[]`) replaces them without an event.' : 'The chosen files.'
+		});
+	}
 	if (formAssociated) members.push(...FORM_MEMBERS);
+	// Own methods: `@method name {(args): ret} text`, defined on the host with Object.defineProperty.
+	const methods = [...tags.method].map(([m, d]) => {
+		if (!source.includes(`Object.defineProperty(host, '${m}'`)) errors.push(`${file}: @method ${m} is not defined on the host`);
+		if (!d.type || !/^\(.*\):\s*\S/.test(d.type)) errors.push(`${file}: @method ${m} needs a signature like {(): void}`);
+		return { name: m, signature: d.type ?? '(): void', description: d.description || undefined };
+	});
 
-	return { file, name, tag, className: `K${pascal(name)}Element`, description, formAssociated, props, events, slots, nativeAttrs, members };
+	return {
+		file,
+		name,
+		tag,
+		className: `K${pascal(name)}Element`,
+		description,
+		formAssociated,
+		props,
+		events,
+		slots,
+		nativeAttrs,
+		members,
+		methods
+	};
 });
 
 // ── custom-elements.json ─────────────────────────────────────────────────────
@@ -277,7 +304,19 @@ const manifest = {
 							...(p.reflects ? { reflects: true } : {}),
 							...(p.description ? { description: p.description } : {})
 						})),
-						...el.members.map((m) => ({ kind: 'field', name: m.name, type: typeObj(m.type), readonly: true, description: m.description })),
+						...el.members.map((m) => ({
+							kind: 'field',
+							name: m.name,
+							type: typeObj(m.type),
+							...(m.readonly ? { readonly: true } : {}),
+							description: m.description
+						})),
+						...el.methods.map((m) => ({
+							kind: 'method',
+							name: m.name,
+							...(m.description ? { description: m.description } : {}),
+							return: { type: typeObj(m.signature.replace(/^\(.*\):\s*/, '')) }
+						})),
 						...(el.formAssociated
 							? FORM_METHODS.map((m) => ({ kind: 'method', name: m.name, description: m.description, signature: m.signature }))
 							: []
@@ -397,6 +436,7 @@ for (const el of elements) {
 		dts += doc(p.description, '\t') + `\t${quote(p.name)}: ${p.type}${p.optional && p.type !== 'boolean' ? ' | undefined' : ''};\n`;
 	}
 	for (const m of el.members) dts += doc(m.description, '\t') + `\t${m.readonly ? 'readonly ' : ''}${m.name}: ${m.type};\n`;
+	for (const m of el.methods) dts += doc(m.description, '\t') + `\t${m.name}${m.signature};\n`;
 	if (el.formAssociated) for (const m of FORM_METHODS) dts += doc(m.description, '\t') + `\t${m.name}${m.signature};\n`;
 	dts += `}\n`;
 }
