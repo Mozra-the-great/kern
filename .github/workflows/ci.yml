@@ -53,9 +53,17 @@ jobs:
         run: npm ci
       - name: Type check
         run: npm run check
+      - name: Lint (ESLint + Prettier)
+        run: npm run lint
       - name: Build
         # svelte-package (dist/), custom elements (dist-elements/ + typings), demo (demo-dist/)
         run: npm run build
+      - name: Strict consumer type check (consumer-typecheck)
+        # A Svelte app with stuffcloud's flags (exactOptionalPropertyTypes, noUncheckedIndexedAccess,
+        # svelte-check --fail-on-warnings ...) using every component from the built dist/ (#22).
+        run: npm run test:consumer
+      - name: No any in published types
+        run: npm run check:dts
       - name: Unit tests (theme contrast, brand entries)
         run: npm test
       - name: Custom Elements Manifest is up to date
