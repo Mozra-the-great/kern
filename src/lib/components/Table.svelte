@@ -36,6 +36,7 @@
 		return [...rows].sort((a, b) => {
 			const x = a[k], y = b[k];
 			if (typeof x === 'number' && typeof y === 'number') return (x - y) * sortDir;
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string -- sorts arbitrary cell values by their string form
 			return String(x ?? '').localeCompare(String(y ?? ''), undefined, { numeric: true }) * sortDir;
 		});
 	});

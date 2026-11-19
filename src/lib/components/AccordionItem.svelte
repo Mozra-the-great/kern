@@ -12,7 +12,7 @@
 	let { title, open = $bindable(), name, class: cls = '', children }: Props = $props();
 </script>
 
-<details class="k-accordion-item {cls}" {name} bind:open={() => open ?? false, (v) => (open = v)}>
+<details class="k-accordion-item {cls}" {name} bind:open={() => open ?? false, (v: boolean) => (open = v)}>
 	<summary>
 		<span>{title}</span>
 		<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg>

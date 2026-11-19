@@ -213,7 +213,7 @@
 		const to = target(day, e.key, e.ctrlKey);
 		if (to === null) return;
 		e.preventDefault();
-		focusDay(to);
+		void focusDay(to);
 	}
 	function onclick(e: MouseEvent) {
 		const day = dayOf(e.target);
@@ -223,11 +223,11 @@
 		const day = dayOf(e.target);
 		if (day === null) return;
 		activeDay = day;
-		showTip(day);
+		void showTip(day);
 	}
 	function onpointerover(e: PointerEvent) {
 		const day = dayOf(e.target);
-		if (day !== null) showTip(day);
+		if (day !== null) void showTip(day);
 	}
 </script>
 

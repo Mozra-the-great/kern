@@ -257,7 +257,7 @@
 		const typed = parseText(text);
 		focusDate = clampDate(selectedDate ?? (typed && inRange(typed) ? typed : today()));
 		expanded = true;
-		focusCell();
+		void focusCell();
 	}
 	function closeCalendar(refocus: boolean) {
 		if (!expanded) return;
@@ -273,7 +273,7 @@
 	}
 	function moveFocus(d: Date) {
 		focusDate = clampDate(d);
-		focusCell();
+		void focusCell();
 	}
 	function showMonth(n: number) {
 		focusDate = clampDate(addMonths(focusDate, n));
@@ -282,7 +282,7 @@
 	function onGridKey(e: KeyboardEvent) {
 		const d = focusDate;
 		const dow = (d.getUTCDay() - firstDay + 7) % 7;
-		let next: Date | null = null;
+		let next: Date;
 		switch (e.key) {
 			case 'ArrowLeft': next = addDays(d, -1); break;
 			case 'ArrowRight': next = addDays(d, 1); break;

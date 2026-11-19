@@ -22,7 +22,7 @@
 			class:invalid
 			class:autosize
 			id={areaId}
-			bind:value={() => (value === undefined ? '' : value), (v) => (value = v)}
+			bind:value={() => (value === undefined ? '' : value), (v: string | null) => (value = v)}
 			{rows}
 			{required}
 			aria-invalid={invalid || undefined}

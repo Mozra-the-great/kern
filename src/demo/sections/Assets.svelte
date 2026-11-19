@@ -1,6 +1,6 @@
 <script lang="ts">
 	/* Brand asset gallery: every SVG under assets/, bundled into the demo by Vite. */
-	const files = import.meta.glob('../../../assets/*/*/*.svg', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+	const files = import.meta.glob<string>('../../../assets/*/*/*.svg', { eager: true, query: '?url', import: 'default' });
 
 	interface Asset { brand: string; group: string; name: string; url: string }
 	const assets: Asset[] = Object.entries(files)

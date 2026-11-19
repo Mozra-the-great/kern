@@ -66,7 +66,7 @@
 <section>
 	<h2>Scramble</h2>
 	<div class="row">
-		{#key scrambleRun + scrambleText}
+		{#key `${scrambleRun}${scrambleText}`}
 			<p class="big m0"><Scramble text={scrambleText} hover /></p>
 		{/key}
 	</div>

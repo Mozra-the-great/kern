@@ -17,7 +17,9 @@
 			try {
 				const parsed: unknown = JSON.parse(v);
 				if (Array.isArray(parsed)) return parsed.map(String);
-			} catch {}
+			} catch {
+				/* not JSON: treated as plain text below */
+			}
 		}
 		return typeof v === 'string' ? v : (host.textContent ?? '').trim();
 	};

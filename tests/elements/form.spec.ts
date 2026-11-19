@@ -43,9 +43,9 @@ test('native attributes are forwarded to the inner control', async ({ page }) =>
 	await expect(page.locator('#bio textarea')).toHaveAttribute('maxlength', '5');
 
 	// Attribute changes after upgrade follow, removal removes.
-	await page.evaluate(() => document.getElementById('m3')!.setAttribute('maxlength', '5'));
+	await page.evaluate(() => document.getElementById('m3')?.setAttribute('maxlength', '5'));
 	await expect(inner).toHaveAttribute('maxlength', '5');
-	await page.evaluate(() => document.getElementById('m3')!.removeAttribute('maxlength'));
+	await page.evaluate(() => document.getElementById('m3')?.removeAttribute('maxlength'));
 	await expect(inner).not.toHaveAttribute('maxlength');
 });
 

@@ -127,26 +127,26 @@
 		let handled = true;
 		switch (e.key) {
 			case 'ArrowDown':
-				focusNode(visible[i + 1]?.id);
+				void focusNode(visible[i + 1]?.id);
 				break;
 			case 'ArrowUp':
-				focusNode(visible[i - 1]?.id);
+				void focusNode(visible[i - 1]?.id);
 				break;
 			case 'ArrowRight':
 				if (hasKids(node)) {
 					if (!open.has(node.id)) setExpanded(node.id, true);
-					else focusNode(node.children?.[0]?.id);
+					else void focusNode(node.children?.[0]?.id);
 				}
 				break;
 			case 'ArrowLeft':
 				if (hasKids(node) && open.has(node.id)) setExpanded(node.id, false);
-				else if (entry.parent !== null) focusNode(entry.parent);
+				else if (entry.parent !== null) void focusNode(entry.parent);
 				break;
 			case 'Home':
-				focusNode(visible[0]?.id);
+				void focusNode(visible[0]?.id);
 				break;
 			case 'End':
-				focusNode(visible[visible.length - 1]?.id);
+				void focusNode(visible[visible.length - 1]?.id);
 				break;
 			case 'Enter':
 			case ' ':
@@ -176,14 +176,14 @@
 		typedAt = now;
 		const q = norm(typed);
 		// Repeating one letter cycles through matches; a longer prefix may stay on the current node.
-		const repeat = q.length > 1 && [...q].every((c) => c === q[0]);
+		const repeat = q.length > 1 && Array.from(q).every((c) => c === q[0]);
 		const needle = repeat ? q[0] : q;
 		const start = repeat || q.length === 1 ? from + 1 : from;
 		const n = visible.length;
 		for (let k = 0; k < n; k++) {
 			const cand = visible[(start + k) % n];
 			if (norm(cand.label).startsWith(needle)) {
-				focusNode(cand.id);
+				void focusNode(cand.id);
 				break;
 			}
 		}

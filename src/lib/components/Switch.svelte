@@ -14,7 +14,7 @@
 </script>
 
 <div class="k-switch {cls}" class:labelFirst>
-	<input type="checkbox" role="switch" id={swId} bind:checked={() => checked ?? false, (v) => (checked = v)} aria-checked={checked ?? false} aria-describedby={hint ? `${swId}-hint` : undefined} {...rest} />
+	<input type="checkbox" role="switch" id={swId} bind:checked={() => checked ?? false, (v: boolean) => (checked = v)} aria-checked={checked ?? false} aria-describedby={hint ? `${swId}-hint` : undefined} {...rest} />
 	<span class="text">
 		<label for={swId}>{label}</label>
 		{#if hint}<span class="hint" id="{swId}-hint">{hint}</span>{/if}

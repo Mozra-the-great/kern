@@ -35,7 +35,7 @@
 			{#if leading}<span class="adorn">{@render leading()}</span>{/if}
 			<input
 				id={inputId}
-				bind:value={() => (value === undefined ? '' : value), (v) => (value = v)}
+				bind:value={() => (value === undefined ? '' : value), (v: string | number | null) => (value = v)}
 				{required}
 				aria-invalid={invalid || undefined}
 				aria-describedby={describedby}

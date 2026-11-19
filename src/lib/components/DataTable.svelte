@@ -28,13 +28,13 @@
 		/** Hide the caption visually. */
 		captionHidden?: boolean | undefined;
 		/** Field whose value identifies a row. Default: the position in `rows`. */
-		rowKey?: keyof Row & string | undefined;
+		rowKey?: Extract<keyof Row, string> | undefined;
 		/** Show a checkbox column. */
 		selectable?: boolean | undefined;
 		/** Keys of the selected rows (see `rowKey`). Kept across filter, sort and pages. */
 		selected?: DataRowKey[] | undefined;
 		/** Column whose text names a row for the checkbox. Default: the first column. */
-		rowLabelKey?: keyof Row & string | undefined;
+		rowLabelKey?: Extract<keyof Row, string> | undefined;
 		/** Show the filter field. */
 		searchable?: boolean | undefined;
 		/** Filter text. Words must all occur in the row's cells. */
@@ -129,6 +129,7 @@
 
 	const text = (row: Row, c: DataColumn<Row>): string => {
 		const v = row[c.key];
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- cells are arbitrary values; plain String() is the documented fallback
 		return c.format ? c.format(v, row) : v === null || v === undefined ? '' : String(v);
 	};
 
@@ -152,6 +153,7 @@
 		return [...filtered].sort((a, b) => {
 			const x = a.row[k], y = b.row[k];
 			if (typeof x === 'number' && typeof y === 'number') return (x - y) * dir;
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string -- sorts arbitrary cell values by their string form
 			return String(x ?? '').localeCompare(String(y ?? ''), undefined, { numeric: true }) * dir;
 		});
 	});

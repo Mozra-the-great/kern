@@ -205,7 +205,7 @@
 			case 'Backspace':
 				if (!text && tags.length && el.selectionStart === 0 && el.selectionEnd === 0) {
 					e.preventDefault();
-					removeAt(tags.length - 1, 'none');
+					void removeAt(tags.length - 1, 'none');
 				}
 				break;
 			case 'ArrowLeft':
@@ -279,11 +279,11 @@
 				break;
 			case 'Backspace':
 				e.preventDefault();
-				removeAt(i, 'prev');
+				void removeAt(i, 'prev');
 				break;
 			case 'Delete':
 				e.preventDefault();
-				removeAt(i, 'next');
+				void removeAt(i, 'next');
 				break;
 		}
 	}

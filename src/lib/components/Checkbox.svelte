@@ -17,7 +17,7 @@
 
 <div class="k-check {cls}">
 	<span class="box">
-		<input type="checkbox" id={boxId} bind:checked={() => checked ?? false, (v) => (checked = v)} bind:indeterminate={() => indeterminate ?? false, (v) => (indeterminate = v)} aria-describedby={hint ? `${boxId}-hint` : undefined} {...rest} />
+		<input type="checkbox" id={boxId} bind:checked={() => checked ?? false, (v: boolean) => (checked = v)} bind:indeterminate={() => indeterminate ?? false, (v: boolean) => (indeterminate = v)} aria-describedby={hint ? `${boxId}-hint` : undefined} {...rest} />
 		<svg viewBox="0 0 16 16" aria-hidden="true">
 			{#if indeterminate}<path d="M4 8h8" stroke="currentColor" stroke-width="2.2" />{:else}<path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" />{/if}
 		</svg>

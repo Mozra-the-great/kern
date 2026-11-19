@@ -109,17 +109,17 @@
 		if (e.key === 'Escape') { hideTip(); return; }
 		if (to === null) return;
 		e.preventDefault();
-		focusAt(to);
+		void focusAt(to);
 	}
 	function onfocusin(e: FocusEvent) {
 		const i = indexOf(e.target);
 		if (i === null) return;
 		active = i;
-		showTip(i);
+		void showTip(i);
 	}
 	function onpointerover(e: PointerEvent) {
 		const i = indexOf(e.target);
-		if (i !== null) showTip(i);
+		if (i !== null) void showTip(i);
 	}
 </script>
 

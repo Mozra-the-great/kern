@@ -168,6 +168,7 @@ export function formControl(host: HTMLElement, config: FormControlConfig): void 
 }
 
 /** First element in the host's shadow root that matches `selector`. */
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- callers name the element type they expect
 export function inShadow<E extends Element>(host: HTMLElement, selector: string): E | null {
 	return host.shadowRoot?.querySelector<E>(selector) ?? null;
 }

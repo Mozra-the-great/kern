@@ -166,7 +166,7 @@
 
 	async function copyCommands(): Promise<void> {
 		const text = lines.map((line) => line.text).join('\n');
-		let ok = false;
+		let ok: boolean;
 		try {
 			await navigator.clipboard.writeText(text);
 			ok = true;
@@ -179,6 +179,7 @@
 			document.body.append(area);
 			area.select();
 			try {
+				// eslint-disable-next-line @typescript-eslint/no-deprecated -- fallback where the async Clipboard API is missing or blocked
 				ok = document.execCommand('copy');
 			} catch {
 				ok = false;

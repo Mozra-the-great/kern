@@ -21,7 +21,7 @@
 	}
 	$effect(() => {
 		document.documentElement.dataset.theme = theme;
-		try { localStorage.setItem('kern-theme', theme); } catch {}
+		try { localStorage.setItem('kern-theme', theme); } catch { /* storage blocked: the choice is just not remembered */ }
 	});
 
 	let name = $state('');
@@ -35,7 +35,7 @@
 	let drawerOpen = $state(false);
 	let tab = $state('files');
 	let tags = $state(['Gel', 'Matt', 'Pastell', 'Glitzer']);
-	let progress = $state(64);
+	const progress = $state(64);
 
 	const rows = [
 		{ name: 'urlaub-2026.zip', type: 'Archiv', size: 482.1, date: '2026-11-02' },

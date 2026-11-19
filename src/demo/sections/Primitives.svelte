@@ -40,8 +40,8 @@ function speichern(): void {
 	let lastCopied = $state('');
 	let pulse = $state(true);
 
-	async function fail(): Promise<string> {
-		throw new Error('Quelle nicht erreichbar');
+	function fail(): Promise<string> {
+		return Promise.reject(new Error('Quelle nicht erreichbar'));
 	}
 </script>
 
@@ -55,7 +55,7 @@ function speichern(): void {
 		<Code block language="TypeScript" lineNumbers copy code={snippet} copyLabel="Kopieren" copiedLabel="Kopiert" copyErrorLabel="Kopieren fehlgeschlagen" />
 		<div class="stack">
 			<Code block language="bash" copy code={longLine} copyLabel="Kopieren" copiedLabel="Kopiert" copyErrorLabel="Kopieren fehlgeschlagen" />
-			<Code block code={'<k-button>Speichern</k-button>'} />
+			<Code block code="<k-button>Speichern</k-button>" />
 			<Code block lineNumbers startLine={42} code={'const a = 1;\nconst b = 2;\nconsole.log(a + b);'} label="Beispiel ab Zeile 42" />
 		</div>
 	</div>

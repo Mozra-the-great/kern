@@ -26,8 +26,9 @@
 		document.body.append(area);
 		area.select();
 		area.setSelectionRange(0, text.length);
-		let ok = false;
+		let ok: boolean;
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-deprecated -- fallback where the async Clipboard API is missing or blocked
 			ok = document.execCommand('copy');
 		} catch {
 			ok = false;

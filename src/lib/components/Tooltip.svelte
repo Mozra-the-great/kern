@@ -19,7 +19,10 @@
 		if (!trigger) return;
 		const prev = trigger.getAttribute('aria-describedby');
 		trigger.setAttribute('aria-describedby', [prev, `${uid}-tip`].filter(Boolean).join(' '));
-		return () => { prev ? trigger.setAttribute('aria-describedby', prev) : trigger.removeAttribute('aria-describedby'); };
+		return () => {
+			if (prev) trigger.setAttribute('aria-describedby', prev);
+			else trigger.removeAttribute('aria-describedby');
+		};
 	});
 </script>
 

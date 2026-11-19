@@ -55,7 +55,7 @@
 	const allowed = $derived(type === 'alphanumeric' ? /[\p{L}\p{N}]/u : /[0-9]/);
 
 	let chars = $state<string[]>([]);
-	let boxes: HTMLInputElement[] = $state([]);
+	const boxes: HTMLInputElement[] = $state([]);
 
 	function clean(s: string): string[] {
 		// Full-width digits (e.g. from Japanese keyboards) count as digits.
@@ -99,7 +99,7 @@
 			next[i++] = c;
 		}
 		update(next);
-		focusBox(i >= count ? count - 1 : i);
+		void focusBox(i >= count ? count - 1 : i);
 	}
 
 	function oninput(e: Event, i: number) {
@@ -127,7 +127,7 @@
 				if (chars[i]) update(chars.map((c, k) => (k === i ? '' : c)));
 				else if (i > 0) {
 					update(chars.map((c, k) => (k === i - 1 ? '' : c)));
-					focusBox(i - 1);
+					void focusBox(i - 1);
 				}
 				break;
 			case 'Delete':
@@ -136,19 +136,19 @@
 				break;
 			case 'ArrowLeft':
 				e.preventDefault();
-				if (i > 0) focusBox(i - 1);
+				if (i > 0) void focusBox(i - 1);
 				break;
 			case 'ArrowRight':
 				e.preventDefault();
-				if (i < count - 1) focusBox(i + 1);
+				if (i < count - 1) void focusBox(i + 1);
 				break;
 			case 'Home':
 				e.preventDefault();
-				focusBox(0);
+				void focusBox(0);
 				break;
 			case 'End':
 				e.preventDefault();
-				focusBox(count - 1);
+				void focusBox(count - 1);
 				break;
 			default:
 				// A character that is not allowed never reaches the box.

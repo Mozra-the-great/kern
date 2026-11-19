@@ -102,7 +102,10 @@
 	function onscroll() {
 		if (!track) return;
 		// A scroll caused by a width change says nothing about the slide the user wants.
-		if (track.clientWidth !== lastWidth) return realign();
+		if (track.clientWidth !== lastWidth) {
+			realign();
+			return;
+		}
 		if (settling) {
 			settle(120);
 			return;
@@ -115,7 +118,7 @@
 	}
 	function onTabKey(e: KeyboardEvent) {
 		const flip = sign();
-		let n = -1;
+		let n: number;
 		if (e.key === 'ArrowRight') n = flip === 1 ? current + 1 : current - 1;
 		else if (e.key === 'ArrowLeft') n = flip === 1 ? current - 1 : current + 1;
 		else if (e.key === 'Home') n = 0;
@@ -130,7 +133,7 @@
 	function onTrackKey(e: KeyboardEvent) {
 		if (total < 2 || e.altKey || e.ctrlKey || e.metaKey) return;
 		const flip = sign();
-		let n = -1;
+		let n: number;
 		if (e.key === 'ArrowRight') n = current + flip;
 		else if (e.key === 'ArrowLeft') n = current - flip;
 		else if (e.key === 'Home') n = 0;

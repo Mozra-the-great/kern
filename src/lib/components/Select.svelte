@@ -24,7 +24,7 @@
 <Field {label} {hint} {error} {required} for={selId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-select" class:invalid>
-			<select id={selId} bind:value={() => value ?? '', (v) => (value = v)} {required} aria-invalid={invalid || undefined} aria-describedby={describedby} {...rest}>
+			<select id={selId} bind:value={() => value ?? '', (v: string) => (value = v)} {required} aria-invalid={invalid || undefined} aria-describedby={describedby} {...rest}>
 				{#if placeholder}<option value="" disabled={required}>{placeholder}</option>{/if}
 				{#each options as o (o.value)}
 					<option value={o.value} disabled={o.disabled}>{o.label}</option>
