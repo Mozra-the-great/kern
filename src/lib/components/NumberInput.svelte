@@ -287,13 +287,14 @@
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
 	.k-number:hover { border-color: var(--k-fg-muted); }
-	.k-number:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.k-number:focus-within { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.invalid { border-color: var(--k-danger); }
 	.disabled { opacity: 0.55; }
 	input {
 		flex: 1;
 		min-width: 0;
-		min-height: calc(var(--k-control-h) - 2 * var(--k-border-w));
+		min-height: var(--k-control-h);
+		margin-block: calc(var(--k-border-w) * -1);
 		padding: 0 var(--k-space-1);
 		border: 0;
 		outline: 0;
@@ -310,8 +311,8 @@
 		flex: none;
 		display: grid;
 		place-items: center;
-		width: 40px;
-		height: 40px;
+		width: max(40px, var(--k-tap-target));
+		height: max(40px, var(--k-tap-target));
 		padding: 0;
 		border: 0;
 		border-radius: var(--k-radius-control);
@@ -323,5 +324,4 @@
 	.step:hover:not(:disabled) { background: var(--k-bg-sunken); }
 	.step:disabled { color: var(--k-fg-muted); opacity: 0.5; cursor: not-allowed; }
 	.step svg { width: 16px; height: 16px; }
-	@media (pointer: coarse) { .step { width: 44px; height: 44px; } }
 </style>

@@ -125,8 +125,8 @@
 		position: relative;
 		display: grid;
 		place-items: center;
-		width: 40px;
-		height: 40px;
+		width: max(40px, var(--k-tap-target));
+		height: max(40px, var(--k-tap-target));
 		border-radius: var(--k-radius-control);
 		color: var(--k-accent-text);
 		cursor: pointer;
@@ -151,5 +151,4 @@
 	.readonly .star svg { width: 24px; height: 24px; }
 	.readonly .full path { fill: currentColor; stroke: currentColor; }
 	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-	@media (pointer: coarse) { .k-rating:not(.readonly) .star { width: 44px; height: 44px; } }
 </style>

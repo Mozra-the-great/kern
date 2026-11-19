@@ -390,7 +390,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--k-space-1) var(--k-space-2);
+		/* Rows stay far enough apart that the remove buttons' hit areas do not reach the next row. */
+		gap: max(var(--k-space-1), calc(var(--k-tap-target) - 32px)) var(--k-space-2);
 		min-height: var(--k-control-h);
 		padding: var(--k-space-1) var(--k-space-3);
 		box-sizing: border-box;
@@ -402,10 +403,10 @@
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
 	.k-tags:hover { border-color: var(--k-fg-muted); }
-	.k-tags:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.k-tags:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.invalid { border-color: var(--k-danger); }
 	.disabled { opacity: 0.55; cursor: not-allowed; }
-	.list { display: flex; flex-wrap: wrap; gap: var(--k-space-1); min-width: 0; max-width: 100%; margin: 0; padding: 0; list-style: none; }
+	.list { display: flex; flex-wrap: wrap; gap: max(var(--k-space-1), calc(var(--k-tap-target) - 32px)) var(--k-space-1); min-width: 0; max-width: 100%; margin: 0; padding: 0; list-style: none; }
 	.tag {
 		display: inline-flex;
 		align-items: center;
@@ -440,8 +441,8 @@
 		color: var(--k-fg-muted);
 		cursor: pointer;
 	}
-	/* The visible button is small; the hit area reaches 40px (44px on touch). */
-	.x::after { content: ''; position: absolute; inset: -5px; }
+	/* The visible button is small; the hit area reaches 40px (the tap target where larger). */
+	.x::after { content: ''; position: absolute; inset: min(-5px, calc((100% - var(--k-tap-target)) / 2)); }
 	.x:hover:not(:disabled) { color: var(--k-fg); background: var(--k-bg-raised); }
 	.x:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); color: var(--k-fg); }
 	.x:disabled { cursor: not-allowed; }
@@ -449,7 +450,7 @@
 	input {
 		flex: 1 1 8rem;
 		min-width: 6rem;
-		min-height: 36px;
+		min-height: max(36px, var(--k-tap-target));
 		padding: 0 var(--k-space-1);
 		border: 0;
 		outline: 0;
@@ -468,7 +469,7 @@
 		flex-direction: column;
 		max-height: min(280px, var(--avail-h, 280px));
 		padding: var(--k-space-1);
-		border: var(--k-border-w) solid var(--k-line);
+		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: min(var(--k-radius-overlay), 16px);
 		background: var(--k-bg-raised);
 		color: var(--k-fg);
@@ -481,7 +482,7 @@
 	[role='option'] {
 		display: flex;
 		align-items: center;
-		min-height: 40px;
+		min-height: max(40px, var(--k-tap-target));
 		padding: var(--k-space-2) var(--k-space-3);
 		box-sizing: border-box;
 		border-radius: min(var(--k-radius-control), 10px);
@@ -495,8 +496,4 @@
 	}
 	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 	@keyframes k-drop { from { opacity: 0; transform: translateY(-4px); } }
-	@media (pointer: coarse) {
-		.x::after { inset: -7px; }
-		[role='option'] { min-height: 44px; }
-	}
 </style>

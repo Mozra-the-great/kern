@@ -210,10 +210,11 @@
 
 	.pause {
 		display: inline-grid;
+		box-sizing: border-box;
 		place-items: center;
 		flex: none;
-		width: var(--k-control-h-sm);
-		height: var(--k-control-h-sm);
+		width: max(var(--k-control-h-sm), var(--k-tap-target));
+		height: max(var(--k-control-h-sm), var(--k-tap-target));
 		padding: 0;
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: var(--k-radius-control);

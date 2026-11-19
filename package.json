@@ -24,6 +24,10 @@
 			"svelte": "./dist/index.js"
 		},
 		"./themes.css": "./dist/themes/index.css",
+		"./themes/base.css": "./dist/themes/base.css",
+		"./themes/stuffcloud.css": "./dist/themes/stuffcloud.css",
+		"./themes/flower.css": "./dist/themes/flower.css",
+		"./themes/pop.css": "./dist/themes/pop.css",
 		"./themes/*": "./dist/themes/*",
 		"./elements": "./dist-elements/kern-elements.js",
 		"./assets/*": "./assets/*",
@@ -47,17 +51,21 @@
 		"package": "svelte-package -i src/lib -o dist",
 		"build:elements": "vite build -c vite.elements.config.ts",
 		"build:demo": "vite build",
-		"check": "svelte-check --tsconfig ./tsconfig.json"
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"test": "vitest run",
+		"test:targets": "playwright test -c tests/targets"
 	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.65.1",
 		"@sveltejs/package": "^3.0.2",
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"svelte": "^5.58.0",
 		"svelte-check": "^4.7.8",
 		"typescript": "^6.0.3",
-		"vite": "^8.3.8"
+		"vite": "^8.3.8",
+		"vitest": "^5.1.1"
 	}
 }

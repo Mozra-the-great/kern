@@ -113,7 +113,7 @@
 		font: inherit;
 		text-align: start;
 	}
-	.link { min-height: 40px; cursor: pointer; transition: background-color var(--k-dur) var(--k-ease); }
+	.link { min-height: max(40px, var(--k-tap-target)); cursor: pointer; transition: background-color var(--k-dur) var(--k-ease); }
 	.link:hover { background: var(--k-bg-sunken); }
 	.link:hover .name { text-decoration: underline; text-underline-offset: 3px; }
 	.link:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); }
@@ -140,7 +140,7 @@
 		border: 2px solid var(--k-primary);
 		color: var(--k-fg);
 		font-weight: var(--k-weight-heading);
-		box-shadow: 0 0 0 3px var(--k-bg), 0 0 0 5px var(--k-accent);
+		box-shadow: 0 0 0 3px var(--k-bg), 0 0 0 5px var(--k-accent-mark);
 	}
 	.text { display: grid; gap: 2px; min-width: 0; padding-top: 4px; }
 	.name {
@@ -196,7 +196,7 @@
 	.bar { display: flex; gap: 4px; }
 	.bar .seg { flex: 1; height: 6px; border-radius: var(--k-radius-badge); background: var(--k-bg-sunken); border: var(--k-border-w) solid var(--k-border); box-sizing: border-box; }
 	.bar .seg[data-state='complete'] { background: var(--k-primary); border-color: var(--k-primary); }
-	.bar .seg[data-state='current'] { background: var(--k-accent); border-color: var(--k-primary); }
+	.bar .seg[data-state='current'] { background: var(--k-accent-mark); border-color: var(--k-primary); }
 
 	/* Narrow container: one line of text plus a progress bar instead of the full row. */
 	@container (max-width: 520px) {
@@ -207,5 +207,4 @@
 	.back svg { width: 16px; height: 16px; flex: none; }
 	.back .name { color: var(--k-fg); }
 	.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-	@media (pointer: coarse) { .link { min-height: 44px; } }
 </style>

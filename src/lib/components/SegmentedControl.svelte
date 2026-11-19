@@ -103,8 +103,8 @@
 		display: grid;
 		place-items: center;
 		box-sizing: border-box;
-		min-width: 40px;
-		min-height: max(40px, calc(var(--k-control-h) - 8px));
+		min-width: max(40px, var(--k-tap-target));
+		min-height: max(40px, var(--k-tap-target), calc(var(--k-control-h) - 8px));
 		padding: 0 var(--k-space-4);
 		border: var(--k-border-w) solid transparent;
 		border-radius: var(--k-radius-control);
@@ -141,5 +141,4 @@
 	.seg:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); z-index: 1; }
 	.seg:has(input:disabled) { opacity: 0.45; cursor: not-allowed; }
 	.txt { padding: var(--k-space-1) 0; min-width: 0; overflow-wrap: break-word; hyphens: auto; }
-	@media (pointer: coarse) { .seg { min-height: max(44px, calc(var(--k-control-h) - 8px)); min-width: 44px; } }
 </style>

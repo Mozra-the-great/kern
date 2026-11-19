@@ -436,13 +436,14 @@
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
 	.k-date:hover { border-color: var(--k-fg-muted); }
-	.k-date:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent); }
+	.k-date:has(input:focus-visible) { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: var(--k-focus-offset); border-color: var(--k-accent-mark); }
 	.invalid { border-color: var(--k-danger); }
 	.disabled { opacity: 0.55; }
 	input {
 		flex: 1;
 		min-width: 0;
-		min-height: calc(var(--k-control-h) - 2 * var(--k-border-w));
+		min-height: var(--k-control-h);
+		margin-block: calc(var(--k-border-w) * -1);
 		padding: 0;
 		border: 0;
 		outline: 0;
@@ -455,6 +456,7 @@
 	input::placeholder { color: var(--k-fg-muted); opacity: 1; }
 	input:disabled { cursor: not-allowed; }
 	button {
+		position: relative;
 		flex: none;
 		display: grid;
 		place-items: center;
@@ -467,6 +469,7 @@
 		color: var(--k-fg-muted);
 		cursor: pointer;
 	}
+	button::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
 	button:hover:not(:disabled) { color: var(--k-fg); background: var(--k-bg-sunken); }
 	button:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: calc(var(--k-focus-w) * -1); }
 	button:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -480,7 +483,7 @@
 		max-height: var(--avail-h, 70vh);
 		overflow: auto;
 		padding: var(--k-space-2);
-		border: var(--k-border-w) solid var(--k-line);
+		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: min(var(--k-radius-overlay), 16px);
 		background: var(--k-bg-raised);
 		color: var(--k-fg);

@@ -161,14 +161,13 @@
 		display: grid;
 		place-items: center;
 		box-sizing: border-box;
-		width: max(40px, calc(var(--k-control-h) - 12px));
-		height: max(36px, calc(var(--k-control-h) - 12px));
+		width: max(40px, var(--k-tap-target), calc(var(--k-control-h) - 12px));
+		height: max(36px, var(--k-tap-target), calc(var(--k-control-h) - 12px));
 		border-radius: var(--k-radius-control);
 		transition: background-color var(--k-dur) var(--k-ease), color var(--k-dur) var(--k-ease);
 	}
 	.seg.on { background: var(--k-primary); color: var(--k-on-primary); box-shadow: var(--k-shadow-raised); }
 	.seg svg { width: 20px; height: 20px; }
-	@media (pointer: coarse) { .seg { width: 44px; height: max(44px, calc(var(--k-control-h) - 12px)); } }
 
 	/* Menu: a native select, so the list works with every input method. */
 	.menu { position: relative; display: inline-flex; align-items: center; max-width: 100%; }

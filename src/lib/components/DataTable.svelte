@@ -326,7 +326,7 @@
 	caption { padding: var(--k-space-4); text-align: left; font-weight: var(--k-weight-heading); }
 	caption.sr { padding: 0; }
 	th { padding: var(--k-space-3) var(--k-space-4); background: var(--k-bg-sunken); color: var(--k-fg-muted); text-align: left; font-family: var(--k-label-font); font-size: var(--k-text-xs); font-weight: var(--k-weight-label); text-transform: var(--k-label-transform); letter-spacing: var(--k-label-tracking); white-space: nowrap; border-bottom: var(--k-border-w) solid var(--k-line); }
-	th button { display: inline-flex; align-items: center; gap: var(--k-space-1); min-height: 24px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+	th button { position: relative; display: inline-flex; align-items: center; gap: var(--k-space-1); min-height: 24px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
 	th button:hover { color: var(--k-fg); }
 	th button:focus-visible { outline: var(--k-focus-w) solid var(--k-focus); outline-offset: 2px; }
 	th svg { width: 12px; height: 12px; opacity: 0.45; transition: transform var(--k-dur) var(--k-ease); }
@@ -336,14 +336,15 @@
 	tbody tr:last-child td { border-bottom: 0; }
 	tbody tr:hover td { background: color-mix(in srgb, var(--k-fg) 5%, transparent); }
 	tbody tr.selected td { background: color-mix(in srgb, var(--k-accent) 10%, var(--k-bg-raised)); }
-	tbody tr.selected td:first-child { box-shadow: inset 3px 0 0 var(--k-accent); }
+	tbody tr.selected td:first-child { box-shadow: inset 3px 0 0 var(--k-accent-mark); }
 	[data-align='end'] { text-align: right; }
 	[data-align='center'] { text-align: center; }
 	.mono { font-family: var(--k-font-mono); font-variant-numeric: tabular-nums; }
 	.empty { padding: var(--k-space-7); text-align: center; color: var(--k-fg-muted); }
 
 	.sel { width: 1%; padding-block: 0; padding-inline: var(--k-space-3) var(--k-space-1); }
-	.chk { position: relative; display: grid; place-items: center; width: 40px; height: 40px; cursor: pointer; }
+	.chk { position: relative; display: grid; place-items: center; width: max(40px, var(--k-tap-target)); height: max(40px, var(--k-tap-target)); cursor: pointer; }
+	th button::after { content: ''; position: absolute; inset: min(0px, calc((100% - var(--k-tap-target)) / 2)); }
 	.chk input {
 		appearance: none;
 		grid-area: 1 / 1;
@@ -370,16 +371,16 @@
 		.stack thead, .stack tr, .stack tbody, .stack table { display: block; }
 		.stack thead tr { display: flex; flex-wrap: wrap; align-items: center; gap: var(--k-space-2); margin-bottom: var(--k-space-3); }
 		.stack th { display: none; padding: 0 var(--k-space-3); border: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-control); background: var(--k-bg-raised); }
-		.stack th.sortable, .stack th.sel { display: inline-flex; align-items: center; min-height: 40px; }
+		.stack th.sortable, .stack th.sel { display: inline-flex; align-items: center; min-height: max(40px, var(--k-tap-target)); }
 		.stack th.sel { width: auto; padding-inline: var(--k-space-1) var(--k-space-3); }
-		.stack th button { min-height: 40px; }
+		.stack th button { min-height: max(40px, var(--k-tap-target)); }
 		.stack .selall-text { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip-path: none; white-space: normal; }
-		.stack th.sel .chk { display: inline-flex; align-items: center; gap: var(--k-space-2); width: auto; min-height: 40px; }
+		.stack th.sel .chk { display: inline-flex; align-items: center; gap: var(--k-space-2); width: auto; min-height: max(40px, var(--k-tap-target)); }
 		.stack th.sel .chk input { flex: none; }
 		.stack th.sel .chk svg { position: absolute; left: 3px; top: 50%; translate: 0 -50%; }
-		.stack .chk { width: 36px; }
+		.stack .chk { width: max(36px, var(--k-tap-target)); }
 		.stack tbody tr { margin-bottom: var(--k-space-3); border: var(--k-border-w) solid var(--k-line); border-radius: var(--k-radius-card); background: var(--k-bg-raised); overflow: hidden; }
-		.stack tbody tr.selected { border-color: var(--k-accent); }
+		.stack tbody tr.selected { border-color: var(--k-accent-mark); }
 		.stack tbody tr.selected td { background: transparent; }
 		.stack tbody tr.selected td:first-child { box-shadow: none; }
 		.stack td { display: flex; align-items: center; justify-content: space-between; gap: var(--k-space-4); text-align: right; }
