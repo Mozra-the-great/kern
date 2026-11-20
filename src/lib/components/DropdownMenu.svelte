@@ -38,12 +38,17 @@
 		if (!open || !menu) return;
 		const panel = menu;
 		const fit = () => {
-			panel.style.translate = '';
+			panel.style.left = '';
+			panel.style.right = '';
 			const r = panel.getBoundingClientRect();
 			const room = document.documentElement.clientWidth - 8;
 			let dx = Math.min(0, room - r.right);
 			if (r.left + dx < 8) dx = 8 - r.left;
-			if (dx) panel.style.translate = `${dx}px 0`;
+			// real offsets, not a transform: the page's scrollable area follows the layout box
+			if (dx) {
+				if (align === 'end') panel.style.right = `${-dx}px`;
+				else panel.style.left = `${dx}px`;
+			}
 		};
 		fit();
 		window.addEventListener('resize', fit);

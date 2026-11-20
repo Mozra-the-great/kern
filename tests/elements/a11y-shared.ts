@@ -37,14 +37,14 @@ export async function elementTags(): Promise<string[]> {
 }
 
 /** Waits until every kern element of the page is defined and has rendered its shadow root. */
-export async function elementsReady(page: Page): Promise<void> {
+export async function elementsReady(page: Page, timeout?: number): Promise<void> {
 	await page.waitForFunction(
 		() =>
 			[...document.querySelectorAll('*')]
 				.filter((el) => el.tagName.startsWith('K-'))
 				.every((el) => customElements.get(el.tagName.toLowerCase()) && el.shadowRoot?.firstElementChild),
 		undefined,
-		{ polling: 100 }
+		{ polling: 100, ...(timeout ? { timeout } : {}) }
 	);
 }
 
@@ -65,23 +65,26 @@ export interface OpenOptions {
 }
 
 /**
- * Loads a page and checks that the theme stylesheet arrived. On a busy Windows machine the loopback connection to
- * the static server sometimes times out (`net::ERR_CONNECTION_TIMED_OUT`, seen after thousands of page loads in one
- * run), which either fails the navigation or leaves a page without its stylesheet, and axe then reports sizes of an
- * unstyled page. A short timeout and up to four attempts make that a retry instead of a red test; a page that is
- * really broken fails all four.
+ * Loads a page and waits until its theme stylesheet has arrived and every kern element has rendered. On a busy
+ * Windows machine the loopback connection to the static server sometimes stalls (`net::ERR_CONNECTION_TIMED_OUT`,
+ * seen after thousands of page loads in one run): the navigation fails, or the page comes without its stylesheet or
+ * its element bundle and axe then measures an unstyled page. Short timeouts and up to four attempts, each starting
+ * from a blank page, turn that into a retry instead of a red test; a page that is really broken fails all four.
  */
-export async function load(page: Page, url: string): Promise<void> {
+export async function load(page: Page, url: string, ready?: () => Promise<void>): Promise<void> {
 	for (let attempt = 1; ; attempt++) {
 		try {
-			await page.goto(url, { timeout: 6000 });
+			if (attempt > 1) await page.goto('about:blank');
+			await page.goto(url, { timeout: 8000 });
 			await page.waitForFunction(
 				() => getComputedStyle(document.documentElement).getPropertyValue('--k-space-2').trim() !== '',
 				undefined,
 				{
-					timeout: 3000
+					timeout: 4000
 				}
 			);
+			await elementsReady(page, 8000);
+			await ready?.();
 			return;
 		} catch (error) {
 			if (attempt === 4) throw error;
@@ -93,15 +96,16 @@ export async function load(page: Page, url: string): Promise<void> {
 export async function openPage(page: Page, name: string, options: OpenOptions = {}): Promise<void> {
 	await page.emulateMedia({ reducedMotion: options.reducedMotion ?? 'reduce' });
 	if (options.width) await page.setViewportSize({ width: options.width, height: options.height ?? 640 });
-	await load(page, `/tests/elements/pages/${name}.html`);
-	await page.evaluate((t) => (document.documentElement.dataset.theme = t), options.theme ?? 'code');
-	await elementsReady(page);
-	if (name === ALL) {
+	await load(page, `/tests/elements/pages/${name}.html`, async () => {
+		if (name !== ALL) return;
 		// the sortable list and the select grid get their items from a module script on the page
 		await page.waitForFunction(() => document.querySelector('#selectgrid')?.shadowRoot?.querySelector('[role=option]'), undefined, {
-			polling: 100
+			polling: 100,
+			timeout: 8000
 		});
-	}
+	});
+	await page.evaluate((t) => (document.documentElement.dataset.theme = t), options.theme ?? 'code');
+	await elementsReady(page);
 	await settle(page);
 }
 
