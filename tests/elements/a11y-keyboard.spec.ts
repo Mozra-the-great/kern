@@ -12,6 +12,9 @@ import { expect, test, type Page } from '@playwright/test';
 import { ALL, elementTags, KEYBOARD, openPage, REACHABLE, THEMES } from './a11y-shared.js';
 import { readFile } from 'node:fs/promises';
 
+// A page load can stall on a busy machine (see load() in a11y-shared.ts): leave room for its retries.
+test.describe.configure({ timeout: 90_000 });
+
 interface Stop {
 	/** Short description of the focused element: tag, id, class, accessible text. */
 	desc: string;

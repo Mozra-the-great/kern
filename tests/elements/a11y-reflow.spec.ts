@@ -8,6 +8,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { ALL, openPage, PAGES, STATES, THEMES } from './a11y-shared.js';
 
+// A page load can stall on a busy machine (see load() in a11y-shared.ts): leave room for its retries.
+test.describe.configure({ timeout: 90_000 });
+
 interface Report {
 	/** scrollWidth of the page minus the window width; > 0 means a horizontal scrollbar. */
 	overflow: number;

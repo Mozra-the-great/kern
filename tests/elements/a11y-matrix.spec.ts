@@ -10,6 +10,9 @@ import { expect, test } from '@playwright/test';
 import { axeViolations } from './axe.js';
 import { ALL, elementTags, openPage, STATES, THEMES } from './a11y-shared.js';
 
+// A page load can stall on a busy machine (see load() in a11y-shared.ts): leave room for its retries.
+test.describe.configure({ timeout: 90_000 });
+
 /** Elements whose main part exists only while they are open: each needs an open state in STATES. */
 const OVERLAYS = [
 	'k-color-picker',

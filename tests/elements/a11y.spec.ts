@@ -12,6 +12,9 @@ import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 import { axeViolations } from './axe.js';
 import { load, THEMES } from './a11y-shared.js';
 
+// A page load can stall on a busy machine (see load() in a11y-shared.ts): leave room for its retries.
+test.describe.configure({ timeout: 90_000 });
+
 interface Case {
 	name: string;
 	/** Puts the page in a state before axe looks at it. */

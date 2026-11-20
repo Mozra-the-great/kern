@@ -121,6 +121,10 @@ Rules the checks encode:
 Not automated, because it needs people and assistive technology: screen reader output (NVDA, JAWS, VoiceOver), 200 %
 text size and text spacing, magnifier use, voice control, and the quality of the texts an app passes in.
 
+Page loads in these specs go through `load()` in `a11y-shared.ts`: short timeouts and up to four attempts, because on a
+busy Windows machine the loopback connection to the test server sometimes stalls (`net::ERR_CONNECTION_TIMED_OUT`
+after thousands of loads in one run). CI (Linux) does not show it; a page that is really broken fails all four attempts.
+
 Run one spec while working: `npm run build`, then
 `npx playwright test -c tests/elements/playwright.config.ts a11y-keys` (add `-g "k-tabs"` for one test, `KERN_TEST_PORT`
 if the default port 4791 is busy). A new spec must pass `--repeat-each=3 --retries=0 --workers=2` before it is merged.

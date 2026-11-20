@@ -74,7 +74,7 @@ export interface OpenOptions {
 export async function load(page: Page, url: string, ready?: () => Promise<void>): Promise<void> {
 	for (let attempt = 1; ; attempt++) {
 		try {
-			if (attempt > 1) await page.goto('about:blank');
+			if (attempt > 1) await page.goto('about:blank').catch(() => undefined);
 			await page.goto(url, { timeout: 8000 });
 			await page.waitForFunction(
 				() => getComputedStyle(document.documentElement).getPropertyValue('--k-space-2').trim() !== '',

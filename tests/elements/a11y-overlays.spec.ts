@@ -8,6 +8,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { ALL, openPage } from './a11y-shared.js';
 
+// A page load can stall on a busy machine (see load() in a11y-shared.ts): leave room for its retries.
+test.describe.configure({ timeout: 90_000 });
+
 /**
  * True when the focus is inside the element: its shadow tree, its light DOM children, and what is slotted into it.
  * (`:focus-within` on a host does not see focus that sits in a shadow root of a child.)

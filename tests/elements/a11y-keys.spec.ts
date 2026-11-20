@@ -10,6 +10,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { ALL, openPage } from './a11y-shared.js';
 
+// A page load can stall on a busy machine (see load() in a11y-shared.ts): leave room for its retries.
+test.describe.configure({ timeout: 90_000 });
+
 test.beforeEach(async ({ page }) => {
 	await openPage(page, ALL, { theme: 'code' });
 });
@@ -278,7 +281,8 @@ test.describe('fields', () => {
 		await button.focus();
 		const first = page.waitForEvent('filechooser');
 		await key(page, 'Enter');
-		await first;
+		// finish the first chooser: an open one blocks the next
+		await (await first).setFiles([]);
 		const second = page.waitForEvent('filechooser');
 		await key(page, 'Space');
 		await second;
