@@ -64,11 +64,36 @@ export interface OpenOptions {
 	height?: number;
 }
 
+/**
+ * Loads a page and checks that the theme stylesheet arrived. On a busy Windows machine the loopback connection to
+ * the static server sometimes times out (`net::ERR_CONNECTION_TIMED_OUT`, seen after thousands of page loads in one
+ * run), which either fails the navigation or leaves a page without its stylesheet, and axe then reports sizes of an
+ * unstyled page. A short timeout and up to four attempts make that a retry instead of a red test; a page that is
+ * really broken fails all four.
+ */
+async function load(page: Page, url: string): Promise<void> {
+	for (let attempt = 1; ; attempt++) {
+		try {
+			await page.goto(url, { timeout: 6000 });
+			await page.waitForFunction(
+				() => getComputedStyle(document.documentElement).getPropertyValue('--k-space-2').trim() !== '',
+				undefined,
+				{
+					timeout: 3000
+				}
+			);
+			return;
+		} catch (error) {
+			if (attempt === 4) throw error;
+		}
+	}
+}
+
 /** Opens a test page in a theme. The theme is set after load, as the other specs do, so every page works the same. */
 export async function openPage(page: Page, name: string, options: OpenOptions = {}): Promise<void> {
 	await page.emulateMedia({ reducedMotion: options.reducedMotion ?? 'reduce' });
 	if (options.width) await page.setViewportSize({ width: options.width, height: options.height ?? 640 });
-	await page.goto(`/tests/elements/pages/${name}.html`);
+	await load(page, `/tests/elements/pages/${name}.html`);
 	await page.evaluate((t) => (document.documentElement.dataset.theme = t), options.theme ?? 'code');
 	await elementsReady(page);
 	if (name === ALL) {

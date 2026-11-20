@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { activeElementOf, eventWithin } from './anchor.js';
+	import { activeElementOf, anchorTo, eventWithin } from './anchor.js';
 
 	export type MenuEntry =
 		| {
@@ -31,6 +31,13 @@
 	let open = $state(false);
 	let btn: HTMLButtonElement | undefined = $state();
 	let menu: HTMLElement | undefined = $state();
+
+	// position: fixed next to the button, flipped and clamped to the viewport (a menu opened from a button in the middle
+	// of a 320 px screen must not reach past its edge)
+	$effect(() => {
+		if (!open || !btn || !menu) return;
+		return anchorTo(btn, menu, { placement: align === 'end' ? 'bottom-end' : 'bottom-start' });
+	});
 
 	const entries = () => Array.from(menu?.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])') ?? []);
 
@@ -193,22 +200,20 @@
 		height: 14px;
 	}
 	.menu {
-		position: absolute;
+		position: fixed;
 		z-index: 950;
-		top: calc(100% + 6px);
-		min-width: 220px;
+		box-sizing: border-box;
+		width: max-content;
+		min-width: min(220px, calc(100vw - 16px));
+		max-width: calc(100vw - 16px);
+		max-height: var(--avail-h, 70vh);
+		overflow: auto;
 		padding: var(--k-space-1);
 		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: min(var(--k-radius-overlay), 16px);
 		background: var(--k-bg-raised);
 		box-shadow: var(--k-shadow-overlay);
 		animation: k-drop var(--k-dur) var(--k-ease);
-	}
-	[data-align='start'] {
-		left: 0;
-	}
-	[data-align='end'] {
-		right: 0;
 	}
 	[role='menuitem'] {
 		display: flex;
