@@ -45,9 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   item. Inside the element's shadow root the window click listener saw the host instead of the button (it closed the
   menu at once) and `document.activeElement` was the host (so no item was current). Both now look through the
   shadow root (`eventWithin`, `activeElementOf`).
-- `DropdownMenu` / `<k-dropdown-menu>`: the menu is `position: fixed` next to the button and flipped and clamped to the
-  viewport (`anchorTo`, like Popover), so it no longer reaches past the screen edge when the button is in the middle of
-  a 320 px screen; it is at most as wide as the viewport and scrolls when it is taller than the room it has.
+- `DropdownMenu` / `<k-dropdown-menu>` on a narrow screen: a button in the middle of a 320 px screen put the menu's
+  right edge past the viewport (the page scrolled sideways and items were cut off). The menu is now shifted sideways
+  until it fits and is at most as wide as the viewport; it still hangs from the button and scrolls with the page.
 - `Pagination` below 300 px: the previous and next buttons show only their arrow (the text stays as the accessible
   name). With a wide label font the two words and the page counter made the page scroll sideways at 320 px.
 - `<k-navbar>` on a narrow screen: after opening the menu with Enter or Space the next Tab left the navbar and

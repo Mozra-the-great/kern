@@ -10,7 +10,7 @@
  */
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 import { axeViolations } from './axe.js';
-import { THEMES } from './a11y-shared.js';
+import { load, THEMES } from './a11y-shared.js';
 
 interface Case {
 	name: string;
@@ -71,7 +71,7 @@ for (const { name, prepare, label } of cases) {
 			// Colour transitions would let axe measure mid-fade colours after the theme switch:
 			// reduced motion sets --k-dur to 0, and running animations are awaited below as well.
 			await page.emulateMedia({ reducedMotion: 'reduce' });
-			await page.goto(`/tests/elements/pages/${name}.html`);
+			await load(page, `/tests/elements/pages/${name}.html`);
 			await page.evaluate((t) => (document.documentElement.dataset.theme = t), theme);
 			await page.evaluate(async () => {
 				await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));

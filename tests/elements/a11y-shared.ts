@@ -71,7 +71,7 @@ export interface OpenOptions {
  * unstyled page. A short timeout and up to four attempts make that a retry instead of a red test; a page that is
  * really broken fails all four.
  */
-async function load(page: Page, url: string): Promise<void> {
+export async function load(page: Page, url: string): Promise<void> {
 	for (let attempt = 1; ; attempt++) {
 		try {
 			await page.goto(url, { timeout: 6000 });
