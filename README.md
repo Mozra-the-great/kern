@@ -1116,6 +1116,40 @@ Systempaletten keine Themenfarbe durchschlägt; axe ohne schwere Verstöße (ohn
 Hochkontrast die Palette der Nutzerin misst); dazu Screenshots (`visual.spec.ts`, `fc-*`). Ansehen:
 Edge/Chrome → DevTools → Rendering → „Emulate CSS media feature forced-colors: active“.
 
+### Barrierefreiheit: Erklärung und was automatisch geprüft wird
+
+Ziel ist WCAG 2.2, Stufe AA, für jede Komponente in jedem Theme. Jeder Pull Request lässt in Chromium
+(`npm run test:elements`, Teil des Pflicht-Checks `build`) diese Prüfungen über **alle** Custom Elements laufen, in den
+acht Theme-Varianten `code`, `code-light`, `flower`, `flower-wald`, `pop`, `pop-dark`, `line` und `line-light`; ein
+neues Element ohne Eintrag in den Tabellen lässt den Test scheitern (#25):
+
+- **axe-core** (WCAG 2 A/AA, 2.1, 2.2 AA und Best Practice): keine Verstöße der Stufen *serious* und *critical*, auf
+  einer Seite mit jedem Element und in jedem geöffneten Zustand (Modal, Drawer, Palette, Popover, Menüs, Kalender,
+  Farbwähler, Vorschläge, Toasts, Tooltip, Fehler an Feldern, sortierte Datentabelle, Telefon-Menü) sowie auf den
+  anderen Testseiten.
+- **Tastatur**: jedes bedienbare Element ist mit Tab erreichbar, nach Tastaturfokus mit sichtbarem Ring (berechnete
+  Outline, in jedem Theme), ohne Tab-Schleife; Ring nach Tastatur, keiner nach Mausklick (`:focus-visible`); jedes
+  Element mit den Tasten seines Musters bedienbar (Pfeile, Home/End, Enter, Leertaste, Escape; WAI-ARIA Authoring
+  Practices). Die einzige Tastaturfalle ist der modale Dialog (Modal, Drawer, Palette): Fokus hinein, Tab bleibt
+  darin, Escape schließt, der Fokus kehrt zum Auslöser zurück; alle anderen Overlays geben den Fokus frei.
+- **Reduzierte Bewegung** (`prefers-reduced-motion: reduce`): auf jeder Seite, in jedem Theme, in den geöffneten
+  Zuständen und direkt nach Hover, Fokus und Bedienung läuft keine CSS-Animation und kein Übergang länger als einen
+  Frame; kein weiches Scrollen; Typewriter, Scramble, CountUp, Odometer und Carousel zeigen sofort den Endzustand.
+  **Einzige Ausnahme**: `Spinner` und das Lade-Zeichen von `Button loading` drehen sich weiter, aber nur noch einmal
+  pro 2 s statt alle 0,8 s. Ein stehender Ladeindikator sagt nicht, dass etwas läuft; die Bewegung ist wesentlich
+  (WCAG 2.3.3), und der Test lässt genau diese beiden und nichts anderes durch.
+- **320 px** (WCAG 1.4.10 Reflow): auf jeder Seite und in jedem Overlay kein horizontaler Scrollbalken und kein
+  Bedienelement, das ein Container oder der Bildschirmrand abschneidet. Was absichtlich scrollt (Tabellen, Code,
+  Carousel), ist erreichbar und gilt nicht als abgeschnitten.
+- **Kontrastmodus** (`forced-colors`) siehe oben (#27), **Kontrast** der Tokens (`tests/tokens`) und **Touch-Ziele**
+  (`tests/targets`) haben eigene Tests.
+
+Nicht automatisch geprüft, weil es Menschen und Hilfsmittel braucht: das Vorlesen mit NVDA, JAWS und VoiceOver,
+200 % Textvergrößerung und Text-Abstände, ein Bildschirm mit Lupe, Spracheingabe und inhaltliche Fragen (verständliche
+Fehlertexte, Alternativtexte für eigene Bilder). Beschriftungen, Fehlertexte und Alternativtexte kommen aus den Props
+der App, die kern einbindet; für diese Inhalte ist sie verantwortlich. Einen Fehler bitte als Issue melden; ein
+Verstoß gegen eine der obigen Regeln gilt als Bug.
+
 ## Dateien speichern: `saveBlob`, `saveText`, DownloadButton
 
 Für Daten, die die Seite schon hat (Ergebnis eines Werkzeugs, Export, erzeugte Datei). Es wird nichts

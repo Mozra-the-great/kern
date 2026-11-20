@@ -70,6 +70,61 @@ nothing is written to `console.error` or `console.warn` (Svelte reports its warn
 `every export has an entry, and every entry an export` fails when a component is added or removed without
 touching the table.
 
+## The accessibility suite
+
+[#25](https://github.com/Mozra-the-great/kern/issues/25). It runs in Chromium as part of `npm run test:elements`, which
+is the required `build` job. Every check goes over **every custom element** (and so every component) in the eight
+theme variants of `THEMES` in `tests/elements/a11y-shared.ts`: `code`, `code-light`, `flower`, `flower-wald`, `pop`,
+`pop-dark`, `line`, `line-light`. Forced colors is [#27](https://github.com/Mozra-the-great/kern/issues/27)
+(`forced-colors.spec.ts`) and is not repeated here.
+
+The page behind the matrix is `tests/elements/pages/forced-colors.html`: it holds every element (`ALL` in
+`a11y-shared.ts`). The open states (`STATES`: modal, drawer, command palette, popover, dropdown menu, context menu,
+combobox, tag input, date picker, colour picker, toaster, tooltip, invalid fields, sorted and selected data table, the
+phone menu of the navbar) put it in the state an overlay or error shows.
+
+| Spec                              | Checks                                                                                                                                                                         | Matrix                                        |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| `a11y-matrix.spec.ts`             | axe (serious and critical fail) on the all-elements page, closed and in every open state; coverage test: the page has every element, every overlay has a state; a canary that axe finds a violation | 8 themes x (1 page + 15 states)               |
+| `a11y.spec.ts`                    | axe on the other pages (parity, feedback, form, navigation, reorder, download, strings, primitives and their states)                                                           | 8 themes x 11 cases                           |
+| `a11y-keyboard.spec.ts`           | tab order of the whole page: a computed focus ring on every stop, no loop, every control of `REACHABLE` reached; ring after Tab and none after a mouse click; coverage table `KEYBOARD` | 8 themes (tab order), 1 (the rest)            |
+| `a11y-keys.spec.ts`               | each interactive element with the keys of its WAI-ARIA pattern, no mouse                                                                                                       | one test per element (Code)                   |
+| `a11y-overlays.spec.ts`           | modal dialogs (focus in, Tab trapped, Escape closes, focus back on the opener) and every other overlay (Escape closes, focus back, Tab leaves)                                 | one test per overlay (Code)                   |
+| `a11y-motion.spec.ts`             | reduced motion: no running animation or transition longer than a frame (`getAnimations()` on the document and every shadow root), no smooth scrolling, effects at their end state | 8 themes x 12 pages, 2 themes x 15 states, 8 themes x an interaction run |
+| `a11y-reflow.spec.ts`             | 320 x 640: no horizontal page scroll, no control cut off by a container or the screen                                                                                          | 8 themes x (12 pages + 15 states)             |
+
+Coverage guards, so a new element cannot slip through: `a11y-matrix.spec.ts` fails when `forced-colors.html` lacks an
+element of `custom-elements.json` or an overlay has no open state; `a11y-keyboard.spec.ts` fails when `KEYBOARD` (one
+entry per element: `keys`, `overlays` or `static` with a reason) differs from the manifest, an entry names a test that
+does not exist, or an element marked `static` renders a control. Every check also has a canary test that makes it fail
+on a deliberate violation (a missing label, a missing ring, a running animation, a clipped button), so none of them can
+pass because it looks at nothing.
+
+Adding an element: put it on `forced-colors.html` (also needed by #27), give it an entry in `KEYBOARD` and, if it
+is interactive, a test in `a11y-keys.spec.ts` or `a11y-overlays.spec.ts` that names its tag in the title, add it to
+`REACHABLE` when it has a tab stop on the page, and add a `STATES` entry when it needs a state to show its main part.
+
+Rules the checks encode:
+
+- **Focus ring**: after keyboard focus the focused element, a wrapper with the focus within, a part inside it or a
+  neighbour in the same component has a visible outline (or a box-shadow or border that differs from the blurred state).
+  A ring that only the mouse shows does not count; `:focus-visible` must match after Tab.
+- **Modal dialogs** are the one keyboard trap. The native dialog makes the page behind inert, so after the last control
+  Tab passes through the browser's own UI; the focus must never land on the page behind.
+- **Reduced motion**: the only running animation allowed is the rotation of `Spinner` and of the loading mark of
+  `Button`, slowed to 2 s per turn (WCAG 2.3.3, essential: a standing loading indicator says nothing). Everything
+  else, including transitions started by hover, focus and operation, must be 20 ms or shorter.
+- **Reflow**: a control inside a container that scrolls on purpose (table, code, carousel track) counts as reachable;
+  inside `overflow: hidden` or beyond the screen it counts as cut off. Boxes of 1-2 px (text for assistive technology)
+  are ignored.
+
+Not automated, because it needs people and assistive technology: screen reader output (NVDA, JAWS, VoiceOver), 200 %
+text size and text spacing, magnifier use, voice control, and the quality of the texts an app passes in.
+
+Run one spec while working: `npm run build`, then
+`npx playwright test -c tests/elements/playwright.config.ts a11y-keys` (add `-g "k-tabs"` for one test, `KERN_TEST_PORT`
+if the default port 4791 is busy). A new spec must pass `--repeat-each=3 --retries=0 --workers=2` before it is merged.
+
 ## stuffcloud mapping
 
 stuffcloud (`web/apps/web/tests/`) may remove a local copy of a component only when the kit covers the same
