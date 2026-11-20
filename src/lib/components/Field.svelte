@@ -83,6 +83,8 @@
 <style>
 	.k-field {
 		display: grid;
+		/* minmax(0, ...): a control with a wide intrinsic size (a text input in a flex row) must not stretch the column past the field */
+		grid-template-columns: minmax(0, 1fr);
 		gap: var(--k-space-2);
 		align-content: start;
 		min-width: 0;

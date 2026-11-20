@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { activeElementOf, eventWithin } from './anchor.js';
 
 	export type MenuEntry =
 		| {
@@ -55,7 +56,8 @@
 	}
 	function onMenuKey(e: KeyboardEvent) {
 		const list = entries();
-		const i = list.indexOf(document.activeElement as HTMLElement);
+		// activeElementOf, not document.activeElement: inside the custom element's shadow root the document sees the host
+		const i = menu ? list.indexOf(activeElementOf(menu) as HTMLElement) : -1;
 		if (e.key === 'ArrowDown') {
 			e.preventDefault();
 			list[(i + 1) % list.length]?.focus();
@@ -84,7 +86,8 @@
 		close();
 	}
 	function onWindowClick(e: MouseEvent) {
-		if (open && !btn?.contains(e.target as Node) && !menu?.contains(e.target as Node)) close(false);
+		// composedPath, not e.target: a window listener sees the shadow host instead of the button or item that was clicked
+		if (open && !eventWithin(e, btn, menu)) close(false);
 	}
 </script>
 

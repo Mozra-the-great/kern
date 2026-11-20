@@ -9,7 +9,7 @@
 
 <script lang="ts">
 	import { strings } from './strings.svelte.js';
-	import type { Snippet } from 'svelte';
+	import { tick, type Snippet } from 'svelte';
 
 	interface Props {
 		items: NavbarItem[];
@@ -31,6 +31,16 @@
 	let open = $state(false);
 	let header: HTMLElement | undefined = $state();
 	let toggle: HTMLButtonElement | undefined = $state();
+	let panel: HTMLElement | undefined = $state();
+
+	/* The panel comes before the button in the DOM (it is placed below the bar, and in the bar on wide screens), so
+	 * after a keyboard press the next Tab would leave it behind: move the focus to its first link instead. */
+	async function onToggle(e: MouseEvent) {
+		open = !open;
+		if (!open || e.detail !== 0) return;
+		await tick();
+		panel?.querySelector<HTMLElement>('a')?.focus();
+	}
 
 	/* Escape closes the panel and gives the focus back to the menu button. */
 	$effect(() => {
@@ -56,7 +66,7 @@
 <header class="k-navbar {cls}" class:open bind:this={header}>
 	<div class="bar">
 		{#if brand}<div class="brand">{@render brand()}</div>{/if}
-		<nav class="panel" id="{uid}-panel" aria-label={label} data-open={open}>
+		<nav class="panel" id="{uid}-panel" bind:this={panel} aria-label={label} data-open={open}>
 			<ul>
 				{#each items as item (item.href + item.label)}
 					<li>
@@ -73,7 +83,7 @@
 			aria-label={menuLabel}
 			aria-expanded={open}
 			aria-controls="{uid}-panel"
-			onclick={() => (open = !open)}
+			onclick={onToggle}
 		>
 			{#if open}
 				<svg viewBox="0 0 20 20" aria-hidden="true">
