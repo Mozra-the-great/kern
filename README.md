@@ -164,24 +164,24 @@ Voraussetzungen: Node ≥ 22 und Svelte ≥ 5.20 (Peer-Abhängigkeit, nötig fü
 URL-Muster (Version einsetzen, der Dateiname enthält sie ebenfalls):
 
 ```text
-https://github.com/Mozra-the-great/kern/releases/download/v0.9.0/mozra-the-great-kern-0.9.0.tgz
+https://github.com/Mozra-the-great/kern/releases/download/v0.10.0/mozra-the-great-kern-0.10.0.tgz
 ```
 
 **pnpm** (stuffcloud):
 
 ```bash
-pnpm add https://github.com/Mozra-the-great/kern/releases/download/v0.9.0/mozra-the-great-kern-0.9.0.tgz
+pnpm add https://github.com/Mozra-the-great/kern/releases/download/v0.10.0/mozra-the-great-kern-0.10.0.tgz
 ```
 
 `package.json` bekommt die URL als Version, `pnpm-lock.yaml` einen Eintrag mit
-`resolution: {integrity: sha512-…, tarball: https://…/mozra-the-great-kern-0.9.0.tgz}`.
+`resolution: {integrity: sha512-…, tarball: https://…/mozra-the-great-kern-0.10.0.tgz}`.
 CI installiert mit `pnpm install --frozen-lockfile`. Den `integrity`-Hash schreibt pnpm ab
 Version 10; pnpm 9 speichert für URL-Tarballs nur die URL und prüft nichts.
 
 **npm-Workspace** (nagellacke), im Workspace-Paket, das kern braucht:
 
 ```bash
-npm install https://github.com/Mozra-the-great/kern/releases/download/v0.9.0/mozra-the-great-kern-0.9.0.tgz -w <workspace>
+npm install https://github.com/Mozra-the-great/kern/releases/download/v0.10.0/mozra-the-great-kern-0.10.0.tgz -w <workspace>
 ```
 
 `package.json` bekommt die URL als Version, `package-lock.json` unter
@@ -198,14 +198,14 @@ ein neues Patch-Release.
 sowie den npm-Integritätswert in den Release-Notizen.
 
 ```bash
-curl -fLO https://github.com/Mozra-the-great/kern/releases/download/v0.9.0/mozra-the-great-kern-0.9.0.tgz
-curl -fLO https://github.com/Mozra-the-great/kern/releases/download/v0.9.0/mozra-the-great-kern-0.9.0.tgz.sha256
-sha256sum -c mozra-the-great-kern-0.9.0.tgz.sha256
+curl -fLO https://github.com/Mozra-the-great/kern/releases/download/v0.10.0/mozra-the-great-kern-0.10.0.tgz
+curl -fLO https://github.com/Mozra-the-great/kern/releases/download/v0.10.0/mozra-the-great-kern-0.10.0.tgz.sha256
+sha256sum -c mozra-the-great-kern-0.10.0.tgz.sha256
 # Wert der Lock-Datei (ohne das Präfix "sha512-"):
-openssl dgst -sha512 -binary mozra-the-great-kern-0.9.0.tgz | openssl base64 -A
+openssl dgst -sha512 -binary mozra-the-great-kern-0.10.0.tgz | openssl base64 -A
 ```
 
-Ein Git-Dependency (`github:Mozra-the-great/kern#v0.9.0`) funktioniert auch, weil `prepare`
+Ein Git-Dependency (`github:Mozra-the-great/kern#v0.10.0`) funktioniert auch, weil `prepare`
 `dist/` und `dist-elements/` baut. Die Lock-Datei hält dann nur den Commit, keinen Hash des
 Inhalts, und die Installation braucht die Dev-Abhängigkeiten; deshalb ist der Tarball der
 empfohlene Weg. Eine Veröffentlichung auf npm (mit Provenance) ist möglich, aber nicht eingerichtet.

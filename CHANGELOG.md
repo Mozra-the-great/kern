@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-11-20
+
 ### Added
 - Accessibility suite (#25), part of `npm run test:elements` and so of the required `build` job. Every custom element
   (and so every component) is checked in the eight theme variants `code`, `code-light`, `flower`, `flower-wald`, `pop`,
