@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { activeElementOf, eventWithin } from './anchor.js';
 
 	export type MenuEntry =
 		| {
@@ -31,6 +32,29 @@
 	let btn: HTMLButtonElement | undefined = $state();
 	let menu: HTMLElement | undefined = $state();
 
+	// The menu hangs from the button (position: absolute, so it scrolls with the page). A button in the middle of a narrow
+	// screen would put its right edge past the viewport: shift the menu sideways until it fits.
+	$effect(() => {
+		if (!open || !menu) return;
+		const panel = menu;
+		const fit = () => {
+			panel.style.left = '';
+			panel.style.right = '';
+			const r = panel.getBoundingClientRect();
+			const room = document.documentElement.clientWidth - 8;
+			let dx = Math.min(0, room - r.right);
+			if (r.left + dx < 8) dx = 8 - r.left;
+			// real offsets, not a transform: the page's scrollable area follows the layout box
+			if (dx) {
+				if (align === 'end') panel.style.right = `${-dx}px`;
+				else panel.style.left = `${dx}px`;
+			}
+		};
+		fit();
+		window.addEventListener('resize', fit);
+		return () => window.removeEventListener('resize', fit);
+	});
+
 	const entries = () => Array.from(menu?.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])') ?? []);
 
 	function openMenu(focus: 'first' | 'last' = 'first') {
@@ -55,7 +79,8 @@
 	}
 	function onMenuKey(e: KeyboardEvent) {
 		const list = entries();
-		const i = list.indexOf(document.activeElement as HTMLElement);
+		// activeElementOf, not document.activeElement: inside the custom element's shadow root the document sees the host
+		const i = menu ? list.indexOf(activeElementOf(menu) as HTMLElement) : -1;
 		if (e.key === 'ArrowDown') {
 			e.preventDefault();
 			list[(i + 1) % list.length]?.focus();
@@ -84,7 +109,8 @@
 		close();
 	}
 	function onWindowClick(e: MouseEvent) {
-		if (open && !btn?.contains(e.target as Node) && !menu?.contains(e.target as Node)) close(false);
+		// composedPath, not e.target: a window listener sees the shadow host instead of the button or item that was clicked
+		if (open && !eventWithin(e, btn, menu)) close(false);
 	}
 </script>
 
@@ -193,7 +219,9 @@
 		position: absolute;
 		z-index: 950;
 		top: calc(100% + 6px);
-		min-width: 220px;
+		box-sizing: border-box;
+		min-width: min(220px, calc(100vw - 16px));
+		max-width: calc(100vw - 16px);
 		padding: var(--k-space-1);
 		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: min(var(--k-radius-overlay), 16px);

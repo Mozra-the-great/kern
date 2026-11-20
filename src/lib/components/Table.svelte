@@ -52,7 +52,7 @@
 	}
 </script>
 
-<div class="k-table {cls}" class:stack>
+<div class="k-table {cls}" class:stack class:sortable={columns.some((c) => c.sortable)}>
 	<table>
 		{#if caption}<caption class:sr={captionHidden}>{caption}</caption>{/if}
 		<thead>
@@ -60,6 +60,7 @@
 				{#each columns as c (c.key)}
 					<th
 						scope="col"
+						class:sortable={c.sortable}
 						data-align={c.align ?? 'start'}
 						aria-sort={sortKey === c.key ? (sortDir === 1 ? 'ascending' : 'descending') : c.sortable ? 'none' : undefined}
 					>
@@ -210,6 +211,48 @@
 			height: 1px;
 			overflow: hidden;
 			clip: rect(0 0 0 0);
+		}
+		/* With sortable columns the header stays on screen as a row of sort buttons; hidden, they would take focus unseen. */
+		.stack.sortable thead {
+			display: block;
+			position: static;
+			width: auto;
+			height: auto;
+			overflow: visible;
+			clip: auto;
+		}
+		.stack.sortable thead tr {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: var(--k-space-2);
+			border: 0;
+			border-radius: 0;
+			background: none;
+			overflow: visible;
+		}
+		.stack.sortable th {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			overflow: hidden;
+			clip: rect(0 0 0 0);
+			border: 0;
+		}
+		.stack.sortable th.sortable {
+			position: static;
+			display: inline-flex;
+			align-items: center;
+			width: auto;
+			height: auto;
+			min-height: max(40px, var(--k-tap-target));
+			padding: 0 var(--k-space-3);
+			overflow: visible;
+			clip: auto;
+			border: var(--k-border-w) solid var(--k-line);
+			border-radius: var(--k-radius-control);
+			background: var(--k-bg-raised);
 		}
 		.stack table,
 		.stack tbody,

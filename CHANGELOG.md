@@ -23,6 +23,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Accessibility suite (#25), part of `npm run test:elements` and so of the required `build` job. Every custom element
+  (and so every component) is checked in the eight theme variants `code`, `code-light`, `flower`, `flower-wald`, `pop`,
+  `pop-dark`, `line` and `line-light`: axe with serious and critical findings failing, on one page with every element
+  and in 15 open states (modal, drawer, palette, popover, menus, pickers, suggestions, toasts, tooltip, invalid
+  fields, sorted data table, phone menu); keyboard (tab order with a computed focus ring on every stop and no loop,
+  ring after Tab and none after a click, each element operated with the keys of its WAI-ARIA pattern, modal dialogs
+  trap Tab and give the focus back on Escape, all other overlays release it); reduced motion (no animation or
+  transition longer than a frame on any page, in open states and after hover, focus and operation, no smooth
+  scrolling; the slowed spinner is the one documented exception); reflow at 320 x 640 (no horizontal scroll, no
+  control cut off). New specs `a11y-matrix`, `a11y-keyboard`, `a11y-keys`, `a11y-overlays`, `a11y-motion` and
+  `a11y-reflow` in `tests/elements` with shared parts in `a11y-shared.ts`; `a11y.spec.ts` now runs its pages in all
+  eight variants. Coverage tables fail the build when a new element is not covered (the page, `STATES`, `KEYBOARD`),
+  and every check has a canary that makes it fail on a deliberate violation. See `docs/testing.md`.
+- README: accessibility statement ("Barrierefreiheit: Erklärung und was automatisch geprüft wird") with what is
+  checked, the one reduced-motion exception and what is not automated.
+
+### Fixed
+- `<k-dropdown-menu>`: a click on the button did not open the menu, and the arrow keys did not move past the first
+  item. Inside the element's shadow root the window click listener saw the host instead of the button (it closed the
+  menu at once) and `document.activeElement` was the host (so no item was current). Both now look through the
+  shadow root (`eventWithin`, `activeElementOf`).
+- `DropdownMenu` / `<k-dropdown-menu>` on a narrow screen: a button in the middle of a 320 px screen put the menu's
+  right edge past the viewport (the page scrolled sideways and items were cut off). The menu is now shifted sideways
+  until it fits and is at most as wide as the viewport; it still hangs from the button and scrolls with the page.
+- `Pagination` below 300 px: the previous and next buttons show only their arrow (the text stays as the accessible
+  name). With a wide label font the two words and the page counter made the page scroll sideways at 320 px.
+- `<k-navbar>` on a narrow screen: after opening the menu with Enter or Space the next Tab left the navbar and
+  skipped the panel (it comes before the button in the DOM). The focus now moves to the first link; Escape still
+  returns it to the button.
+- `<k-tooltip>`: the text never reached assistive technology when the trigger was slotted light DOM or inside another
+  element (an id reference cannot cross a shadow root). While the focus is in such a trigger it gets `aria-description`
+  with the tooltip text; the `aria-describedby` of the Svelte component is unchanged.
+- `Table` with sortable columns at 760 px and below: the header was visually hidden but its sort buttons stayed
+  focusable, so keyboard users tabbed into invisible controls and nobody could sort on a phone. The sortable headers
+  now show as a row of bordered chips above the stacked rows (a table without sortable columns keeps the hidden header).
+- `Field` (so Input, Select, NumberInput, Combobox ... ): a control with a wide intrinsic size, such as the text input
+  of `NumberInput`, stretched the field past its container at 320 px and made the page scroll sideways. The field's grid
+  column is now `minmax(0, 1fr)`.
+
 ## [0.9.0] - 2026-11-20
 
 ### Added

@@ -24,6 +24,25 @@
 			else trigger.removeAttribute('aria-describedby');
 		};
 	});
+
+	// An id reference cannot cross a shadow root. As `<k-tooltip>` the trigger is slotted light DOM (or sits inside the
+	// shadow root of another element such as <k-button>), so the effect above finds nothing and the text would never
+	// reach assistive technology. While the focus is in such a trigger it gets `aria-description` with the text.
+	let described: Element | undefined;
+	function onfocusin(e: FocusEvent) {
+		shown = true;
+		const target = e.composedPath()[0];
+		if (target instanceof Element && wrap && target.getRootNode() !== wrap.getRootNode() && !target.hasAttribute('aria-description')) {
+			target.setAttribute('aria-description', text);
+			described = target;
+		}
+	}
+	function onfocusout() {
+		shown = false;
+		described?.removeAttribute('aria-description');
+		described = undefined;
+	}
+	$effect(() => () => described?.removeAttribute('aria-description'));
 </script>
 
 <span
@@ -32,8 +51,8 @@
 	role="presentation"
 	onmouseenter={() => (shown = true)}
 	onmouseleave={() => (shown = false)}
-	onfocusin={() => (shown = true)}
-	onfocusout={() => (shown = false)}
+	{onfocusin}
+	{onfocusout}
 	onkeydown={(e) => {
 		if (e.key === 'Escape') shown = false;
 	}}

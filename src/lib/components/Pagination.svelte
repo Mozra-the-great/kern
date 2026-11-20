@@ -218,6 +218,22 @@
 			flex: 1;
 		}
 	}
+	/* On a phone the previous and next buttons keep only their arrow (the text stays as the accessible name): with a wide
+	 * label font (Linux fallback, uppercase mono) the two words plus the page counter are wider than 320 px. */
+	@container (max-width: 300px) {
+		.step {
+			padding: 0;
+		}
+		.step span {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			margin: -1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
+	}
 	@media (forced-colors: active) {
 		/* Current page: inverted, with the underline and the heavier weight it already has. */
 		.page[aria-current='page'],
