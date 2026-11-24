@@ -4,7 +4,8 @@
 // its size and sha256: the contract with the art's source. The Code pixel art (called stuffcloud before the rename) is drawn in the
 // stuffcloud repository (docs/design/prototypes, generated from ASCII sources by
 // docs/design/tools/mascots.py and stickers.py) and its manifest also records the pixel grid; the
-// pop, line and flower art is vector art from their design-system artifacts and moodboards, and its
+// pop, line and flower art is vector art from their design-system artifacts and moodboards (plus the
+// flower banner, drawn for kern in #110 because its source is a raster picture with text), and its
 // manifest records the SVG viewBox. CI cannot reach any of these sources, so the manifests are the
 // contract.
 //
@@ -39,7 +40,11 @@ const BRANDS = {
 			'claude.ai artifacts "Line-Designsystem" (logo, mascots, outfits, tool icons) and the stuffcloud Line design canvas (seasonal, illustrations)',
 		pixel: false
 	},
-	flower: { source: 'claude.ai artifacts "Flower-Designs" and "Mozra Botanik-Bausteine" (identical files)', pixel: false }
+	flower: {
+		source:
+			'claude.ai artifacts "Flower-Designs" and "Mozra Botanik-Bausteine" (identical files: blossoms, leaves, trees); banners/ is drawn for kern after the Flower banner (#110)',
+		pixel: false
+	}
 };
 
 /** Constructs no shipped SVG may contain: they are shown via <img>, but consumers may inline them. */

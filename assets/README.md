@@ -20,7 +20,8 @@ Rules for every brand:
 - **Safe files.** Only SVG, each with `xmlns` and `viewBox`, without scripts, event handlers,
   `<foreignObject>`, `<image>`, external `href`/`url()` or `data:` URIs (`npm run assets:check`).
 - **Same-origin files.** Serve them as files (`img-src 'self'`), not as `data:` URIs (README,
-  "Mascot", CSP). The largest flower files are 60 to 135 kB: load them with `loading="lazy"`.
+  "Mascot", CSP). The largest flower files are 60 to 135 kB (the banner is 70 kB): load them with
+  `loading="lazy"`.
 
 ## code
 
@@ -92,17 +93,24 @@ and the art shows its still pose.
 ## flower
 
 Botanical motifs from the Flower designs, drawn after the "Mozra-the-great" banner: soft flat
-shapes in fixed colours, made for Flower's cream ground (`#F6F0E0`).
+shapes in fixed colours, made for Flower's cream ground (`#F6F0E0`). The blossoms, leaves and trees
+are transparent; the banner brings its own cream ground.
 
 | Group | Files | Use |
 | --- | --- | --- |
 | `blossoms/` | 16 | Single blossoms (pink, red, purple, ochre, white), blossoms on a stem, buds, lavender, a pink panicle and `bouquet.svg` (a main motif on its own). The white ones need their foliage or a darker ground for contrast. |
 | `leaves/` | 20 | Ten single leaves (olive, green, dark) and ten branches, tendrils and plants. Dark leaves not on a dark green ground. |
 | `trees/` | 10 | Trees and bushes on an oval ground shadow (`viewBox="0 0 300 360"`): round dark tree, olive tree, conifer, blossom tree, cypress, fruit tree, young tree, bush with white blossoms, shrub with buds, and `hill-with-trees.svg`, a finished small scene (not mixed with single trees). |
+| `banners/` | 1 | `garden-frame.svg`: the Flower banner as a picture without any text (`viewBox="0 0 1536 650"`, the 1536:650 ratio of the original). Plants grow in from all four edges (pink blossom, lavender and white blossoms on the left, a red blossom and a large split leaf on the right, hanging twigs at the top), three flat hills lie along the lower edge, and the middle stays empty. It is opaque: its own cream ground (`#F6F0E0`) makes it a light panel on Flower's dark `wald` ground too. Show it whole, as a page or section header (`<img alt="" width="1536" height="650" loading="lazy">`, `width: 100%; height: auto`; 70 kB); round the corners in CSS if you like. A heading may stand in the empty middle (about the central 40 % of the width and half of the height) as real text in your page, in ink `#2C4F38`; nothing else goes on top. |
 
 Sources: the claude.ai artifact **"Flower-Designs"** (design system); its 46 SVGs are byte-identical
 to the motifs on the canvas **"Mozra Botanik-Bausteine"**. The file names translate the German
 originals (`rosa-bluete.svg` → `blossoms/pink-blossom.svg`, `olivbaum.svg` → `trees/olive-tree.svg`, …).
+`banners/garden-frame.svg` is the one file drawn for kern (#110): the design system's `banner.png` is a
+500 kB raster picture with a title and account names in it, so the banner was redrawn as vector art
+with the same composition and the palette of the design system's tokens, and without text. It is built
+like the other motifs: filled shapes only (`<path fill d>`), no outlines, no gradients, a few tones per
+colour family with the light from the upper left.
 
 ## Drift check and refresh
 
@@ -130,6 +138,6 @@ When pop, line or flower art changes in its artifact: take the changed file from
 assets, or extract the inline `<svg>` from the canvas page (add `xmlns`, keep the `viewBox`, drop only
 presentation attributes of the root such as `class`, `width` or `aria-hidden`), keep the kern file
 name, run `npm run assets:manifest` and commit file and manifest together. New art comes from the
-sources only; kern does not draw its own.
+sources only; kern does not draw its own (the one exception is the text-free flower banner, see above).
 
 Licence: same as the project (GPL-3.0-or-later), see `NOTICE`.

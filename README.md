@@ -62,7 +62,7 @@ Silkscreen, Flower braucht Figtree, Pop Figtree 400–900 und JetBrains Mono, Li
 Zu jeder Marke gehören Grafiken unter `@mozra-the-great/kern/assets/<marke>/…`, siehe [`assets/README.md`](assets/README.md):
 Code Pixel-Art aus den stuffcloud-Moodboards (Logo, Maskottchen, Tool-Sticker, Zeichen, Saison-Deko, 115 Dateien),
 Pop Vektor-Maskottchen, Outfits, Accessoires, Tool-Icons und Saison-Abzeichen (88), Line Strich-Maskottchen,
-Outfits, Tool-Icons, Saison-Deko und Illustrationen (48), Flower Blüten, Blätter und Bäume (46). Die Komponenten
+Outfits, Tool-Icons, Saison-Deko und Illustrationen (48), Flower Blüten, Blätter, Bäume und ein Banner ohne Text (47). Die Komponenten
 laden keine davon; du bindest sie per `<img alt="">` ein. Die Code-Pixel-Art zeigt auch `Mascot`
 (siehe [Mascot](#mascot-pixel-art)). Der Ordner der Pixel-Art heißt `assets/code/` (bis zur Umbenennung #85:
 `assets/stuffcloud/`); `@mozra-the-great/kern/assets/stuffcloud/…` löst bis 1.0 weiter auf dieselben Dateien auf
