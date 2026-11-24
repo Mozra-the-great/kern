@@ -23,6 +23,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- `Odometer` and `CountUp` (`makeNumberFormatter`) kept their `format` options when `locale` is invalid: they fell
+  back to a bare `Intl.NumberFormat()`, so `minimumIntegerDigits`, currency and similar options were dropped. They now
+  fall back to the default locale with the same options, and only to the plain default format when the options are
+  invalid too.
+
+### Changed
+- Component test suite, stage 2 (#24): behaviour tests in jsdom for every component that only had a smoke test
+  (Popover, Tooltip, DropdownMenu, ContextMenu, Combobox, TagInput, DatePicker, ColorPicker, PinInput, NumberInput,
+  TreeView, CommandPalette, SelectGrid, SortableList, Carousel, Resizable, ScrollArea, Marquee, Terminal, DataTable,
+  Table, Heatmap, Sparkline, Stat, Pagination, Timeline, Stepper, Navbar, Breadcrumb, Kbd, SkipLink, Tag, HistoryBar,
+  DownloadButton, ThemeToggle, Rating, OnlineStatus, RelativeTime, StatusDot, Typewriter, Skeleton, CountUp, Reveal,
+  Scramble, Odometer, Highlight, SegmentedControl, Slider, Prose and the small display components) and for the shared
+  modules (`anchor.ts`, `color.ts`, `data-utils.ts`, `theme.ts`, `accent.ts`, `announcer.ts`, `strings.ts`,
+  `modal-dialog.ts`, `scroll-lock.ts`, `scroll-fade.ts`, `motion.svelte.ts`). Coverage over `src/lib` went from
+  65.49 / 48.35 / 67.4 / 63.76 % to 99.53 / 96.25 / 99.95 / 100 % (statements / branches / functions / lines); the ratchet
+  in `vitest.config.ts` is now 99 / 96 / 99 / 100, above the 95 % floor. No source file is excluded.
+
 ## [0.10.0] - 2026-11-20
 
 ### Added
