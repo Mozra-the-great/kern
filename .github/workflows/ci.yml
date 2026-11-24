@@ -94,6 +94,10 @@ jobs:
       - name: Custom Elements Manifest is up to date
         # The build regenerates custom-elements.json from src/elements; commit the result.
         run: git diff --exit-code custom-elements.json
+      - name: API reference is up to date (docs/api/reference.md)
+        # Generated from src/lib/components/*.svelte and custom-elements.json (#57); fails when the committed
+        # file differs. Run `npm run docs:api` and commit the result.
+        run: npm run docs:check
       - name: Element typings (strict TS + React 19 fixture)
         run: npm run test:types
       - name: Size budget (custom elements)
