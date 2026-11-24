@@ -67,6 +67,37 @@ test.describe('actions', () => {
 		await expect(page.locator('#btn-loading button')).toHaveAttribute('aria-busy', 'true');
 	});
 
+	test('k-button loading: a polite status region is filled when loading starts, the name stays the label (#109)', async ({ page }) => {
+		const state = await page.evaluate(async () => {
+			const host = document.createElement('k-button');
+			host.id = 'btn-status';
+			host.textContent = 'Save';
+			const fired: string[] = [];
+			for (const type of ['click', 'change', 'input', 'action', 'toggle']) host.addEventListener(type, () => fired.push(type));
+			document.body.append(host);
+			await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+			const region = (): HTMLElement | null => host.shadowRoot?.querySelector('[role="status"]') ?? null;
+			const idle = { present: region() !== null, text: region()?.textContent ?? null };
+			(host as unknown as { loading: boolean }).loading = true;
+			await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+			const loading = { text: region()?.textContent, live: region()?.getAttribute('aria-live') };
+			host.setAttribute('loading-label', 'Saving');
+			await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+			const custom = region()?.textContent;
+			const button = host.shadowRoot?.querySelector('button');
+			return { idle, loading, custom, busy: button?.getAttribute('aria-busy'), inside: button?.contains(region()) ?? null, fired };
+		});
+		expect(state.idle).toEqual({ present: true, text: '' });
+		expect(state.loading).toEqual({ text: 'Loading', live: 'polite' });
+		expect(state.custom).toBe('Saving');
+		expect(state.busy).toBe('true');
+		expect(state.inside).toBe(false);
+		expect(state.fired).toEqual([]);
+		// the button is still named by its visible label
+		await expect(page.locator('#btn-status button')).toHaveAccessibleName('Save');
+		await page.evaluate(() => document.getElementById('btn-status')?.remove());
+	});
+
 	test('k-icon-button and k-link: Enter and Space (button), Enter (link)', async ({ page }) => {
 		await listen(page, '#ib', 'click');
 		await page.locator('#ib button').focus();

@@ -9,6 +9,7 @@ export const de: KernBundle = {
 	lang: 'de',
 	alert: { dismissLabel: 'Schließen' },
 	breadcrumb: { label: 'Brotkrumennavigation', expandLabel: 'Verborgene Einträge anzeigen' },
+	button: { loadingLabel: 'Lädt' },
 	card: { openLabel: 'Öffnen' },
 	carousel: {
 		label: 'Karussell',

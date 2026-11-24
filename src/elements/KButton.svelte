@@ -6,6 +6,7 @@
 			block: { type: 'Boolean' },
 			wide: { type: 'Boolean' },
 			loading: { type: 'Boolean' },
+			loadingLabel: { type: 'String', attribute: 'loading-label' },
 			disabled: { type: 'Boolean', reflect: true },
 			href: { type: 'String' },
 			target: { type: 'String' },
@@ -22,7 +23,7 @@
 	/**
 	 * Button, or a link with `href` (also `target`, `rel`, `download`). A disabled or loading link stays
 	 * a link without href and with `aria-disabled="true"`. `size="icon"` is a square for an icon: give
-	 * it a `label`.
+	 * it a `label`. While `loading`, a polite status text is announced (`loading-label`, default "Loading").
 	 * @prop label Accessible name of the inner button or link, for content that is only an icon.
 	 */
 	import Button from '../lib/components/Button.svelte';
@@ -33,6 +34,7 @@
 		block = false,
 		wide = false,
 		loading = false,
+		loadingLabel,
 		disabled = false,
 		href,
 		target,
@@ -52,7 +54,22 @@
 	}
 </script>
 
-<Button {variant} {size} {block} {wide} {loading} {disabled} {href} {target} {rel} {download} type="button" aria-label={label} {onclick}>
+<Button
+	{variant}
+	{size}
+	{block}
+	{wide}
+	{loading}
+	{loadingLabel}
+	{disabled}
+	{href}
+	{target}
+	{rel}
+	{download}
+	type="button"
+	aria-label={label}
+	{onclick}
+>
 	<slot />
 </Button>
 

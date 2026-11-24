@@ -168,7 +168,15 @@
 <Avatar name="Ada" src={maybeString} size={undefined} />
 <Badge tone={undefined} look={undefined}>Badge</Badge>
 <Breadcrumb items={crumbs} label={maybeString} max={maybeNumber} />
-<Button variant={undefined} size={undefined} block={maybeBoolean} loading={maybeBoolean} href={maybeString} disabled={maybeBoolean}>
+<Button
+	variant={undefined}
+	size={undefined}
+	block={maybeBoolean}
+	loading={maybeBoolean}
+	loadingLabel={maybeString}
+	href={maybeString}
+	disabled={maybeBoolean}
+>
 	Button
 </Button>
 <Card title={maybeString} description={maybeString} href={maybeString} level={undefined} look={undefined}>Card</Card>

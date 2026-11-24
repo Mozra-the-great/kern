@@ -108,7 +108,7 @@ test('async producer: busy state, one download for two clicks, focus comes back,
 	await expect(button).not.toHaveAttribute('aria-busy');
 	await expect(button).toBeFocused();
 	// show-status makes the spoken text visible too.
-	const status = page.locator('#late [role="status"]');
+	const status = page.locator('#late .k-status-message[role="status"]');
 	await expect(status).toHaveText('Download started');
 	await expect(status).toBeVisible();
 	expect(downloads).toBe(1);
@@ -152,7 +152,7 @@ test('keyboard: Enter and Space start the download', async ({ page }) => {
 
 test('success is announced once per click, set fresh each time and kept', async ({ page }) => {
 	await page.evaluate(() => {
-		const region = document.getElementById('text')?.shadowRoot?.querySelector('[role="status"]');
+		const region = document.getElementById('text')?.shadowRoot?.querySelector('.k-status-message[role="status"]');
 		if (!region) throw new Error('no live region');
 		window.events = [];
 		new MutationObserver(() => window.events.push(`live:${region.textContent ?? ''}`)).observe(region, {
@@ -161,7 +161,7 @@ test('success is announced once per click, set fresh each time and kept', async 
 			subtree: true
 		});
 	});
-	const status = page.locator('#text [role="status"]');
+	const status = page.locator('#text .k-status-message[role="status"]');
 	await expect(status).toHaveText('');
 	await downloadFrom(page, 'text');
 	await expect.poll(() => page.evaluate(() => window.events.at(-1))).toBe('live:Download started');
@@ -185,7 +185,7 @@ test('a producer that throws: no download, the error text is visible and an aler
 	await expect(alert).toHaveText('Could not make the file');
 	await expect(alert).toBeVisible();
 	expect(await page.evaluate(() => window.events)).toEqual(['boom:download-error:{"code":"content","message":"no data yet"}']);
-	await expect(page.locator('#boom [role="status"]')).toHaveText('');
+	await expect(page.locator('#boom .k-status-message[role="status"]')).toHaveText('');
 	expect(downloads).toBe(0);
 });
 

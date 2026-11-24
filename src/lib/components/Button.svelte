@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import { strings } from './strings.svelte.js';
+	import VisuallyHidden from './VisuallyHidden.svelte';
 
 	interface Props extends HTMLButtonAttributes {
 		/** Visual weight. One `primary` per view. */
@@ -15,8 +17,16 @@
 		block?: boolean | undefined;
 		/** Full width with the label at the start and the last child (arrow, icon, count) at the end. */
 		wide?: boolean | undefined;
-		/** Shows a spinner and blocks clicks. */
+		/**
+		 * Shows a spinner and blocks clicks. The state is also said, not only shown: a polite status text
+		 * (`loadingLabel`) is announced when it starts, so it does not depend on the motion of the spinner.
+		 */
 		loading?: boolean | undefined;
+		/**
+		 * Status text announced (polite) while `loading`, e.g. "Loading". It is not part of the button's name,
+		 * which stays its visible label. Default: the catalogue text (`strings().button.loadingLabel`).
+		 */
+		loadingLabel?: string | undefined;
 		/**
 		 * Renders an `<a>` instead of a `<button>` (attributes that only buttons know are passed on as they
 		 * are). With `disabled` or `loading` it stays an `<a>`, without
@@ -40,7 +50,8 @@
 		size = 'md',
 		block = false,
 		wide = false,
-		loading = false,
+		loading: loadingProp,
+		loadingLabel: loadingLabelProp,
 		href,
 		target,
 		rel,
@@ -53,7 +64,20 @@
 		children,
 		...rest
 	}: Props = $props();
+	const loading = $derived(loadingProp === true);
+	/** Buttons that are never given `loading` (the buttons inside other components) get no status region. */
+	const announces = $derived(loadingProp !== undefined);
 	const inert = $derived(!!disabled || loading);
+	const loadingLabel = $derived(loadingLabelProp ?? strings().button.loadingLabel);
+	/**
+	 * Text of the status region (rendered while `loading` is passed, true or false). The region is rendered empty and filled by an effect, i.e. after it is in the
+	 * DOM: screen readers speak a live region when its text changes, not text it arrives with. So the start of
+	 * loading is announced, also when `loading` is already true at mount, and an idle button announces nothing.
+	 */
+	let status = $state('');
+	$effect(() => {
+		status = loading ? loadingLabel : '';
+	});
 	/** A disabled link has no href, so a click cannot navigate; this also stops handlers on the host page. */
 	function blockClick(e: MouseEvent) {
 		e.preventDefault();
@@ -99,6 +123,11 @@
 		{@render children?.()}
 	</button>
 {/if}
+<!--
+	Outside the button: its content is the button's name (and a button's children are presentational), so a
+	status inside it would become part of the name. A sibling is a live region of its own and takes no space.
+-->
+{#if announces}<VisuallyHidden role="status" aria-live="polite">{status}</VisuallyHidden>{/if}
 
 <style>
 	.k-button {

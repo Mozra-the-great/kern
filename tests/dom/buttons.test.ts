@@ -5,11 +5,17 @@
  */
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import Button from '../../src/lib/components/Button.svelte';
 import IconButton from '../../src/lib/components/IconButton.svelte';
 import Link from '../../src/lib/components/Link.svelte';
-import { textSnippet } from './helpers.js';
+import { resetStrings, setStrings } from '../../src/lib/components/strings.js';
+import { de } from '../../src/lib/components/strings-de.js';
+import { flush, textSnippet } from './helpers.js';
+
+afterEach(() => {
+	resetStrings();
+});
 
 describe('Button', () => {
 	it('renders a real button that is type=button unless told otherwise', () => {
@@ -147,6 +153,110 @@ describe('Button', () => {
 			render(Button, { href: '/x', loading: true, children: textSnippet('Go') });
 			expect(screen.getByRole('link').getAttribute('aria-busy')).toBe('true');
 		});
+	});
+});
+
+/** The live region of a Button (#109): the polite status that is a sibling of the button or link. */
+function statusOf(container: HTMLElement): HTMLElement {
+	const region = container.querySelector<HTMLElement>('[role="status"]');
+	if (!region) throw new Error('no status region');
+	return region;
+}
+
+describe('Button loading status (#109)', () => {
+	it('has a polite status region that is empty while idle, so nothing is announced on first render', async () => {
+		const { container } = render(Button, { loading: false, children: textSnippet('Save') });
+		await flush();
+		const region = statusOf(container);
+		expect(region.textContent).toBe('');
+		expect(region.getAttribute('aria-live')).toBe('polite');
+		expect(container.querySelectorAll('[aria-live="assertive"], [role="alert"]')).toHaveLength(0);
+	});
+
+	it('says "Loading" in the region when loading starts, and empties it when loading ends', async () => {
+		const { container, rerender } = render(Button, { loading: false, children: textSnippet('Save') });
+		const region = statusOf(container);
+		await rerender({ loading: true });
+		expect(region.textContent).toBe('Loading');
+		await rerender({ loading: false });
+		expect(region.textContent).toBe('');
+		await rerender({ loading: true });
+		expect(region.textContent).toBe('Loading');
+	});
+
+	it('has no status region when `loading` is never passed (buttons inside other components)', async () => {
+		const { container, rerender } = render(Button, { children: textSnippet('Save') });
+		await flush();
+		expect(container.querySelector('[role="status"]')).toBeNull();
+		// passing it later still announces: the region is inserted, then filled
+		await rerender({ loading: true });
+		await flush();
+		expect(statusOf(container).textContent).toBe('Loading');
+	});
+
+	it('the region exists before the text appears: the same node is filled, not inserted with its text', async () => {
+		const { container, rerender } = render(Button, { loading: false, children: textSnippet('Save') });
+		const before = statusOf(container);
+		await rerender({ loading: true });
+		expect(statusOf(container)).toBe(before);
+	});
+
+	it('speaks also when it is loading from the start, but only after the region is in the DOM', async () => {
+		const { container } = render(Button, { loading: true, children: textSnippet('Save') });
+		await flush();
+		expect(statusOf(container).textContent).toBe('Loading');
+		expect(container.querySelectorAll('[role="status"]')).toHaveLength(1);
+	});
+
+	it('keeps the visible label as the accessible name and keeps aria-busy', async () => {
+		const { container, rerender } = render(Button, { loading: false, children: textSnippet('Save') });
+		await rerender({ loading: true });
+		const button = screen.getByRole('button', { name: 'Save' });
+		expect(button.getAttribute('aria-busy')).toBe('true');
+		expect(button.textContent).not.toContain('Loading');
+		expect(button.contains(statusOf(container))).toBe(false);
+		// the status text is not in a name either: it is a sibling, outside the control
+		expect(screen.queryByRole('button', { name: /Loading/ })).toBeNull();
+	});
+
+	it('loadingLabel overrides the catalogue text and undefined behaves like a missing prop', async () => {
+		const { container, rerender } = render(Button, { loading: true, loadingLabel: 'Saving …', children: textSnippet('Save') });
+		expect(statusOf(container).textContent).toBe('Saving …');
+		await rerender({ loadingLabel: undefined });
+		expect(statusOf(container).textContent).toBe('Loading');
+	});
+
+	it('follows the language of the catalogue', async () => {
+		setStrings(de);
+		const { container } = render(Button, { loading: true, children: textSnippet('Speichern') });
+		await flush();
+		expect(statusOf(container).textContent).toBe('Lädt');
+	});
+
+	it('announces once per loading phase: one region, text set once', async () => {
+		const { container, rerender } = render(Button, { loading: false, children: textSnippet('Save') });
+		const region = statusOf(container);
+		const texts: string[] = [];
+		new MutationObserver(() => texts.push(region.textContent ?? '')).observe(region, {
+			childList: true,
+			characterData: true,
+			subtree: true
+		});
+		await rerender({ loading: true });
+		await rerender({ loading: true, variant: 'secondary' });
+		await flush();
+		expect(texts.filter((t) => t !== '')).toEqual(['Loading']);
+	});
+
+	it('does the same for the link variant, which stays a link named by its label', async () => {
+		const { container, rerender } = render(Button, { href: '/x', loading: false, children: textSnippet('Go') });
+		const region = statusOf(container);
+		expect(region.textContent).toBe('');
+		await rerender({ loading: true });
+		expect(region.textContent).toBe('Loading');
+		const link = screen.getByRole('link', { name: 'Go' });
+		expect(link.getAttribute('aria-busy')).toBe('true');
+		expect(link.contains(region)).toBe(false);
 	});
 });
 

@@ -103,6 +103,23 @@ describe('Button (#52, stuffcloud buttons.test.ts)', () => {
 			expect(link.attrs['aria-disabled']).toBe('true');
 		}
 	});
+	it('renders no status region for a button that is never given `loading` (#109)', () => {
+		expect(tags(html(Button, { children }), 'span')).toHaveLength(0);
+		expect(tags(html(Button, { href: '/tools', children }), 'span')).toHaveLength(0);
+	});
+	it('renders an empty polite status region beside the button, filled only on the client (#109)', () => {
+		for (const props of [{ loading: false }, { loading: true }, { href: '/tools', loading: false }, { href: '/tools', loading: true }]) {
+			const markup = html(Button, { ...props, children });
+			const region = one(markup, 'span', { role: 'status' });
+			expect(region.attrs['aria-live']).toBe('polite');
+			// empty on the server, so nothing is announced on first render; the effect fills it after mount
+			expect(markup).toMatch(/role="status"[^>]*><\/span>/);
+			expect(markup).not.toContain('Loading');
+			const control = one(markup, 'href' in props ? 'a' : 'button');
+			expect(control.at).toBeLessThan(region.at);
+			expect(markup.indexOf('</' + ('href' in props ? 'a' : 'button') + '>')).toBeLessThan(region.at);
+		}
+	});
 	it('uses the theme token for the disabled look and handles forced colours', async () => {
 		const { readFile } = await import('node:fs/promises');
 		for (const path of ['src/lib/components/Button.svelte', 'src/lib/components/IconButton.svelte']) {
