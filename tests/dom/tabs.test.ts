@@ -2,9 +2,9 @@
  * Tabs, TabLinks and the tab badge (stuffcloud: tabs-cards.test.ts "Tabs" / "TabLinks", tabs-nav.test.ts).
  * stuffcloud's `nextTabIndex` helper lives inside kern's Tabs, so its cases run through the keyboard here.
  */
-import { render, screen } from '@testing-library/svelte';
+import { fireEvent, render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import TabLinks, { type TabLinkItem } from '../../src/lib/components/TabLinks.svelte';
 import Tabs, { type TabItem } from '../../src/lib/components/Tabs.svelte';
 import { mapSnippet } from './helpers.js';
@@ -267,5 +267,50 @@ describe('TabLinks', () => {
 		});
 		expect(screen.getByRole('link', { name: 'Inbox 2 unread' })).toBeTruthy();
 		expect(screen.getByRole('link', { name: 'Alerts Sync error' })).toBeTruthy();
+	});
+});
+
+describe('Tabs and TabLinks edge cases', () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
+	it('arrow keys on the strip itself start from the ends when the active tab is not usable', async () => {
+		const props = reactive<{ tabs: TabItem[]; label: string; value: string | undefined }>({
+			tabs: [{ id: 'off', label: 'Off', disabled: true }, ...tabs],
+			label: 'Formats',
+			value: 'off'
+		});
+		render(Tabs, { props });
+		const list = screen.getByRole('tablist');
+		await fireEvent.keyDown(list, { key: 'ArrowRight' });
+		expect(props.value).toBe('json');
+		props.value = 'off';
+		await vi.waitFor(() => expect(selectedTab()).toBe('Off'));
+		await fireEvent.keyDown(list, { key: 'ArrowLeft' });
+		expect(props.value).toBe('xml');
+	});
+
+	it('marks both faded edges while the strip scrolls with hidden tabs on either side', () => {
+		vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(600);
+		vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(200);
+		vi.spyOn(Element.prototype, 'scrollLeft', 'get').mockReturnValue(100);
+		const tabsView = render(Tabs, { tabs, label: 'Formats' });
+		const list = screen.getByRole('tablist');
+		expect(list.hasAttribute('data-fade-start')).toBe(true);
+		expect(list.hasAttribute('data-fade-end')).toBe(true);
+		tabsView.unmount();
+		const { container } = render(TabLinks, { links: [{ href: '#a', label: 'A' }], label: 'Tools' });
+		const strip = container.querySelector('.list');
+		expect(strip?.hasAttribute('data-fade-start')).toBe(true);
+		expect(strip?.hasAttribute('data-fade-end')).toBe(true);
+	});
+
+	it('nullish classes from untyped callers add no "null" to the class', () => {
+		render(Tabs, { tabs, label: 'Formats', class: null as unknown as string });
+		render(TabLinks, { links: [{ href: '#a', label: 'A' }], label: 'Tools', class: null as unknown as string });
+		const roots = document.querySelectorAll('.k-tabs, .k-tab-links');
+		expect(roots).toHaveLength(2);
+		for (const el of roots) expect(el.getAttribute('class')).not.toMatch(/null|undefined/);
 	});
 });

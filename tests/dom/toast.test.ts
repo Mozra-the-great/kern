@@ -184,6 +184,23 @@ describe('Toaster', () => {
 		outside.remove();
 	});
 
+	it('after a keyboard dismiss of the last toast the focus does not go back to a removed element', async () => {
+		const queue = createToastQueue();
+		const outside = document.createElement('button');
+		document.body.append(outside);
+		render(Toaster, { queue });
+		queue.add({ message: 'only', duration: 0 });
+		await screen.findByText('only');
+		const keys = user();
+		outside.focus();
+		await keys.tab();
+		expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Dismiss' }));
+		outside.remove();
+		await keys.keyboard('{Enter}');
+		await vi.waitFor(() => expect(screen.queryByText('only')).toBeNull());
+		expect(document.activeElement).not.toBe(outside);
+	});
+
 	it('a mouse dismiss leaves the focus alone', async () => {
 		const queue = createToastQueue();
 		render(Toaster, { queue });

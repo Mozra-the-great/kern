@@ -193,3 +193,18 @@ describe('Link', () => {
 		expect(screen.getByRole('link').querySelector('.sr')?.textContent.trim()).toBe('neuer Tab');
 	});
 });
+
+describe('nullish class from untyped callers', () => {
+	const loose = { class: null as unknown as string };
+
+	it('Button, Button as a link, IconButton and Link add no "null" to the class', () => {
+		render(Button, { ...loose, children: textSnippet('Save') });
+		render(Button, { ...loose, href: '/x', children: textSnippet('Go') });
+		render(IconButton, { ...loose, label: 'Close', children: textSnippet('x') });
+		render(Link, { ...loose, href: '/docs', children: textSnippet('Docs') });
+		for (const el of [...screen.getAllByRole('button'), ...screen.getAllByRole('link')])
+			expect(el.getAttribute('class')).not.toMatch(/null|undefined/);
+		expect(screen.getAllByRole('button')).toHaveLength(2);
+		expect(screen.getAllByRole('link')).toHaveLength(2);
+	});
+});

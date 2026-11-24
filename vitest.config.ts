@@ -18,10 +18,10 @@ export default defineConfig({
 			exclude: ['src/lib/themes/**', 'src/lib/**/*.d.ts'],
 			reporter: ['text-summary', 'text', 'json-summary', 'lcov'],
 			reportsDirectory: 'coverage',
-			// Ratchet, not the goal: the floor is the coverage of stage 1 rounded down, so CI fails when it drops.
-			// The goal is 95 % on all four metrics ("raised to 95 % in stage 2", #24). Raise these numbers
-			// whenever the coverage grows; never lower them to get green.
-			thresholds: { statements: 65, branches: 48, functions: 67, lines: 63 }
+			// Ratchet: the coverage of stage 2 of #24 rounded down (the floor is 95 % on all four metrics; these
+			// are higher because the suite reached more), so CI fails when it drops. Raise these numbers whenever
+			// the coverage grows; never lower them to get green.
+			thresholds: { statements: 99, branches: 96, functions: 99, lines: 100 }
 		},
 		projects: [
 			{

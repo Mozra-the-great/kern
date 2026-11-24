@@ -63,6 +63,11 @@ describe('parseProse links', () => {
 		expect(links('(see https://example.com/x)')[0]).toMatchObject({ text: 'https://example.com/x' });
 	});
 
+	it('treats square brackets the same way', () => {
+		expect(links('https://example.com/list[1]')[0]).toMatchObject({ text: 'https://example.com/list[1]' });
+		expect(links('[https://example.com/y]')[0]).toMatchObject({ text: 'https://example.com/y' });
+	});
+
 	it('finds several links per line and keeps the text between them', () => {
 		const [line] = parseProse('a https://a.example b mail@b.example c')[0] ?? [];
 		expect(line?.map((s) => (s.type === 'text' ? s.text : `<${s.href}>`))).toEqual([
