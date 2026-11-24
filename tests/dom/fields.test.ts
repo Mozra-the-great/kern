@@ -361,6 +361,22 @@ describe('RadioGroup', () => {
 		expect(radios[0]?.getAttribute('aria-describedby')).toBe(screen.getByText('Fits one').id);
 	});
 
+	it('new option objects with the same values update labels and hints in place', async () => {
+		const props = reactive<{ label: string; options: { value: string; label: string; hint?: string }[]; value: string | undefined }>({
+			label: 'Size',
+			options: [{ value: 's', label: 'Small' }],
+			value: 's'
+		});
+		render(RadioGroup, { props });
+		const radio = screen.getByRole<HTMLInputElement>('radio', { name: 'Small' });
+		expect(radio.getAttribute('aria-describedby')).toBeNull();
+		props.options = [{ value: 's', label: 'Tiny', hint: 'Really small' }];
+		await vi.waitFor(() => expect(screen.getByRole('radio', { name: 'Tiny' })).toBe(radio));
+		expect(radio.value).toBe('s');
+		expect(radio.checked).toBe(true);
+		expect(radio.getAttribute('aria-describedby')).toBe(screen.getByText('Really small').id);
+	});
+
 	it('selects with the mouse, reports the value and moves with the arrow keys', async () => {
 		const user = userEvent.setup();
 		const onchange = vi.fn();
@@ -394,5 +410,18 @@ describe('RadioGroup', () => {
 		expect(screen.getByRole<HTMLInputElement>('radio', { name: 'Medium' }).checked).toBe(true);
 		props.value = 's';
 		await vi.waitFor(() => expect(screen.getByRole<HTMLInputElement>('radio', { name: 'Small' }).checked).toBe(true));
+	});
+});
+
+describe('nullish class from untyped callers', () => {
+	it('Field, Checkbox, Switch and RadioGroup add no "null" to the class', () => {
+		const loose = { class: null as unknown as string };
+		render(Input, { ...loose, label: 'Name' });
+		render(Checkbox, { ...loose, label: 'Accept' });
+		render(Switch, { ...loose, label: 'On' });
+		render(RadioGroup, { ...loose, label: 'Size', options: [{ value: 's', label: 'Small' }] });
+		const roots = document.querySelectorAll('.k-field, .k-check, .k-switch, .k-radio-group');
+		expect(roots).toHaveLength(4);
+		for (const el of roots) expect(el.getAttribute('class')).not.toMatch(/null|undefined/);
 	});
 });

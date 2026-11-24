@@ -145,6 +145,12 @@ describe('isBlob', () => {
 		expect(isBlob(new File(['x'], 'a.txt'))).toBe(true);
 		for (const other of [undefined, null, 'x', 1, {}, { size: 1 }, [], new ArrayBuffer(1)]) expect(isBlob(other)).toBe(false);
 	});
+
+	it('accepts a blob of another window by its tag and size, not by the tag alone', () => {
+		expect(isBlob({ [Symbol.toStringTag]: 'Blob', size: 3 })).toBe(true);
+		expect(isBlob({ [Symbol.toStringTag]: 'File', size: 0 })).toBe(true);
+		expect(isBlob({ [Symbol.toStringTag]: 'Blob', size: '3' })).toBe(false);
+	});
 });
 
 describe('on the server (no document)', () => {
@@ -250,6 +256,13 @@ describe('in a document', () => {
 		expect(revoked).toEqual(['blob:test/1']);
 		vi.runAllTimers();
 		expect(revoked).toEqual(['blob:test/1']);
+	});
+
+	it('appends the link to the root element of a document without a body', () => {
+		const dom = fakeDocument();
+		vi.stubGlobal('document', { ...dom.document, body: null });
+		expect(saveBlob('a.txt', new Blob(['x']))).toMatchObject({ ok: true });
+		expect(dom.log).toEqual(['append', 'click', 'remove']);
 	});
 
 	it('cleans the name and reports the name it used', () => {

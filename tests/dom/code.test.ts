@@ -3,7 +3,7 @@
  * CodeBlock is kern's CodeBlock (a block of Code with a copy button). One difference by design: kern
  * names the code box as a focusable region only while it really scrolls sideways.
  */
-import { render, screen } from '@testing-library/svelte';
+import { fireEvent, render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Code from '../../src/lib/components/Code.svelte';
@@ -321,5 +321,83 @@ describe('CopyButton', () => {
 		await user.keyboard('{Enter}');
 		await user.keyboard(' ');
 		expect(writeText).toHaveBeenCalledTimes(2);
+	});
+});
+
+describe('Code and CopyButton edge cases', () => {
+	it('a scrolling block without language or label is named "Code"', () => {
+		vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(900);
+		vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(300);
+		render(Code, { block: true, code });
+		expect(screen.getByRole('region', { name: 'Code' })).toBeTruthy();
+	});
+
+	it('measures once without ResizeObserver', () => {
+		vi.stubGlobal('ResizeObserver', undefined);
+		try {
+			vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(900);
+			vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(300);
+			render(Code, { block: true, code, language: 'sh' });
+			expect(screen.getByRole('region', { name: 'sh code' })).toBeTruthy();
+		} finally {
+			vi.unstubAllGlobals();
+		}
+	});
+
+	it('nullish classes from untyped callers add no "null" to the class', () => {
+		const loose = { class: null as unknown as string };
+		render(Code, { ...loose, code: 'a' });
+		render(Code, { ...loose, code: 'b', block: true });
+		render(CopyButton, { ...loose, text: 'c' });
+		for (const el of document.querySelectorAll('.k-code, .k-code-block, .k-copy-button'))
+			expect(el.getAttribute('class')).not.toMatch(/null|undefined/);
+		expect(document.querySelectorAll('.k-code, .k-code-block, .k-copy-button')).toHaveLength(3);
+	});
+
+	it('copies an empty text without text, value or getValue', async () => {
+		const writeText = ok();
+		const oncopy = vi.fn();
+		const user = setupUser(writeText);
+		render(CopyButton, { oncopy });
+		await user.click(screen.getByRole('button'));
+		expect(writeText).toHaveBeenCalledWith('');
+		expect(oncopy).toHaveBeenCalledWith('');
+	});
+
+	it('the fallback leaves the focus alone when the button did not have it', async () => {
+		setupUser();
+		Object.defineProperty(document, 'execCommand', { configurable: true, writable: true, value: vi.fn(() => true) });
+		const outside = document.body.appendChild(document.createElement('input'));
+		try {
+			const oncopy = vi.fn();
+			render(CopyButton, { text: 'legacy', oncopy });
+			outside.focus();
+			await fireEvent.click(screen.getByRole('button'));
+			await vi.waitFor(() => expect(oncopy).toHaveBeenCalledWith('legacy'));
+			expect(document.activeElement).toBe(outside);
+		} finally {
+			outside.remove();
+			Reflect.deleteProperty(document, 'execCommand');
+		}
+	});
+
+	it('the fallback reports a throwing execCommand as a failed copy', async () => {
+		setupUser();
+		Object.defineProperty(document, 'execCommand', {
+			configurable: true,
+			writable: true,
+			value: vi.fn(() => {
+				throw new Error('blocked');
+			})
+		});
+		try {
+			const onerror = vi.fn();
+			render(CopyButton, { text: 'legacy', onerror });
+			await fireEvent.click(screen.getByRole('button'));
+			await vi.waitFor(() => expect(onerror).toHaveBeenCalledTimes(1));
+			expect(document.querySelector('textarea')).toBeNull();
+		} finally {
+			Reflect.deleteProperty(document, 'execCommand');
+		}
 	});
 });
