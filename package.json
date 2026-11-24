@@ -86,7 +86,9 @@
 		"test:mascot": "playwright test -c tests/mascot/playwright.config.ts",
 		"tokens:code": "node scripts/ci/code-theme.mjs --write",
 		"tokens:check": "node scripts/ci/code-theme.mjs",
-		"neutrality:check": "node scripts/ci/neutrality.mjs"
+		"neutrality:check": "node scripts/ci/neutrality.mjs",
+		"docs:api": "node scripts/api-reference.mjs",
+		"docs:check": "node scripts/api-reference.mjs --check"
 	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"

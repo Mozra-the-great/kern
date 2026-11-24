@@ -23,6 +23,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Consumer documentation (#57), in German like the README and linked from it: `docs/consumer-guide.md` (install from
+  the release tarball, check the sha256/sha512 files and the lock file's integrity against the release notes, update
+  steps, one theme entry per app, `data-theme` values and their colour scheme, theme before first paint, fonts, accent
+  API, forced colours, Vite and asset notes, a Content Security Policy table, the component mapping from stuffcloud's
+  `src/ui`), `docs/react.md` (React 19 over the custom elements: setup, properties vs attributes, events, controlled
+  fields, forms, moving to Svelte, and which `react-*.spec.ts` proves what), `docs/accessibility.md` (the
+  accessibility statement: WCAG 2.2 AA target, what is checked automatically, what the components guarantee, known
+  limits such as the slowed spinner under reduced motion, what the app has to provide).
+- Generated API reference `docs/api/reference.md`: props (type, default, bindable, catalogue text), callbacks and
+  snippets of every Svelte component, attributes, properties, events with their `detail` type, slots and methods of
+  every custom element, the component's own `--k-<name>-*` variables and the exported data types. It is built by
+  `scripts/api-reference.mjs` from `src/lib/components/*.svelte` (Svelte parser and TypeScript API, no build needed),
+  `custom-elements.json` and `src/elements/types.ts`; `npm run docs:api` writes it, `npm run docs:check` fails when the
+  committed file is stale and runs in the required `build` job. How to read it: `docs/api/README.md`.
+
+### Changed
+- README: a "Dokumentation" list at the top links the new pages; the accessibility statement moved to
+  `docs/accessibility.md` and the README keeps a short summary with the link.
+
 ## [0.10.0] - 2026-11-20
 
 ### Added
