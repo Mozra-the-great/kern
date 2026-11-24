@@ -22,7 +22,7 @@ describe('Prose', () => {
 		const mail = screen.getByRole('link', { name: 'mail@example.org' });
 		expect(mail.getAttribute('href')).toBe('mailto:mail@example.org');
 		expect(mail.hasAttribute('target')).toBe(false);
-		const web = screen.getByRole('link', { name: /https:\/\/example\.org\/a/ });
+		const web = screen.getByRole('link', { name: (name) => name.startsWith('https://example.org/a') });
 		expect(web.getAttribute('href')).toBe('https://example.org/a');
 		expect(web.getAttribute('target')).toBe('_blank');
 		expect(web.querySelector('.sr')?.textContent.trim()).toBe('(opens in a new tab)');
