@@ -30,19 +30,30 @@ const errors = [];
 // ── helpers ──────────────────────────────────────────────────────────────────
 const kebab = (name) => name.replace(/(?<!^)[A-Z]/g, (c) => `-${c}`).toLowerCase();
 const squash = (text) => text.replace(/\s+/g, ' ').trim();
-/** A table cell of prose: one line, `|` escaped, `<` outside code spans escaped (GitHub would read it as HTML). */
+/**
+ * Escapes a pipe for a table cell (GitHub removes the escape before it parses the cell, also inside code spans).
+ * A backslash is literal inside a code span; outside one it escapes itself, so a source `\|` stays visible.
+ */
+const cellEscape = (part, inCode) => part.replace(/[\\|]/g, (c) => (c === '|' ? '\\|' : inCode ? c : '\\\\'));
+/** A table cell of prose: one line, `|` and `\` escaped, `<` outside code spans escaped (GitHub would read it as HTML). */
 function prose(text) {
 	if (!text) return '';
 	return squash(text)
 		.split(/(`[^`]*`)/)
+		.map((part, i) => (i % 2 === 1 ? cellEscape(part, true) : cellEscape(part, false).replace(/</g, '&lt;')))
+		.join('');
+}
+/** Prose outside a table: one line, `<` outside code spans escaped. */
+function paragraph(text) {
+	return squash(text)
+		.split(/(`[^`]*`)/)
 		.map((part, i) => (i % 2 === 1 ? part : part.replace(/</g, '&lt;')))
-		.join('')
-		.replace(/\|/g, '\\|');
+		.join('');
 }
 /** A code span inside a table cell. */
 function code(text) {
 	if (text === undefined || text === '') return '';
-	const t = squash(String(text)).replace(/\|/g, '\\|');
+	const t = cellEscape(squash(String(text)), true);
 	return t.includes('`') ? `\`\` ${t} \`\`` : `\`${t}\``;
 }
 function table(head, rows) {
@@ -236,7 +247,7 @@ function renderComponent(name) {
 	md += `Quelle: [\`${name}.svelte\`](${rel(`src/lib/components/${name}.svelte`)})`;
 	if (el) md += `, [\`K${name}.svelte\`](${rel(`src/elements/K${name}.svelte`)})`;
 	md += '\n\n';
-	if (el?.description) md += `${prose(el.description).replace(/\\\|/g, '|')}\n\n`;
+	if (el?.description) md += `${paragraph(el.description)}\n\n`;
 
 	if (props) {
 		const plain = props.members.filter((m) => !isSnippet(m) && !isCallback(m));
@@ -380,7 +391,7 @@ function renderTypes(title, intro, types, suffix) {
 		md += `### ${name}${suffix ? ` (${suffix})` : ''}\n\n`;
 		md += `Aus [${code(path.split('/').pop())}](${rel(path)})`;
 		const doc = jsDocOf(node);
-		md += doc ? `: ${prose(doc).replace(/\\\|/g, '|')}\n\n` : '.\n\n';
+		md += doc ? `: ${paragraph(doc)}\n\n` : '.\n\n';
 		if (ts.isInterfaceDeclaration(node)) {
 			const params = node.typeParameters?.map((p) => p.getText()) ?? [];
 			if (params.length) md += `Generisch über ${params.map(code).join(', ')}.\n\n`;
