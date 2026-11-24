@@ -31,6 +31,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   (`<k-button loading-label="…">`). It is a live region next to the button or link, empty until loading starts, so it is
   not part of the accessible name (that stays the visible label), nothing is announced while idle, and `aria-busy`
   stays. A button that is given `loading` (true or false) renders one more hidden, out-of-flow `<span role="status">` after the control; one that is never given `loading` (e.g. the buttons inside `SortableList`) does not.
+- Consumer documentation (#57), in German like the README and linked from it: `docs/consumer-guide.md` (install from
+  the release tarball, check the sha256/sha512 files and the lock file's integrity against the release notes, update
+  steps, one theme entry per app, `data-theme` values and their colour scheme, theme before first paint, fonts, accent
+  API, forced colours, Vite and asset notes, a Content Security Policy table, the component mapping from stuffcloud's
+  `src/ui`), `docs/react.md` (React 19 over the custom elements: setup, properties vs attributes, events, controlled
+  fields, forms, moving to Svelte, and which `react-*.spec.ts` proves what), `docs/accessibility.md` (the
+  accessibility statement: WCAG 2.2 AA target, what is checked automatically, what the components guarantee, known
+  limits such as the slowed spinner under reduced motion, what the app has to provide).
+- Generated API reference `docs/api/reference.md`: props (type, default, bindable, catalogue text), callbacks and
+  snippets of every Svelte component, attributes, properties, events with their `detail` type, slots and methods of
+  every custom element, the component's own `--k-<name>-*` variables and the exported data types. It is built by
+  `scripts/api-reference.mjs` from `src/lib/components/*.svelte` (Svelte parser and TypeScript API, no build needed),
+  `custom-elements.json` and `src/elements/types.ts`; `npm run docs:api` writes it, `npm run docs:check` fails when the
+  committed file is stale and runs in the required `build` job. How to read it: `docs/api/README.md`.
+
+### Changed
+- README: a "Dokumentation" list at the top links the new pages; the accessibility statement moved to
+  `docs/accessibility.md` and the README keeps a short summary with the link.
+- Component test suite, stage 2 (#24): behaviour tests in jsdom for every component that only had a smoke test
+  (Popover, Tooltip, DropdownMenu, ContextMenu, Combobox, TagInput, DatePicker, ColorPicker, PinInput, NumberInput,
+  TreeView, CommandPalette, SelectGrid, SortableList, Carousel, Resizable, ScrollArea, Marquee, Terminal, DataTable,
+  Table, Heatmap, Sparkline, Stat, Pagination, Timeline, Stepper, Navbar, Breadcrumb, Kbd, SkipLink, Tag, HistoryBar,
+  DownloadButton, ThemeToggle, Rating, OnlineStatus, RelativeTime, StatusDot, Typewriter, Skeleton, CountUp, Reveal,
+  Scramble, Odometer, Highlight, SegmentedControl, Slider, Prose and the small display components) and for the shared
+  modules (`anchor.ts`, `color.ts`, `data-utils.ts`, `theme.ts`, `accent.ts`, `announcer.ts`, `strings.ts`,
+  `modal-dialog.ts`, `scroll-lock.ts`, `scroll-fade.ts`, `motion.svelte.ts`). Coverage over `src/lib` went from
+  65.49 / 48.35 / 67.4 / 63.76 % to 99.53 / 96.25 / 99.95 / 100 % (statements / branches / functions / lines); the ratchet
+  in `vitest.config.ts` is now 99 / 96 / 99 / 100, above the 95 % floor. No source file is excluded.
+
+### Fixed
+- `Odometer` and `CountUp` (`makeNumberFormatter`) kept their `format` options when `locale` is invalid: they fell
+  back to a bare `Intl.NumberFormat()`, so `minimumIntegerDigits`, currency and similar options were dropped. They now
+  fall back to the default locale with the same options, and only to the plain default format when the options are
+  invalid too.
 
 ## [0.10.0] - 2026-11-20
 

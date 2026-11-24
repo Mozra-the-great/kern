@@ -4,7 +4,7 @@
  * and the copy does not: update the table with the values printed here.
  */
 import { describe, expect, it } from 'vitest';
-import { ACCENT_GROUNDS } from '../../src/lib/components/accent-themes.ts';
+import { ACCENT_GROUNDS, accentGround } from '../../src/lib/components/accent-themes.ts';
 import { isDarkTheme } from '../../src/lib/components/theme.ts';
 import { loadRules, resolveTokens, themeVariants } from './theme-css.ts';
 
@@ -25,5 +25,15 @@ describe.each(themeVariants(rules))('accent ground of data-theme="%s"', (theme) 
 
 	it('has the scheme that the theme toggle assumes', () => {
 		expect(ACCENT_GROUNDS[theme]?.scheme).toBe(isDarkTheme(theme) ? 'dark' : 'light');
+	});
+});
+
+describe('accentGround', () => {
+	it('returns the ground of a standard theme and nothing for other ids or no theme', () => {
+		expect(accentGround('code')).toBe(ACCENT_GROUNDS['code']);
+		expect(accentGround('my-brand')).toBeUndefined();
+		expect(accentGround('constructor')).toBeUndefined();
+		expect(accentGround(null)).toBeUndefined();
+		expect(accentGround(undefined)).toBeUndefined();
 	});
 });

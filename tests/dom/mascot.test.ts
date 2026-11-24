@@ -203,3 +203,10 @@ describe('Mascot motion state', () => {
 		await vi.waitFor(() => expect(mascot(container).dataset['motion']).toBe('still'));
 	});
 });
+
+describe('Mascot class', () => {
+	it('a nullish class from an untyped caller adds no "null" to the class', () => {
+		const { container } = render(Mascot, { name: 'boo', base: BASE, class: null as unknown as string });
+		expect(mascot(container).getAttribute('class')).not.toMatch(/null|undefined/);
+	});
+});

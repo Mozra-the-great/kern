@@ -20,6 +20,17 @@ Es gibt zwei Builds:
 
 Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 
+**Dokumentation für Apps, die kern nutzen:**
+
+- [Leitfaden](docs/consumer-guide.md): Installation und Pinning mit Prüfsummen, Aktualisieren, Theme-Einstiege,
+  `data-theme`, Schriften, Akzentfarbe, Kontrastmodus, Bundler und CSP, Umstieg von stuffcloud
+- [API-Referenz](docs/api/reference.md): Props, Callbacks, Snippets, Attribute, Ereignisse und Slots jeder Komponente
+  und jedes Elements, aus den Quellen erzeugt ([Lesehilfe](docs/api/README.md))
+- [React 19](docs/react.md): die Custom Elements in React, Properties und Attribute, Ereignisse, Formulare, was die
+  Test-App belegt
+- [Barrierefreiheit](docs/accessibility.md): Ziel WCAG 2.2 AA, Prüfungen, bekannte Grenzen
+- [Themes und Tokens](docs/themes.md), [Tests](docs/testing.md)
+
 ## Themes
 
 | `data-theme` | Quelle |
@@ -195,7 +206,8 @@ Eine Version nie überschreiben: ein Release wird nicht nachträglich ersetzt, s
 ein neues Patch-Release.
 
 **Hash prüfen:** Jedes Release enthält neben dem Tarball `….tgz.sha256` und `….tgz.sha512`
-sowie den npm-Integritätswert in den Release-Notizen.
+sowie den npm-Integritätswert in den Release-Notizen. Alle drei gegeneinander und gegen die Lock-Datei prüfen:
+[Leitfaden, Prüfsummen prüfen](docs/consumer-guide.md#prüfsummen-prüfen).
 
 ```bash
 curl -fLO https://github.com/Mozra-the-great/kern/releases/download/v0.10.0/mozra-the-great-kern-0.10.0.tgz
@@ -435,6 +447,9 @@ verwenden; die Werte gehen dann ohnehin direkt ins Formular.
 
 ### TypeScript und React 19
 
+Die ausführliche Anleitung für React (Einrichten, Properties und Attribute, Ereignisse, Formulare, Übergang zu
+Svelte, was die Test-App belegt) steht in [`docs/react.md`](docs/react.md).
+
 Das Paket bringt Typen mit: `import '@mozra-the-great/kern/elements'` (oder ein einzelnes Element)
 ergänzt `HTMLElementTagNameMap`, also ist `document.querySelector('k-input')` ein `KInputElement`
 mit typisierten Props, `addEventListener('change', e => e.detail)` und `window.kern`. Datenformen wie
@@ -569,7 +584,8 @@ Lokal: `npm run build`, dann `npm run test:elements` (baut die App mit `npm run 
 `@mozra-the-great/kern/custom-elements.json`) beschreibt alle Tags mit Attributen, Properties,
 Typen, Ereignissen samt `detail`-Typ und Slots, z. B. für Editor-Unterstützung und Doku-Werkzeuge.
 `scripts/elements-manifest.mjs` erzeugt es und die Typen aus den Wrappern in `src/elements/`;
-CI prüft, dass die eingecheckte Datei aktuell ist.
+CI prüft, dass die eingecheckte Datei aktuell ist. Aus dem Manifest und den Svelte-Typen entsteht die
+[API-Referenz](docs/api/reference.md) (`npm run docs:api`, in CI `npm run docs:check`).
 
 ## Mascot (Pixel-Art)
 
@@ -1127,38 +1143,17 @@ Edge/Chrome → DevTools → Rendering → „Emulate CSS media feature forced-c
 
 ### Barrierefreiheit: Erklärung und was automatisch geprüft wird
 
-Ziel ist WCAG 2.2, Stufe AA, für jede Komponente in jedem Theme. Jeder Pull Request lässt in Chromium
-(`npm run test:elements`, Teil des Pflicht-Checks `build`) diese Prüfungen über **alle** Custom Elements laufen, in den
-acht Theme-Varianten `code`, `code-light`, `flower`, `flower-wald`, `pop`, `pop-dark`, `line` und `line-light`; ein
-neues Element ohne Eintrag in den Tabellen lässt den Test scheitern (#25):
+Ziel ist WCAG 2.2, Stufe AA, für jede Komponente in jedem Theme. Jeder Pull Request prüft im Pflicht-Check `build` in
+Chromium alle Custom Elements in acht Theme-Varianten: axe-core (keine Verstöße *serious* oder *critical*, auch in 15
+geöffneten Zuständen), Tastatur (Tab-Reihenfolge, sichtbarer Fokusring, die Tasten jedes WAI-ARIA-Musters, Fokusfalle
+nur in modalen Dialogen), reduzierte Bewegung, Reflow bei 320 px und den Kontrastmodus; dazu den Kontrast der Tokens und
+die Touch-Ziele (#25). **Einzige Ausnahme** unter reduzierter Bewegung: `Spinner` und das Lade-Zeichen von
+`Button loading` drehen sich weiter, nur langsamer (2 s pro Umdrehung, WCAG 2.3.3).
 
-- **axe-core** (WCAG 2 A/AA, 2.1, 2.2 AA und Best Practice): keine Verstöße der Stufen *serious* und *critical*, auf
-  einer Seite mit jedem Element und in jedem geöffneten Zustand (Modal, Drawer, Palette, Popover, Menüs, Kalender,
-  Farbwähler, Vorschläge, Toasts, Tooltip, Fehler an Feldern, sortierte Datentabelle, Telefon-Menü) sowie auf den
-  anderen Testseiten.
-- **Tastatur**: jedes bedienbare Element ist mit Tab erreichbar, nach Tastaturfokus mit sichtbarem Ring (berechnete
-  Outline, in jedem Theme), ohne Tab-Schleife; Ring nach Tastatur, keiner nach Mausklick (`:focus-visible`); jedes
-  Element mit den Tasten seines Musters bedienbar (Pfeile, Home/End, Enter, Leertaste, Escape; WAI-ARIA Authoring
-  Practices). Die einzige Tastaturfalle ist der modale Dialog (Modal, Drawer, Palette): Fokus hinein, Tab bleibt
-  darin, Escape schließt, der Fokus kehrt zum Auslöser zurück; alle anderen Overlays geben den Fokus frei.
-- **Reduzierte Bewegung** (`prefers-reduced-motion: reduce`): auf jeder Seite, in jedem Theme, in den geöffneten
-  Zuständen und direkt nach Hover, Fokus und Bedienung läuft keine CSS-Animation und kein Übergang länger als einen
-  Frame; kein weiches Scrollen; Typewriter, Scramble, CountUp, Odometer und Carousel zeigen sofort den Endzustand.
-  **Einzige Ausnahme**: `Spinner` und das Lade-Zeichen von `Button loading` drehen sich weiter, aber nur noch einmal
-  pro 2 s statt alle 0,8 s. Ein stehender Ladeindikator sagt nicht, dass etwas läuft; die Bewegung ist wesentlich
-  (WCAG 2.3.3), und der Test lässt genau diese beiden und nichts anderes durch. Der Zustand hängt nicht an der Bewegung:
-`Spinner` ist ein `role="status"` mit unsichtbarem Text, `Button loading` hat den Statustext `loadingLabel` (siehe Button).
-- **320 px** (WCAG 1.4.10 Reflow): auf jeder Seite und in jedem Overlay kein horizontaler Scrollbalken und kein
-  Bedienelement, das ein Container oder der Bildschirmrand abschneidet. Was absichtlich scrollt (Tabellen, Code,
-  Carousel), ist erreichbar und gilt nicht als abgeschnitten.
-- **Kontrastmodus** (`forced-colors`) siehe oben (#27), **Kontrast** der Tokens (`tests/tokens`) und **Touch-Ziele**
-  (`tests/targets`) haben eigene Tests.
-
-Nicht automatisch geprüft, weil es Menschen und Hilfsmittel braucht: das Vorlesen mit NVDA, JAWS und VoiceOver,
-200 % Textvergrößerung und Text-Abstände, ein Bildschirm mit Lupe, Spracheingabe und inhaltliche Fragen (verständliche
-Fehlertexte, Alternativtexte für eigene Bilder). Beschriftungen, Fehlertexte und Alternativtexte kommen aus den Props
-der App, die kern einbindet; für diese Inhalte ist sie verantwortlich. Einen Fehler bitte als Issue melden; ein
-Verstoß gegen eine der obigen Regeln gilt als Bug.
+Die vollständige Erklärung mit allen Prüfungen, den Zusicherungen der Komponenten, den bekannten Grenzen und dem, was
+die App beitragen muss, steht in [`docs/accessibility.md`](docs/accessibility.md); wie die Prüfungen gebaut sind, in
+[`docs/testing.md`](docs/testing.md#the-accessibility-suite). Einen Fehler bitte als Issue melden; ein Verstoß gegen
+eine der Regeln gilt als Bug.
 
 ## Dateien speichern: `saveBlob`, `saveText`, DownloadButton
 
@@ -1262,6 +1257,8 @@ npm run check:html                # kein {@html}/innerHTML in src/lib und src/el
 npm run size                      # Größenbudget der Custom Elements
 npm run test:mascot               # Playwright: <k-mascot> unter strenger CSP (nach npm run build)
 npm run assets:check              # Marken-Grafiken gegen assets/*/manifest.json (Drift- und SVG-Check)
+npm run docs:api                  # API-Referenz docs/api/reference.md neu erzeugen (nach Änderungen an Props, Ereignissen, Kommentaren)
+npm run docs:check                # CI: schlägt fehl, wenn docs/api/reference.md veraltet ist
 ```
 
 `npm ci` baut über `prepare` bereits `dist/` und `dist-elements/`. Release: `version` in

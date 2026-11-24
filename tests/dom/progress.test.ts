@@ -91,6 +91,16 @@ describe('Progress', () => {
 		expect(screen.getByRole('progressbar', { name: 'Upload' })).toBeTruthy();
 	});
 
+	it('hideLabel with showValue keeps only the percentage in the head; indeterminate drops the head', () => {
+		const { unmount } = render(Progress, { label: 'Upload', value: 20, showValue: true, hideLabel: true });
+		expect(document.querySelector('.head')).not.toBeNull();
+		expect(document.querySelector('.label')).toBeNull();
+		expect(document.querySelector('.val')?.textContent).toBe('20%');
+		unmount();
+		render(Progress, { label: 'Upload', showValue: true, hideLabel: true });
+		expect(document.querySelector('.head')).toBeNull();
+	});
+
 	it('shows no percentage for an indeterminate bar even with showValue', () => {
 		render(Progress, { label: 'Working', showValue: true });
 		expect(document.querySelector('.val')).toBeNull();
@@ -155,5 +165,15 @@ describe('ProgressRing', () => {
 		const circle = ring.querySelector('circle.arc');
 		// Thickness is limited to half the size: r = (16 - 8) / 2.
 		expect(circle?.getAttribute('r')).toBe('4');
+	});
+});
+
+describe('nullish class from untyped callers', () => {
+	it('Progress and ProgressRing add no "null" to the class', () => {
+		render(Progress, { label: 'A', class: null as unknown as string });
+		render(ProgressRing, { label: 'B', class: null as unknown as string });
+		const roots = document.querySelectorAll('.k-progress, .k-progress-ring');
+		expect(roots).toHaveLength(2);
+		for (const el of roots) expect(el.getAttribute('class')).not.toMatch(/null|undefined/);
 	});
 });

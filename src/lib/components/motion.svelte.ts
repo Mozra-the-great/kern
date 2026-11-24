@@ -69,12 +69,19 @@ export function graphemes(text: string): string[] {
 	return Array.from(text);
 }
 
-/** `Intl.NumberFormat` that falls back to the default locale instead of throwing on bad input. */
+/**
+ * `Intl.NumberFormat` that does not throw on bad input: an invalid locale falls back to the default
+ * locale with the same options, invalid options to the default format.
+ */
 export function makeNumberFormatter(locale: string | undefined, options: Intl.NumberFormatOptions | undefined): Intl.NumberFormat {
 	try {
 		return new Intl.NumberFormat(locale, options);
 	} catch {
-		return new Intl.NumberFormat();
+		try {
+			return new Intl.NumberFormat(undefined, options);
+		} catch {
+			return new Intl.NumberFormat();
+		}
 	}
 }
 

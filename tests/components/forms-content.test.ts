@@ -185,6 +185,20 @@ describe('Card (#50, #51)', () => {
 	it('muted adds the muted look', () => {
 		expect(classes(one(html(Card, { title: 'T', muted: true }), 'article').attrs)).toContain('muted');
 	});
+	it('without a title, href makes a cover link named by the description, then the default', () => {
+		const described = html(Card, { href: '/x', description: 'About X', media: snippet('<img alt="">') });
+		expect(one(described, 'a').attrs).toMatchObject({ href: '/x', 'aria-label': 'About X' });
+		expect(classes(one(described, 'a').attrs)).toContain('cover');
+		expect(described).toContain('class="media');
+		expect(text(described)).toBe('About X');
+		expect(one(html(Card, { href: '/y' }), 'a').attrs['aria-label']).toBe('Open');
+		expect(one(html(Card, { onclick: () => undefined, description: '' }), 'button').attrs['aria-label']).toBe('Open');
+	});
+	it('a title with an actionLabel keeps the label on the title link', () => {
+		const markup = html(Card, { title: 'T', description: 'D', href: '/x', actionLabel: 'Open T' });
+		expect(one(markup, 'a').attrs['aria-label']).toBe('Open T');
+		expect(text(markup)).toBe('T D');
+	});
 });
 
 describe('Field, Input, Select, Textarea (#54, stuffcloud fields.test.ts)', () => {
@@ -228,6 +242,25 @@ describe('Field, Input, Select, Textarea (#54, stuffcloud fields.test.ts)', () =
 	});
 	it('labelId names the label element', () => {
 		expect(one(html(FieldHarness, { label: 'Name', labelId: 'lbl' }), 'label').attrs.id).toBe('lbl');
+	});
+	it('Input renders its leading and trailing adornments around the control', () => {
+		const markup = html(Input, { label: 'Price', leading: snippet('<b>€</b>'), trailing: snippet('<i>EUR</i>') });
+		const adorn = tags(markup, 'span').filter((t) => classes(t.attrs).includes('adorn'));
+		expect(adorn).toHaveLength(2);
+		expect(adorn[0]?.at).toBeLessThan(one(markup, 'input').at);
+		expect(adorn[1]?.at).toBeGreaterThan(one(markup, 'input').at);
+	});
+	it('Select renders a placeholder option, disabled when the field is required', () => {
+		const markup = html(Select, {
+			label: 'Pick',
+			placeholder: 'Choose',
+			required: true,
+			options: [{ value: 'a', label: 'A', disabled: true }]
+		});
+		const [placeholder, option] = tags(markup, 'option');
+		expect(placeholder?.attrs).toMatchObject({ value: '', disabled: '' });
+		expect(option?.attrs).toMatchObject({ value: 'a', disabled: '' });
+		expect(text(markup)).toContain('Choose');
 	});
 
 	const options = [{ value: 'a', label: 'A' }];

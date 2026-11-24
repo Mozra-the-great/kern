@@ -20,19 +20,28 @@ npm run test:coverage      # text summary + per-file table in the terminal, cove
 ```
 
 CI runs it in the `build` job (Node 22), prints the table in the log and uploads `coverage/` as the artifact
-`coverage`. The thresholds in `vitest.config.ts` are a **ratchet**: the stage 1 coverage rounded down, so a PR
-that lowers coverage fails. Raise them whenever coverage grows; never lower them to get green. The goal is 95 %
-lines, functions, branches and statements, raised in stage 2 of
-[#24](https://github.com/Mozra-the-great/kern/issues/24).
+`coverage`. The floor is 95 % lines, functions, branches and statements (stage 2 of
+[#24](https://github.com/Mozra-the-great/kern/issues/24)). The thresholds in `vitest.config.ts` are a **ratchet** above
+that floor: the stage 2 coverage rounded down, so a PR that lowers coverage fails. Raise them whenever coverage grows;
+never lower them to get green, and never exclude source files.
 
-Stage 1 numbers (node and dom projects together):
+| Metric     | Stage 1 | Stage 2  | Threshold |
+| ---------- | ------- | -------- | --------- |
+| Statements | 65.63 % | 99.53 %  | 99        |
+| Branches   | 48.51 % | 96.25 %  | 96        |
+| Functions  | 67.45 % | 99.95 %  | 99        |
+| Lines      | 63.99 % | 100 %    | 100       |
 
-| Metric     | Covered       | Threshold |
-| ---------- | ------------- | --------- |
-| Statements | 65.63 %       | 65        |
-| Branches   | 48.51 %       | 48        |
-| Functions  | 67.45 %       | 67        |
-| Lines      | 63.99 %       | 63        |
+What the remaining branches are (about 200 of 5344, none excluded): Svelte compiles every interpolation in an
+attribute or text (`class="k-x {cls}"`, `id="{uid}-opt"`, `style:left="{x}px"`) to `value ?? ''`, and that fallback
+runs only for `null`, which typed props never pass; guards on `bind:this` elements that are always bound when the
+effect runs (`if (!el) return`); and `$derived` values read only in the other branch of the template. Tests may pass
+`null as unknown as string` for a `class` to check that an untyped (JavaScript or custom-element) caller gets no
+`null` text; do not add casts to reach other compiler fallbacks.
+
+Two things that change the numbers: a component that a node test renders with `svelte/server` (tests/components)
+adds the branches of its server compile to the same file, so its server paths need markup tests too; and the text
+reporter omits rows at 100 %, so read `coverage/coverage-summary.json` for per-file numbers.
 
 ## The DOM project
 
@@ -53,13 +62,22 @@ Rules that keep the tests honest:
   under `render(Component, { props: { ... } })`.
 - **Bindable values**: `reactive()` from `tests/dom/reactive.svelte.ts` returns a `$state` object. Mount the
   component with it as `props`; a `bind:` write of the component lands on the object, and assigning to the object
-  re-renders the component.
+  re-renders the component. Only keys present on the object receive `bind:` writes, so list every bindable key,
+  even as `undefined`.
+- `fireEvent` from `@testing-library/svelte` returns a Promise; import it from `@testing-library/dom` when the test
+  needs the synchronous `defaultPrevented` result.
 - Snippets: `textSnippet()`, `mapSnippet()` and `mapSnippet2()` in `tests/dom/helpers.ts`.
 - Timers: use `vi.useFakeTimers()` and `userEvent.setup({ advanceTimers: vi.advanceTimersByTime.bind(vi) })`.
   After the code under test queued a task, `await flush()` before asserting that something did not happen.
 - jsdom does not load component styles and has no layout. Whatever depends on them (sizes, positions, what is
   visually hidden, `scrollWidth`) is either stubbed with `vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get')`
   or tested in the Playwright suites.
+
+Every component and shared module has behaviour tests: `tests/dom/<component>.test.ts` (several small display
+components share `tests/dom/display.test.ts`; harness components live in `tests/dom/harness/`), and DOM-free modules
+(`color.ts`, `data-utils.ts`, `theme.ts`, ...) in `tests/unit`. Stand-ins a single file needs (layout via
+`getBoundingClientRect` / `clientWidth`, a recording `ResizeObserver`, `navigator.clipboard`) are set up and restored
+inside that file, not in `env.ts`.
 
 ### Smoke test of every export
 
@@ -147,11 +165,3 @@ test files named in [#24](https://github.com/Mozra-the-great/kern/issues/24) to 
 | `tokens.test.ts`      | `tests/tokens/theme-entries.test.ts`, `tests/tokens/theme-alias.test.ts`, `tests/unit/code-theme-source.test.ts` (+ `npm run tokens:check`)                       | stuffcloud generates `tokens.css` from its design stylesheet; kern generates `brands/code.css` from `code.tokens.json` and checks the snapshot.                                                                                        |
 | `fonts.test.ts`       | not applicable                                                                                                                                                 | kern ships no font files; themes only name font stacks in `--k-font-*`. Fonts stay in the consumer.                                                                                                                                    |
 | `gallery.test.ts`     | `tests/targets/targets.spec.ts` (every control of the demo), `tests/elements/a11y.spec.ts` (axe over the demo pages), `tests/dom/smoke.test.ts`                  | stuffcloud's gallery is its own page; kern's counterpart is the demo plus the per-export smoke test.                                                                                                                                  |
-
-## Stage 2 (open)
-
-Stage 1 stops at the stuffcloud base components. To reach the 95 % floor, stage 2 needs behaviour tests for the
-components that only have a smoke test today (largest gaps first): Popover, DropdownMenu, ContextMenu, Combobox,
-DatePicker, ColorPicker, TagInput, PinInput, NumberInput, TreeView, CommandPalette, SelectGrid, SortableList,
-Carousel, Terminal, DataTable, Table, Stat, Resizable, Rating, SkipLink, ThemeToggle, and the shared modules
-`anchor.ts`, `color.ts`, `data-utils.ts`, `theme.ts`. Then the thresholds in `vitest.config.ts` go to 95.
