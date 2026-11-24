@@ -9,6 +9,7 @@ import type { Snippet } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import CodeBlock from '../../src/lib/components/CodeBlock.svelte';
 import Drawer from '../../src/lib/components/Drawer.svelte';
+import Modal from '../../src/lib/components/Modal.svelte';
 import TabLinks from '../../src/lib/components/TabLinks.svelte';
 import Tabs, { type TabItem } from '../../src/lib/components/Tabs.svelte';
 import Tile from '../../src/lib/components/Tile.svelte';
@@ -207,5 +208,18 @@ describe('Drawer parity with Modal (#74)', () => {
 		const markup = html(Drawer, { title: 'Filter', dismissible: undefined, closeLabel: 'Schließen' });
 		expect(one(markup, 'dialog').attrs.closedby).toBeUndefined();
 		expect(one(markup, 'button').attrs['aria-label']).toBe('Schließen');
+	});
+
+	it('Modal renders its description (referenced by the dialog) and its footer', () => {
+		const markup = html(Modal, { title: 'T', description: 'About', footer: snippet('<button type="button">OK</button>') });
+		expect(one(markup, 'dialog').attrs['aria-describedby']).toBe(one(markup, 'p').attrs.id);
+		expect(tags(markup, 'footer')).toHaveLength(1);
+		expect(text(markup)).toContain('About');
+	});
+
+	it('Drawer renders its footer', () => {
+		const markup = html(Drawer, { title: 'T', footer: snippet('<button type="button">OK</button>') });
+		expect(tags(markup, 'footer')).toHaveLength(1);
+		expect(text(markup)).toContain('OK');
 	});
 });

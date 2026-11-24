@@ -107,6 +107,29 @@ describe('Card', () => {
 		expect(screen.getByRole('button', { name: 'Open' }).classList.contains('cover')).toBe(true);
 	});
 
+	it('the cover link, the cover button and the title link all report clicks to onclick', async () => {
+		const user = userEvent.setup();
+		const onclick = vi.fn((event: MouseEvent) => event.preventDefault());
+		const cover = render(Card, { href: '#a', onclick, actionLabel: 'Open A' });
+		await user.click(screen.getByRole('link', { name: 'Open A' }));
+		expect(onclick).toHaveBeenCalledTimes(1);
+		cover.unmount();
+		const button = render(Card, { onclick, actionHaspopup: 'dialog' });
+		const cover2 = screen.getByRole('button', { name: 'Open' });
+		expect(cover2.getAttribute('aria-haspopup')).toBe('dialog');
+		await user.click(cover2);
+		expect(onclick).toHaveBeenCalledTimes(2);
+		button.unmount();
+		render(Card, { title: 'Plan', href: '#plan', onclick });
+		await user.click(screen.getByRole('link', { name: 'Plan' }));
+		expect(onclick).toHaveBeenCalledTimes(3);
+	});
+
+	it('a nullish class from an untyped caller adds no text to the class', () => {
+		render(Card, { title: 'T', class: null as unknown as string, 'data-testid': 'card' });
+		expect(screen.getByTestId('card').getAttribute('class')).not.toMatch(/null|undefined/);
+	});
+
 	it('a plain card without href or onclick has no interactive element', () => {
 		render(Card, { title: 'Static', description: 'Nothing to press' });
 		expect(screen.queryByRole('link')).toBeNull();
@@ -145,6 +168,37 @@ describe('Tile and TileGrid', () => {
 		expect(screen.getByRole('list', { name: 'Tools' })).toBeTruthy();
 		expect(screen.getAllByRole('listitem')).toHaveLength(1);
 		expect(screen.getByRole('link', { name: 'PDF' }).closest('li')).not.toBeNull();
+	});
+
+	it('a Tile as="li" with href puts the link inside the list item', () => {
+		render(Tile, {
+			props: { as: 'li', href: '#doc', target: '_self', rel: 'help', class: 'mine', 'data-testid': 'tile', children: textSnippet('Doc') }
+		});
+		const item = screen.getByTestId('tile');
+		expect(item.tagName).toBe('LI');
+		expect(item.classList.contains('mine')).toBe(true);
+		expect(item.classList.contains('cell')).toBe(false);
+		const link = screen.getByRole('link', { name: 'Doc' });
+		expect(link.parentElement).toBe(item);
+		expect(link.classList.contains('cell')).toBe(true);
+		expect(link.getAttribute('target')).toBe('_self');
+		expect(link.getAttribute('rel')).toBe('help');
+	});
+
+	it('nullish classes from untyped callers add no text to the class', () => {
+		const loose = { class: null as unknown as string };
+		const a = render(Tile, { ...loose, href: '#a', children: textSnippet('A') });
+		expect(screen.getByRole('link').getAttribute('class')).not.toMatch(/null/);
+		a.unmount();
+		const b = render(Tile, { ...loose, as: 'li', href: '#b', 'data-testid': 't' });
+		expect(screen.getByTestId('t').getAttribute('class')).not.toMatch(/null/);
+		b.unmount();
+		const c = render(Tile, { ...loose, 'data-testid': 't' });
+		expect(screen.getByTestId('t').getAttribute('class')).not.toMatch(/null/);
+		c.unmount();
+		render(TileGrid, { ...loose, 'data-testid': 'g' });
+		expect(screen.getByTestId('g').getAttribute('class')).not.toMatch(/null/);
+		expect(screen.getByTestId('g').style.getPropertyValue('--k-tile-min')).toBe('');
 	});
 
 	it('an unknown root element falls back to a div', () => {

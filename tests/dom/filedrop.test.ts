@@ -355,3 +355,31 @@ describe('FileDrop (dispatch mode)', () => {
 		expect(onfiles).toHaveBeenCalledTimes(2);
 	});
 });
+
+describe('FileDrop details', () => {
+	it('keeps an unknown placeholder of a custom message as written', async () => {
+		render(FileDrop, { label: 'Upload', accept: '.pdf', typeError: '{name} is not a {kind}' });
+		await fireEvent.drop(zone(), { dataTransfer: { files: [fileOf('a.txt', 'text/plain')] } });
+		expect(document.querySelector('.error')?.textContent.trim()).toBe('a.txt is not a {kind}');
+	});
+
+	it('the split layout without a label is named by the prompt alone', () => {
+		render(FileDrop, { buttonLabel: 'Choose files' });
+		expect(screen.getByRole('group', { name: 'Drop a file here' })).toBe(zone());
+	});
+
+	it('mirrors the chosen files into the native input through a DataTransfer where the platform has one', async () => {
+		const added: File[] = [];
+		const empty = document.createElement('input');
+		empty.type = 'file';
+		class FakeDataTransfer {
+			readonly items = { add: (file: File): void => void added.push(file) };
+			readonly files = empty.files;
+		}
+		vi.stubGlobal('DataTransfer', FakeDataTransfer);
+		const pdf = fileOf('a.pdf');
+		render(FileDrop, { label: 'Upload' });
+		await fireEvent.drop(zone(), { dataTransfer: { files: [pdf] } });
+		await vi.waitFor(() => expect(added).toEqual([pdf]));
+	});
+});

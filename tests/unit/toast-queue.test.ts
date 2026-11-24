@@ -291,3 +291,73 @@ describe('close callbacks (nagellacke Snackbar contract)', () => {
 		error.mockRestore();
 	});
 });
+
+describe('edge cases', () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
+	it('undo of a toast without onundo still closes it with reason "undo" and commits nothing', () => {
+		const q = createToastQueue();
+		const oncommit = vi.fn();
+		const onclose = vi.fn();
+		const id = q.add({ message: 'x', oncommit, onclose });
+		q.undo(id);
+		expect(q.items).toHaveLength(0);
+		expect(onclose).toHaveBeenCalledWith('undo');
+		expect(oncommit).not.toHaveBeenCalled();
+	});
+
+	it('reports a throwing callback through reportError where the platform has it', () => {
+		const reportError = vi.fn();
+		vi.stubGlobal('reportError', reportError);
+		const failure = new Error('boom');
+		const q = createToastQueue();
+		q.dismiss(
+			q.add({
+				message: 'x',
+				oncommit: () => {
+					throw failure;
+				}
+			})
+		);
+		expect(reportError).toHaveBeenCalledWith(failure);
+	});
+});
+
+describe('sharedToastQueue on a fresh page', () => {
+	const KEY = Symbol.for('kern.toasts');
+	const g = globalThis as typeof globalThis & { [KEY]?: unknown };
+	let saved: unknown;
+
+	beforeEach(() => {
+		saved = g[KEY];
+		vi.resetModules();
+	});
+	afterEach(() => {
+		g[KEY] = saved;
+	});
+
+	async function fresh(): Promise<typeof import('../../src/lib/components/toast-queue.js')> {
+		return import('../../src/lib/components/toast-queue.js');
+	}
+
+	it('adopts a queue another copy of kern put on the global', async () => {
+		const other = createToastQueue();
+		g[KEY] = other;
+		const mod = await fresh();
+		expect(mod.sharedToastQueue()).toBe(other);
+	});
+
+	it('keeps its own queue and leaves a foreign value on the global untouched', async () => {
+		for (const foreign of [{ version: 1 }, null, 'queue']) {
+			g[KEY] = foreign;
+			vi.resetModules();
+			const mod = await fresh();
+			const q = mod.sharedToastQueue();
+			expect(q.version).toBe(2);
+			expect(q).not.toBe(foreign);
+			expect(g[KEY]).toBe(foreign);
+		}
+	});
+});
