@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-11-25
+
 ### Added
 - `Button` and `<k-button>` say that they are loading (#109): while `loading`, a visually hidden polite status text
   ("Loading", German "Lädt") is announced, so the state does not depend on the motion of the spinner mark (which
