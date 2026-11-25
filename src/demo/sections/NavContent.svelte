@@ -81,7 +81,7 @@
 		<Tile as="li"><strong>Bald</strong><span class="muted">Weitere Werkzeuge folgen</span></Tile>
 	</TileGrid>
 
-	<div class="row"><Button variant="secondary" onclick={() => (plan = true)}>Drawer, der beantwortet werden muss</Button></div>
+	<div class="row"><Button variant="secondary" onclick={() => (plan = true)}>Drawer mit Pflichtwahl</Button></div>
 </section>
 
 <Drawer bind:open={plan} title="Tarif wählen" side="bottom" dismissible={false} initialFocus="[data-primary]">

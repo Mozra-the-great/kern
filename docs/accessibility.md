@@ -26,7 +26,7 @@ lässt den Build scheitern (#25).
 | Tastatur | jedes bedienbare Element mit Tab erreichbar, mit sichtbarem Fokusring nach Tastatur (keiner nach Mausklick), ohne Tab-Schleife; jedes Element mit den Tasten seines WAI-ARIA-Musters bedienbar | `a11y-keyboard.spec.ts`, `a11y-keys.spec.ts` |
 | Overlays | modale Dialoge (Modal, Drawer, Palette): Fokus hinein, Tab bleibt darin, Escape schließt, Fokus zurück zum Auslöser; alle anderen Overlays geben den Fokus frei | `a11y-overlays.spec.ts` |
 | Reduzierte Bewegung | unter `prefers-reduced-motion: reduce` keine Animation und kein Übergang länger als einen Frame, auch nach Hover, Fokus und Bedienung; kein weiches Scrollen; Effekte zeigen sofort ihren Endzustand | `a11y-motion.spec.ts` |
-| Reflow (WCAG 1.4.10) | bei 320 × 640 px kein horizontales Scrollen der Seite und kein abgeschnittenes Bedienelement, auch in Overlays | `a11y-reflow.spec.ts` |
+| Reflow (WCAG 1.4.10) | bei 320 × 640 px kein horizontales Scrollen der Seite und kein abgeschnittenes Bedienelement, auch in Overlays; beide Demo-Seiten (`index.html`, `elements.html`) scrollen in allen acht Theme-Varianten nicht seitwärts | `a11y-reflow.spec.ts`, `tests/targets/reflow.spec.ts` |
 | Kontrastmodus | unter `forced-colors: active` Kanten, Fokusring, Zustände ohne Hintergrundfarbe, `GrayText` für gesperrt, keine durchschlagenden Theme-Farben; axe ohne Kontrastregel | `forced-colors.spec.ts` |
 | Kontrast der Tokens | jede `data-theme`-Variante: Text 4,5:1, Ränder, Fokus und Markierungen 3:1; Akzentfarben mit derselben Messung | `tests/tokens/contrast.test.ts`, `tests/unit/accent.test.ts` |
 | Touch-Ziele | jedes bedienbare Teil der Demo mindestens `--k-tap-target` groß (44 px bei grobem Zeiger) | `tests/targets/` |
