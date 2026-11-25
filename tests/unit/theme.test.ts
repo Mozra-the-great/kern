@@ -1,7 +1,8 @@
 /**
  * theme.ts: families, dark detection, the light/dark pair, toggle roles, system pick, storage helpers that
- * survive blocked storage, and the before-paint script (run against a stand-in document).
+ * survive blocked storage, the before-paint script (run against a stand-in document) and its CSP hash.
  */
+import { createHash } from 'node:crypto';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
 	THEME_FAMILIES,
@@ -9,9 +10,11 @@ import {
 	isDarkTheme,
 	pickBySystem,
 	readStoredTheme,
+	scriptHash,
 	themeFamily,
 	themePair,
 	themeScript,
+	themeScriptHash,
 	toggleRoles,
 	writeStoredTheme
 } from '../../src/lib/components/theme.js';
@@ -198,5 +201,45 @@ describe('createThemeScript', () => {
 		const script = createThemeScript('</script><b>');
 		expect(script).not.toContain('</script>');
 		expect(script).toContain('\\u003c/script>');
+	});
+});
+
+/** The reference: Node's own SHA-256 over the UTF-8 bytes, as a CSP hash source. */
+const nodeHash = (source: string): string => `'sha256-${createHash('sha256').update(source, 'utf8').digest('base64')}'`;
+
+describe('scriptHash and themeScriptHash', () => {
+	it('match a SHA-256 of the UTF-8 text, in the quoted form script-src takes', async () => {
+		for (const source of ['', 'a', themeScript, 'ä€😀 non-ASCII', 'x'.repeat(10_000), ' leading and trailing \n']) {
+			const hash = await scriptHash(source);
+			expect(hash).toBe(nodeHash(source));
+			expect(hash).toMatch(/^'sha256-[A-Za-z0-9+/]{43}='$/);
+		}
+		// the published SHA-256 of the empty string (e3b0c442…b855), independent of node:crypto
+		expect(await scriptHash('')).toBe("'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='");
+	});
+
+	it('hash exactly the text createThemeScript returns, for every option set', async () => {
+		for (const options of [undefined, {}, { followSystem: true }, { followSystem: false }, { followSystem: undefined }]) {
+			expect(await themeScriptHash('kern-theme', options)).toBe(nodeHash(createThemeScript('kern-theme', options)));
+		}
+		expect(await themeScriptHash('kern-theme')).toBe(nodeHash(themeScript));
+	});
+
+	it('change with the key and the options, so a stale hash cannot allow another script', async () => {
+		const hashes = new Set([
+			await themeScriptHash('kern-theme'),
+			await themeScriptHash('kern-theme', { followSystem: true }),
+			await themeScriptHash('app-theme'),
+			await themeScriptHash('</script>')
+		]);
+		expect(hashes.size).toBe(4);
+		// one character of whitespace is another script for the browser
+		expect(await scriptHash(`${themeScript}\n`)).not.toBe(await scriptHash(themeScript));
+	});
+
+	it('reject with a clear error where Web Crypto is missing', async () => {
+		vi.stubGlobal('crypto', undefined);
+		await expect(scriptHash('x')).rejects.toThrow(/Web Crypto/);
+		await expect(themeScriptHash('kern-theme')).rejects.toThrow(/Web Crypto/);
 	});
 });

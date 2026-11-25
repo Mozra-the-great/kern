@@ -124,6 +124,10 @@ jobs:
           retention-days: 14
       - name: Mascot runtime (Playwright, built k-mascot under a strict CSP)
         run: npm run test:mascot
+      - name: Strict CSP, Svelte build path (Playwright, every component under style-src 'self', #125)
+        # Builds tests/fixtures/csp-app (and its negative canary), serves it with the policy of the consumer guide and
+        # fails on any securitypolicyviolation; the canary proves the check fails on a static style attribute.
+        run: npm run test:csp
 
       # ── Node 24 (current LTS) ─────────────────────────────────────────────────
       # Same job on purpose: the required check `build` then means "green on Node 22

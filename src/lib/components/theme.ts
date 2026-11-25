@@ -134,3 +134,29 @@ export function createThemeScript(storageKey: string, options: ThemeScriptOption
 
 /** Script for the default storage key `kern-theme` (the key the kern demo uses). */
 export const themeScript: string = createThemeScript('kern-theme');
+
+/**
+ * The CSP hash source of an inline script, `'sha256-…'` (quotes included), for `script-src`. The hash covers the
+ * exact text between `<script>` and `</script>` as UTF-8: put the script in unchanged, without added whitespace
+ * or a trailing newline, or the browser computes another hash and blocks it; serve the page as UTF-8 (a non-ASCII
+ * character in a page with another encoding gives another hash). Only hash script text you wrote: never content
+ * derived from user input or per-request data, since a hash allows that exact text on every page. Uses Web Crypto
+ * (`crypto.subtle`, Node ≥ 22 and every current browser on a secure origin); rejects where it is missing.
+ */
+export async function scriptHash(source: string): Promise<string> {
+	const subtle: SubtleCrypto | undefined = globalThis.crypto?.subtle;
+	if (!subtle) throw new Error('kern: scriptHash needs Web Crypto (crypto.subtle)');
+	const digest = new Uint8Array(await subtle.digest('SHA-256', new TextEncoder().encode(source)));
+	let binary = '';
+	for (const byte of digest) binary += String.fromCharCode(byte);
+	return `'sha256-${btoa(binary)}'`;
+}
+
+/**
+ * `scriptHash(createThemeScript(storageKey, options))`: the `script-src` source that allows the before-paint
+ * theme script under a CSP without `'unsafe-inline'`. Same arguments as `createThemeScript`; the result is fixed
+ * for one kern version and one set of arguments, so a server can compute it once at start-up.
+ */
+export function themeScriptHash(storageKey: string, options: ThemeScriptOptions = {}): Promise<string> {
+	return scriptHash(createThemeScript(storageKey, options));
+}

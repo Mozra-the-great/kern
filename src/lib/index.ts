@@ -137,7 +137,7 @@ export type { SortableItem } from './components/SortableList.svelte';
 export type { SelectGridItem } from './components/SelectGrid.svelte';
 export { moveItem } from './components/reorder.js';
 export type { ItemKey } from './components/reorder.js';
-export { themeScript, createThemeScript, themePair, isDarkTheme } from './components/theme.js';
+export { themeScript, createThemeScript, scriptHash, themeScriptHash, themePair, isDarkTheme } from './components/theme.js';
 export type { ThemeOption, ThemeScriptOptions } from './components/theme.js';
 export {
 	accentTokens,

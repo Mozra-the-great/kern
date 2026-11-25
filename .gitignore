@@ -29,6 +29,7 @@ coverage/
 
 # kern build output (svelte-package, custom elements, demo)
 dist-elements/
+dist-canary/
 demo-dist/
 .svelte-kit/
 

@@ -24,6 +24,8 @@ export default defineConfig(
 		ignores: [
 			'dist/',
 			'tests/fixtures/react-app/dist/',
+			'tests/fixtures/csp-app/dist/',
+			'tests/fixtures/csp-app/dist-canary/',
 			'dist-elements/',
 			'demo-dist/',
 			'coverage/',
