@@ -401,11 +401,18 @@ test.describe('strict CSP: the served policy', () => {
 			expect(csp).not.toMatch(/'unsafe-inline'|'unsafe-eval'|'unsafe-hashes'|'wasm-unsafe-eval'|\bdata:|\bblob:|\*/);
 			expect(csp).toMatch(/(^|; )style-src 'self'(;|$)/);
 		}
-		// the fixture's inline script is byte for byte the one the hash is of
-		const html = await (await page.request.get('/index.html')).text();
-		const inline = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
-		expect(inline).toEqual([createThemeScript(THEME_KEY, THEME_OPTIONS)]);
-		expect(html).not.toMatch(/\sstyle=|\son\w+=|javascript:/i);
+		// The fixture's only inline script is byte for byte the one the hash is of. The browser parses the HTML (no
+		// regular expression over markup); the static attributes are read before any script of the page runs.
+		await page.route('**/*.js', (route) => route.abort());
+		await page.goto('/index.html');
+		const parsed = await page.evaluate(() => ({
+			inline: [...document.querySelectorAll('script:not([src])')].map((s) => s.textContent),
+			attributes: [...document.querySelectorAll('*')].flatMap((el) =>
+				el.getAttributeNames().filter((a) => a === 'style' || a.startsWith('on') || /^\s*javascript:/i.test(el.getAttribute(a) ?? ''))
+			)
+		}));
+		expect(parsed.inline).toEqual([createThemeScript(THEME_KEY, THEME_OPTIONS)]);
+		expect(parsed.attributes).toEqual([]);
 	});
 
 	test('the hashed theme script runs: a stored theme and, without one, the system scheme', async ({ page }) => {
