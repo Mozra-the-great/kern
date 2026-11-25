@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.12.1] - 2026-11-25
+
 ### Fixed
 - `<k-button>` in a stacked `<k-modal>` footer (below 520 px; in the Code theme up to 760 px) fills the row in every
   theme, like the Svelte `Button` (#120): the host and the button inside it. Before, Flower, Pop and Line kept the
