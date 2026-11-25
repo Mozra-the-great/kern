@@ -23,6 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `themeScriptHash(storageKey, options)` and `scriptHash(source)`: the `'sha256-…'` source for `script-src` that allows
+  the inline script of `createThemeScript` (or any other inline script, such as `createAccentScript`) under a CSP
+  without `'unsafe-inline'` (#125). Async, Web Crypto; the hash covers the exact text, so put the script in unchanged.
+- The Svelte build path is tested under a strict CSP in the required `build` job (`npm run test:csp`, #125): a
+  production Vite build that mounts every exported component, served with `default-src 'none'; script-src 'self'
+  'sha256-<createThemeScript>'; style-src 'self'; …` (no `'unsafe-inline'`, no `'unsafe-eval'`), opens every overlay
+  and picker in all eight theme variants and fails on any `securitypolicyviolation`. A canary build with a static
+  `style` attribute in Badge's template proves the check fails. The consumer guide documents the tested policy and
+  the hash helper.
+
 ## [0.12.1] - 2026-11-25
 
 ### Fixed

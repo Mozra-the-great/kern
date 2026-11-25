@@ -164,7 +164,7 @@ bis 1.0. Herkunft der Themes und alle Tokens: README [Themes](../README.md#theme
 **Vor dem ersten Paint.** Ein gespeichertes Theme (ThemeToggle mit `persist`) oder das System-Schema setzt
 `createThemeScript(key, { followSystem: true })` aus `@mozra-the-great/kern`: es liefert ein kleines Inline-Script
 als Text, das in `<head>` vor dem ersten Paint `data-theme` setzt. Ohne Script zeigt die Seite bis zum Start der App
-das Theme aus dem HTML. Unter strenger CSP braucht das Script ein Nonce oder einen Hash (siehe
+das Theme aus dem HTML. Unter strenger CSP braucht das Script ein Nonce oder seinen Hash, `themeScriptHash(key, options)` (siehe
 [CSP](#content-security-policy)).
 
 ```html
@@ -231,12 +231,66 @@ brauchen dieselben Regeln. Muster und Prüfung: README
 | Teil | Was die Policy erlauben muss |
 | --- | --- |
 | Theme-Stylesheets | `style-src 'self'` (eigene Dateien) |
-| Svelte-Paket | im Build nichts Besonderes: Vite schreibt das CSS der Komponenten in Dateien (der Dev-Server fügt es dagegen als `<style>` ein) |
+| Svelte-Paket | im Build nichts Besonderes: Vite schreibt das CSS der Komponenten in Dateien (der Dev-Server fügt es dagegen als `<style>` ein). Geprüft mit der Policy unten |
 | Custom Elements | `style-src 'unsafe-inline'` (zusätzlich zu `'self'`): jedes Element legt beim Start ein `<style>` in seinen Shadow Root, ohne Nonce. So läuft auch die CSP-Prüfung von `<k-mascot>` in `tests/mascot/`. |
-| `createThemeScript`, `createAccentScript` | das Inline-Script braucht in `script-src` ein Nonce oder seinen Hash; `createAccentScript(key, { nonce })` gibt dem eingesetzten `<style>` das Nonce der Seite |
+| `createThemeScript`, `createAccentScript` | das Inline-Script braucht in `script-src` ein Nonce oder seinen Hash (`themeScriptHash`, `scriptHash`, siehe unten); `createAccentScript(key, { nonce })` gibt dem eingesetzten `<style>` das Nonce der Seite |
 | `installAccent` | `style-src` mit Nonce: `installAccent(hex, { nonce })` |
 | `applyAccent`, `ThemeToggle` | nichts: Inline-Tokens über das CSSOM blockiert `style-src` nicht |
 | Bilder aus `assets/` | `img-src 'self'`, wenn sie als Dateien ausgeliefert werden (siehe oben) |
+
+**Geprüfte Policy für den Svelte-Weg** ([#125](https://github.com/Mozra-the-great/kern/issues/125)). Diese Policy, Wort
+für Wort, läuft in CI im Pflicht-Job `build` (`npm run test:csp`):
+
+```
+default-src 'none'; script-src 'self' 'sha256-<createThemeScript>'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'
+```
+
+Der Test ([`tests/csp/csp.spec.ts`](../tests/csp/csp.spec.ts)) baut mit Vite eine App
+([`tests/fixtures/csp-app`](../tests/fixtures/csp-app)), die jede exportierte Svelte-Komponente einbindet, liefert den
+Produktions-Build unter dieser Policy aus ([`tests/csp/server.mjs`](../tests/csp/server.mjs),
+[`tests/csp/policy.mjs`](../tests/csp/policy.mjs)) und öffnet in allen acht Theme-Varianten jedes Overlay und jeden
+Picker über die Oberfläche (Modal, Drawer, Toasts, Popover, Tooltip, Menüs, Kontextmenü, Befehlspalette, Combobox,
+Datum, Farbe, Tags, Handymenü der Navbar). Er schlägt fehl bei jedem `securitypolicyviolation`-Ereignis, bei jeder
+CSP-Meldung in der Konsole, bei jedem Seitenfehler und wenn die ausgelieferte Policy `'unsafe-inline'` oder
+`'unsafe-eval'` enthält. Eine neue Komponente ohne Eintrag in der App oder in der Tabelle `CASES` lässt ihn ebenfalls
+fehlschlagen. Ein Gegenbeweis gehört dazu: unter `/canary/` läuft dieselbe App, nur mit einem statischen
+`style="…"` im Template von `Badge`; der Test zeigt, dass die Prüfung dort anschlägt.
+
+Was diese Policy blockiert und kern deshalb nicht tut: ein statisches `style="…"`-Attribut im Template (Svelte klont
+Template-HTML, der Browser behandelt es als Inline-Style), ein eingefügtes `<style>`, Inline-Handler (`onclick="…"`),
+`javascript:`-URLs, `eval`, Bilder und Schriften als `data:`-URI. Erlaubt ist, was Script über das CSSOM setzt
+(`style:prop={…}`, `element.style.x = …`, `style.cssText`): so positioniert kern Overlays und setzt Größen.
+
+**Hash des Theme-Scripts.** `themeScriptHash(key, options)` aus `@mozra-the-great/kern` gibt die fertige Quelle für
+`script-src` zurück, mit Anführungszeichen (`'sha256-…'`), als Promise; dieselben Argumente wie `createThemeScript`.
+`scriptHash(text)` tut dasselbe für jedes andere Inline-Script, etwa das von `createAccentScript`. Beide rechnen mit
+Web Crypto (`crypto.subtle`, Node ≥ 22). Der Hash gilt für den Text genau so, wie die Funktion ihn liefert: ohne
+zusätzliche Leerzeichen oder Zeilenumbrüche zwischen `<script>` und `</script>` einsetzen. Er hängt an der
+kern-Version und den Argumenten; nach einem Update neu berechnen (am einfachsten beim Start des Servers).
+
+```ts
+import { createThemeScript, themeScriptHash } from '@mozra-the-great/kern';
+
+const key = 'kern-theme';
+const options = { followSystem: true };
+const head = `<script>${createThemeScript(key, options)}</script>`; // unverändert in <head>
+const csp = [
+	"default-src 'none'",
+	`script-src 'self' ${await themeScriptHash(key, options)}`,
+	"style-src 'self'",
+	"img-src 'self'",
+	"font-src 'self'",
+	"connect-src 'self'",
+	"frame-ancestors 'none'",
+	"base-uri 'none'",
+	"form-action 'self'"
+].join('; ');
+```
+
+Nicht abgedeckt: der Vite-Dev-Server (er fügt CSS als `<style>` ein), die Custom Elements (siehe Tabelle) und
+Server-Rendering. SvelteKit schreibt `style:`-Werte beim Rendern als `style="…"`-Attribut ins HTML, und solche
+Attribute blockiert `style-src 'self'`; ein Nonce gilt für sie nicht, ein Hash nur mit `'unsafe-hashes'`. Der geprüfte
+Weg ist eine App, die im Browser rendert (Vite-SPA, SvelteKit mit `ssr = false`).
 
 kern erzeugt Markup nie aus Strings (kein `{@html}`, kein `innerHTML`; `npm run check:html` in CI), Texte aus Props
 sind immer Textknoten. Eine App kann also auch fremden Text ohne Bereinigung übergeben; Links in `Prose` werden nur

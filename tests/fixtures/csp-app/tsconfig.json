@@ -1,0 +1,23 @@
+{
+	// Type-checks the strict-CSP fixture app (#125) against the BUILT package (self-reference through package.json
+	// "exports"), so run `npm run build` first: `npm run test:csp` runs svelte-check on it before it builds it.
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"exactOptionalPropertyTypes": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"allowJs": true,
+		"checkJs": false,
+		"skipLibCheck": true,
+		"noEmit": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"types": ["svelte", "vite/client"]
+	},
+	"include": ["src", "*.ts"],
+	"exclude": ["dist", "dist-canary"]
+}

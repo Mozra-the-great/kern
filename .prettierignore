@@ -1,6 +1,7 @@
 # Build output and generated files
 dist/
 dist-elements/
+dist-canary/
 demo-dist/
 coverage/
 .svelte-kit/

@@ -1,6 +1,6 @@
 # Testing
 
-kern is tested on four levels. Each level has one job; a behaviour is tested where it can be observed
+kern is tested on four levels, plus a check of the Svelte build path under a strict CSP. Each level has one job; a behaviour is tested where it can be observed
 most cheaply and most truthfully.
 
 | Level                        | Where                                                              | Command                                                          | Covers                                                                                   |
@@ -9,6 +9,7 @@ most cheaply and most truthfully.
 | DOM (`dom` project)          | `tests/dom`                                                        | `npm test`                                                       | Component behaviour in jsdom: props, `bind:`, callbacks, keyboard, focus, ARIA, states   |
 | Browser (Playwright)         | `tests/targets`, `tests/elements`, `tests/mascot/*.spec.ts`        | `npm run test:targets`, `test:elements`, `test:mascot` (after build) | Real layout and CSS: touch targets, 320 px reflow of the demo, overlays, axe, visual regression, custom elements    |
 | Types and consumers          | `tests/fixtures`                                                   | `npm run test:types`, `npm run test:consumer`                    | Published typings, strict consumer, React 19                                              |
+| Strict CSP (Playwright)      | `tests/csp`, `tests/fixtures/csp-app`                              | `npm run test:csp` (after build)                                 | Production Vite build of every Svelte component under `style-src 'self'`, no `'unsafe-inline'` ([#125](https://github.com/Mozra-the-great/kern/issues/125)) |
 
 `npm test` runs both Vitest projects (`vitest.config.ts`). `npm run test:coverage` is the same run with the
 v8 coverage provider over `src/lib/**/*.{ts,svelte}` (the themes are CSS and not measured).
@@ -87,6 +88,28 @@ technology, a role and an accessible name. It checks: renders, the root exists, 
 nothing is written to `console.error` or `console.warn` (Svelte reports its warnings there), and it unmounts.
 `every export has an entry, and every entry an export` fails when a component is added or removed without
 touching the table.
+
+## Strict CSP
+
+[#125](https://github.com/Mozra-the-great/kern/issues/125), in the `build` job (`npm run test:csp`). `tests/fixtures/csp-app` is a
+Vite app that imports the built package and mounts every exported component in a `data-csp-case` section;
+`npm run build:csp-app` builds it into `dist/` and, with `--mode canary`, into `dist-canary/` with a static
+`style="outline: 0"` injected into Badge's template. `tests/csp/server.mjs` serves both under the policy of
+`tests/csp/policy.mjs` (the one the consumer guide documents), with the theme-script hash from `themeScriptHash()` of the
+built package. `tests/csp/csp.spec.ts`:
+
+- asserts the served policy word for word and that it has no `'unsafe-inline'`, `'unsafe-eval'`, `data:` or `*`;
+- checks that the hashed theme script runs (stored theme, system dark and light);
+- in each of the eight theme variants renders the page and runs every entry of `CASES` (overlays, pickers, menus, toasts,
+  tooltips, drag and keyboard interactions that set inline styles), failing on any `securitypolicyviolation` event, any
+  console message about the policy and any page error;
+- coverage guard: `CASES` must have exactly one entry per component export (`'static'` or an interaction), and the
+  fixture must mount each export in its own section;
+- canary: on `/canary/` the same check reports the `style-src-attr` violation of Badge, so it cannot pass by looking at
+  nothing.
+
+Adding a component: mount it in `tests/fixtures/csp-app/src/App.svelte` inside `<section data-csp-case="Name">` and give
+it a `CASES` entry; one that opens something gets a function that opens it, asserts it is visible and closes it.
 
 ## The accessibility suite
 

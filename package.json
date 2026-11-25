@@ -84,6 +84,8 @@
 		"assets:check": "node scripts/ci/assets-drift.mjs",
 		"assets:manifest": "node scripts/ci/assets-drift.mjs --write",
 		"test:mascot": "playwright test -c tests/mascot/playwright.config.ts",
+		"build:csp-app": "vite build -c tests/fixtures/csp-app/vite.config.ts && vite build -c tests/fixtures/csp-app/vite.config.ts --mode canary",
+		"test:csp": "svelte-check --workspace tests/fixtures/csp-app --tsconfig ./tsconfig.json --fail-on-warnings && npm run build:csp-app && playwright test -c tests/csp/playwright.config.ts",
 		"tokens:code": "node scripts/ci/code-theme.mjs --write",
 		"tokens:check": "node scripts/ci/code-theme.mjs",
 		"neutrality:check": "node scripts/ci/neutrality.mjs",
