@@ -39,7 +39,7 @@
 		{
 			id: 'flower',
 			title: 'Flower',
-			text: 'Botanische Motive aus den Flower-Designs: Blüten, Blätter und Bäume in festen Farben, gemacht für einen cremefarbenen Grund.'
+			text: 'Botanische Motive aus den Flower-Designs: Blüten, Blätter und Bäume in festen Farben, gemacht für einen cremefarbenen Grund. Dazu das Flower-Banner als Bild ohne Text: Pflanzen von allen Rändern, die Mitte bleibt frei. Es bringt seinen cremefarbenen Grund selbst mit.'
 		}
 	];
 
@@ -55,7 +55,13 @@
 		illustrations: 'Illustrationen',
 		blossoms: 'Blüten',
 		leaves: 'Blätter und Zweige',
-		trees: 'Bäume und Büsche'
+		trees: 'Bäume und Büsche',
+		banners: 'Banner'
+	};
+
+	/** Groups of wide pictures: shown one per row at full width, in the size of their `viewBox`. */
+	const wideGroups: Record<string, { width: number; height: number }> = {
+		banners: { width: 1536, height: 650 }
 	};
 
 	const sections = $derived(
@@ -67,6 +73,7 @@
 				groups: [...new Set(mine.map((a) => a.group))].map((group) => ({
 					group,
 					label: groupNames[group] ?? group,
+					wide: wideGroups[group],
 					items: mine.filter((a) => a.group === group)
 				}))
 			};
@@ -91,10 +98,12 @@
 			{#each b.groups as g (g.group)}
 				<div class="group">
 					<h4>{g.label} <span class="count">· {g.items.length}</span></h4>
-					<ul class="grid">
+					<ul class="grid" class:wide={g.wide !== undefined}>
 						{#each g.items as a (a.url)}
 							<li>
-								<span class="tile" class:dark={darkTwin(a)}><img src={a.url} alt="" loading="lazy" decoding="async" /></span>
+								<span class="tile" class:dark={darkTwin(a)}>
+									<img src={a.url} alt="" width={g.wide?.width} height={g.wide?.height} loading="lazy" decoding="async" />
+								</span>
 								<span class="name">{a.name}</span>
 							</li>
 						{/each}
@@ -201,6 +210,18 @@
 		width: 64px;
 		height: 64px;
 		image-rendering: pixelated;
+	}
+	/* A banner is one picture per row; it keeps its own ratio and fills the tile. */
+	.grid.wide {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.wide .tile {
+		aspect-ratio: auto;
+		overflow: hidden;
+	}
+	.wide img {
+		width: 100%;
+		height: auto;
 	}
 	.name {
 		max-width: 100%;

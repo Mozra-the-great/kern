@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `scripts/api-reference.mjs` from `src/lib/components/*.svelte` (Svelte parser and TypeScript API, no build needed),
   `custom-elements.json` and `src/elements/types.ts`; `npm run docs:api` writes it, `npm run docs:check` fails when the
   committed file is stale and runs in the required `build` job. How to read it: `docs/api/README.md`.
+- Flower banner as vector art (#110): `@mozra-the-great/kern/assets/flower/banners/garden-frame.svg`
+  (`viewBox="0 0 1536 650"`, 70 kB). The design system's `banner.png` (500 kB raster with a title and account names
+  in the picture) was redrawn as a text-free SVG with the same composition and palette: plants from all four edges,
+  three flat hills along the lower edge, an empty middle, its own cream ground. Filled paths in the fixed Flower
+  colours only, like the other flower motifs. `assets/flower/` now has 47 files; `assets/README.md` documents the new
+  `banners/` group and the demo's "Marken-Assets" section shows it at full width.
 
 ### Changed
 - README: a "Dokumentation" list at the top links the new pages; the accessibility statement moved to
