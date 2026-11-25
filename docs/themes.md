@@ -21,7 +21,7 @@ list with the source of every value is `src/lib/themes/code.tokens.json` (next s
 | ink / `--fg` | `#f4f4f0` | `--k-fg`, `--k-primary`, `--k-focus` | `#f4f4f0` | |
 | ink-muted | `#a2a2ab` | `--k-fg-muted` | `#a2a2ab` | |
 | `--fg-soft` | `#d8d8de` | `--k-fg-soft` | `#d8d8de` | long copy; no component reads it |
-| `--fg-hint` | `#c7c7cf` | `--k-fg-hint` | `#c7c7cf` | Field hint, FileDrop icon |
+| `--fg-hint` | `#c7c7cf` | `--k-fg-hint` | `#c7c7cf` | the app's drop-zone hint (Code draws no FileDrop icon; the other themes colour it with this token) |
 | `--fg-code` | `#e8e8ee` | `--k-fg-code` | `#e8e8ee` | Code |
 | `--fg-disabled` | `#6a6a74` | `--k-fg-disabled` | `#6a6a74` | disabled menu items and options |
 | line | `#26262b` | `--k-line` | `#26262b` | dividers |
