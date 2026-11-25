@@ -59,3 +59,12 @@
 >
 	<slot />
 </Modal>
+
+<style>
+	/* A stacked footer (--k-modal-action-w: 100%, Code on phones): the <k-button> hosts fill the row like the
+	 * Svelte Buttons do, and --k-modal-action-fill tells the button inside each host to fill it (KButton). */
+	:global(slot[name='footer']::slotted(*)) {
+		width: var(--k-modal-action-w);
+		--k-modal-action-fill: var(--k-modal-action-w);
+	}
+</style>

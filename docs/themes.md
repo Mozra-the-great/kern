@@ -21,7 +21,7 @@ list with the source of every value is `src/lib/themes/code.tokens.json` (next s
 | ink / `--fg` | `#f4f4f0` | `--k-fg`, `--k-primary`, `--k-focus` | `#f4f4f0` | |
 | ink-muted | `#a2a2ab` | `--k-fg-muted` | `#a2a2ab` | |
 | `--fg-soft` | `#d8d8de` | `--k-fg-soft` | `#d8d8de` | long copy; no component reads it |
-| `--fg-hint` | `#c7c7cf` | `--k-fg-hint` | `#c7c7cf` | Field hint, FileDrop icon |
+| `--fg-hint` | `#c7c7cf` | `--k-fg-hint` | `#c7c7cf` | the app's drop-zone hint (Code draws no FileDrop icon; the other themes colour it with this token) |
 | `--fg-code` | `#e8e8ee` | `--k-fg-code` | `#e8e8ee` | Code |
 | `--fg-disabled` | `#6a6a74` | `--k-fg-disabled` | `#6a6a74` | disabled menu items and options |
 | line | `#26262b` | `--k-line` | `#26262b` | dividers |
@@ -130,43 +130,62 @@ Flower, Pop and Line.
 
 | Component | Tokens | Code value |
 | --- | --- | --- |
-| Button | `--k-button-font`, `-size`, `-weight`, `-transform`, `-tracking` (default: the label tokens), `-pad-x`, `-gap`, `--k-button-secondary-border`, `-weight`, `-hover-bg` | Inter 600 15 px sentence case, 28 px padding, 10 px gap; secondary = the design's ghost button (`line2` edge, 500, no fill on hover) |
-| Input, Select | `--k-field-font` (`initial` = inherit), `--k-field-size`, `--k-field-bg`, `--k-select-bg`, `--k-field-pad-x`, `--k-field-disabled-opacity` | JetBrains Mono 15 px, transparent (select on `--k-bg`), 14 px padding, 0.4 |
-| Field, Label | `--k-field-label-color`, `--k-field-hint-font`, `--k-field-hint-size`, `--k-field-hint-color` | muted label (mono 12 px caps), hint and error mono 13 px, hint muted |
-| Checkbox | `--k-check-gap`, `--k-check-checked`, `--k-check-mark`, `--k-check-label-size` (`initial` = inherit), `--k-check-disabled-opacity` | 14 px gap, pink box with dark tick, 15 px label |
+| Button | `--k-button-font`, `-size`, `-weight`, `-transform`, `-tracking` (default: the label tokens), `-pad-x`, `-gap`, `--k-button-secondary-border`, `-weight`, `-hover-bg`, `--k-button-leading`, `--k-button-press-offset`, `--k-button-danger-hover-as-primary`, `--k-button-danger-hover-filter` | Inter 600 15 px sentence case, 28 px padding, 10 px gap, `line-height: normal`; secondary = the design's ghost button (`line2` edge, 500, no fill on hover); pressed buttons do not move; danger turns pink on hover like every `.btn` |
+| Input, Select | `--k-field-font` (`initial` = inherit), `--k-field-size`, `--k-field-bg`, `--k-select-bg`, `--k-field-pad-x`, `--k-field-disabled-opacity`, `--k-field-hover-border`, `--k-field-focus-border` (no default: the component falls back to `--k-accent-mark`), `--k-select-appearance`, `--k-select-chevron` (`display`), `--k-select-pad-end` | JetBrains Mono 15 px, transparent (select on `--k-bg`), 14 px padding, 0.4; the edge stays `--field-border` on hover and focus (focus is the ring); Select uses the browser's arrow |
+| Field, Label | `--k-field-label-color`, `--k-field-hint-font`, `--k-field-hint-size`, `--k-field-hint-color`, `--k-field-error-icon` (`display`) | muted label (mono 12 px caps), hint and error mono 13 px, hint muted, error without icon |
+| Checkbox | `--k-check-gap`, `--k-check-checked`, `--k-check-mark`, `--k-check-label-size` (`initial` = inherit), `--k-check-disabled-opacity`, `--k-check-appearance`, `--k-check-tick` (`display`), `--k-check-row-h`, `--k-check-disabled-fg` (`initial` = inherit) | 14 px gap, the browser's checkbox filled pink (`accent-color`), 15 px label, 48 px row; disabled greys the label and leaves the box to the browser |
 | Card | `--k-card-bg`, `--k-card-pad` (one length), `--k-card-gap` | transparent, 20 px, 10 px |
-| Tabs | `--k-tabs-gap`, `--k-tabs-scrollbar`, `--k-tab-h`, `--k-tab-pad-x`, `--k-tab-font`, `-size`, `-weight`, `-selected-weight`, `-transform`, `-tracking`, `--k-tab-fg`, `-hover-fg`, `-selected-bg`, `--k-tab-divider-w` | a strip of cells (1 px `line` after each tab, `look="line"`), 52 px, Inter 15 px, selected 600 on the raised surface with the 2 px accent underline, pink on hover, no scrollbar |
-| Modal | `--k-modal-bg`, `-pad`, `-gap`, `-title-size`, `-title-tracking`, `-title-leading`, `--k-modal-actions-direction` | page background, 36/36/32 px, 24 px gap, 32 px/-0.8 px title; below 760 px 28/16/24 px, 28 px title, stacked actions (main action on top) |
+| Tabs | `--k-tabs-gap`, `--k-tabs-scrollbar`, `--k-tab-h`, `--k-tab-pad-x`, `--k-tab-font`, `-size`, `-weight`, `-selected-weight`, `-transform`, `-tracking`, `--k-tab-fg`, `-hover-fg`, `-selected-bg`, `--k-tab-divider-w`, `--k-tabs-fade-start`, `--k-tabs-fade-end` (0px = no fade) | a strip of cells (1 px `line` after each tab, `look="line"`), 52 px, Inter 15 px, selected 600 on the raised surface with the 2 px accent underline, pink on hover, no scrollbar; only the end edge fades, only below 760 px |
+| Modal | `--k-modal-bg`, `-pad`, `-gap`, `-title-size`, `-title-tracking`, `-title-leading`, `--k-modal-actions-direction`, `--k-modal-action-w`, `--k-modal-width` (`initial` = the `size` width), `-margin`, `-border-w`, `-shadow`, `-enter-dur`, `-close-inset`, `-close-icon` | page background, 36/36/32 px, 24 px gap, 32 px/-0.8 px title, no open animation; below 760 px T's sheet: full width at the bottom, top edge only, no shadow, 28/16/24 px, 28 px title, stacked full-width actions (main action on top) |
+| Modal, Toaster close | `--k-close-fg`, `--k-close-hover-bg`, `--k-close-border-w`, `--k-close-stroke` | the app's ghost icon button: `line2` edge (`--k-fg` on hover), ink cross 12 px wide, 2 px stroke |
 | Progress | `--k-progress-track`, `--k-progress-track-border-w` | `line` track without an edge |
-| Toaster | `--k-toaster-width` (includes the offset on both sides), `--k-toast-pad`, `--k-toast-msg-size`, `--k-toast-ok-border`, `--k-toast-warn-border` | 420 px of toasts, 8/8/8/16 px, 15 px, green and amber edges |
-| FileDrop | `--k-filedrop-bg`, `--k-filedrop-pad`, `--k-filedrop-prompt-font`, `-size`, `-weight`, `-transform`, `-tracking` | transparent, 24/28 px, mono 14 px sentence case |
+| Toaster | `--k-toaster-width` (includes the offset on both sides), `--k-toast-pad`, `--k-toast-msg-size`, `--k-toast-ok-border`, `--k-toast-warn-border`, `--k-toast-dot` (`display`), `--k-toast-align`, `--k-toast-text-offset`, `--k-toast-close-size`, `--k-toast-close-icon`, `--k-toast-enter-dur` | 420 px of toasts, 8/8/8/16 px, 15 px, green and amber edges, no tone dot, text centred, 48 px dismiss, no entrance animation |
+| FileDrop | `--k-filedrop-bg`, `--k-filedrop-pad`, `--k-filedrop-prompt-font`, `-size`, `-weight`, `-transform`, `-tracking`, `--k-filedrop-icon` (`display`), `--k-filedrop-drag-ring`, `--k-filedrop-split-gap`, `--k-filedrop-prompt-basis` | transparent, 24/28 px, mono 14 px sentence case, no icon, no inset ring while dragging, 16 px gap, the button wraps as soon as prompt and button do not fit side by side |
 
 **Phone breakpoint.** A custom property cannot be used in a media query, so a theme switches tokens in
 its own `@media` rule at its breakpoint (Code: `max-width: 760px`, the design system's `breakpoint`):
-`--k-control-h`, the Modal tokens and `--k-toaster-offset-mobile` change there.
+`--k-control-h`, the Modal tokens (the sheet), `--k-tabs-fade-end` and `--k-toaster-offset-mobile` change there.
 
-**Approved differences** to stuffcloud's components (side by side with `web/apps/web/src/ui`); each needs
-Moritz' approval in stuffcloud's ADR (stuffcloud#121), or a follow-up that removes it:
+**Forced colours keep kern's own parts.** Where Code hides a drawn part or leaves it to the browser, the
+component brings it back under `@media (forced-colors: active)`, because there it carries state that colour no
+longer does: the error icon (hint and error have the same system colour), the toast's tone dot (its shape tells
+the tones apart) and kern's checkbox (each state in its system colour, a GrayText edge when disabled).
 
-- Button: kern moves pressed buttons 1 px down; a danger button darkens on hover, while `.btn:hover` in
-  `stuff.css` also turns it pink; `line-height: 1.2` instead of `normal` (same 52/56 px height).
-- Input, Select: kern adds the accent border on focus and a muted border on hover to the design's focus
-  ring; Select draws its own chevron instead of the native arrow; an error carries an icon.
-- Checkbox: kern draws a 22 px box with a tick (native `accent-color` boxes differ per browser); the row
-  is 44 px (`--k-tap-target`), the design's `.toggle` 48 px; disabled fades the box instead of greying
-  the label.
-- Tabs: the edge fade shows whenever tabs are hidden on that side, at any width; the design fades the
-  right edge on phones only.
-- Modal: follows docs/design (S/T), not the app's `Dialog.svelte` (480 px, 22 px heading, 20 px padding);
-  it keeps a close button and its open animation (none under reduced motion); on phones it stays a
-  centred dialog, not T's full-width sheet. In custom elements, `<k-button>` hosts in a stacked footer
-  keep their own width (the Svelte `Button` stretches).
-- Progress: kern shows the label row above the bar.
-- Toaster: each toast keeps its tone dot; the dismiss button is 32 px with a 44 px hit area (the app: a
-  48 px ghost icon button); the default position is bottom right (pass `position="bottom-left"` as the
-  app does); text aligns to the top.
-- FileDrop: kern shows an upload icon and an inset ring while dragging; with a button the zone wraps the
-  button under the prompt when narrow.
+**Remaining differences** to stuffcloud's components (#111). Each item of the former list was compared again
+side by side with `web/apps/web/src/ui`, `stuff.css` and the mockups (rendered and in code), and aligned in the Code
+theme wherever that is possible without breaking WCAG 2.2 AA, `--k-tap-target`, visible focus, reduced motion,
+forced colours or an API that is the same in every theme. Only these remain, each with its reason:
+
+- Modal close button: kern keeps it. The mockup S has none, but `dismissible` (default `true`) means a visible way
+  out in every theme, and stuffcloud's own `Dialog.svelte` and its accessibility notes require one too. It now has
+  the app's look (48 px ghost icon button with a `line2` edge, ink cross).
+- Progress label row: kern keeps the label above the bar. Showing `label` unless `hideLabel` is the component's
+  contract in every theme; stuffcloud's bare bar is `hideLabel` (the label stays the accessible name).
+- Toaster position: the default stays `bottom-right` in every theme (a prop default cannot depend on the theme);
+  stuffcloud passes `position="bottom-left"`, as its toast region sits there.
+- Tabs edge fade: the end edge fades only while tabs are hidden behind it. stuffcloud's mask is static and fades
+  the last 36 px on phones even when every tab fits, which dims a visible label below 4.5:1 (WCAG 1.4.3).
+- FileDrop while dragging: the edge turns solid as well as pink. stuffcloud changes only colours (dashed edge,
+  ground); the solid line is the cue that does not rely on colour (WCAG 1.4.1).
+- FileDrop picker button: kern's is the secondary button (`size="sm"`), stuffcloud's the filled primary one
+  (`size="compact"`). The variant is the component's markup in every theme; a theme token cannot pick it, and
+  changing it would change Flower, Pop and Line.
+- Forced colours: the error icon, the toast's tone dot and kern's checkbox stay there (see above); stuffcloud has
+  no forced-colours rule for them.
+
+Where stuffcloud's sources disagree, kern follows docs/design: the Modal is S and T (520 px, 32 px heading, the
+page background; on phones T's sheet), not the generic `Dialog.svelte` (480 px, 22 px heading, 20 px padding), which
+has not moved on from the mockups (it is the base component of the first build, older than the last change to S
+and T). Where S and T say nothing (the close button), the app is the source.
+
+**Aligned in #111** (Code only, through component tokens; every other theme resolves each new token to what the
+component drew before, which `tests/unit/code-theme-source.test.ts` checks): pressed buttons no longer move, the
+danger button turns pink on hover, button `line-height: normal`; field edges stay `--field-border` on hover and
+focus; Select shows the browser's arrow; field errors without an icon; the browser's checkbox with `accent-color`,
+a 48 px row, a grey label when disabled; no tab fade on desktop and only the end edge on phones; no Modal open
+animation, T's full-width sheet below 760 px with stacked full-width actions (`<k-button>` hosts too), the app's
+close button; toasts without the tone dot, text centred, the 48 px ghost dismiss, no entrance animation; FileDrop
+without the upload icon and the inset ring, wrapping as the app does.
 
 **Visual regression.** `tests/elements/visual.spec.ts` (part of `npm run test:elements`, so of the
 `build` job) screenshots Button, Input, Select, Checkbox, Card, Tabs, Progress, FileDrop, Modal and the

@@ -127,7 +127,7 @@ describe('code.tokens.json is the source of brands/code.css', () => {
 
 describe('component tokens (#38) leave the other themes as they were', () => {
 	const rules = loadRules('src/lib/themes/index.css');
-	/** New token -> the token (or value) the component read before. */
+	/** New token -> the token (or value, which may name tokens in `var()`) the component read before. */
 	const BEFORE: Record<string, string> = {
 		'--k-button-font': '--k-label-font',
 		'--k-button-size': '--k-label-size',
@@ -139,6 +139,10 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 		'--k-button-secondary-border': '--k-border',
 		'--k-button-secondary-weight': '--k-weight-label',
 		'--k-button-secondary-hover-bg': '--k-bg-sunken',
+		'--k-button-leading': '1.2',
+		'--k-button-press-offset': '1px',
+		'--k-button-danger-hover-as-primary': '0',
+		'--k-button-danger-hover-filter': 'brightness(0.92)',
 		'--k-field-font': 'initial',
 		'--k-field-size': '--k-text-md',
 		'--k-field-bg': '--k-bg-raised',
@@ -149,11 +153,20 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 		'--k-field-hint-font': 'initial',
 		'--k-field-hint-size': '--k-text-sm',
 		'--k-field-hint-color': '--k-fg-hint',
+		'--k-field-hover-border': '--k-fg-muted',
+		'--k-field-error-icon': 'block',
+		'--k-select-appearance': 'none',
+		'--k-select-chevron': 'block',
+		'--k-select-pad-end': 'calc(var(--k-field-pad-x) + 24px)',
 		'--k-check-gap': '--k-space-3',
 		'--k-check-checked': '--k-primary',
 		'--k-check-mark': '--k-on-primary',
 		'--k-check-label-size': 'initial',
 		'--k-check-disabled-opacity': '0.5',
+		'--k-check-appearance': 'none',
+		'--k-check-tick': 'block',
+		'--k-check-row-h': '--k-tap-target',
+		'--k-check-disabled-fg': 'initial',
 		'--k-card-bg': '--k-bg-raised',
 		'--k-card-pad': '--k-space-6',
 		'--k-card-gap': '--k-space-4',
@@ -171,6 +184,8 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 		'--k-tab-hover-fg': '--k-fg',
 		'--k-tab-selected-bg': 'transparent',
 		'--k-tab-divider-w': '0px',
+		'--k-tabs-fade-start': '36px',
+		'--k-tabs-fade-end': '36px',
 		'--k-modal-bg': '--k-bg-raised',
 		'--k-modal-pad': '--k-space-6',
 		'--k-modal-gap': '--k-space-4',
@@ -178,6 +193,19 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 		'--k-modal-title-tracking': '0',
 		'--k-modal-title-leading': '1.3',
 		'--k-modal-actions-direction': 'row',
+		'--k-modal-action-w': 'auto',
+		'--k-modal-width': 'initial',
+		'--k-modal-margin': 'auto',
+		'--k-modal-border-w': '--k-border-w',
+		'--k-modal-shadow': '--k-shadow-overlay',
+		'--k-modal-enter-dur': '--k-dur',
+		'--k-modal-close-inset': 'calc(12px - var(--k-tap-icon) / 2)',
+		'--k-close-fg': '--k-fg-muted',
+		'--k-close-hover-bg': '--k-bg-sunken',
+		'--k-close-border-w': '0px',
+		'--k-modal-close-icon': '16px',
+		'--k-toast-close-icon': '14px',
+		'--k-close-stroke': '2',
 		'--k-progress-track': '--k-bg-sunken',
 		'--k-progress-track-border-w': '--k-border-w',
 		'--k-toaster-width': '400px',
@@ -185,13 +213,22 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 		'--k-toast-pad': '12px 12px 12px 16px',
 		'--k-toast-ok-border': '--k-line-strong',
 		'--k-toast-warn-border': '--k-line-strong',
+		'--k-toast-dot': 'block',
+		'--k-toast-align': 'flex-start',
+		'--k-toast-text-offset': '2px',
+		'--k-toast-close-size': '32px',
+		'--k-toast-enter-dur': '--k-dur',
 		'--k-filedrop-bg': '--k-bg-sunken',
 		'--k-filedrop-pad': '24px 16px',
 		'--k-filedrop-prompt-font': '--k-label-font',
 		'--k-filedrop-prompt-size': '--k-label-size',
 		'--k-filedrop-prompt-weight': '--k-weight-label',
 		'--k-filedrop-prompt-transform': '--k-label-transform',
-		'--k-filedrop-prompt-tracking': '--k-label-tracking'
+		'--k-filedrop-prompt-tracking': '--k-label-tracking',
+		'--k-filedrop-icon': 'block',
+		'--k-filedrop-drag-ring': '--k-border-w',
+		'--k-filedrop-split-gap': 'var(--k-space-3) var(--k-space-4)',
+		'--k-filedrop-prompt-basis': '10em'
 	};
 	const others = themeVariants(rules).filter((t) => !/^(code|stuffcloud)/.test(t));
 
@@ -206,7 +243,7 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 	it.each(others)('%s resolves each one to what the component read before', (theme) => {
 		const t = resolveTokens(rules, theme);
 		for (const [name, was] of Object.entries(BEFORE)) {
-			const want = was.startsWith('--') ? t.get(was) : was;
+			const want = was.startsWith('--') ? t.get(was) : was.replace(/var\((--[\w-]+)\)/g, (m, n: string) => t.get(n) ?? m);
 			expect(t.get(name), `${name} in ${theme}`).toBe(want);
 		}
 	});

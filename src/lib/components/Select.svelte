@@ -64,11 +64,11 @@
 		display: flex;
 	}
 	select {
-		appearance: none;
+		appearance: var(--k-select-appearance);
 		box-sizing: border-box;
 		width: 100%;
 		min-height: var(--k-control-h);
-		padding: 0 calc(var(--k-field-pad-x) + 24px) 0 var(--k-field-pad-x);
+		padding: 0 var(--k-select-pad-end) 0 var(--k-field-pad-x);
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: var(--k-radius-field);
 		background: var(--k-select-bg);
@@ -79,17 +79,18 @@
 		cursor: pointer;
 	}
 	select:hover {
-		border-color: var(--k-fg-muted);
+		border-color: var(--k-field-hover-border);
 	}
 	select:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
-		border-color: var(--k-accent-mark);
+		border-color: var(--k-field-focus-border, var(--k-accent-mark));
 	}
 	.invalid select {
 		border-color: var(--k-danger);
 	}
 	svg {
+		display: var(--k-select-chevron);
 		position: absolute;
 		right: var(--k-field-pad-x);
 		top: 50%;

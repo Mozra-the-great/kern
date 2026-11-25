@@ -91,6 +91,25 @@
 				},
 				"--k-button-secondary-weight": { "value": "500", "from": "design:stuff.css|.btn-ghost{font-weight}" },
 				"--k-button-secondary-hover-bg": { "value": "transparent", "from": "design:stuff.css|.btn-ghost:hover{background}" },
+				"--k-button-leading": {
+					"value": "normal",
+					"from": "design:stuff.css|.btn{font}",
+					"design": "600 15px var(--sans)",
+					"note": "the font shorthand resets line-height to normal"
+				},
+				"--k-button-press-offset": {
+					"value": "0px",
+					"from": "app:ui/button.css|.sc-btn:hover,.sc-btn:active{transform}",
+					"design": null,
+					"note": "a pressed button only turns pink, it does not move"
+				},
+				"--k-button-danger-hover-as-primary": {
+					"value": "1",
+					"from": "design:stuff.css|.btn:hover{background}",
+					"design": "var(--pink)",
+					"note": ".btn:hover turns every button pink (--k-primary-hover), the danger button too"
+				},
+				"--k-button-danger-hover-filter": { "value": "none", "from": "design:stuff.css|.btn:hover{filter}", "design": null },
 				"--k-field-font": { "value": "var(--k-font-mono)", "from": "design:stuff.css|.field{font}", "design": "15px var(--mono)" },
 				"--k-field-size": { "value": "15px", "from": "design:stuff.css|.field{font}", "design": "15px var(--mono)" },
 				"--k-field-bg": { "value": "transparent", "from": "design:stuff.css|.field{background}" },
@@ -113,6 +132,27 @@
 					"design": "13px var(--mono)"
 				},
 				"--k-field-hint-color": { "value": "var(--k-fg-muted)", "from": "app:ui/field.css|.sc-fld__hint{color}", "design": "var(--mut)" },
+				"--k-field-hover-border": {
+					"value": "var(--k-border)",
+					"from": "design:stuff.css|.field:hover{border-color}",
+					"design": null,
+					"note": "no hover edge in the design: the field keeps --field-border"
+				},
+				"--k-field-focus-border": {
+					"value": "var(--k-border)",
+					"from": "design:stuff.css|.field:focus-visible{border-color}",
+					"design": null,
+					"note": "focus is the :focus-visible ring alone"
+				},
+				"--k-field-error-icon": { "value": "none", "note": "the app's field error is text only (ui/Input.svelte, ui/Select.svelte)" },
+				"--k-select-appearance": {
+					"value": "auto",
+					"from": "design:stuff.css|select.field{appearance}",
+					"design": null,
+					"note": "the design keeps the browser's own select arrow"
+				},
+				"--k-select-chevron": { "value": "none", "note": "the browser draws the arrow (--k-select-appearance: auto)" },
+				"--k-select-pad-end": { "value": "var(--k-field-pad-x)", "from": "design:stuff.css|.field{padding}", "design": "0 14px" },
 				"--k-check-gap": { "value": "var(--k-space-3-5)", "from": "design:stuff.css|.toggle{gap}", "design": "14px" },
 				"--k-check-checked": {
 					"value": "var(--k-accent)",
@@ -124,6 +164,20 @@
 					"note": "the design draws a native checkbox with accent-color pink, whose tick the browser paints dark on it"
 				},
 				"--k-check-label-size": { "value": "15px", "from": "design:stuff.css|.toggle{font-size}" },
+				"--k-check-appearance": {
+					"value": "auto",
+					"from": "design:stuff.css|.toggle input{accent-color}",
+					"design": "var(--pink)",
+					"note": "the design's checkbox is the browser's own, filled pink by accent-color"
+				},
+				"--k-check-tick": { "value": "none", "note": "the browser draws the tick" },
+				"--k-check-row-h": { "value": "var(--k-tap-icon)", "from": "design:stuff.css|.toggle{min-height}", "design": "48px" },
+				"--k-check-disabled-opacity": { "value": "1", "note": "the browser dims a disabled checkbox itself; the label turns grey instead" },
+				"--k-check-disabled-fg": {
+					"value": "var(--k-fg-disabled)",
+					"from": "app:ui/Checkbox.svelte|.toggle:has(input:disabled){color}",
+					"design": "var(--fg-disabled)"
+				},
 				"--k-card-bg": { "value": "transparent", "from": "design:stuff.css|.card{background}", "design": null },
 				"--k-card-pad": { "value": "var(--k-space-5)", "from": "design:stuff.css|.card{padding}", "design": "20px" },
 				"--k-card-gap": { "value": "var(--k-space-2-5)", "from": "design:stuff.css|.card{gap}", "design": "10px" },
@@ -150,6 +204,13 @@
 					"design": "#17171a"
 				},
 				"--k-tab-divider-w": { "value": "1px", "from": "design:stuff.css|.tabs a{border-right}", "design": "1px solid var(--line)" },
+				"--k-tabs-fade-start": {
+					"value": "0px",
+					"from": "design:stuff.css|@media (max-width:760px)|.tabs{mask-image}",
+					"design": "linear-gradient(90deg,#000 calc(100% - 36px),transparent)",
+					"note": "only the end edge fades, and only on phones (below)"
+				},
+				"--k-tabs-fade-end": { "value": "0px", "from": "design:stuff.css|.tabs{mask-image}", "design": null },
 				"--k-modal-bg": {
 					"value": "var(--k-bg)",
 					"from": "design:S.dc.html#background: #101012; border: 1px solid #3a3a42; box-shadow: 8px 8px 0 rgba(16,16,18,.6); padding: 36px 36px 32px; display: flex; flex-direction: column; gap: 24px",
@@ -181,6 +242,36 @@
 					"from": "design:S.dc.html#font-size: 32px; font-weight: 500; letter-spacing: -.8px; line-height: 1.1",
 					"design": "1.1"
 				},
+				"--k-modal-enter-dur": {
+					"value": "0ms",
+					"from": "app:ui/Dialog.svelte|dialog{animation}",
+					"design": null,
+					"note": "S and T are still pictures and the app's dialog opens without motion"
+				},
+				"--k-modal-close-inset": {
+					"value": "0px",
+					"from": "app:ui/Dialog.svelte|.head{align-items}",
+					"design": "flex-start",
+					"note": "the app's close button sits in the heading row, inside the padding"
+				},
+				"--k-close-fg": {
+					"value": "var(--k-fg)",
+					"from": "app:ui/button.css|.sc-btn--ghost{color}",
+					"design": "var(--fg)",
+					"note": "close buttons are the app's ghost icon button (ui/Dialog.svelte, ui/ToastRegion.svelte)"
+				},
+				"--k-close-hover-bg": {
+					"value": "transparent",
+					"from": "app:ui/button.css|.sc-btn--ghost:hover,.sc-btn--ghost:active{background}"
+				},
+				"--k-close-border-w": { "value": "1px", "from": "app:ui/button.css|.sc-btn--ghost{border}", "design": "1px solid var(--line2)" },
+				"--k-modal-close-icon": {
+					"value": "24px",
+					"from": "app:ui/Dialog.svelte#<path d=\"M1 1l12 12M13 1L1 13\" />",
+					"note": "the app's cross spans 12px with a 2px stroke: kern's half-box cross at 24px, stroke 4/3 of the 16-unit grid"
+				},
+				"--k-toast-close-icon": { "value": "24px", "from": "app:ui/Dialog.svelte#<path d=\"M1 1l12 12M13 1L1 13\" />" },
+				"--k-close-stroke": { "value": "1.333", "from": "app:ui/Dialog.svelte#<path d=\"M1 1l12 12M13 1L1 13\" />" },
 				"--k-progress-track": { "value": "var(--k-line)", "from": "design:stuff.css|.bar{background}", "design": "var(--line)" },
 				"--k-progress-track-border-w": { "value": "0px", "from": "design:stuff.css|.bar{border}", "design": null },
 				"--k-toaster-width": {
@@ -205,6 +296,20 @@
 					"from": "app:ui/ToastRegion.svelte|.warn{border-color}",
 					"design": "var(--amber)"
 				},
+				"--k-toast-dot": { "value": "none", "note": "the app's toast shows its tone by edge and ground only (ui/ToastRegion.svelte)" },
+				"--k-toast-align": { "value": "center", "from": "app:ui/ToastRegion.svelte|.toast{align-items}" },
+				"--k-toast-text-offset": { "value": "0px", "from": "app:ui/ToastRegion.svelte|.message{padding-top}", "design": null },
+				"--k-toast-close-size": {
+					"value": "var(--k-tap-icon)",
+					"from": "app:ui/button.css|.sc-btn--icon{width}",
+					"design": "var(--target-icon)"
+				},
+				"--k-toast-enter-dur": {
+					"value": "0ms",
+					"from": "app:ui/ToastRegion.svelte|.toast{animation}",
+					"design": null,
+					"note": "the app's toasts appear without motion"
+				},
 				"--k-filedrop-bg": { "value": "transparent", "from": "app:ui/FileDropzone.svelte|.dz{background}", "design": null },
 				"--k-filedrop-pad": {
 					"value": "var(--k-space-6) var(--k-space-6-5)",
@@ -219,7 +324,20 @@
 				"--k-filedrop-prompt-size": { "value": "14px", "from": "app:ui/FileDropzone.svelte|.hint{font}", "design": "14px var(--mono)" },
 				"--k-filedrop-prompt-weight": { "value": "400", "from": "app:ui/FileDropzone.svelte|.hint{font}", "design": "14px var(--mono)" },
 				"--k-filedrop-prompt-transform": { "value": "none", "from": "app:ui/FileDropzone.svelte|.hint{text-transform}", "design": null },
-				"--k-filedrop-prompt-tracking": { "value": "0", "from": "app:ui/FileDropzone.svelte|.hint{letter-spacing}", "design": null }
+				"--k-filedrop-prompt-tracking": { "value": "0", "from": "app:ui/FileDropzone.svelte|.hint{letter-spacing}", "design": null },
+				"--k-filedrop-icon": { "value": "none", "note": "the app's drop zone has no icon (ui/FileDropzone.svelte)" },
+				"--k-filedrop-drag-ring": { "value": "0px", "from": "app:ui/FileDropzone.svelte|.dz.dragging{box-shadow}", "design": null },
+				"--k-filedrop-split-gap": {
+					"value": "var(--k-space-4)",
+					"from": "app:ui/FileDropzone.svelte|.dz{gap}",
+					"design": "var(--space-16)"
+				},
+				"--k-filedrop-prompt-basis": {
+					"value": "auto",
+					"from": "app:ui/FileDropzone.svelte|.hint{flex}",
+					"design": null,
+					"note": "the hint keeps its own width, so the button wraps under it as soon as both do not fit"
+				}
 			}
 		},
 		{
@@ -227,6 +345,36 @@
 			"media": "(max-width: 760px)",
 			"tokens": {
 				"--k-control-h": { "value": "56px", "from": "design:stuff.css|@media (max-width:760px)|.btn{min-height}" },
+				"--k-tabs-fade-end": {
+					"value": "36px",
+					"from": "design:stuff.css|@media (max-width:760px)|.tabs{mask-image}",
+					"design": "linear-gradient(90deg,#000 calc(100% - 36px),transparent)"
+				},
+				"--k-modal-width": {
+					"value": "100%",
+					"from": "design:T.dc.html#display: flex; flex-direction: column; justify-content: flex-end",
+					"note": "T: a sheet across the bottom of the screen"
+				},
+				"--k-modal-margin": {
+					"value": "auto 0 0",
+					"from": "design:T.dc.html#display: flex; flex-direction: column; justify-content: flex-end"
+				},
+				"--k-modal-border-w": {
+					"value": "1px 0 0",
+					"from": "design:T.dc.html#background: #101012; border-top: 1px solid #3a3a42; padding: 28px 16px 24px; display: flex; flex-direction: column; gap: 20px",
+					"design": "border-top: 1px solid #3a3a42"
+				},
+				"--k-modal-shadow": {
+					"value": "none",
+					"from": "design:T.dc.html#background: #101012; border-top: 1px solid #3a3a42; padding: 28px 16px 24px; display: flex; flex-direction: column; gap: 20px",
+					"design": null,
+					"note": "T has no shadow"
+				},
+				"--k-modal-action-w": {
+					"value": "100%",
+					"from": "design:T.dc.html#<div style=\"display: flex; flex-direction: column; gap: 10px\">",
+					"note": "the stacked buttons fill the sheet"
+				},
 				"--k-modal-pad": {
 					"value": "28px 16px 24px",
 					"from": "design:T.dc.html#background: #101012; border-top: 1px solid #3a3a42; padding: 28px 16px 24px; display: flex; flex-direction: column; gap: 20px",

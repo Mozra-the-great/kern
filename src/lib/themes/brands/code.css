@@ -64,6 +64,13 @@
 	--k-button-secondary-border: var(--k-line-strong);
 	--k-button-secondary-weight: 500;
 	--k-button-secondary-hover-bg: transparent;
+	/* the font shorthand resets line-height to normal */
+	--k-button-leading: normal;
+	/* a pressed button only turns pink, it does not move */
+	--k-button-press-offset: 0px;
+	/* .btn:hover turns every button pink (--k-primary-hover), the danger button too */
+	--k-button-danger-hover-as-primary: 1;
+	--k-button-danger-hover-filter: none;
 	--k-field-font: var(--k-font-mono);
 	--k-field-size: 15px;
 	--k-field-bg: transparent;
@@ -74,11 +81,30 @@
 	--k-field-hint-font: var(--k-font-mono);
 	--k-field-hint-size: 13px;
 	--k-field-hint-color: var(--k-fg-muted);
+	/* no hover edge in the design: the field keeps --field-border */
+	--k-field-hover-border: var(--k-border);
+	/* focus is the :focus-visible ring alone */
+	--k-field-focus-border: var(--k-border);
+	/* the app's field error is text only (ui/Input.svelte, ui/Select.svelte) */
+	--k-field-error-icon: none;
+	/* the design keeps the browser's own select arrow */
+	--k-select-appearance: auto;
+	/* the browser draws the arrow (--k-select-appearance: auto) */
+	--k-select-chevron: none;
+	--k-select-pad-end: var(--k-field-pad-x);
 	--k-check-gap: var(--k-space-3-5);
 	--k-check-checked: var(--k-accent);
 	/* the design draws a native checkbox with accent-color pink, whose tick the browser paints dark on it */
 	--k-check-mark: var(--k-on-accent);
 	--k-check-label-size: 15px;
+	/* the design's checkbox is the browser's own, filled pink by accent-color */
+	--k-check-appearance: auto;
+	/* the browser draws the tick */
+	--k-check-tick: none;
+	--k-check-row-h: var(--k-tap-icon);
+	/* the browser dims a disabled checkbox itself; the label turns grey instead */
+	--k-check-disabled-opacity: 1;
+	--k-check-disabled-fg: var(--k-fg-disabled);
 	--k-card-bg: transparent;
 	--k-card-pad: var(--k-space-5);
 	--k-card-gap: var(--k-space-2-5);
@@ -97,6 +123,9 @@
 	--k-tab-hover-fg: var(--k-accent-text);
 	--k-tab-selected-bg: var(--k-bg-raised);
 	--k-tab-divider-w: 1px;
+	/* only the end edge fades, and only on phones (below) */
+	--k-tabs-fade-start: 0px;
+	--k-tabs-fade-end: 0px;
 	/* the delete-site dialog (S), the one dialog of the design */
 	--k-modal-bg: var(--k-bg);
 	--k-modal-pad: 36px 36px 32px;
@@ -104,6 +133,18 @@
 	--k-modal-title-size: 32px;
 	--k-modal-title-tracking: -0.8px;
 	--k-modal-title-leading: 1.1;
+	/* S and T are still pictures and the app's dialog opens without motion */
+	--k-modal-enter-dur: 0ms;
+	/* the app's close button sits in the heading row, inside the padding */
+	--k-modal-close-inset: 0px;
+	/* close buttons are the app's ghost icon button (ui/Dialog.svelte, ui/ToastRegion.svelte) */
+	--k-close-fg: var(--k-fg);
+	--k-close-hover-bg: transparent;
+	--k-close-border-w: 1px;
+	/* the app's cross spans 12px with a 2px stroke: kern's half-box cross at 24px, stroke 4/3 of the 16-unit grid */
+	--k-modal-close-icon: 24px;
+	--k-toast-close-icon: 24px;
+	--k-close-stroke: 1.333;
 	--k-progress-track: var(--k-line);
 	--k-progress-track-border-w: 0px;
 	/* 420px of toasts plus the 16px offset on both sides */
@@ -112,6 +153,13 @@
 	--k-toast-msg-size: 15px;
 	--k-toast-ok-border: var(--k-ok);
 	--k-toast-warn-border: var(--k-warn);
+	/* the app's toast shows its tone by edge and ground only (ui/ToastRegion.svelte) */
+	--k-toast-dot: none;
+	--k-toast-align: center;
+	--k-toast-text-offset: 0px;
+	--k-toast-close-size: var(--k-tap-icon);
+	/* the app's toasts appear without motion */
+	--k-toast-enter-dur: 0ms;
 	--k-filedrop-bg: transparent;
 	--k-filedrop-pad: var(--k-space-6) var(--k-space-6-5);
 	--k-filedrop-prompt-font: var(--k-font-mono);
@@ -119,11 +167,26 @@
 	--k-filedrop-prompt-weight: 400;
 	--k-filedrop-prompt-transform: none;
 	--k-filedrop-prompt-tracking: 0;
+	/* the app's drop zone has no icon (ui/FileDropzone.svelte) */
+	--k-filedrop-icon: none;
+	--k-filedrop-drag-ring: 0px;
+	--k-filedrop-split-gap: var(--k-space-4);
+	/* the hint keeps its own width, so the button wraps under it as soon as both do not fit */
+	--k-filedrop-prompt-basis: auto;
 }
 @media (max-width: 760px) {
 	[data-theme^='code'],
 	[data-theme^='stuffcloud'] {
 		--k-control-h: 56px;
+		--k-tabs-fade-end: 36px;
+		/* T: a sheet across the bottom of the screen */
+		--k-modal-width: 100%;
+		--k-modal-margin: auto 0 0;
+		--k-modal-border-w: 1px 0 0;
+		/* T has no shadow */
+		--k-modal-shadow: none;
+		/* the stacked buttons fill the sheet */
+		--k-modal-action-w: 100%;
 		--k-modal-pad: 28px 16px 24px;
 		--k-modal-gap: var(--k-space-5);
 		--k-modal-title-size: 28px;

@@ -48,7 +48,7 @@
 		display: flex;
 		gap: var(--k-check-gap);
 		align-items: flex-start;
-		padding-block: calc(max(0px, var(--k-tap-target) - 24px) / 2);
+		padding-block: calc(max(0px, var(--k-check-row-h) - 24px) / 2);
 	}
 	.box {
 		position: relative;
@@ -61,7 +61,8 @@
 		margin-block: 1px;
 	}
 	input {
-		appearance: none;
+		appearance: var(--k-check-appearance);
+		accent-color: var(--k-check-checked);
 		grid-area: 1 / 1;
 		width: 22px;
 		height: 22px;
@@ -91,6 +92,7 @@
 		cursor: not-allowed;
 	}
 	svg {
+		display: var(--k-check-tick);
 		grid-area: 1 / 1;
 		width: 16px;
 		height: 16px;
@@ -118,13 +120,22 @@
 		position: absolute;
 		inset: 0;
 	}
+	.k-check:has(input:disabled) label {
+		color: var(--k-check-disabled-fg);
+	}
 	.hint {
 		font-size: var(--k-text-sm);
 		color: var(--k-fg-muted);
 	}
 	@media (forced-colors: active) {
+		/* kern's own box and tick, also in a theme that uses the browser's checkbox (Code): the rules
+		 * below give each state its system colour and the disabled box its GrayText edge. */
+		input {
+			appearance: none;
+		}
 		/* The mark is an SVG: it would keep its authored colour (dark on a dark canvas) and vanish. */
 		svg {
+			display: block;
 			color: CanvasText;
 		}
 		input:checked,

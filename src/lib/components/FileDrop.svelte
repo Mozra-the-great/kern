@@ -397,7 +397,7 @@
 		border-style: solid;
 		border-color: var(--k-accent-mark);
 		background: var(--k-surface-selected);
-		box-shadow: inset 0 0 0 var(--k-border-w) var(--k-accent-mark);
+		box-shadow: inset 0 0 0 var(--k-filedrop-drag-ring) var(--k-accent-mark);
 	}
 	/* Separate picker button: the zone is a group with the drop text and the button. */
 	.split {
@@ -405,7 +405,7 @@
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--k-space-3) var(--k-space-4);
+		gap: var(--k-filedrop-split-gap);
 		min-height: 0;
 		text-align: start;
 		cursor: default;
@@ -414,12 +414,13 @@
 		flex: none;
 	}
 	.split .prompt {
-		flex: 1 1 10em;
+		flex: 1 1 var(--k-filedrop-prompt-basis);
 	}
 	.split.disabled {
 		opacity: 0.55;
 	}
 	.icon {
+		display: var(--k-filedrop-icon);
 		width: 28px;
 		height: 28px;
 		color: var(--k-fg-hint);

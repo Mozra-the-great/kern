@@ -306,7 +306,7 @@ Keine eigenen Ereignisse.
 
 ### Eigene CSS-Variablen
 
-`--k-button-font`, `--k-button-gap`, `--k-button-pad-x`, `--k-button-secondary-border`, `--k-button-secondary-hover-bg`, `--k-button-secondary-weight`, `--k-button-size`, `--k-button-tracking`, `--k-button-transform`, `--k-button-weight`
+`--k-button-danger-hover-as-primary`, `--k-button-danger-hover-filter`, `--k-button-font`, `--k-button-gap`, `--k-button-leading`, `--k-button-pad-x`, `--k-button-press-offset`, `--k-button-secondary-border`, `--k-button-secondary-hover-bg`, `--k-button-secondary-weight`, `--k-button-size`, `--k-button-tracking`, `--k-button-transform`, `--k-button-weight`
 
 ## Card
 
@@ -1507,7 +1507,7 @@ Quelle: [`Field.svelte`](../../src/lib/components/Field.svelte)
 
 ### Eigene CSS-Variablen
 
-`--k-field-hint-color`, `--k-field-hint-font`, `--k-field-hint-size`, `--k-field-label-color`
+`--k-field-error-icon`, `--k-field-hint-color`, `--k-field-hint-font`, `--k-field-hint-size`, `--k-field-label-color`
 
 ## FileDrop
 
@@ -2212,7 +2212,7 @@ Quelle: [`Modal.svelte`](../../src/lib/components/Modal.svelte), [`KModal.svelte
 
 ### Eigene CSS-Variablen
 
-`--k-modal-actions-direction`, `--k-modal-bg`, `--k-modal-gap`, `--k-modal-pad`, `--k-modal-title-leading`, `--k-modal-title-size`, `--k-modal-title-tracking`
+`--k-modal-action-w`, `--k-modal-actions-direction`, `--k-modal-bg`, `--k-modal-border-w`, `--k-modal-close-icon`, `--k-modal-close-inset`, `--k-modal-enter-dur`, `--k-modal-gap`, `--k-modal-margin`, `--k-modal-pad`, `--k-modal-shadow`, `--k-modal-title-leading`, `--k-modal-title-size`, `--k-modal-title-tracking`, `--k-modal-width`
 
 ## Navbar
 
@@ -3164,7 +3164,7 @@ Keine Slots.
 
 ### Eigene CSS-Variablen
 
-`--k-select-bg`
+`--k-select-appearance`, `--k-select-bg`, `--k-select-chevron`, `--k-select-pad-end`
 
 ## SelectGrid
 
@@ -3884,7 +3884,7 @@ Tabs. Panels are children with `data-tab="<id>"`; only the active one is shown. 
 
 ### Eigene CSS-Variablen
 
-`--k-tabs-gap`, `--k-tabs-scrollbar`
+`--k-tabs-fade-end`, `--k-tabs-fade-start`, `--k-tabs-gap`, `--k-tabs-scrollbar`
 
 ## Tag
 

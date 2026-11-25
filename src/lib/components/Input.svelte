@@ -66,12 +66,12 @@
 		transition: border-color var(--k-dur) var(--k-ease);
 	}
 	.k-input:hover {
-		border-color: var(--k-fg-muted);
+		border-color: var(--k-field-hover-border);
 	}
 	.k-input:focus-within {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
-		border-color: var(--k-accent-mark);
+		border-color: var(--k-field-focus-border, var(--k-accent-mark));
 	}
 	.invalid {
 		border-color: var(--k-danger);

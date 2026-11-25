@@ -114,6 +114,7 @@
 		color: var(--k-danger);
 	}
 	.error svg {
+		display: var(--k-field-error-icon);
 		flex: none;
 		width: 16px;
 		height: 16px;
@@ -124,7 +125,9 @@
 		.error {
 			color: CanvasText;
 		}
+		/* shown even where the theme hides it: the error and the hint have the same colour here */
 		.error svg {
+			display: block;
 			color: CanvasText;
 		}
 	}
