@@ -36,6 +36,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   minimum height, and the screenshots of the Code baselines and of the demo in all eight theme variants did not
   change. Applies to `<k-button>`, and to every component that renders a `Button`.
 
+## [0.12.0] - 2026-11-25
+
+### Changed
+- Code theme parity with stuffcloud (#111): every item of the former "Approved differences" list was compared again
+  with stuffcloud's `src/ui`, `stuff.css` and the mockups S/T, and aligned where WCAG 2.2 AA, the tap target, focus,
+  reduced motion, forced colours and the cross-theme API allow it. Visible in `code` and its variants (and the
+  `stuffcloud*` aliases) only: pressed buttons no longer move, the danger button turns pink on hover, button text
+  uses `line-height: normal`; Input and Select keep their edge on hover and focus (the focus ring stays); Select
+  shows the browser's arrow; a field error has no icon; Checkbox is the browser's checkbox filled pink
+  (`accent-color`) in a 48 px row, disabled greys the label; Tabs fade no edge on desktop and only the end edge
+  below 760 px; Modal opens without animation and below 760 px is T's sheet (full width at the bottom, top edge,
+  no shadow) with full-width stacked actions, `<k-button>` in the footer included; the Modal and toast close
+  buttons are the app's 48 px ghost icon button; toasts have no tone dot, centred text and no entrance animation;
+  FileDrop has no upload icon and no inset ring while dragging, and its button wraps under the prompt as in the app.
+  Under forced colours the error icon, the tone dot and kern's own checkbox stay. The few remaining differences
+  and their reasons are in `docs/themes.md` ("Remaining differences"). New component tokens (defaults are exactly
+  what the components drew before, so Flower, Pop and Line do not change): `--k-button-leading`,
+  `--k-button-press-offset`, `--k-button-danger-hover-as-primary`, `-filter`, `--k-field-hover-border`,
+  `--k-field-focus-border`, `--k-field-error-icon`, `--k-select-appearance`, `--k-select-chevron`,
+  `--k-select-pad-end`, `--k-check-appearance`, `--k-check-tick`, `--k-check-row-h`, `--k-check-disabled-fg`,
+  `--k-tabs-fade-start`, `--k-tabs-fade-end`, `--k-modal-action-w`, `--k-modal-width`, `-margin`, `-border-w`,
+  `-shadow`, `-enter-dur`, `-close-inset`, `-close-icon`, `--k-close-fg`, `--k-close-hover-bg`, `--k-close-border-w`,
+  `--k-close-stroke`, `--k-toast-dot`, `--k-toast-align`, `--k-toast-text-offset`, `--k-toast-close-size`,
+  `--k-toast-close-icon`, `--k-toast-enter-dur`, `--k-filedrop-icon`, `--k-filedrop-drag-ring`,
+  `--k-filedrop-split-gap`, `--k-filedrop-prompt-basis`. No prop, default or event changed.
+  Migration: nothing to do. An app on `code` that wants a part of the old look back sets the token on its
+  `[data-theme^='code']` element, e.g. `--k-check-appearance: none; --k-check-tick: block` for kern's drawn
+  checkbox, or `--k-modal-width: initial; --k-modal-margin: auto` (inside its own `@media (max-width: 760px)`)
+  for the centred phone dialog.
+- Demo: no horizontal scrolling at 320 px in any theme (#116); `tests/targets/reflow.spec.ts` checks both demo pages in all
+  eight theme variants at 320 x 640 as part of the required `build` job.
+
 ## [0.11.0] - 2026-11-25
 
 ### Added
@@ -68,32 +100,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `banners/` group and the demo's "Marken-Assets" section shows it at full width.
 
 ### Changed
-- Code theme parity with stuffcloud (#111): every item of the former "Approved differences" list was compared again
-  with stuffcloud's `src/ui`, `stuff.css` and the mockups S/T, and aligned where WCAG 2.2 AA, the tap target, focus,
-  reduced motion, forced colours and the cross-theme API allow it. Visible in `code` and its variants (and the
-  `stuffcloud*` aliases) only: pressed buttons no longer move, the danger button turns pink on hover, button text
-  uses `line-height: normal`; Input and Select keep their edge on hover and focus (the focus ring stays); Select
-  shows the browser's arrow; a field error has no icon; Checkbox is the browser's checkbox filled pink
-  (`accent-color`) in a 48 px row, disabled greys the label; Tabs fade no edge on desktop and only the end edge
-  below 760 px; Modal opens without animation and below 760 px is T's sheet (full width at the bottom, top edge,
-  no shadow) with full-width stacked actions, `<k-button>` in the footer included; the Modal and toast close
-  buttons are the app's 48 px ghost icon button; toasts have no tone dot, centred text and no entrance animation;
-  FileDrop has no upload icon and no inset ring while dragging, and its button wraps under the prompt as in the app.
-  Under forced colours the error icon, the tone dot and kern's own checkbox stay. The few remaining differences
-  and their reasons are in `docs/themes.md` ("Remaining differences"). New component tokens (defaults are exactly
-  what the components drew before, so Flower, Pop and Line do not change): `--k-button-leading`,
-  `--k-button-press-offset`, `--k-button-danger-hover-as-primary`, `-filter`, `--k-field-hover-border`,
-  `--k-field-focus-border`, `--k-field-error-icon`, `--k-select-appearance`, `--k-select-chevron`,
-  `--k-select-pad-end`, `--k-check-appearance`, `--k-check-tick`, `--k-check-row-h`, `--k-check-disabled-fg`,
-  `--k-tabs-fade-start`, `--k-tabs-fade-end`, `--k-modal-action-w`, `--k-modal-width`, `-margin`, `-border-w`,
-  `-shadow`, `-enter-dur`, `-close-inset`, `-close-icon`, `--k-close-fg`, `--k-close-hover-bg`, `--k-close-border-w`,
-  `--k-close-stroke`, `--k-toast-dot`, `--k-toast-align`, `--k-toast-text-offset`, `--k-toast-close-size`,
-  `--k-toast-close-icon`, `--k-toast-enter-dur`, `--k-filedrop-icon`, `--k-filedrop-drag-ring`,
-  `--k-filedrop-split-gap`, `--k-filedrop-prompt-basis`. No prop, default or event changed.
-  Migration: nothing to do. An app on `code` that wants a part of the old look back sets the token on its
-  `[data-theme^='code']` element, e.g. `--k-check-appearance: none; --k-check-tick: block` for kern's drawn
-  checkbox, or `--k-modal-width: initial; --k-modal-margin: auto` (inside its own `@media (max-width: 760px)`)
-  for the centred phone dialog.
 - README: a "Dokumentation" list at the top links the new pages; the accessibility statement moved to
   `docs/accessibility.md` and the README keeps a short summary with the link.
 - Component test suite, stage 2 (#24): behaviour tests in jsdom for every component that only had a smoke test
