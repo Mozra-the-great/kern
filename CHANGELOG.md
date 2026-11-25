@@ -24,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- `Button` and `<k-button>` say that they are loading (#109): while `loading`, a visually hidden polite status text
+  ("Loading", German "Lädt") is announced, so the state does not depend on the motion of the spinner mark (which
+  keeps turning, slowed, under `prefers-reduced-motion`). The text is the new catalogue entry `button.loadingLabel`
+  (`strings.ts`, German in `strings-de.ts`) and is overridable with the new optional prop `loadingLabel`
+  (`<k-button loading-label="…">`). It is a live region next to the button or link, empty until loading starts, so it is
+  not part of the accessible name (that stays the visible label), nothing is announced while idle, and `aria-busy`
+  stays. A button that is given `loading` (true or false) renders one more hidden, out-of-flow `<span role="status">` after the control; one that is never given `loading` (e.g. the buttons inside `SortableList`) does not.
 - Consumer documentation (#57), in German like the README and linked from it: `docs/consumer-guide.md` (install from
   the release tarball, check the sha256/sha512 files and the lock file's integrity against the release notes, update
   steps, one theme entry per app, `data-theme` values and their colour scheme, theme before first paint, fonts, accent

@@ -14,6 +14,10 @@
 const catalogue = {
 	alert: { dismissLabel: 'Dismiss' },
 	breadcrumb: { label: 'Breadcrumb', expandLabel: 'Show hidden items' },
+	button: {
+		/** Status text announced while a `loading` button works (#109); not part of its accessible name. */
+		loadingLabel: 'Loading'
+	},
 	card: {
 		/** Accessible name of a clickable card that has neither an `actionLabel`, a title nor a description. */
 		openLabel: 'Open'

@@ -58,6 +58,8 @@ ansieht. Details und wie man eine Spec lokal startet: [`docs/testing.md`](testin
 - **Spinner unter reduzierter Bewegung.** `Spinner` und das Lade-Zeichen von `Button loading` drehen sich weiter, aber
   nur einmal pro 2 s statt alle 0,8 s. Ein stehender Ladeindikator sagt nicht, dass etwas läuft; die Bewegung ist
   wesentlich (WCAG 2.3.3). Es ist die einzige Ausnahme, und der Bewegungstest lässt genau diese beiden durch.
+  Der Zustand hängt nicht an der Bewegung: `Spinner` ist ein `role="status"` mit unsichtbarem Text, und `Button loading`
+  sagt „Loading“ (`loadingLabel`, Katalog `button.loadingLabel`) höflich an, ohne den Namen des Buttons zu ändern (#109).
 - **Nur Chromium automatisch.** Alle Browser-Prüfungen laufen in Chromium (Playwright). Firefox und Safari sind nicht
   automatisch geprüft, der Kontrastmodus nur über Chromiums Emulation von `forced-colors`.
 - **Kein Test mit Hilfsmitteln.** Nicht automatisiert, weil es Menschen braucht: Ausgabe von NVDA, JAWS und VoiceOver,

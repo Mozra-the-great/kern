@@ -41,7 +41,9 @@ afterEach(() => {
 	Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, writable: true, value: original.revoke });
 });
 
-const statusText = (): string => screen.getByRole('status').textContent.trim();
+/** The message region of the DownloadButton; the Button inside has a status region of its own for `loading` (#109). */
+const statusRegion = (): HTMLElement => document.querySelector<HTMLElement>('.k-status-message[role="status"]') as HTMLElement;
+const statusText = (): string => statusRegion().textContent.trim();
 const alertText = (): string => screen.getByRole('alert').textContent.trim();
 const root = (): HTMLElement => document.querySelector<HTMLElement>('.k-download-button') as HTMLElement;
 
@@ -279,7 +281,7 @@ describe('DownloadButton', () => {
 		expect(ondownload).not.toHaveBeenCalled();
 		const second = render(DownloadButton, { text: 'x' });
 		screen.getByRole('button').click();
-		const region = screen.getByRole('status');
+		const region = statusRegion();
 		second.unmount();
 		await new Promise((resolve) => setTimeout(resolve, 80));
 		expect(region.textContent.trim()).toBe('');

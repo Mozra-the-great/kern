@@ -245,7 +245,7 @@ Svelte: `import { Button } from '@mozra-the-great/kern'` · Element: `<k-button>
 
 Quelle: [`Button.svelte`](../../src/lib/components/Button.svelte), [`KButton.svelte`](../../src/elements/KButton.svelte)
 
-Button, or a link with `href` (also `target`, `rel`, `download`). A disabled or loading link stays a link without href and with `aria-disabled="true"`. `size="icon"` is a square for an icon: give it a `label`.
+Button, or a link with `href` (also `target`, `rel`, `download`). A disabled or loading link stays a link without href and with `aria-disabled="true"`. `size="icon"` is a square for an icon: give it a `label`. While `loading`, a polite status text is announced (`loading-label`, default "Loading").
 
 ### Svelte: Props
 
@@ -255,7 +255,8 @@ Button, or a link with `href` (also `target`, `rel`, `download`). A disabled or 
 | `size` | `'sm' \| 'md' \| 'lg' \| 'icon'` | `'md'` | Height from the theme: `sm` = `--k-control-h-sm`, `md` = `--k-control-h`, `lg` = `--k-control-h-lg` (never below `--k-tap-target`). `icon` is a `--k-tap-icon` square for an icon without text: give it an `aria-label`. |
 | `block` | `boolean` | `false` | Full width. |
 | `wide` | `boolean` | `false` | Full width with the label at the start and the last child (arrow, icon, count) at the end. |
-| `loading` | `boolean` | `false` | Shows a spinner and blocks clicks. |
+| `loading` | `boolean` |  | Shows a spinner and blocks clicks. The state is also said, not only shown: a polite status text (`loadingLabel`) is announced when it starts, so it does not depend on the motion of the spinner. |
+| `loadingLabel` | `string` | Katalog `button.loadingLabel` | Status text announced (polite) while `loading`, e.g. "Loading". It is not part of the button's name, which stays its visible label. Default: the catalogue text (`strings().button.loadingLabel`). |
 | `href` | `string` |  | Renders an `<a>` instead of a `<button>` (attributes that only buttons know are passed on as they are). With `disabled` or `loading` it stays an `<a>`, without `href` and with `aria-disabled="true"`: it cannot be followed and leaves the tab order. |
 | `target` | `HTMLAnchorAttributes['target']` |  | Link only: browsing context, as on `<a>`. |
 | `rel` | `string \| null` |  | Link only: relation, as on `<a>`. |
@@ -281,7 +282,8 @@ Weitere Attribute aus `HTMLButtonAttributes` gehen an das Wurzelelement.
 | `size` | `size` | `string` | `'md'` (wie Button) | Height from the theme: `sm` = `--k-control-h-sm`, `md` = `--k-control-h`, `lg` = `--k-control-h-lg` (never below `--k-tap-target`). `icon` is a `--k-tap-icon` square for an icon without text: give it an `aria-label`. |
 | `block` | `block` | `boolean` | `false` | Full width. |
 | `wide` | `wide` | `boolean` | `false` | Full width with the label at the start and the last child (arrow, icon, count) at the end. |
-| `loading` | `loading` | `boolean` | `false` | Shows a spinner and blocks clicks. |
+| `loading` | `loading` | `boolean` | `false` | Shows a spinner and blocks clicks. The state is also said, not only shown: a polite status text (`loadingLabel`) is announced when it starts, so it does not depend on the motion of the spinner. |
+| `loading-label` | `loadingLabel` | `string` | Katalog `button.loadingLabel` (wie Button) | Status text announced (polite) while `loading`, e.g. "Loading". It is not part of the button's name, which stays its visible label. Default: the catalogue text (`strings().button.loadingLabel`). |
 | `disabled` | `disabled` (gespiegelt) | `boolean` | `false` |  |
 | `href` | `href` | `string` |  | Renders an `<a>` instead of a `<button>` (attributes that only buttons know are passed on as they are). With `disabled` or `loading` it stays an `<a>`, without `href` and with `aria-disabled="true"`: it cannot be followed and leaves the tab order. |
 | `target` | `target` | `string` |  | Link only: browsing context, as on `<a>`. |

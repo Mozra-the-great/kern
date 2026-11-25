@@ -474,7 +474,7 @@
 					"customElement": true,
 					"tagName": "k-button",
 					"name": "KButtonElement",
-					"description": "Button, or a link with `href` (also `target`, `rel`, `download`). A disabled or loading link stays a link without href and with `aria-disabled=\"true\"`. `size=\"icon\"` is a square for an icon: give it a `label`.",
+					"description": "Button, or a link with `href` (also `target`, `rel`, `download`). A disabled or loading link stays a link without href and with `aria-disabled=\"true\"`. `size=\"icon\"` is a square for an icon: give it a `label`. While `loading`, a polite status text is announced (`loading-label`, default \"Loading\").",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -521,6 +521,14 @@
 							},
 							"default": "false",
 							"attribute": "loading"
+						},
+						{
+							"kind": "field",
+							"name": "loadingLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "loading-label"
 						},
 						{
 							"kind": "field",
@@ -695,6 +703,13 @@
 							},
 							"default": "false",
 							"fieldName": "loading"
+						},
+						{
+							"name": "loading-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "loadingLabel"
 						},
 						{
 							"name": "disabled",

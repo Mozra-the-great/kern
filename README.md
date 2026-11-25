@@ -688,6 +688,15 @@ Ein Link mit `disabled` oder `loading` bleibt ein `<a>`: ohne `href`, mit `role=
 `aria-disabled="true"`, nicht im Tab-Fokus und nicht klickbar. Die gesperrte Optik kommt aus
 `--k-disabled-opacity` (Basis 0,5, Code 0,4); im Kontrastmodus (`forced-colors`) GrayText.
 
+**Ladezustand (#109):** Solange `loading` gesetzt ist, sagt der Button es auch an, nicht nur mit dem drehenden
+Zeichen: ein unsichtbarer Statustext (`role="status"`, `aria-live="polite"`, vorgegeben „Loading“, in
+`strings-de` „Lädt“) wird beim Start des Ladens vorgelesen, nicht unterbrechend und nur einmal. Der Text ist
+überschreibbar mit `loadingLabel` (`<k-button loading-label="Speichert …">`) oder über die Texte (`button.loadingLabel`).
+Er steht als Geschwister hinter dem Button bzw. Link (nur wenn `loading` übergeben wird, auch als `false`), nicht darin: der zugängliche Name bleibt die sichtbare Beschriftung,
+`aria-busy` bleibt gesetzt, ein ruhender Button sagt nichts. Der Statusbereich ist beim ersten Rendern leer und wird erst
+danach gefüllt; ein Screenreader liest ihn dadurch auch, wenn der Button schon mit `loading` startet. Das Ende des
+Ladens wird nicht angesagt (den Ausgang melden `StatusMessage`, `toast` oder `announce`).
+
 **Card:** `as` wählt das Wurzelelement: `article` (Vorgabe), `section`, `div` oder `li` (Karten
 direkt in einer `<ul>`). Ohne `title` gibt es keine Überschrift. `id`, `aria-*`, `data-*` und
 Ereignisse gehen an das Wurzelelement; `<k-card as="li">` bekommt selbst `role="listitem"`.

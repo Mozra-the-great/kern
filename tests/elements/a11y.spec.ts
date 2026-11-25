@@ -48,7 +48,7 @@ const cases: Case[] = [
 			await page.locator('#boom button').click();
 			await expect(page.locator('#boom [role="alert"]')).toHaveText('Could not make the file');
 			await page.locator('#icon button').click();
-			await expect(page.locator('#icon [role="status"]')).toHaveText('Download started');
+			await expect(page.locator('#icon .k-status-message[role="status"]')).toHaveText('Download started');
 		}
 	},
 	{ name: 'strings' },
