@@ -17,7 +17,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { createThemeScript, themeScriptHash } from '../../src/lib/components/theme.ts';
-import { THEME_KEY, THEME_OPTIONS, strictPolicy } from './policy.mjs';
+import { THEME_HASH_PLACEHOLDER, THEME_KEY, THEME_OPTIONS, strictPolicy } from './policy.mjs';
 
 const root = new URL('../../', import.meta.url);
 const source = (path: string): string => readFileSync(new URL(path, root), 'utf8');
@@ -392,6 +392,13 @@ const CASES: Record<string, Case> = {
 };
 
 test.describe('strict CSP: the served policy', () => {
+	test('the consumer guide documents exactly the tested policy', () => {
+		const section = source('docs/consumer-guide.md').split('**Geprüfte Policy für den Svelte-Weg**')[1];
+		expect(section, 'docs/consumer-guide.md lost the section "Geprüfte Policy für den Svelte-Weg"').toBeDefined();
+		const block = /\n```\r?\n([^\r\n]+)\r?\n```/.exec(section ?? '')?.[1];
+		expect(block).toBe(strictPolicy(THEME_HASH_PLACEHOLDER));
+	});
+
 	test('is the documented policy word for word, with the theme-script hash and nothing inline', async ({ page }) => {
 		const expected = strictPolicy(await themeScriptHash(THEME_KEY, THEME_OPTIONS));
 		for (const path of ['/index.html', '/canary/index.html']) {

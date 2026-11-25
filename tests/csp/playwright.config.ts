@@ -13,7 +13,8 @@ export default defineConfig({
 	fullyParallel: true,
 	workers: 2,
 	forbidOnly: !!process.env.CI,
-	retries: process.env.CI ? 1 : 0,
+	// No retries: an intermittent violation is a violation, never "flaky".
+	retries: 0,
 	reporter: process.env.CI ? [['list'], ['github']] : 'list',
 	use: { baseURL: `http://127.0.0.1:${port}`, actionTimeout: 5_000 },
 	expect: { timeout: 5_000 },

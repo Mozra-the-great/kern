@@ -98,7 +98,7 @@ Vite app that imports the built package and mounts every exported component in a
 `tests/csp/policy.mjs` (the one the consumer guide documents), with the theme-script hash from `themeScriptHash()` of the
 built package. `tests/csp/csp.spec.ts`:
 
-- asserts the served policy word for word and that it has no `'unsafe-inline'`, `'unsafe-eval'`, `data:` or `*`;
+- asserts that the policy block of the consumer guide is the tested policy, and the served policy word for word with no `'unsafe-inline'`, `'unsafe-eval'`, `data:` or `*`;
 - checks that the hashed theme script runs (stored theme, system dark and light);
 - in each of the eight theme variants renders the page and runs every entry of `CASES` (overlays, pickers, menus, toasts,
   tooltips, drag and keyboard interactions that set inline styles), failing on any `securitypolicyviolation` event, any

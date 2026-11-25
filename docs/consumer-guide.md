@@ -263,10 +263,22 @@ Template-HTML, der Browser behandelt es als Inline-Style), ein eingefügtes `<st
 
 **Hash des Theme-Scripts.** `themeScriptHash(key, options)` aus `@mozra-the-great/kern` gibt die fertige Quelle für
 `script-src` zurück, mit Anführungszeichen (`'sha256-…'`), als Promise; dieselben Argumente wie `createThemeScript`.
-`scriptHash(text)` tut dasselbe für jedes andere Inline-Script, etwa das von `createAccentScript`. Beide rechnen mit
-Web Crypto (`crypto.subtle`, Node ≥ 22). Der Hash gilt für den Text genau so, wie die Funktion ihn liefert: ohne
-zusätzliche Leerzeichen oder Zeilenumbrüche zwischen `<script>` und `</script>` einsetzen. Er hängt an der
-kern-Version und den Argumenten; nach einem Update neu berechnen (am einfachsten beim Start des Servers).
+`scriptHash(text)` tut dasselbe für jedes andere feste Inline-Script, etwa `createAccentScript(key)` ohne Nonce. Beide
+rechnen mit Web Crypto (`crypto.subtle`, Node ≥ 22). Der Hash gilt für den Text genau so, wie die Funktion ihn
+liefert: ohne zusätzliche Leerzeichen oder Zeilenumbrüche zwischen `<script>` und `</script>` einsetzen, und die Seite
+als UTF-8 ausliefern (`<meta charset="utf-8">` bzw. `charset=utf-8` im `Content-Type`; ein Schlüssel mit
+Nicht-ASCII-Zeichen ergibt in einer anders kodierten Seite einen anderen Hash). Er hängt an der kern-Version und den
+Argumenten; nach einem Update neu berechnen, am einfachsten einmal beim Start des Servers.
+
+Nur Script-Text hashen, den die App selbst festlegt: nie Inhalte aus Nutzereingaben oder Daten, die sich pro Anfrage
+ändern. Ein Hash erlaubt genau diesen Text auf jeder Seite, für immer; wer fremden Text hasht, gibt fremdem Code die
+Freigabe.
+
+**Nonce statt Hash.** `createAccentScript(key, { nonce })` schreibt das Nonce in den Script-Text (für das `<style>`,
+das es einsetzt); dieser Text ändert sich also mit jeder Anfrage und hat keinen festen Hash. Mit Nonce braucht es
+keinen Hash: das Nonce auf das Element setzen (`<script nonce="…">`), in `script-src 'nonce-…'` und `style-src
+'nonce-…'` eintragen und für **jede Anfrage neu** erzeugen (zufällig, mindestens 128 Bit, nie wiederverwenden). Den
+Hash einmal beim Serverstart berechnen gilt nur für Scripts ohne Nonce.
 
 ```ts
 import { createThemeScript, themeScriptHash } from '@mozra-the-great/kern';
@@ -289,8 +301,15 @@ const csp = [
 
 Nicht abgedeckt: der Vite-Dev-Server (er fügt CSS als `<style>` ein), die Custom Elements (siehe Tabelle) und
 Server-Rendering. SvelteKit schreibt `style:`-Werte beim Rendern als `style="…"`-Attribut ins HTML, und solche
-Attribute blockiert `style-src 'self'`; ein Nonce gilt für sie nicht, ein Hash nur mit `'unsafe-hashes'`. Der geprüfte
-Weg ist eine App, die im Browser rendert (Vite-SPA, SvelteKit mit `ssr = false`).
+Attribute blockiert `style-src 'self'`; ein Nonce gilt für sie nicht, ein Hash nur mit `'unsafe-hashes'`. Geprüft ist
+nur eine Vite-SPA: eine statische HTML-Datei mit dem Theme-Script als einzigem Inline-Script.
+
+**SvelteKit ist nicht geprüft**, auch nicht mit `ssr = false`: SvelteKit schreibt auch dann ein eigenes Inline-Script
+zum Start der App in die HTML-Hülle, und die Policy oben blockiert es. Dafür ist `kit.csp` in `svelte.config.js` da
+(`mode: 'hash'` oder `'nonce'`): SvelteKit trägt dann Hash oder Nonce seines eigenen Start-Scripts selbst ein. Der Hash
+des Theme-Scripts gehört in `kit.csp.directives['script-src']` (neben `'self'`). Keinen zweiten CSP-Header neben
+`kit.csp` senden: zwei Policies gelten beide, und was eine erlaubt, blockiert die andere. `'unsafe-inline'` ist nie
+der Ausweg.
 
 kern erzeugt Markup nie aus Strings (kein `{@html}`, kein `innerHTML`; `npm run check:html` in CI), Texte aus Props
 sind immer Textknoten. Eine App kann also auch fremden Text ohne Bereinigung übergeben; Links in `Prose` werden nur

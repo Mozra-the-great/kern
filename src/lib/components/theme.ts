@@ -138,7 +138,9 @@ export const themeScript: string = createThemeScript('kern-theme');
 /**
  * The CSP hash source of an inline script, `'sha256-…'` (quotes included), for `script-src`. The hash covers the
  * exact text between `<script>` and `</script>` as UTF-8: put the script in unchanged, without added whitespace
- * or a trailing newline, or the browser computes another hash and blocks it. Uses Web Crypto
+ * or a trailing newline, or the browser computes another hash and blocks it; serve the page as UTF-8 (a non-ASCII
+ * character in a page with another encoding gives another hash). Only hash script text you wrote: never content
+ * derived from user input or per-request data, since a hash allows that exact text on every page. Uses Web Crypto
  * (`crypto.subtle`, Node ≥ 22 and every current browser on a secure origin); rejects where it is missing.
  */
 export async function scriptHash(source: string): Promise<string> {

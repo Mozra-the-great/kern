@@ -8,13 +8,18 @@ export const THEME_KEY = 'kern-csp-theme';
 /** Options of the theme script: `followSystem` so its longest branch runs too. */
 export const THEME_OPTIONS = Object.freeze({ followSystem: true });
 
+/** How the consumer guide writes the theme-script hash; csp.spec.ts compares the guide's policy with this one. */
+export const THEME_HASH_PLACEHOLDER = "'sha256-<createThemeScript>'";
+
 /**
- * The policy with the given `'sha256-…'` source of the theme script.
+ * The policy with the given `'sha256-…'` source of the theme script, or with THEME_HASH_PLACEHOLDER for the
+ * documented form.
  * @param {string} themeHash
  * @returns {string}
  */
 export function strictPolicy(themeHash) {
-	if (!/^'sha256-[A-Za-z0-9+/]{43}='$/.test(themeHash)) throw new Error(`not a CSP sha256 source: ${themeHash}`);
+	if (themeHash !== THEME_HASH_PLACEHOLDER && !/^'sha256-[A-Za-z0-9+/]{43}='$/.test(themeHash))
+		throw new Error(`not a CSP sha256 source: ${themeHash}`);
 	return [
 		"default-src 'none'",
 		`script-src 'self' ${themeHash}`,
