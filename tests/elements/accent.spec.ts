@@ -446,3 +446,53 @@ test('elements/accent registers window.kern.accent and no tag', async ({ page })
 	expect(await page.evaluate(() => !!customElements.get('k-button'))).toBe(false);
 	expect(await page.evaluate(() => window.kern?.accent.tokens('#e91e8c', { theme: 'flower' }).ok)).toBe(true);
 });
+
+/**
+ * An accent on a subtree (applyAccent sets the tokens inline on that element) reaches the parts that read the
+ * accent colours, also through the component tokens of #38/#111: those resolve on the component, not on the
+ * theme element (Input focus edge; the Code danger button, which hovers like a primary one).
+ */
+test.describe('accent on a subtree reaches the component tokens', () => {
+	const PINK = 'rgb(233, 30, 140)';
+	const DARK = 'rgb(10, 26, 92)';
+	async function openAccented(page: Page, theme: string): Promise<void> {
+		// no colour transitions: the computed colour is the end state at once
+		await page.emulateMedia({ reducedMotion: 'reduce' });
+		await page.goto(`/tests/elements/pages/visual.html?theme=${theme}`);
+		await page.evaluate(() => customElements.whenDefined('k-input'));
+		await page.evaluate(
+			([pink, dark]) => {
+				for (const s of ['input', 'button']) {
+					const el = document.querySelector<HTMLElement>(`[data-shot="${s}"]`);
+					el?.style.setProperty('--k-accent-mark', pink);
+					el?.style.setProperty('--k-primary-hover', dark);
+					el?.style.setProperty('--k-on-primary-hover', pink);
+				}
+			},
+			[PINK, DARK]
+		);
+	}
+	for (const theme of ['flower', 'line', 'code']) {
+		test(`focus edge of k-input in ${theme}`, async ({ page }) => {
+			await openAccented(page, theme);
+			await page.locator('[data-shot="input"] k-input').first().locator('input').focus();
+			const edge = await page
+				.locator('[data-shot="input"] k-input')
+				.first()
+				.locator('.k-input')
+				.evaluate((el) => getComputedStyle(el).borderTopColor);
+			// Code keeps the field edge while focused (stuffcloud); every other theme shows the accent there
+			if (theme === 'code') expect(edge).not.toBe(PINK);
+			else expect(edge).toBe(PINK);
+		});
+	}
+	test('danger hover in code follows the subtree primary hover', async ({ page }) => {
+		await openAccented(page, 'code');
+		const button = page.locator('[data-shot="button"] k-button[variant="danger"] button');
+		await button.hover();
+		// color-mix() reports in color(srgb …): 10, 26, 92 are 0.0392, 0.102, 0.361
+		await expect
+			.poll(() => button.evaluate((el) => getComputedStyle(el).backgroundColor))
+			.toMatch(/^(rgb\(10, 26, 92\)|color\(srgb 0\.0392\d* 0\.10196\d* 0\.36078\d*\))$/);
+	});
+});

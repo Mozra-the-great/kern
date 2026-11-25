@@ -68,9 +68,8 @@
 	--k-button-leading: normal;
 	/* a pressed button only turns pink, it does not move */
 	--k-button-press-offset: 0px;
-	/* .btn:hover turns every button pink, the danger button too */
-	--k-button-danger-hover-bg: var(--k-primary-hover);
-	--k-button-danger-hover-fg: var(--k-on-primary-hover);
+	/* .btn:hover turns every button pink (--k-primary-hover), the danger button too */
+	--k-button-danger-hover-as-primary: 1;
 	--k-button-danger-hover-filter: none;
 	--k-field-font: var(--k-font-mono);
 	--k-field-size: 15px;

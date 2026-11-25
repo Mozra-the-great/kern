@@ -84,7 +84,7 @@
 	select:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
-		border-color: var(--k-field-focus-border);
+		border-color: var(--k-field-focus-border, var(--k-accent-mark));
 	}
 	.invalid select {
 		border-color: var(--k-danger);

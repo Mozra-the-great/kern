@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Under forced colours the error icon, the tone dot and kern's own checkbox stay. The few remaining differences
   and their reasons are in `docs/themes.md` ("Remaining differences"). New component tokens (defaults are exactly
   what the components drew before, so Flower, Pop and Line do not change): `--k-button-leading`,
-  `--k-button-press-offset`, `--k-button-danger-hover-bg`, `-fg`, `-filter`, `--k-field-hover-border`,
+  `--k-button-press-offset`, `--k-button-danger-hover-as-primary`, `-filter`, `--k-field-hover-border`,
   `--k-field-focus-border`, `--k-field-error-icon`, `--k-select-appearance`, `--k-select-chevron`,
   `--k-select-pad-end`, `--k-check-appearance`, `--k-check-tick`, `--k-check-row-h`, `--k-check-disabled-fg`,
   `--k-tabs-fade-start`, `--k-tabs-fade-end`, `--k-modal-action-w`, `--k-modal-width`, `-margin`, `-border-w`,

@@ -8,6 +8,9 @@ const port = Number(process.env.KERN_TEST_PORT ?? 4791);
 export default defineConfig({
 	testDir: '.',
 	testMatch: '*.spec.ts',
+	// next to this file (tests/elements/test-results): the path CI uploads as `visual-results` and
+	// scripts/ci/visual-baselines.mjs reads; without it the folder lands in the working directory
+	outputDir: 'test-results',
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 1 : 0,
 	reporter: process.env.CI ? [['list'], ['github']] : 'list',

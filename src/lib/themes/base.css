@@ -164,8 +164,9 @@
 	--k-button-leading: 1.2;
 	/* how far a pressed button moves down */
 	--k-button-press-offset: 1px;
-	--k-button-danger-hover-bg: var(--k-danger);
-	--k-button-danger-hover-fg: var(--k-on-danger);
+	/* 1: a danger button hovers like a primary one (--k-primary-hover, --k-on-primary-hover); the colours are
+	 * read by the button itself, so an accent set on a subtree reaches them */
+	--k-button-danger-hover-as-primary: 0;
 	--k-button-danger-hover-filter: brightness(0.92);
 	/* Input, Select (the control) and Field, Label (label, hint and error) */
 	--k-field-font: initial;
@@ -178,9 +179,10 @@
 	--k-field-hint-font: initial;
 	--k-field-hint-size: var(--k-text-sm);
 	--k-field-hint-color: var(--k-fg-hint);
-	/* edge of Input and Select on hover and while focused (the focus ring is drawn as well) */
+	/* edge of Input and Select on hover; while focused (the ring is drawn as well) the edge is
+	 * --k-field-focus-border, which has no default here: the component falls back to --k-accent-mark
+	 * itself, so an accent set on a subtree (applyAccent) still reaches it */
 	--k-field-hover-border: var(--k-fg-muted);
-	--k-field-focus-border: var(--k-accent-mark);
 	/* `display` of the icon before a field error; `none` leaves the text alone (forced colours always show it) */
 	--k-field-error-icon: block;
 	/* Select: `auto` uses the browser's own arrow, then --k-select-chevron (`display` of kern's) is `none` */

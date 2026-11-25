@@ -239,8 +239,9 @@
 		color: var(--k-on-danger);
 	}
 	[data-variant='danger']:hover:not(:disabled, [aria-disabled='true']) {
-		background: var(--k-button-danger-hover-bg);
-		color: var(--k-button-danger-hover-fg);
+		/* --k-button-danger-hover-as-primary 0: the danger colours (darkened by the filter), 1: the primary hover */
+		background: color-mix(in srgb, var(--k-primary-hover) calc(var(--k-button-danger-hover-as-primary) * 100%), var(--k-danger));
+		color: color-mix(in srgb, var(--k-on-primary-hover) calc(var(--k-button-danger-hover-as-primary) * 100%), var(--k-on-danger));
 		filter: var(--k-button-danger-hover-filter);
 	}
 

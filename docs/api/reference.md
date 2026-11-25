@@ -306,7 +306,7 @@ Keine eigenen Ereignisse.
 
 ### Eigene CSS-Variablen
 
-`--k-button-danger-hover-bg`, `--k-button-danger-hover-fg`, `--k-button-danger-hover-filter`, `--k-button-font`, `--k-button-gap`, `--k-button-leading`, `--k-button-pad-x`, `--k-button-press-offset`, `--k-button-secondary-border`, `--k-button-secondary-hover-bg`, `--k-button-secondary-weight`, `--k-button-size`, `--k-button-tracking`, `--k-button-transform`, `--k-button-weight`
+`--k-button-danger-hover-as-primary`, `--k-button-danger-hover-filter`, `--k-button-font`, `--k-button-gap`, `--k-button-leading`, `--k-button-pad-x`, `--k-button-press-offset`, `--k-button-secondary-border`, `--k-button-secondary-hover-bg`, `--k-button-secondary-weight`, `--k-button-size`, `--k-button-tracking`, `--k-button-transform`, `--k-button-weight`
 
 ## Card
 

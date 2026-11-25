@@ -103,16 +103,11 @@
 					"design": null,
 					"note": "a pressed button only turns pink, it does not move"
 				},
-				"--k-button-danger-hover-bg": {
-					"value": "var(--k-primary-hover)",
+				"--k-button-danger-hover-as-primary": {
+					"value": "1",
 					"from": "design:stuff.css|.btn:hover{background}",
 					"design": "var(--pink)",
-					"note": ".btn:hover turns every button pink, the danger button too"
-				},
-				"--k-button-danger-hover-fg": {
-					"value": "var(--k-on-primary-hover)",
-					"from": "design:stuff.css|.btn:hover{color}",
-					"design": "var(--bg)"
+					"note": ".btn:hover turns every button pink (--k-primary-hover), the danger button too"
 				},
 				"--k-button-danger-hover-filter": { "value": "none", "from": "design:stuff.css|.btn:hover{filter}", "design": null },
 				"--k-field-font": { "value": "var(--k-font-mono)", "from": "design:stuff.css|.field{font}", "design": "15px var(--mono)" },
