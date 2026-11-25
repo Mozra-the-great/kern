@@ -794,7 +794,8 @@ Tab-Leiste, kein `tabpanel` und kein `aria-controls`; die App zeigt den Inhalt s
 `badgeLabel` bleibt stumm), `badgeTone` (`accent`, `danger`), `disabled` und `hidden` (nicht
 gerendert, z. B. ein Admin-Tab) haben. Der Name des Tabs lautet dann „Mehr Sync-Fehler“. Pfeiltasten
 überspringen gesperrte und versteckte Tabs. Auf schmalen Bildschirmen scrollt die Leiste seitlich;
-die Kante mit verdeckten Tabs blendet aus, der Fokusring liegt innen. Wie bisher kommt `change` nur
+die Kante mit verdeckten Tabs blendet aus (im Code-Theme wie in stuffcloud nur die Endkante und nur unter
+760 px), der Fokusring liegt innen. Wie bisher kommt `change` nur
 bei Nutzereingaben.
 
 ```svelte

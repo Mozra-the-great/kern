@@ -161,6 +161,12 @@
 	--k-button-secondary-border: var(--k-border);
 	--k-button-secondary-weight: var(--k-button-weight);
 	--k-button-secondary-hover-bg: var(--k-bg-sunken);
+	--k-button-leading: 1.2;
+	/* how far a pressed button moves down */
+	--k-button-press-offset: 1px;
+	--k-button-danger-hover-bg: var(--k-danger);
+	--k-button-danger-hover-fg: var(--k-on-danger);
+	--k-button-danger-hover-filter: brightness(0.92);
 	/* Input, Select (the control) and Field, Label (label, hint and error) */
 	--k-field-font: initial;
 	--k-field-size: var(--k-text-md);
@@ -172,12 +178,29 @@
 	--k-field-hint-font: initial;
 	--k-field-hint-size: var(--k-text-sm);
 	--k-field-hint-color: var(--k-fg-hint);
+	/* edge of Input and Select on hover and while focused (the focus ring is drawn as well) */
+	--k-field-hover-border: var(--k-fg-muted);
+	--k-field-focus-border: var(--k-accent-mark);
+	/* `display` of the icon before a field error; `none` leaves the text alone (forced colours always show it) */
+	--k-field-error-icon: block;
+	/* Select: `auto` uses the browser's own arrow, then --k-select-chevron (`display` of kern's) is `none` */
+	--k-select-appearance: none;
+	--k-select-chevron: block;
+	--k-select-pad-end: calc(var(--k-field-pad-x) + 24px);
 	/* Checkbox */
 	--k-check-gap: var(--k-space-3);
 	--k-check-checked: var(--k-primary);
 	--k-check-mark: var(--k-on-primary);
 	--k-check-label-size: initial;
 	--k-check-disabled-opacity: 0.5;
+	/* `auto` draws the browser's checkbox (filled with --k-check-checked via accent-color), then
+	 * --k-check-tick (`display` of kern's tick) is `none`; forced colours always get kern's box */
+	--k-check-appearance: none;
+	--k-check-tick: block;
+	/* the row is padded to this height (at least --k-tap-target) */
+	--k-check-row-h: var(--k-tap-target);
+	/* label colour of a disabled checkbox (`initial` = inherit) */
+	--k-check-disabled-fg: initial;
 	/* Card */
 	--k-card-bg: var(--k-bg-raised);
 	--k-card-pad: var(--k-space-6);
@@ -197,6 +220,9 @@
 	--k-tab-hover-fg: var(--k-fg);
 	--k-tab-selected-bg: transparent;
 	--k-tab-divider-w: 0px;
+	/* width of the fade at an edge with hidden tabs; 0px turns that fade off */
+	--k-tabs-fade-start: 36px;
+	--k-tabs-fade-end: 36px;
 	/* Modal (--k-modal-actions-direction: column-reverse stacks the footer, a theme sets it at its phone breakpoint) */
 	--k-modal-bg: var(--k-bg-raised);
 	--k-modal-pad: var(--k-space-6);
@@ -205,6 +231,24 @@
 	--k-modal-title-tracking: 0;
 	--k-modal-title-leading: 1.3;
 	--k-modal-actions-direction: row;
+	/* width of the footer actions (`100%` for a stacked footer, custom elements too) */
+	--k-modal-action-w: auto;
+	/* `initial` = the size prop's width; a theme sets 100% (with --k-modal-margin: auto 0 0) for a sheet at the bottom */
+	--k-modal-width: initial;
+	--k-modal-margin: auto;
+	--k-modal-border-w: var(--k-border-w);
+	--k-modal-shadow: var(--k-shadow-overlay);
+	--k-modal-enter-dur: var(--k-dur);
+	/* the close button: pulled into the corner by this much */
+	--k-modal-close-inset: calc(12px - var(--k-tap-icon) / 2);
+	/* close buttons of Modal and Toaster: icon colour, hover fill and an edge (--k-line-strong, --k-fg on hover) */
+	--k-close-fg: var(--k-fg-muted);
+	--k-close-hover-bg: var(--k-bg-sunken);
+	--k-close-border-w: 0px;
+	/* the cross: icon box of each close button and its stroke (in the 16-unit icon grid, the cross spans half the box) */
+	--k-modal-close-icon: 16px;
+	--k-toast-close-icon: 14px;
+	--k-close-stroke: 2;
 	/* Progress */
 	--k-progress-track: var(--k-bg-sunken);
 	--k-progress-track-border-w: var(--k-border-w);
@@ -214,6 +258,12 @@
 	--k-toast-pad: var(--k-space-3) var(--k-space-3) var(--k-space-3) var(--k-space-4);
 	--k-toast-ok-border: var(--k-line-strong);
 	--k-toast-warn-border: var(--k-line-strong);
+	/* `display` of the tone dot (forced colours keep it: its shape tells the tones apart) */
+	--k-toast-dot: block;
+	--k-toast-align: flex-start;
+	--k-toast-text-offset: 2px;
+	--k-toast-close-size: 32px;
+	--k-toast-enter-dur: var(--k-dur);
 	/* FileDrop */
 	--k-filedrop-bg: var(--k-bg-sunken);
 	--k-filedrop-pad: var(--k-space-6) var(--k-space-4);
@@ -222,6 +272,13 @@
 	--k-filedrop-prompt-weight: var(--k-weight-label);
 	--k-filedrop-prompt-transform: var(--k-label-transform);
 	--k-filedrop-prompt-tracking: var(--k-label-tracking);
+	/* `display` of the upload icon */
+	--k-filedrop-icon: block;
+	/* inset ring inside the solid edge while dragging */
+	--k-filedrop-drag-ring: var(--k-border-w);
+	/* with a picker button: gap and the prompt's flex basis (the button wraps under it below that) */
+	--k-filedrop-split-gap: var(--k-space-3) var(--k-space-4);
+	--k-filedrop-prompt-basis: 10em;
 }
 
 /* Coarse pointers (touch) always get 44px targets. */

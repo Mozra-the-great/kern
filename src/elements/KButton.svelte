@@ -79,4 +79,8 @@
 	:host([wide]) {
 		display: block;
 	}
+	/* In a stacked <k-modal> footer the host is as wide as the row (KModal); the button fills it. Unset elsewhere. */
+	:global(.k-button) {
+		width: var(--k-modal-action-fill, auto);
+	}
 </style>

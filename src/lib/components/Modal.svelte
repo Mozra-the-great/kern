@@ -105,27 +105,31 @@
 
 <style>
 	.k-modal {
-		width: min(520px, calc(100vw - 32px));
+		width: var(--k-modal-width, min(520px, calc(100vw - 32px)));
+		/* a theme's width also beats the browser's max-width for modal dialogs (100% less 2em and 6px) */
+		min-width: var(--k-modal-width, auto);
 		max-height: calc(100dvh - 32px);
+		margin: var(--k-modal-margin);
 		padding: 0;
 		border: var(--k-border-w) solid var(--k-line-strong);
+		border-width: var(--k-modal-border-w);
 		border-radius: var(--k-radius-overlay);
 		background: var(--k-modal-bg);
 		color: var(--k-fg);
-		box-shadow: var(--k-shadow-overlay);
+		box-shadow: var(--k-modal-shadow);
 		font-family: var(--k-font-sans);
 	}
 	[data-size='sm'] {
-		width: min(400px, calc(100vw - 32px));
+		width: var(--k-modal-width, min(400px, calc(100vw - 32px)));
 	}
 	[data-size='lg'] {
-		width: min(760px, calc(100vw - 32px));
+		width: var(--k-modal-width, min(760px, calc(100vw - 32px)));
 	}
 	.k-modal::backdrop {
 		background: var(--k-backdrop);
 	}
 	.k-modal[open] {
-		animation: k-pop var(--k-dur) var(--k-ease);
+		animation: k-pop var(--k-modal-enter-dur) var(--k-ease);
 	}
 	.inner {
 		display: grid;
@@ -158,31 +162,38 @@
 		gap: var(--k-space-3);
 		margin-top: var(--k-space-2);
 	}
+	footer :global(> *) {
+		width: var(--k-modal-action-w);
+	}
 	.x {
 		flex: none;
 		display: grid;
 		place-items: center;
 		width: var(--k-tap-icon);
 		height: var(--k-tap-icon);
-		margin: calc(12px - var(--k-tap-icon) / 2) calc(12px - var(--k-tap-icon) / 2) 0 0;
+		margin: var(--k-modal-close-inset) var(--k-modal-close-inset) 0 0;
 		padding: 0;
-		border: 0;
+		border: var(--k-close-border-w) solid var(--k-line-strong);
 		border-radius: var(--k-radius-control);
 		background: transparent;
-		color: var(--k-fg-muted);
+		color: var(--k-close-fg);
 		cursor: pointer;
 	}
 	.x:hover {
 		color: var(--k-fg);
-		background: var(--k-bg-sunken);
+		background: var(--k-close-hover-bg);
+		border-color: var(--k-fg);
 	}
 	.x:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: 0;
 	}
 	.x svg {
-		width: 16px;
-		height: 16px;
+		width: var(--k-modal-close-icon);
+		height: var(--k-modal-close-icon);
+	}
+	.x path {
+		stroke-width: var(--k-close-stroke);
 	}
 	@keyframes k-pop {
 		from {

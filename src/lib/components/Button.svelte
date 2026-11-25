@@ -146,7 +146,7 @@
 		font-weight: var(--k-button-weight);
 		text-transform: var(--k-button-transform);
 		letter-spacing: var(--k-button-tracking);
-		line-height: 1.2;
+		line-height: var(--k-button-leading);
 		text-decoration: none;
 		cursor: pointer;
 		user-select: none;
@@ -162,7 +162,7 @@
 		outline-offset: var(--k-focus-offset);
 	}
 	.k-button:active:not(:disabled, [aria-disabled='true']) {
-		transform: translateY(1px);
+		transform: translateY(var(--k-button-press-offset));
 	}
 	.k-button:disabled,
 	.k-button[aria-disabled='true'] {
@@ -239,7 +239,9 @@
 		color: var(--k-on-danger);
 	}
 	[data-variant='danger']:hover:not(:disabled, [aria-disabled='true']) {
-		filter: brightness(0.92);
+		background: var(--k-button-danger-hover-bg);
+		color: var(--k-button-danger-hover-fg);
+		filter: var(--k-button-danger-hover-filter);
 	}
 
 	.spin {

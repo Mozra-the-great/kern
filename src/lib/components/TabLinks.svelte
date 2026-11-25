@@ -70,22 +70,22 @@
 		scrollbar-width: var(--k-tabs-scrollbar);
 	}
 	.list[data-fade-end] {
-		mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
+		mask-image: linear-gradient(90deg, #000 calc(100% - var(--k-tabs-fade-end)), transparent);
 	}
 	.list[data-fade-start] {
-		mask-image: linear-gradient(90deg, transparent, #000 36px);
+		mask-image: linear-gradient(90deg, transparent, #000 var(--k-tabs-fade-start));
 	}
 	.list[data-fade-start][data-fade-end] {
-		mask-image: linear-gradient(90deg, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+		mask-image: linear-gradient(90deg, transparent, #000 var(--k-tabs-fade-start), #000 calc(100% - var(--k-tabs-fade-end)), transparent);
 	}
 	.list:dir(rtl)[data-fade-end] {
-		mask-image: linear-gradient(270deg, #000 calc(100% - 36px), transparent);
+		mask-image: linear-gradient(270deg, #000 calc(100% - var(--k-tabs-fade-end)), transparent);
 	}
 	.list:dir(rtl)[data-fade-start] {
-		mask-image: linear-gradient(270deg, transparent, #000 36px);
+		mask-image: linear-gradient(270deg, transparent, #000 var(--k-tabs-fade-start));
 	}
 	.list:dir(rtl)[data-fade-start][data-fade-end] {
-		mask-image: linear-gradient(270deg, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+		mask-image: linear-gradient(270deg, transparent, #000 var(--k-tabs-fade-start), #000 calc(100% - var(--k-tabs-fade-end)), transparent);
 	}
 	[data-look='line'] .list {
 		border-bottom: var(--k-border-w) solid var(--k-line);

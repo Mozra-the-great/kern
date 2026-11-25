@@ -256,14 +256,14 @@
 		pointer-events: auto;
 		display: flex;
 		gap: var(--k-space-3);
-		align-items: flex-start;
+		align-items: var(--k-toast-align);
 		padding: var(--k-toast-pad);
 		border: var(--k-border-w) solid var(--k-line-strong);
 		border-radius: var(--k-radius-overlay);
 		background: var(--k-bg-raised);
 		color: var(--k-fg);
 		box-shadow: var(--k-shadow-sm);
-		animation: k-in var(--k-dur) var(--k-ease);
+		animation: k-in var(--k-toast-enter-dur) var(--k-ease);
 	}
 	[data-tone='ok'] {
 		--c: var(--k-ok);
@@ -280,17 +280,19 @@
 		background: var(--k-surface-danger);
 	}
 	.dot {
+		display: var(--k-toast-dot);
 		flex: none;
 		width: 10px;
 		height: 10px;
-		margin-top: 7px;
+		/* level with the first text line; centred toasts (offset 0) need none */
+		margin-top: calc(var(--k-toast-text-offset) * 3.5);
 		border-radius: var(--k-radius-badge);
 		background: var(--c);
 	}
 	.content {
 		flex: 1;
 		min-width: 0;
-		padding-top: 2px;
+		padding-top: var(--k-toast-text-offset);
 		overflow-wrap: anywhere;
 	}
 	.title {
@@ -323,18 +325,19 @@
 		flex: none;
 		display: grid;
 		place-items: center;
-		width: 32px;
-		height: 32px;
+		width: var(--k-toast-close-size);
+		height: var(--k-toast-close-size);
 		padding: 0;
-		border: 0;
+		border: var(--k-close-border-w) solid var(--k-line-strong);
 		border-radius: var(--k-radius-control);
 		background: transparent;
-		color: var(--k-fg-muted);
+		color: var(--k-close-fg);
 		cursor: pointer;
 	}
 	.x:hover {
 		color: var(--k-fg);
-		background: var(--k-bg-sunken);
+		background: var(--k-close-hover-bg);
+		border-color: var(--k-fg);
 	}
 	.act::after,
 	.x::after {
@@ -343,8 +346,11 @@
 		inset: min(0px, calc((100% - var(--k-tap-target)) / 2));
 	}
 	.x svg {
-		width: 14px;
-		height: 14px;
+		width: var(--k-toast-close-icon);
+		height: var(--k-toast-close-icon);
+	}
+	.x path {
+		stroke-width: var(--k-close-stroke);
 	}
 	button:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
@@ -364,7 +370,9 @@
 		[data-tone='danger'] {
 			border-width: 3px;
 		}
+		/* shown even where the theme hides it: here its shape is what tells the tones apart */
 		.dot {
+			display: block;
 			forced-color-adjust: none;
 			background: CanvasText;
 			/* square, whatever radius the theme gives a badge (Flower, Pop and Line round it into a circle) */
