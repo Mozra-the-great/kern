@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-11-25
+
 ### Added
 - `themeScriptHash(storageKey, options)` and `scriptHash(source)`: the `'sha256-…'` source for `script-src` that allows
   the inline script of `createThemeScript` (or any other inline script, such as `createAccentScript`) under a CSP
