@@ -7,7 +7,7 @@ most cheaply and most truthfully.
 | ---------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | Node (`node` project)        | `tests/tokens`, `tests/unit`, `tests/components`, `tests/mascot/*.test.ts` | `npm test`                                                | Theme contrast, brand isolation, pure logic, server-rendered markup (`svelte/server`)    |
 | DOM (`dom` project)          | `tests/dom`                                                        | `npm test`                                                       | Component behaviour in jsdom: props, `bind:`, callbacks, keyboard, focus, ARIA, states   |
-| Browser (Playwright)         | `tests/targets`, `tests/elements`, `tests/mascot/*.spec.ts`        | `npm run test:targets`, `test:elements`, `test:mascot` (after build) | Real layout and CSS: touch targets, overlays, axe, visual regression, custom elements    |
+| Browser (Playwright)         | `tests/targets`, `tests/elements`, `tests/mascot/*.spec.ts`        | `npm run test:targets`, `test:elements`, `test:mascot` (after build) | Real layout and CSS: touch targets, 320 px reflow of the demo, overlays, axe, visual regression, custom elements    |
 | Types and consumers          | `tests/fixtures`                                                   | `npm run test:types`, `npm run test:consumer`                    | Published typings, strict consumer, React 19                                              |
 
 `npm test` runs both Vitest projects (`vitest.config.ts`). `npm run test:coverage` is the same run with the
@@ -110,6 +110,12 @@ phone menu of the navbar) put it in the state an overlay or error shows.
 | `a11y-overlays.spec.ts`           | modal dialogs (focus in, Tab trapped, Escape closes, focus back on the opener) and every other overlay (Escape closes, focus back, Tab leaves)                                 | one test per overlay (Code)                   |
 | `a11y-motion.spec.ts`             | reduced motion: no running animation or transition longer than a frame (`getAnimations()` on the document and every shadow root), no smooth scrolling, effects at their end state | 8 themes x 12 pages, 2 themes x 15 states, 8 themes x an interaction run |
 | `a11y-reflow.spec.ts`             | 320 x 640: no horizontal page scroll, no control cut off by a container or the screen                                                                                          | 8 themes x (12 pages + 15 states)             |
+
+The demo itself has a reflow guard of its own ([#116](https://github.com/Mozra-the-great/kern/issues/116)):
+`tests/targets/reflow.spec.ts` asserts `document.documentElement.scrollWidth <= window.innerWidth` at 320 x 640 on the
+built `index.html` and `elements.html` in the same eight variants (it runs with `npm run test:targets`, in the `build`
+job). The page-level check of `a11y-reflow.spec.ts` covers the components; this one covers the layout around them (a
+long label on a `nowrap` button, unbreakable code in a paragraph, a grid track that grows with its content).
 
 Coverage guards, so a new element cannot slip through: `a11y-matrix.spec.ts` fails when `forced-colors.html` lacks an
 element of `custom-elements.json` or an overlay has no open state; `a11y-keyboard.spec.ts` fails when `KEYBOARD` (one

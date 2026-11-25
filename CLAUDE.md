@@ -25,7 +25,7 @@ tests/tokens/         Vitest (node project): theme contrast, per-brand entry iso
 tests/unit/ tests/components/  Vitest (node project): logic and server-rendered markup (svelte/server, no DOM)
 tests/dom/            Vitest (dom project, jsdom + @testing-library/svelte): smoke test of every export (smoke.test.ts)
                       and behaviour tests per component; env.ts = jsdom stand-ins (dialog, matchMedia, observers)
-tests/targets/        Playwright: touch targets in the built demo (npm run test:targets)
+tests/targets/        Playwright: touch targets and 320 px reflow of the built demo (npm run test:targets)
 src/lib/index.ts      public exports (components + types)
 src/elements/         custom-element wrappers K<Name>.svelte; form.ts, control.svelte.ts + native.ts
                       (attribute forwarding, ElementInternals validity), define.ts (idempotent
