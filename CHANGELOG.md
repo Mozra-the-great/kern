@@ -23,6 +23,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- `<k-button>` in a stacked `<k-modal>` footer (below 520 px; in the Code theme up to 760 px) fills the row in every
+  theme, like the Svelte `Button` (#120): the host and the button inside it. Before, Flower, Pop and Line kept the
+  button's own width; since #119 only Code stretched it. `Modal` now sets `--k-modal-action-w: 100%` on its footer
+  below 520 px and `KModal` reads the token for the slotted hosts, replacing the width rule on the children, so Code
+  and the other themes share one mechanism. The Code theme looks as before; a row footer is unchanged.
+- A `Button` label wider than its container no longer overflows it (#121, WCAG 1.4.10 reflow): `white-space: nowrap`
+  is gone, the button is never wider than its container (`max-width: 100%`), a long label wraps (centred, `wide`
+  keeps it at the start) and a word wider than the container breaks (`overflow-wrap: anywhere`). A label that fits
+  stays on one line and every size keeps its height: the vertical padding (`--k-space-1`) stays below each size's
+  minimum height, and the screenshots of the Code baselines and of the demo in all eight theme variants did not
+  change. Applies to `<k-button>`, and to every component that renders a `Button`.
+
 ## [0.11.0] - 2026-11-25
 
 ### Added

@@ -6,7 +6,7 @@
  * track, a code block) is reachable by scrolling and does not count as clipped.
  */
 import { expect, test, type Page } from '@playwright/test';
-import { ALL, openPage, PAGES, STATES, THEMES } from './a11y-shared.js';
+import { ALL, elementsReady, openPage, PAGES, settle, STATES, THEMES } from './a11y-shared.js';
 
 interface Report {
 	/** scrollWidth of the page minus the window width; > 0 means a horizontal scrollbar. */
@@ -133,4 +133,79 @@ for (const theme of THEMES) {
 			await expectReflow(page);
 		});
 	}
+}
+
+/**
+ * A button label wider than its container wraps instead of overflowing (#121). The Button is as wide as its one
+ * line while that fits and never wider than the container; a word wider than the container breaks. Injected into
+ * the page with every element, in a 200 px box (narrower than the page, so the box, not the page, is the limit).
+ */
+const LONG = 'A very long button label that a consumer wrote and that does not fit on one line at all';
+const UNBREAKABLE = 'Averyveryverylongunbreakablelabelwithoutanyspacesthatkeepsgoingandgoing';
+
+interface Fit {
+	box: { left: number; right: number };
+	buttons: { name: string; left: number; right: number; height: number; clipped: boolean }[];
+	/** Height of the one-line button next to them, in the box. */
+	short: number;
+}
+
+/** Runs in the browser. */
+function measureFit(): Fit {
+	const box = document.getElementById('long-box');
+	if (!box) throw new Error('no box');
+	const b = box.getBoundingClientRect();
+	const buttons = [...box.querySelectorAll<HTMLElement>('k-button[data-long]')].map((host) => {
+		const inner = host.shadowRoot?.querySelector<HTMLElement>('.k-button');
+		if (!inner) throw new Error('k-button has not rendered');
+		const r = inner.getBoundingClientRect();
+		// the label is part of the flex box: its text must not stick out of the button
+		const range = document.createRange();
+		range.selectNodeContents(host);
+		const t = range.getBoundingClientRect();
+		return {
+			name: host.getAttribute('data-long') ?? '',
+			left: r.left,
+			right: r.right,
+			height: r.height,
+			clipped: t.left < r.left - 1 || t.right > r.right + 1
+		};
+	});
+	const one = box.querySelector<HTMLElement>('k-button[data-short]')?.shadowRoot?.querySelector('.k-button');
+	return { box: { left: b.left, right: b.right }, buttons, short: one?.getBoundingClientRect().height ?? 0 };
+}
+
+for (const theme of THEMES) {
+	test(`320 px: a long button label wraps inside its container in ${theme}`, async ({ page }) => {
+		await openPage(page, ALL, { theme, width: 320, height: 640 });
+		await page.evaluate(
+			([long, unbreakable]) => {
+				document.querySelector('main')?.insertAdjacentHTML(
+					'beforeend',
+					`<div id="long-box" style="width:200px;display:grid;gap:8px;justify-items:start">
+						<k-button data-short>Save</k-button>
+						<k-button data-long="primary">${long}</k-button>
+						<k-button data-long="secondary" variant="secondary">${unbreakable}</k-button>
+						<k-button data-long="small" size="sm" variant="ghost">${long}</k-button>
+						<k-button data-long="large" size="lg" variant="accent">${long}</k-button>
+						<k-button data-long="link" href="#">${long}</k-button>
+						<k-button data-long="block" block variant="danger">${long}</k-button>
+						<k-button data-long="wide" wide variant="secondary">${long}</k-button>
+					</div>`
+				);
+			},
+			[LONG, UNBREAKABLE]
+		);
+		await elementsReady(page);
+		await settle(page);
+		const fit = await page.evaluate(measureFit);
+		expect(fit.buttons).toHaveLength(7);
+		for (const b of fit.buttons) {
+			expect(b.left, `${b.name} starts inside the box`).toBeGreaterThanOrEqual(fit.box.left - 1);
+			expect(b.right, `${b.name} ends inside the box`).toBeLessThanOrEqual(fit.box.right + 1);
+			expect(b.clipped, `${b.name}: the label stays inside the button`).toBe(false);
+			expect(b.height, `${b.name} grew to wrap the label`).toBeGreaterThan(fit.short);
+		}
+		await expectReflow(page);
+	});
 }
