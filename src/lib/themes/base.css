@@ -233,7 +233,7 @@
 	--k-modal-title-tracking: 0;
 	--k-modal-title-leading: 1.3;
 	--k-modal-actions-direction: row;
-	/* width of the footer actions (`100%` for a stacked footer, custom elements too) */
+	/* width of the footer actions (`100%` for a stacked footer, custom elements too). Modal sets it itself below 520 px in every theme; a theme sets it where it stacks the footer earlier. */
 	--k-modal-action-w: auto;
 	/* `initial` = the size prop's width; a theme sets 100% (with --k-modal-margin: auto 0 0) for a sheet at the bottom */
 	--k-modal-width: initial;

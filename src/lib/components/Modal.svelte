@@ -204,9 +204,9 @@
 	@media (max-width: 520px) {
 		footer {
 			flex-direction: column-reverse;
-		}
-		footer :global(> *) {
-			width: 100%;
+			/* Stacked: every action fills the row. The token (not a width rule on the children) is what KModal
+			 * reads for the <k-button> hosts and the buttons inside them, so Svelte and custom elements agree. */
+			--k-modal-action-w: 100%;
 		}
 	}
 	@media (forced-colors: active) {

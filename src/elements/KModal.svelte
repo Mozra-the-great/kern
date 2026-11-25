@@ -61,8 +61,9 @@
 </Modal>
 
 <style>
-	/* A stacked footer (--k-modal-action-w: 100%, Code on phones): the <k-button> hosts fill the row like the
-	 * Svelte Buttons do, and --k-modal-action-fill tells the button inside each host to fill it (KButton). */
+	/* A stacked footer (Modal sets --k-modal-action-w: 100% below 520 px in every theme; Code also up to 760 px): the
+	 * <k-button> hosts fill the row like the Svelte Buttons do, and --k-modal-action-fill tells the button inside
+	 * each host to fill it (KButton). In a row footer the token is `auto` and nothing changes. */
 	:global(slot[name='footer']::slotted(*)) {
 		width: var(--k-modal-action-w);
 		--k-modal-action-fill: var(--k-modal-action-w);

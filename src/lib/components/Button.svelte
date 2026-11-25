@@ -138,7 +138,9 @@
 		gap: var(--k-button-gap);
 		min-height: var(--k-control-h);
 		min-width: var(--k-tap-target);
-		padding: 0 var(--k-button-pad-x);
+		/* never wider than the container: a label that does not fit wraps (below) instead of overflowing */
+		max-width: 100%;
+		padding: var(--k-space-1) var(--k-button-pad-x);
 		border: var(--k-border-w) solid transparent;
 		border-radius: var(--k-radius-control);
 		font-family: var(--k-button-font);
@@ -150,7 +152,12 @@
 		text-decoration: none;
 		cursor: pointer;
 		user-select: none;
-		white-space: nowrap;
+		/* A label stays on one line while it fits (the button is as wide as the line). Only a label wider than
+		 * the container wraps, and a word wider than that breaks; the vertical padding keeps wrapped lines off the edge
+		 * and stays below every size's min-height, so a one-line button keeps its height. */
+		white-space: normal;
+		overflow-wrap: anywhere;
+		text-align: center;
 		transition:
 			background-color var(--k-dur) var(--k-ease),
 			color var(--k-dur) var(--k-ease),
@@ -180,11 +187,11 @@
 
 	[data-size='sm'] {
 		min-height: max(var(--k-control-h-sm), var(--k-tap-target));
-		padding: 0 var(--k-space-3);
+		padding: var(--k-space-1) var(--k-space-3);
 	}
 	[data-size='lg'] {
 		min-height: var(--k-control-h-lg);
-		padding: 0 var(--k-space-7);
+		padding: var(--k-space-1) var(--k-space-7);
 	}
 	[data-size='icon'] {
 		width: max(var(--k-tap-icon), var(--k-tap-target));
