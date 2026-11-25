@@ -38,7 +38,12 @@ let conflicts = 0;
 // `-actual.png`: a baseline that differs; `-chromium-<platform>.png`: a missing one the run wrote.
 // Plain suffix comparison: `platform` is one of the three allowed names above and never becomes a pattern.
 const ownSuffix = `-chromium-${platform}.png`;
-for (const file of files.filter((f) => f.endsWith('-actual.png') || f.endsWith(ownSuffix))) {
+const actuals = files.filter((f) => f.endsWith('-actual.png'));
+const withActual = new Set(actuals.map((f) => basename(f).slice(0, -'-actual.png'.length)));
+// The artifact also carries every checked-in baseline (the snapshot folder): one with an actual screenshot of the
+// same name is the old image, not a second rendering, so the actuals come first and decide.
+const written = files.filter((f) => f.endsWith(ownSuffix) && !withActual.has(basename(f).slice(0, -ownSuffix.length)));
+for (const file of [...actuals, ...written]) {
 	const b = basename(file);
 	const name = b.endsWith('-actual.png') ? b.slice(0, -'-actual.png'.length) : b.slice(0, -ownSuffix.length);
 	// Read once; the copy is written from the same bytes that were hashed.
