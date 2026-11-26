@@ -206,3 +206,17 @@ export {
 } from './components/mascots.js';
 export type { CodeArt, MascotName, MascotSource, PixelGrid, StuffcloudArt } from './components/mascots.js';
 /* eslint-enable @typescript-eslint/no-deprecated */
+export { default as Sticker } from './components/Sticker.svelte';
+export {
+	STICKER_NAMES,
+	STICKER_CATEGORIES,
+	STICKER_CATEGORY,
+	STICKERS_BY_CATEGORY,
+	isStickerName,
+	isStickerCategory,
+	stickersOfCategory,
+	stickerPath,
+	stickerGrid,
+	stickerUrl
+} from './components/stickers.js';
+export type { StickerCategory, StickerName } from './components/stickers.js';

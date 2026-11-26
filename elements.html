@@ -200,11 +200,13 @@
 			<k-status-message id="tool-status" tone="ok"></k-status-message>
 			<k-status-message id="tool-error" kind="alert"></k-status-message>
 			<div class="row"><code>#FF4F8B</code><k-copy-button text="#FF4F8B" label="HEX kopieren" show-label copied-label="Kopiert"></k-copy-button><k-button wide href="#" disabled>Gesperrter Link</k-button></div>
-			<h2>Maskottchen</h2>
+			<h2>Maskottchen und Sticker</h2>
 			<div class="row" style="padding:16px;background:#17171a;border:1px solid var(--k-line)">
 				<k-mascot id="m-stuffy" name="stuffy" scale="8" compact-scale="6" label="Stuffy, das Axolotl"></k-mascot>
 				<k-mascot id="m-boo" name="boo" scale="6"></k-mascot>
 				<k-mascot id="m-qr" name="tool-stickers/sticker-qr" scale="5" animated="false"></k-mascot>
+				<k-sticker id="s-qr" name="qr" scale="5" label="QR-Code"></k-sticker>
+				<k-sticker id="s-pdf" name="pdf-merge" scale="5"></k-sticker>
 			</div>
 			<h2>Layout</h2>
 			<div id="tbox" data-theme="flower" style="display:grid;gap:12px;padding:16px;border:1px solid var(--k-line)">
@@ -264,10 +266,13 @@
 			import axoUrl from './assets/code/mascots/axo.svg?url';
 			import ghostUrl from './assets/code/mascots/mascot-ghost.svg?url';
 			import qrUrl from './assets/code/tool-stickers/sticker-qr.svg?url';
+			import pdfMergeUrl from './assets/code/tool-stickers/sticker-pdf-merge.svg?url';
 			const $ = (s) => document.querySelector(s);
 			$('#m-stuffy').src = axoUrl;
 			$('#m-boo').src = ghostUrl;
 			$('#m-qr').src = qrUrl;
+			$('#s-qr').src = qrUrl;
+			$('#s-pdf').src = pdfMergeUrl;
 			$('#lang').addEventListener('change', (e) => (e.detail === 'de' ? window.kern.strings.set(window.kern.strings.de) : window.kern.strings.reset()));
 			const say = (m, p) => { $('#said').textContent = 'Letzte Ansage: ' + m; window.kern.announce(m, p); };
 			$('#say-polite').addEventListener('click', () => say('Änderungen gespeichert', 'polite'));

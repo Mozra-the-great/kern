@@ -86,6 +86,7 @@ import KTileGrid from './KTileGrid.svelte';
 import KSortableList from './KSortableList.svelte';
 import KSelectGrid from './KSelectGrid.svelte';
 import KMascot from './KMascot.svelte';
+import KSticker from './KSticker.svelte';
 import KProse from './KProse.svelte';
 import KSkipLink from './KSkipLink.svelte';
 import KLiveAnnouncer from './KLiveAnnouncer.svelte';
@@ -200,6 +201,7 @@ export const elements = {
 	KSortableList,
 	KSelectGrid,
 	KMascot,
+	KSticker,
 	KProse,
 	KSkipLink,
 	KLiveAnnouncer,

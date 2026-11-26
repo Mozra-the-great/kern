@@ -23,6 +23,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `Sticker` and `<k-sticker>`: draws one of the 42 tool stickers of `assets/code/tool-stickers/` by name (`StickerName`), through
+  `<img>` at a whole-number scale (`scale`, default 4, `compactScale` under 760 px) with `image-rendering: pixelated`. The art keeps
+  its own colours in every theme and never moves. Decorative by default (`alt=""`, `aria-hidden`, never focusable); `label` makes it a
+  named image. The URL comes from `src` or `base`, like `Mascot` (same-origin file, no `data:` URI, so `img-src 'self'` is enough) (#182).
+- Sticker data: `STICKER_NAMES`, `StickerName`, the neutral tool categories `STICKER_CATEGORIES` / `StickerCategory`
+  (`pdf`, `images`, `convert`, `time`, `network`, `text`, `dev`, `hosting`), `STICKER_CATEGORY` (sticker to category),
+  `STICKERS_BY_CATEGORY` and `stickersOfCategory()`, plus `stickerPath`, `stickerGrid`, `stickerUrl`, `isStickerName` and
+  `isStickerCategory`. A test keeps the names and the shipped files in step (#182).
+- `assets/README.md`: the sticker categories and the licence and attribution of the Code pixel art (original work, GPL-3.0-or-later,
+  no attribution duty). The 42 sticker files were compared with their design source and are unchanged (#182).
+
 ### Changed
 - Docs and process, no visual change: kern is the design source of the `code` theme. stuffcloud's `docs/design` (mockups,
   `stuff.css`, the design PDF) is a frozen reference to orient on, no longer binding. `docs/themes.md` splits "Remaining

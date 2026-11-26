@@ -34,6 +34,7 @@ const EXEMPT: Record<string, string> = {
 	ScrollArea: 'a region whose focus ring is an outline (kept); scrollbars follow the system',
 	Stat: 'a bordered card of text; the delta has an arrow glyph',
 	StatusDot: 'a glyph whose shape (not its colour) carries the status',
+	Sticker: 'an image, which forced colors leave alone',
 	Typewriter: 'text',
 	VisuallyHidden: 'not painted at all: text for assistive technology only'
 };

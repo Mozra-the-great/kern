@@ -44,6 +44,7 @@
 	import Accent from './sections/Accent.svelte';
 	import Assets from './sections/Assets.svelte';
 	import Mascots from './sections/Mascots.svelte';
+	import Stickers from './sections/Stickers.svelte';
 	import Data from './sections/Data.svelte';
 	import Feedback from './sections/Feedback.svelte';
 	import Texts from './sections/Texts.svelte';
@@ -318,6 +319,7 @@
 	<Layout />
 	<Effects />
 	<Mascots />
+	<Stickers />
 	<Accent />
 	<Assets />
 	<Texts />
