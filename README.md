@@ -748,7 +748,14 @@ sichtbar, `aria-describedby` nennt ihn weiter zuerst und das Steuerelement bleib
 Elemente schalten es mit dem Attribut `no-announce` (Property `noAnnounce`) ab, wie `no-reject-messages`.
 
 **CopyButton und StatusMessage:** `text` ist gleichbedeutend mit `value`. `showLabel` zeigt
-`label` als Text („HEX kopieren“), der dann der zugängliche Name ist. Die Meldung
+`label` als Text („HEX kopieren“), der dann der zugängliche Name ist. Soll der Name mehr sagen als
+der sichtbare Text (viele „Kopieren“-Knöpfe in einer Tabelle), setzt `accessibleLabel` (Element:
+`accessible-label`) den Namen („SHA-256 kopieren“), `label` bleibt der sichtbare Text. Das gilt mit
+und ohne `showLabel` (ohne: auch als Tooltip) und hat Vorrang vor `label`; leer oder nur
+Leerzeichen zählt als nicht gesetzt. Mit `showLabel` muss der Name den sichtbaren Text enthalten,
+am besten am Anfang (WCAG 2.5.3, Label in Name): Sprachsteuerung („Kopieren klicken“) findet den
+Knopf sonst nicht. kern prüft das nicht und warnt nicht; die Texte der Meldung (`copiedLabel`,
+`errorLabel`) bleiben unberührt. Die Meldung
 (`copiedLabel`/`errorLabel`) wird bei jedem Klick geleert und neu gesetzt, also auch beim
 gleichen Ergebnis erneut angesagt, und bleibt bis zum nächsten Klick; nur das Symbol springt
 nach `resetAfter` zurück. `StatusMessage` ist eine sichtbare Live-Region (`kind="status"`
@@ -756,6 +763,7 @@ höflich, `kind="alert"` für Fehler): von Anfang an leer einbinden und nur `mes
 
 ```svelte
 <CopyButton text={hex} label="HEX kopieren" showLabel copiedLabel="{hex} kopiert" />
+<CopyButton text={sha} label="Kopieren" accessibleLabel="SHA-256 kopieren" showLabel />
 <StatusMessage message={result} />
 <StatusMessage message={problem} kind="alert" />
 ```
@@ -1197,7 +1205,10 @@ if (!result.ok) console.warn(result.error.code, result.error.message);
 
 **DownloadButton** (`<k-download-button>`) ist der Button dazu, nach dem Vorbild von CopyButton:
 Symbol allein, `label` ist dann der zugängliche Name; `showLabel` (Element: `show-label`) zeigt ihn als
-Text. Den Inhalt liefert `getContent`, sonst `blob`, sonst `text`; `getContent` darf einen String oder `Blob` auch asynchron liefern
+Text. `accessibleLabel` (Element: `accessible-label`) setzt einen längeren Namen („Bericht.csv
+herunterladen“) neben dem kurzen sichtbaren `label` („Herunterladen“), mit und ohne `showLabel` und mit
+Vorrang vor `label`; mit `showLabel` muss er den sichtbaren Text enthalten (WCAG 2.5.3, wie bei CopyButton,
+keine Warnung). Den Inhalt liefert `getContent`, sonst `blob`, sonst `text`; `getContent` darf einen String oder `Blob` auch asynchron liefern
 und läuft erst beim Klick. Währenddessen zeigt der Button einen Spinner und ignoriert weitere Klicks;
 danach bekommt er den Fokus zurück. `name` ist der Dateiname, `type` der MIME-Typ (bei einem `Blob`
 ersetzt er dessen Typ). Ohne Inhalt gibt es keine leere Datei, sondern einen Fehler.
@@ -1212,6 +1223,7 @@ fehlgeschlagen“) ist immer sichtbarer Text mit `role="alert"` unter dem Button
 
 ```svelte
 <DownloadButton text={csv} name="bericht.csv" type="text/csv" label="Bericht herunterladen" showLabel />
+<DownloadButton text={csv} name="bericht.csv" label="Herunterladen" accessibleLabel="Bericht.csv herunterladen" showLabel />
 <DownloadButton getContent={buildReport} name="bericht.pdf" label="Bericht" showLabel showStatus
 	ondownload={(r) => log(r.name, r.size)} onerror={(e) => report(e.code)} />
 ```

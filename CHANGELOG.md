@@ -23,6 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `CopyButton` and `DownloadButton` (and `<k-copy-button>`, `<k-download-button>`): optional `accessibleLabel` (attribute `accessible-label`)
+  for a short visible `label` with a longer accessible name, e.g. "Copy" for sighted users and "Copy SHA-256" for a screen reader in a list
+  of values (#166, from stuffcloud#121). It is the button's `aria-label` and wins over `label` as the name, with `showLabel` (the visible text
+  stays `label`) and without it (icon-only: the name and the tooltip). Empty or whitespace-only counts as not set; the status texts
+  (`copiedLabel`, `startedLabel`, `errorLabel`) are unchanged. With `showLabel` the name must contain the visible text (WCAG 2.5.3 Label in
+  Name); this is documented, not checked. Nothing changes for existing uses.
+
 ## [0.13.2] - 2026-11-26
 
 ### Fixed

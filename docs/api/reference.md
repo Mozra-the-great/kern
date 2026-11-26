@@ -961,7 +961,7 @@ Svelte: `import { CopyButton } from '@mozra-the-great/kern'` · Element: `<k-cop
 
 Quelle: [`CopyButton.svelte`](../../src/lib/components/CopyButton.svelte), [`KCopyButton.svelte`](../../src/elements/KCopyButton.svelte)
 
-Copies `text` (or `value`) to the clipboard and announces the result in a polite live region, once per click; the message stays until the next click. `show-label` shows `label` as visible text.
+Copies `text` (or `value`) to the clipboard and announces the result in a polite live region, once per click; the message stays until the next click. `show-label` shows `label` as visible text; `accessible-label` is the longer accessible name (it must contain the visible `label`, WCAG 2.5.3) and wins over `label` as the name.
 
 ### Svelte: Props
 
@@ -970,8 +970,9 @@ Copies `text` (or `value`) to the clipboard and announces the result in a polite
 | `text` | `string` |  | Text to copy. Same as `value`; wins when both are set. |
 | `value` | `string` |  | Text to copy. |
 | `getValue` | `(() => string \| Promise<string>)` |  | Reads the text at click time. Wins over `text` and `value`; may be async. |
-| `label` | `string` | Katalog `copyButton.label` | Accessible name of the button, e.g. "Copy HEX". Icon-only by default (the label is the `aria-label` and tooltip); with `showLabel` it is visible text and the name comes from it. |
+| `label` | `string` | Katalog `copyButton.label` | Name of the button, e.g. "Copy HEX". Icon-only by default (the label is the `aria-label` and tooltip); with `showLabel` it is the visible text and, without `accessibleLabel`, also the accessible name. |
 | `showLabel` | `boolean` | `false` | Show `label` as text next to the icon instead of an icon-only button. |
+| `accessibleLabel` | `string` |  | Accessible name when it should say more than `label`, e.g. `label` "Copy" and `accessibleLabel` "Copy SHA-256" in a list of values. It is the button's `aria-label`, with and without `showLabel` (icon-only: also the tooltip), and wins over `label` as the name; `label` stays the visible text. WCAG 2.5.3 (Label in Name): with `showLabel` it must contain the visible `label`, ideally at the start, so voice control ("click Copy") still finds the button. Empty, whitespace-only or `null` (an untyped caller, a removed element attribute) counts as not set. The spoken results (`copiedLabel`, `errorLabel`) are not affected. |
 | `copiedLabel` | `string` | Katalog `copyButton.copiedLabel` | Spoken after a successful copy, in a polite live region. It is set fresh on every click (so a repeated result is announced again) and stays until the next click. |
 | `errorLabel` | `string` | Katalog `copyButton.errorLabel` | Spoken when copying fails (no clipboard outside a secure context, permission denied …). |
 | `variant` | `'ghost' \| 'secondary'` | `'ghost'` |  |
@@ -993,8 +994,9 @@ Copies `text` (or `value`) to the clipboard and announces the result in a polite
 | --- | --- | --- | --- | --- |
 | `text` | `text` | `string` |  | Text to copy. Same as `value`; wins when both are set. |
 | `value` | `value` | `string` | `''` | Text to copy. |
-| `label` | `label` | `string` | Katalog `copyButton.label` (wie CopyButton) | Accessible name of the button, e.g. "Copy HEX". Icon-only by default (the label is the `aria-label` and tooltip); with `showLabel` it is visible text and the name comes from it. |
+| `label` | `label` | `string` | Katalog `copyButton.label` (wie CopyButton) | Name of the button, e.g. "Copy HEX". Icon-only by default (the label is the `aria-label` and tooltip); with `showLabel` it is the visible text and, without `accessibleLabel`, also the accessible name. |
 | `show-label` | `showLabel` | `boolean` | `false` | Show `label` as text next to the icon instead of an icon-only button. |
+| `accessible-label` | `accessibleLabel` | `string` |  | Accessible name when it should say more than `label`, e.g. `label` "Copy" and `accessibleLabel` "Copy SHA-256" in a list of values. It is the button's `aria-label`, with and without `showLabel` (icon-only: also the tooltip), and wins over `label` as the name; `label` stays the visible text. WCAG 2.5.3 (Label in Name): with `showLabel` it must contain the visible `label`, ideally at the start, so voice control ("click Copy") still finds the button. Empty, whitespace-only or `null` (an untyped caller, a removed element attribute) counts as not set. The spoken results (`copiedLabel`, `errorLabel`) are not affected. |
 | `copied-label` | `copiedLabel` | `string` | Katalog `copyButton.copiedLabel` (wie CopyButton) | Spoken after a successful copy, in a polite live region. It is set fresh on every click (so a repeated result is announced again) and stays until the next click. |
 | `error-label` | `errorLabel` | `string` | Katalog `copyButton.errorLabel` (wie CopyButton) | Spoken when copying fails (no clipboard outside a secure context, permission denied …). |
 | `variant` | `variant` | `string` | `'ghost'` (wie CopyButton) |  |
@@ -1282,7 +1284,7 @@ Svelte: `import { DownloadButton } from '@mozra-the-great/kern'` · Element: `<k
 
 Quelle: [`DownloadButton.svelte`](../../src/lib/components/DownloadButton.svelte), [`KDownloadButton.svelte`](../../src/elements/KDownloadButton.svelte)
 
-Saves text or bytes as a file download and announces the result in a polite live region, once per click; the message stays until the next click. The content is the `text` attribute, or the JS property `blob` (a `Blob` or `File`) or `getContent` (a function that returns a string or a Blob, also as a promise, called at click time); `getContent` wins over `blob`, `blob` over `text`. `name` is the file name (cleaned), `type` the MIME type. `show-label` shows `label` as visible text; an error is always shown as text under the button. Nothing is sent anywhere.
+Saves text or bytes as a file download and announces the result in a polite live region, once per click; the message stays until the next click. The content is the `text` attribute, or the JS property `blob` (a `Blob` or `File`) or `getContent` (a function that returns a string or a Blob, also as a promise, called at click time); `getContent` wins over `blob`, `blob` over `text`. `name` is the file name (cleaned), `type` the MIME type. `show-label` shows `label` as visible text; `accessible-label` is the longer accessible name (it must contain the visible `label`, WCAG 2.5.3) and wins over `label` as the name; an error is always shown as text under the button. Nothing is sent anywhere.
 
 ### Svelte: Props
 
@@ -1293,8 +1295,9 @@ Saves text or bytes as a file download and announces the result in a polite live
 | `getContent` | `(() => DownloadContent \| Promise<DownloadContent>)` |  | Makes the content at click time: a string or a `Blob`, directly or as a promise. Wins over `blob` and `text`. While a promise is pending the button shows a spinner and ignores clicks. A function that throws or rejects, or returns something else, shows `errorLabel` and calls `onerror` with code `content`. |
 | `name` | `string` |  | File name, e.g. `report.csv`. Cleaned before use (no path, control or direction characters). Default: the catalogue's `fallbackName`. |
 | `type` | `string` |  | MIME type. For text it defaults to `text/plain` (`;charset=utf-8` is added). For a `Blob` it replaces the blob's own type when set. |
-| `label` | `string` | Katalog `downloadButton.label` | Accessible name, e.g. "Download report". Icon-only by default (it is the `aria-label` and the tooltip); with `showLabel` it is visible text and the name comes from it. |
+| `label` | `string` | Katalog `downloadButton.label` | Name of the button, e.g. "Download report". Icon-only by default (it is the `aria-label` and the tooltip); with `showLabel` it is the visible text and, without `accessibleLabel`, also the accessible name. |
 | `showLabel` | `boolean` | `false` | Show `label` as text next to the icon instead of an icon-only button. |
+| `accessibleLabel` | `string` |  | Accessible name when it should say more than `label`, e.g. `label` "Download" and `accessibleLabel` "Download report.csv" in a list of files. It is the button's `aria-label`, with and without `showLabel` (icon-only: also the tooltip), and wins over `label` as the name; `label` stays the visible text. WCAG 2.5.3 (Label in Name): with `showLabel` it must contain the visible `label`, ideally at the start, so voice control ("click Download") still finds the button. Empty, whitespace-only or `null` (an untyped caller, a removed element attribute) counts as not set. The status texts (`startedLabel`, `errorLabel`) are not affected. |
 | `startedLabel` | `string` | Katalog `downloadButton.startedLabel` | Spoken when the download was handed to the browser, in a polite live region. It is set fresh on every click and stays until the next click. |
 | `errorLabel` | `string` | Katalog `downloadButton.errorLabel` | Shown and announced (assertive) when the content could not be produced or the browser refused. |
 | `showStatus` | `boolean` | `false` | Show the spoken text as a visible line under the button. Errors are always visible. |
@@ -1320,8 +1323,9 @@ Saves text or bytes as a file download and announces the result in a polite live
 | `getcontent` (JSON) | `getContent` | `(() => string \| Blob \| Promise<string \| Blob>)` |  | Makes the content at click time. Set as a property; not an attribute. |
 | `name` | `name` | `string` |  | File name, e.g. `report.csv`. Cleaned before use (no path, control or direction characters). Default: the catalogue's `fallbackName`. |
 | `type` | `type` | `string` |  | MIME type. For text it defaults to `text/plain` (`;charset=utf-8` is added). For a `Blob` it replaces the blob's own type when set. |
-| `label` | `label` | `string` | Katalog `downloadButton.label` (wie DownloadButton) | Accessible name, e.g. "Download report". Icon-only by default (it is the `aria-label` and the tooltip); with `showLabel` it is visible text and the name comes from it. |
+| `label` | `label` | `string` | Katalog `downloadButton.label` (wie DownloadButton) | Name of the button, e.g. "Download report". Icon-only by default (it is the `aria-label` and the tooltip); with `showLabel` it is the visible text and, without `accessibleLabel`, also the accessible name. |
 | `show-label` | `showLabel` | `boolean` | `false` | Show `label` as text next to the icon instead of an icon-only button. |
+| `accessible-label` | `accessibleLabel` | `string` |  | Accessible name when it should say more than `label`, e.g. `label` "Download" and `accessibleLabel` "Download report.csv" in a list of files. It is the button's `aria-label`, with and without `showLabel` (icon-only: also the tooltip), and wins over `label` as the name; `label` stays the visible text. WCAG 2.5.3 (Label in Name): with `showLabel` it must contain the visible `label`, ideally at the start, so voice control ("click Download") still finds the button. Empty, whitespace-only or `null` (an untyped caller, a removed element attribute) counts as not set. The status texts (`startedLabel`, `errorLabel`) are not affected. |
 | `started-label` | `startedLabel` | `string` | Katalog `downloadButton.startedLabel` (wie DownloadButton) | Spoken when the download was handed to the browser, in a polite live region. It is set fresh on every click and stays until the next click. |
 | `error-label` | `errorLabel` | `string` | Katalog `downloadButton.errorLabel` (wie DownloadButton) | Shown and announced (assertive) when the content could not be produced or the browser refused. |
 | `show-status` | `showStatus` | `boolean` | `false` | Show the spoken text as a visible line under the button. Errors are always visible. |

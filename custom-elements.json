@@ -3140,7 +3140,7 @@
 					"customElement": true,
 					"tagName": "k-copy-button",
 					"name": "KCopyButtonElement",
-					"description": "Copies `text` (or `value`) to the clipboard and announces the result in a polite live region, once per click; the message stays until the next click. `show-label` shows `label` as visible text.",
+					"description": "Copies `text` (or `value`) to the clipboard and announces the result in a polite live region, once per click; the message stays until the next click. `show-label` shows `label` as visible text; `accessible-label` is the longer accessible name (it must contain the visible `label`, WCAG 2.5.3) and wins over `label` as the name.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -3178,6 +3178,14 @@
 							},
 							"default": "false",
 							"attribute": "show-label"
+						},
+						{
+							"kind": "field",
+							"name": "accessibleLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "accessible-label"
 						},
 						{
 							"kind": "field",
@@ -3259,6 +3267,13 @@
 							},
 							"default": "false",
 							"fieldName": "showLabel"
+						},
+						{
+							"name": "accessible-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "accessibleLabel"
 						},
 						{
 							"name": "copied-label",
@@ -4531,7 +4546,7 @@
 					"customElement": true,
 					"tagName": "k-download-button",
 					"name": "KDownloadButtonElement",
-					"description": "Saves text or bytes as a file download and announces the result in a polite live region, once per click; the message stays until the next click. The content is the `text` attribute, or the JS property `blob` (a `Blob` or `File`) or `getContent` (a function that returns a string or a Blob, also as a promise, called at click time); `getContent` wins over `blob`, `blob` over `text`. `name` is the file name (cleaned), `type` the MIME type. `show-label` shows `label` as visible text; an error is always shown as text under the button. Nothing is sent anywhere.",
+					"description": "Saves text or bytes as a file download and announces the result in a polite live region, once per click; the message stays until the next click. The content is the `text` attribute, or the JS property `blob` (a `Blob` or `File`) or `getContent` (a function that returns a string or a Blob, also as a promise, called at click time); `getContent` wins over `blob`, `blob` over `text`. `name` is the file name (cleaned), `type` the MIME type. `show-label` shows `label` as visible text; `accessible-label` is the longer accessible name (it must contain the visible `label`, WCAG 2.5.3) and wins over `label` as the name; an error is always shown as text under the button. Nothing is sent anywhere.",
 					"superclass": {
 						"name": "HTMLElement"
 					},
@@ -4594,6 +4609,14 @@
 							},
 							"default": "false",
 							"attribute": "show-label"
+						},
+						{
+							"kind": "field",
+							"name": "accessibleLabel",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "accessible-label"
 						},
 						{
 							"kind": "field",
@@ -4704,6 +4727,13 @@
 							},
 							"default": "false",
 							"fieldName": "showLabel"
+						},
+						{
+							"name": "accessible-label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "accessibleLabel"
 						},
 						{
 							"name": "started-label",
