@@ -65,6 +65,9 @@
 	--k-text-lg: 20px;
 	--k-text-xl: 28px;
 	--k-text-2xl: 48px;
+	/* `--k-text-md` as a multiple of 16px, a plain number: the size of `<html data-theme>` relative to the
+	 * reader's default font size (#144). A theme whose `--k-text-md` is not 16px sets both (Line: 17px = 17 / 16). */
+	--k-root-scale: 1;
 
 	/* size */
 	--k-control-h: 44px;
@@ -295,8 +298,21 @@
 	background: var(--k-bg);
 	color: var(--k-fg);
 	font-family: var(--k-font-sans);
-	font-size: var(--k-text-md);
 	line-height: 1.5;
+}
+
+/* The base size is set on theme boxes in the page (`<div data-theme>`), as before. On the document root it is
+ * relative to the reader's default font size instead (#144): a px `font-size` on `<html>` replaced that setting
+ * and froze every `rem` at 16px. `1rem` on the root is the browser's default size, so at the default 16px this
+ * is exactly `--k-text-md` (`--k-root-scale` 1; Line 17 / 16 = 17px) and at 20px it is 20px (Line 21.25px).
+ * `:where()` keeps the specificity of a plain `[data-theme]` for boxes and 0 for the root, so a page's own
+ * `html { font-size }` wins there. */
+[data-theme]:where(:not(:root)) {
+	font-size: var(--k-text-md);
+}
+
+:where(:root[data-theme]) {
+	font-size: calc(var(--k-root-scale) * 1rem);
 }
 
 /* Themes set --k-dur on [data-theme^='…'], which has the same specificity as :root and
