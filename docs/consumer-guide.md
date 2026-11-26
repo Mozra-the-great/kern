@@ -201,6 +201,12 @@ Spezifität 0 hat. Ein eigenes Theme auf `base.css`, dessen `--k-text-md` nicht 
 `--k-root-scale` (`--k-text-md` ÷ 16 px als Zahl, Line `1.0625`), sonst ist die Wurzel bei 16 px 16 px.
 Test: `tests/elements/root-font-size.spec.ts` (Browser-Standardschrift 16 und 20 px, alle Varianten).
 
+**Zeilenhöhe.** Jedes Element mit `data-theme` setzt `line-height: var(--k-leading-body)`, und Text ohne eigene Zeilenhöhe erbt
+sie (#145). Das Token ist in Flower, Pop und Line `1.5` wie bisher; in Code (alle Varianten, auch die `stuffcloud*`-Namen) ist es
+`normal`, wie in stuffclouds Design, das auf `body` keine Zeilenhöhe setzt. Wer in Code die alte Zeilenhöhe behalten will, setzt
+`--k-leading-body: 1.5` auf das Element mit `data-theme`. Komponenten mit eigener Zeilenhöhe (Prose, Code, Terminal, Button,
+Textarea …) folgen dem Token nicht; Alert und Toast haben dafür eine feste `1.5`, weil Icon und Punkt darauf abgestimmt sind.
+
 ### Eigene Akzentfarbe
 
 Eine App mit eigener Markenfarbe (vom Server, aus Einstellungen) setzt **nur diese Farbe** auf ein Standard-Theme;

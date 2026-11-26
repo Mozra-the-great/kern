@@ -35,6 +35,8 @@
 	--k-label-transform: uppercase;
 	--k-label-tracking: 1px;
 	--k-text-2xl: 48px;
+	/* stuff.css's body sets no line-height, so the browser's normal applies (#145) */
+	--k-leading-body: normal;
 	--k-control-h: 52px;
 	--k-control-h-sm: 44px;
 	--k-control-h-lg: 56px;

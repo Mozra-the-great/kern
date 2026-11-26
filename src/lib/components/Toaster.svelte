@@ -263,6 +263,9 @@
 		background: var(--k-bg-raised);
 		color: var(--k-fg);
 		box-shadow: var(--k-shadow-sm);
+		/* the dot and the text offset are set against a 1.5 line (stuffcloud's toast sets it too); own value so
+		 * --k-leading-body (Code: normal) does not move them (#145) */
+		line-height: 1.5;
 		animation: k-in var(--k-toast-enter-dur) var(--k-ease);
 	}
 	[data-tone='ok'] {

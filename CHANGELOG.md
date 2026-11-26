@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- `Code` theme (all variants and the deprecated `stuffcloud*` names): the themed element now has `line-height: normal`, like stuffcloud's design
+  (#145, from stuffcloud#121). `[data-theme]` set a fixed `1.5`; stuffcloud's `stuff.css` sets no line height on `body`, so Code text was
+  taller than the design. The line height is the new token `--k-leading-body` (`1.5` in `base.css`, `normal` in Code, source
+  `design:stuff.css|body{line-height}` in the drift check): Flower, Pop and Line stay exactly as they were. Visible in Code only: text
+  without a line height of its own (Card and Modal body, Field hints, Switch and Checkbox hints, Table cells, Accordion panels, ...) gets
+  tighter lines, so blocks of text are a few pixels shorter and the Code baselines changed. `Alert` and `Toast` keep an own `1.5`
+  (icon and dot offsets are set against it, stuffcloud's toast sets 1.5 as well). **Migration:** to keep the old Code look set
+  `--k-leading-body: 1.5` on the themed element (`html[data-theme] { --k-leading-body: 1.5 }`). A theme box nested in another theme
+  takes its own theme's value. Documented in docs/themes.md ("Line height") and docs/consumer-guide.md; tested in
+  `tests/elements/leading-body.spec.ts` and the token-default test.
 - `data-theme` on `<html>` no longer overrides the reader's default font size (#144, from stuffcloud#121): `base.css` set a px
   `font-size` (`--k-text-md`) on every `[data-theme]` element, so a themed root ignored the browser setting and froze every `rem`
   at 16px (17px in Line). The root now takes `calc(var(--k-root-scale) * 1rem)`, i.e. the reader's default size times a new token

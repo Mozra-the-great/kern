@@ -52,6 +52,8 @@
 		border-radius: var(--k-radius-field);
 		background: var(--soft);
 		color: var(--k-fg);
+		/* the icon's offset is set against a 1.5 line; own value so --k-leading-body (Code: normal) does not move it (#145) */
+		line-height: 1.5;
 	}
 	[data-tone='ok'] {
 		--c: var(--k-ok);

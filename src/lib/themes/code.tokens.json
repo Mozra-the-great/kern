@@ -45,6 +45,12 @@
 				"--k-label-transform": { "value": "uppercase", "from": "design:stuff.css|.label{text-transform}" },
 				"--k-label-tracking": { "value": "1px", "from": "design:stuff.css|.label{letter-spacing}" },
 				"--k-text-2xl": { "value": "48px", "from": "design:stuff.css|.title{font-size}" },
+				"--k-leading-body": {
+					"value": "normal",
+					"from": "design:stuff.css|body{line-height}",
+					"design": null,
+					"note": "stuff.css's body sets no line-height, so the browser's normal applies (#145)"
+				},
 				"--k-control-h": { "value": "52px", "from": "design:stuff.css|.btn{min-height}" },
 				"--k-control-h-sm": { "value": "44px", "from": "app:styles/theme.css|:root{--target-min}" },
 				"--k-control-h-lg": { "value": "56px", "from": "app:styles/theme.css|:root{--control-h-m}" },
