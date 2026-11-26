@@ -15,7 +15,7 @@
 <script lang="ts">
 	/**
 	 * @prop sizes {number[]}
-	 * @prop panels {ResizablePanel[]}
+	 * @prop panels {readonly ResizablePanel[]}
 	 * @event change {number[]} Panel sizes in % after the user moved a handle.
 	 * @slot - The panels: children with data-panel="<id>" (up to 8).
 	 */

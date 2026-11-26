@@ -79,7 +79,7 @@
 		"test:elements": "npm run build:react-app && playwright test -c tests/elements/playwright.config.ts",
 		"test:types": "tsc --noEmit -p tests/fixtures/react-jsx && tsc --noEmit -p tests/fixtures/react-app",
 		"test:consumer": "svelte-check --workspace tests/fixtures/strict-consumer --tsconfig ./tsconfig.json --fail-on-warnings && node tests/fixtures/strict-consumer/coverage.mjs",
-		"check:dts": "node scripts/ci/no-any-dts.mjs",
+		"check:dts": "node scripts/ci/no-any-dts.mjs && node scripts/ci/readonly-arrays-dts.mjs",
 		"size": "node scripts/ci/size-budget.mjs",
 		"assets:check": "node scripts/ci/assets-drift.mjs",
 		"assets:manifest": "node scripts/ci/assets-drift.mjs --write",

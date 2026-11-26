@@ -77,7 +77,7 @@ jobs:
         # A Svelte app with stuffcloud's flags (exactOptionalPropertyTypes, noUncheckedIndexedAccess,
         # svelte-check --fail-on-warnings ...) using every component from the built dist/ (#22).
         run: npm run test:consumer
-      - name: No any in published types
+      - name: Published types (no any, readonly list props)
         run: npm run check:dts
       - name: Tests (Vitest, node + dom projects with coverage)
         # The same run as `npm test`, with the v8 coverage of src/lib: the table is printed here and the

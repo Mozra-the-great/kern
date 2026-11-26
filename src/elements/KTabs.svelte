@@ -9,7 +9,7 @@
 	 * Tabs. Panels are children with `data-tab="<id>"`; only the active one is shown. Without children
 	 * the element is only the tab bar (app navigation): no tabpanel, the page swaps its content on
 	 * `change`. Items may carry `badge`, `dot`, `badgeLabel`, `badgeTone`, `hidden` and `disabled`.
-	 * @prop tabs {TabItem[]}
+	 * @prop tabs {readonly TabItem[]}
 	 * @prop look {'line' | 'pill'}
 	 * @event change {string} Id of the tab the user picked.
 	 */

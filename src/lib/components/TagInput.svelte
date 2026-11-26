@@ -21,7 +21,7 @@
 		/** Treat "Gel" and "gel" as different tags. Default: duplicates are found ignoring case. */
 		caseSensitive?: boolean | undefined;
 		/** Offered while typing (listbox autocomplete); free text stays allowed. */
-		suggestions?: string[] | undefined;
+		suggestions?: readonly string[] | undefined;
 		/** Turn leftover text into a tag when the field loses focus. */
 		addOnBlur?: boolean | undefined;
 		/** Accessible name of each remove button; `{tag}` is replaced. */

@@ -18,7 +18,7 @@
 <script lang="ts">
 	/**
 	 * Single choice as a row of segments. `group-label`: accessible name when there is no visible label.
-	 * @prop options {SegmentOption[]}
+	 * @prop options {readonly SegmentOption[]}
 	 * @event change {string} The picked value.
 	 */
 	import SegmentedControl from '../lib/components/SegmentedControl.svelte';

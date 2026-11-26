@@ -16,7 +16,7 @@
 	import { fill, numberFormat, tipAnchor, withDefaults } from './data-utils.js';
 
 	interface Props {
-		items: HistoryItem[];
+		items: readonly HistoryItem[];
 		/** Accessible name of the bars. */
 		label: string;
 		/** Summary above the bars. Placeholders: {percent} {ok} {total}. */

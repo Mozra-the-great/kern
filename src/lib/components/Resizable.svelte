@@ -20,7 +20,7 @@
 	}
 	interface Props {
 		/** The panels in order; a handle sits between each two neighbours. */
-		panels: ResizablePanel[];
+		panels: readonly ResizablePanel[];
 		/** Sizes in %, one per panel, summing to 100. Default: equal shares. */
 		sizes?: number[] | undefined;
 		/** `horizontal` = panels side by side, `vertical` = stacked. */

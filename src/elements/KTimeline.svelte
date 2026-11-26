@@ -11,7 +11,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop items {TimelineItem[]}
+	 * @prop items {readonly TimelineItem[]}
 	 * @prop statusLabels {Partial<Record<TimelineStatus, string>>}
 	 */
 	import Timeline from '../lib/components/Timeline.svelte';

@@ -20,8 +20,8 @@
 	 * `items` itself: set `items` again in the `move` handler (`splice` the item from `from` to `to`;
 	 * Svelte: `moveItem`). An item shows `src` as a picture and its `label` and `description` as a caption
 	 * (other pictures, e.g. a canvas: the Svelte component's `item` snippet).
-	 * @prop items {SelectGridItem[]} `{ id, label, src?, description? }`.
-	 * @prop selected {Array<string | number>} The `id`s of the selected items.
+	 * @prop items {readonly SelectGridItem[]} `{ id, label, src?, description? }`.
+	 * @prop selected {readonly (string | number)[]} The `id`s of the selected items.
 	 * @prop min {string} Smallest column width (CSS length). Default `150px`.
 	 * @prop caption {boolean | 'true' | 'false'} `false` hides the caption (label and description) under the picture. Default true.
 	 * @event change {Array<string | number>} The `id`s of the selected items after the user changed the selection (not for `selected` set from code).

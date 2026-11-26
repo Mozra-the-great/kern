@@ -5,7 +5,7 @@
 	import { activeElementOf, composedContains, deepActiveElement, eventWithin, placeAtPoint } from './anchor.js';
 
 	interface Props {
-		items: MenuEntry[];
+		items: readonly MenuEntry[];
 		/** Accessible name of the menu. */
 		label?: string | undefined;
 		/** Accessible name of the target area (role="group"). Recommended when the area is focusable. */

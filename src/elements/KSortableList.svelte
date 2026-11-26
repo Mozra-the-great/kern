@@ -23,7 +23,7 @@
 	 * to its partner when that one is disabled at an end of the list. Say what happened with
 	 * `announce()` (README). An item shows its `label` and `description` (richer content: the Svelte
 	 * component's `item` snippet).
-	 * @prop items {SortableItem[]} `{ id, label, description? }`, in their current order.
+	 * @prop items {readonly SortableItem[]} `{ id, label, description? }`, in their current order.
 	 * @prop removable {boolean | 'true' | 'false'} `false` (property or attribute) hides the Remove buttons. Default true.
 	 * @prop dragDrop {boolean | 'true' | 'false'} `false` turns off dragging. Default true.
 	 * @event move {{ from: number; to: number }} The user moved the item at `from` so that it should end up at `to`.

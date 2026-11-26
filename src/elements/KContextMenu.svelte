@@ -13,7 +13,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop items {MenuEntry[]}
+	 * @prop items {readonly MenuEntry[]}
 	 * @event select {string} Id of the chosen item.
 	 */
 	import ContextMenu from '../lib/components/ContextMenu.svelte';

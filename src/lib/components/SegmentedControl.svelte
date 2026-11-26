@@ -14,7 +14,7 @@
 		ariaLabel?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
-		options: SegmentOption[];
+		options: readonly SegmentOption[];
 		/** Value of the chosen option. */
 		value?: string | undefined;
 		/** Form field name (native radios). */

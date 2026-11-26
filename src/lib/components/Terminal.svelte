@@ -5,7 +5,7 @@
 		/** The command that is typed. */
 		text: string;
 		/** What the command prints. One string = one line. */
-		output?: string | string[] | undefined;
+		output?: string | readonly string[] | undefined;
 	}
 </script>
 
@@ -15,7 +15,7 @@
 	import { graphemes, observeInView, useReducedMotion } from './motion.svelte.js';
 
 	interface Props {
-		lines: TerminalLine[];
+		lines: readonly TerminalLine[];
 		/** Text in the title bar. */
 		title?: string | undefined;
 		/** Default prompt of every line. */
@@ -78,8 +78,8 @@
 	let done = $state(0);
 	let typed = $state(0);
 
-	const outputLines = (line: TerminalLine): string[] =>
-		line.output === undefined ? [] : Array.isArray(line.output) ? line.output : [line.output];
+	const outputLines = (line: TerminalLine): readonly string[] =>
+		line.output === undefined ? [] : Array.isArray(line.output) ? (line.output as readonly string[]) : [line.output as string];
 	const commandOf = (line: TerminalLine): Row => ({
 		kind: 'cmd',
 		prompt: line.prompt ?? prompt,

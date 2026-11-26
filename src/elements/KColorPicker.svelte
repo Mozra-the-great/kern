@@ -26,7 +26,7 @@
 <script lang="ts">
 	/**
 	 * Colour field with a picker popup. `swatches`: JSON list of hex strings or {"value","label"} objects.
-	 * @prop swatches {(string | ColorSwatch)[]}
+	 * @prop swatches {readonly (string | ColorSwatch)[]}
 	 * @event change {string} The chosen colour as hex, or "" when cleared.
 	 */
 	import ColorPicker from '../lib/components/ColorPicker.svelte';

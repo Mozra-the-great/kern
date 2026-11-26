@@ -42,8 +42,8 @@
 
 <script lang="ts">
 	/**
-	 * @prop columns {TableColumn[]}
-	 * @prop rows {TableRow[]}
+	 * @prop columns {readonly TableColumn[]}
+	 * @prop rows {readonly TableRow[]}
 	 * @prop selected {DataRowKey[]}
 	 * @prop sortKey {string | null}
 	 * @prop sortDir {DataSortDir}

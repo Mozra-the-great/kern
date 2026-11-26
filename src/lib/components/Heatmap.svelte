@@ -12,7 +12,7 @@
 	import { dateFormat, fill, numberFormat, tipAnchor } from './data-utils.js';
 
 	interface Props {
-		data: HeatmapDatum[];
+		data: readonly HeatmapDatum[];
 		/** Accessible name of the grid. */
 		label: string;
 		/** First day of the range, ISO. Default: the earliest date in `data`. */

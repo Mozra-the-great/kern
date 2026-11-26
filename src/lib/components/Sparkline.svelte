@@ -3,7 +3,7 @@
 	import { fill, numberFormat } from './data-utils.js';
 
 	interface Props {
-		values: number[];
+		values: readonly number[];
 		/** `line`, `area` (line with a filled area) or `bar`. */
 		variant?: 'line' | 'area' | 'bar' | undefined;
 		/** Lower end of the scale. Default: the smallest value (bars: 0 or the smallest value if negative). */

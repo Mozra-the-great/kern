@@ -90,7 +90,7 @@
 		 * The keys of one shortcut, e.g. `['mod', 'K']`. Names like `mod`, `ctrl`, `alt`, `shift`,
 		 * `enter`, `esc`, `up` become symbols with a spoken name; anything else is shown as it is.
 		 */
-		keys?: string[] | undefined;
+		keys?: readonly string[] | undefined;
 		/** Drawn between the keys. Empty string for none. */
 		separator?: string | undefined;
 		size?: 'sm' | 'md' | undefined;

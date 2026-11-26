@@ -19,7 +19,7 @@
 	interface Props {
 		/** Text of the trigger button. */
 		label: string;
-		items: MenuEntry[];
+		items: readonly MenuEntry[];
 		align?: 'start' | 'end' | undefined;
 		/** Custom trigger content; `label` stays the accessible name. */
 		trigger?: Snippet | undefined;
