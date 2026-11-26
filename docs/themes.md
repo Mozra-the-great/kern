@@ -132,8 +132,8 @@ later stuffcloud change into kern: a change there is, at most, an idea that kern
 the reference as it was frozen, and say so in the PR.
 
 **Instance neutrality.** `npm run neutrality:check` (also in `build`) fails on an e-mail address, a URL,
-a domain name or an IPv4 address in `src/lib/themes/**`, the snapshot or `assets/**` (contents and file
-names). Allowed: the SVG namespace, `claude.ai` (the artifacts named in the asset manifests) and the
+a domain name or an IPv4 address in `src/lib/themes/**`, the snapshot, `assets/**` and the theme texts
+(`src/lib/components/theme-texts.ts`, `theme-texts-de.ts`; contents and file names). Allowed: the SVG namespace, `claude.ai` (the artifacts named in the asset manifests) and the
 documentation names of RFC 2606/6761 (`example.com`, `*.test`, ...). The operator's own names and
 domains cannot be listed in a public repository: set them as the Actions secret or variable
 `KERN_FORBIDDEN_TERMS` (one per line or comma separated, `#` comments); findings name the entry number,
@@ -235,7 +235,22 @@ is in the mapping tables of the [consumer guide](consumer-guide.md) and of [test
 | Need | Issue |
 | --- | --- |
 | Season and special-day sets (the 17 sets with decorations and the theme button behaviour), an optional feature | [#184](https://github.com/Mozra-the-great/kern/issues/184) |
-| Theme texts as a DE/EN catalogue that consumers can override | [#185](https://github.com/Mozra-the-great/kern/issues/185) |
+| ~~Theme texts as a DE/EN catalogue that consumers can override~~ **met**: `setThemeTexts`, `themeTexts()`, `deThemeTexts` (see the paragraph below) | [#185](https://github.com/Mozra-the-great/kern/issues/185) |
+
+**Theme texts (#185, met).** The two short facts the theme button shows for each of the 17 season and special-day sets
+are a typed catalogue of their own, not part of `strings.ts`: they are not component defaults (no component reads them),
+and `strings.ts` keeps what a component shows when no prop is given. The module follows the same rules
+(`src/lib/components/theme-texts.ts`, `theme-texts-de.ts`, `theme-texts.svelte.ts`): typed keys, a complete German bundle
+(a missing text does not compile), a runtime override, a reactive read, and one state on
+`globalThis[Symbol.for('kern.themeTexts')]`. It reuses the store of the strings (`createStringsStore`) instead of copying it.
+The wording of the reference (`THEME-TEXTS.md`, a frozen reference like the rest of `docs/design`) is ported with these changes:
+no product, operator, domain or handle, and no claim about the product that shows the text. The privacy lines of Halloween and
+Christmas, the "runs in your browser" line of Earth Day, the "clear out old files and sites" of New Year and the product name in
+Pride became neutral sentences (an app that wants such a claim sets it with `setThemeTexts`); the Advent line "3 of 4 candles"
+became the template `Today: {lit} of {total} candles.`. No text lets a mascot speak (mascots never speak, no filler copy).
+The theme button that reads them, and the set names, come with the season sets ([#184](https://github.com/Mozra-the-great/kern/issues/184)).
+The two catalogue files are in the scope of `neutrality:check`, and a unit test scans the texts for the product name and the
+same patterns.
 
 Both are parts of [#181](https://github.com/Mozra-the-great/kern/issues/181), the issue that made kern the
 design source. A token that stuffcloud still defines locally and kern lacks is not on the list: stuffcloud#199 files
