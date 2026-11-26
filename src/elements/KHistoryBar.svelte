@@ -16,7 +16,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop items {HistoryItem[]}
+	 * @prop items {readonly HistoryItem[]}
 	 * @prop statusLabels {Partial<Record<HistoryStatus, string>>}
 	 */
 	import HistoryBar from '../lib/components/HistoryBar.svelte';

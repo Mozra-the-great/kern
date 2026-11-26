@@ -11,7 +11,7 @@
 	import { tick } from 'svelte';
 
 	interface Props {
-		items: BreadcrumbItem[];
+		items: readonly BreadcrumbItem[];
 		/** Accessible name of the navigation landmark. */
 		label?: string | undefined;
 		/** Show at most this many items (first, an ellipsis button, the last ones). Without it,

@@ -119,14 +119,14 @@ export interface Command {
 	/** Heading the command is listed under. */
 	group?: string | undefined;
 	/** Extra search terms. */
-	keywords?: string[] | undefined;
+	keywords?: readonly string[] | undefined;
 	/** Shortcut hint shown on the right, e.g. "Ctrl+S". */
 	shortcut?: string | undefined;
 }
 export interface TreeNode {
 	id: string;
 	label: string;
-	children?: TreeNode[] | undefined;
+	children?: readonly TreeNode[] | undefined;
 	/** Can be focused and expanded, but not selected. */
 	disabled?: boolean | undefined;
 }
@@ -175,7 +175,7 @@ export interface TerminalLine {
 	/** The command that is typed. */
 	text: string;
 	/** What the command prints. One string = one line. */
-	output?: string | string[] | undefined;
+	output?: string | readonly string[] | undefined;
 }
 export interface ThemeOption {
 	/** Value of `data-theme`. */

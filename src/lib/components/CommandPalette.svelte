@@ -6,14 +6,14 @@
 		/** Heading the command is listed under. */
 		group?: string | undefined;
 		/** Extra search terms. */
-		keywords?: string[] | undefined;
+		keywords?: readonly string[] | undefined;
 		/** Shortcut hint shown on the right, e.g. "Ctrl+S". */
 		shortcut?: string | undefined;
 		onselect?: (() => void) | undefined;
 	}
 	interface Props {
 		open?: boolean | undefined;
-		commands: Command[];
+		commands: readonly Command[];
 		/** Accessible name of the dialog and the search field. */
 		label?: string | undefined;
 		placeholder?: string | undefined;

@@ -14,7 +14,7 @@
 	import { watchScrollFade, type ScrollFade } from './scroll-fade.js';
 
 	interface Props {
-		links: TabLinkItem[];
+		links: readonly TabLinkItem[];
 		/** Accessible name of the navigation landmark, e.g. "Sections". */
 		label: string;
 		/** Same looks as Tabs: `line` = underline marker, `pill` = filled segment. */

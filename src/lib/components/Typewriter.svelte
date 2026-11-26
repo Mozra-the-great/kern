@@ -4,7 +4,7 @@
 
 	interface Props {
 		/** Text to type. With several strings each one is typed, held, erased and replaced by the next. */
-		text: string | string[];
+		text: string | readonly string[];
 		/** Milliseconds per typed character. */
 		speed?: number | undefined;
 		/** Milliseconds per erased character. Defaults to half of `speed`. */
@@ -39,7 +39,7 @@
 	}: Props = $props();
 
 	const reduced = useReducedMotion();
-	const list = $derived(Array.isArray(text) ? text : [text]);
+	const list = $derived<readonly string[]>(Array.isArray(text) ? (text as readonly string[]) : [text as string]);
 	/* What is shown without JS, with reduced motion, and until the animation starts. */
 	const finalText = $derived((loop ? list[0] : list[list.length - 1]) ?? '');
 	let typed: string | null = $state(null);

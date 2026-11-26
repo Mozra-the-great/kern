@@ -17,5 +17,5 @@
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"types": []
 	},
-	"files": ["app.tsx", "strings-a11y.tsx", "reorder.tsx", "download.tsx"]
+	"files": ["app.tsx", "strings-a11y.tsx", "reorder.tsx", "download.tsx", "readonly-arrays.tsx"]
 }

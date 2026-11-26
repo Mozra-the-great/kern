@@ -29,7 +29,7 @@
 	 * Free-text tags. The form gets one entry per tag under `name`, like a multi-select;
 	 * `required` needs at least one tag.
 	 * @prop value {string[]}
-	 * @prop suggestions {string[]}
+	 * @prop suggestions {readonly string[]}
 	 * @event change {string[]} All tags after the user added or removed one.
 	 */
 	import TagInput from '../lib/components/TagInput.svelte';

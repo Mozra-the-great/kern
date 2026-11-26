@@ -1253,7 +1253,7 @@ npm run test:targets              # Playwright: Touch-Ziele in der gebauten Demo
 npm run test:elements             # Playwright: gebaute Custom Elements (nach npm run build)
 npm run test:types                # Element-Typen gegen eine strikte React-19-Fixture (nach dem Build)
 npm run test:consumer             # Svelte-App mit strengen TS-Flags gegen dist/ (nach dem Build)
-npm run check:dts                 # kein `any` in den veröffentlichten .d.ts (nach dem Build)
+npm run check:dts                 # kein `any` und keine veränderlichen Listen-Props in den veröffentlichten .d.ts (nach dem Build)
 npm run check:html                # kein {@html}/innerHTML in src/lib und src/elements
 npm run size                      # Größenbudget der Custom Elements
 npm run test:mascot               # Playwright: <k-mascot> unter strenger CSP (nach npm run build)

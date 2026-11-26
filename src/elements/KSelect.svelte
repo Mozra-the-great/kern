@@ -19,7 +19,7 @@
 <script lang="ts">
 	/**
 	 * Native select.
-	 * @prop options {SelectOption[]}
+	 * @prop options {readonly SelectOption[]}
 	 * @event change {string} The chosen value.
 	 */
 	import Select from '../lib/components/Select.svelte';

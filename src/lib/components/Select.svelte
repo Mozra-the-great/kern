@@ -15,7 +15,7 @@
 		/** Show the hint under the error instead of hiding it (both are referenced, the error first). */
 		keepHint?: boolean | undefined;
 		value?: string | undefined;
-		options: SelectOption[];
+		options: readonly SelectOption[];
 		/** Text of an empty first option. */
 		placeholder?: string | undefined;
 	}

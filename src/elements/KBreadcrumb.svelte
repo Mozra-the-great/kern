@@ -11,7 +11,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop items {BreadcrumbItem[]}
+	 * @prop items {readonly BreadcrumbItem[]}
 	 */
 	import Breadcrumb from '../lib/components/Breadcrumb.svelte';
 	/* items: JSON list of { label, href? }; the last item is the current page. */

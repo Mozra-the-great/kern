@@ -6,7 +6,7 @@
 	 * like `<k-tabs>`, the current one with `aria-current="page"`. Plain links: Tab moves between them,
 	 * no arrow keys. Links in a shadow root are invisible to client-side routers; listen to `navigate`
 	 * and call `preventDefault()` to route yourself.
-	 * @prop links {TabLinkItem[]}
+	 * @prop links {readonly TabLinkItem[]}
 	 * @prop look {'line' | 'pill'}
 	 * @event navigate {TabLinkItem} The user follows a link with a plain primary click; cancelable: `preventDefault()` stops the page load (client-side routing).
 	 */

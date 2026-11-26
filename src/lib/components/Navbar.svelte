@@ -13,7 +13,7 @@
 
 	interface Props {
 		/** Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. */
-		items?: NavbarItem[] | undefined;
+		items?: readonly NavbarItem[] | undefined;
 		/** Logo or product name, on the left. */
 		brand?: Snippet | undefined;
 		/** Controls on the right, e.g. a theme switch or a sign-in button. Stays in the bar on narrow widths. */

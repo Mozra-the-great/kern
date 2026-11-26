@@ -389,7 +389,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "BreadcrumbItem[]"
+								"text": "readonly BreadcrumbItem[]"
 							},
 							"default": "[]",
 							"attribute": "items"
@@ -423,7 +423,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "BreadcrumbItem[] (JSON)"
+								"text": "readonly BreadcrumbItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -2144,7 +2144,7 @@
 							"kind": "field",
 							"name": "swatches",
 							"type": {
-								"text": "(string | ColorSwatch)[]"
+								"text": "readonly (string | ColorSwatch)[]"
 							},
 							"default": "[]",
 							"attribute": "swatches"
@@ -2357,7 +2357,7 @@
 						{
 							"name": "swatches",
 							"type": {
-								"text": "(string | ColorSwatch)[] (JSON)"
+								"text": "readonly (string | ColorSwatch)[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "swatches"
@@ -2531,7 +2531,7 @@
 							"kind": "field",
 							"name": "options",
 							"type": {
-								"text": "ComboboxOption[]"
+								"text": "readonly ComboboxOption[]"
 							},
 							"default": "[]",
 							"attribute": "options"
@@ -2705,7 +2705,7 @@
 						{
 							"name": "options",
 							"type": {
-								"text": "ComboboxOption[] (JSON)"
+								"text": "readonly ComboboxOption[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "options"
@@ -2828,7 +2828,7 @@
 							"kind": "field",
 							"name": "commands",
 							"type": {
-								"text": "Command[]"
+								"text": "readonly Command[]"
 							},
 							"default": "[]",
 							"attribute": "commands"
@@ -2886,7 +2886,7 @@
 						{
 							"name": "commands",
 							"type": {
-								"text": "Command[] (JSON)"
+								"text": "readonly Command[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "commands"
@@ -2975,7 +2975,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "MenuEntry[]"
+								"text": "readonly MenuEntry[]"
 							},
 							"default": "[]",
 							"attribute": "items"
@@ -3026,7 +3026,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "MenuEntry[] (JSON)"
+								"text": "readonly MenuEntry[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -3448,7 +3448,7 @@
 							"kind": "field",
 							"name": "columns",
 							"type": {
-								"text": "TableColumn[]"
+								"text": "readonly TableColumn[]"
 							},
 							"default": "[]",
 							"attribute": "columns"
@@ -3457,7 +3457,7 @@
 							"kind": "field",
 							"name": "rows",
 							"type": {
-								"text": "TableRow[]"
+								"text": "readonly TableRow[]"
 							},
 							"default": "[]",
 							"attribute": "rows"
@@ -3742,7 +3742,7 @@
 						{
 							"name": "columns",
 							"type": {
-								"text": "TableColumn[] (JSON)"
+								"text": "readonly TableColumn[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "columns"
@@ -3750,7 +3750,7 @@
 						{
 							"name": "rows",
 							"type": {
-								"text": "TableRow[] (JSON)"
+								"text": "readonly TableRow[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "rows"
@@ -4925,7 +4925,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "MenuEntry[]"
+								"text": "readonly MenuEntry[]"
 							},
 							"default": "[]",
 							"attribute": "items"
@@ -4959,7 +4959,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "MenuEntry[] (JSON)"
+								"text": "readonly MenuEntry[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -5638,7 +5638,7 @@
 							"kind": "field",
 							"name": "data",
 							"type": {
-								"text": "HeatmapDatum[]"
+								"text": "readonly HeatmapDatum[]"
 							},
 							"default": "[]",
 							"attribute": "data"
@@ -5746,7 +5746,7 @@
 						{
 							"name": "data",
 							"type": {
-								"text": "HeatmapDatum[] (JSON)"
+								"text": "readonly HeatmapDatum[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "data"
@@ -5944,7 +5944,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "HistoryItem[]"
+								"text": "readonly HistoryItem[]"
 							},
 							"default": "[]",
 							"attribute": "items"
@@ -6020,7 +6020,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "HistoryItem[] (JSON)"
+								"text": "readonly HistoryItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -6642,7 +6642,7 @@
 							"kind": "field",
 							"name": "keys",
 							"type": {
-								"text": "string[] | undefined"
+								"text": "readonly string[] | undefined"
 							},
 							"attribute": "keys"
 						},
@@ -6683,7 +6683,7 @@
 						{
 							"name": "keys",
 							"type": {
-								"text": "string[] (JSON)"
+								"text": "readonly string[] (JSON)"
 							},
 							"fieldName": "keys"
 						},
@@ -7521,7 +7521,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "NavbarItem[]"
+								"text": "readonly NavbarItem[]"
 							},
 							"default": "[]",
 							"attribute": "items"
@@ -7547,7 +7547,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "NavbarItem[] (JSON)"
+								"text": "readonly NavbarItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -9178,7 +9178,7 @@
 							"kind": "field",
 							"name": "options",
 							"type": {
-								"text": "RadioOption[]"
+								"text": "readonly RadioOption[]"
 							},
 							"default": "[]",
 							"attribute": "options"
@@ -9315,7 +9315,7 @@
 						{
 							"name": "options",
 							"type": {
-								"text": "RadioOption[] (JSON)"
+								"text": "readonly RadioOption[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "options"
@@ -9845,7 +9845,7 @@
 							"kind": "field",
 							"name": "panels",
 							"type": {
-								"text": "ResizablePanel[] | undefined"
+								"text": "readonly ResizablePanel[] | undefined"
 							},
 							"attribute": "panels"
 						},
@@ -9900,7 +9900,7 @@
 						{
 							"name": "panels",
 							"type": {
-								"text": "ResizablePanel[] (JSON)"
+								"text": "readonly ResizablePanel[] (JSON)"
 							},
 							"fieldName": "panels"
 						},
@@ -10337,7 +10337,7 @@
 							"kind": "field",
 							"name": "options",
 							"type": {
-								"text": "SegmentOption[]"
+								"text": "readonly SegmentOption[]"
 							},
 							"default": "[]",
 							"attribute": "options"
@@ -10487,7 +10487,7 @@
 						{
 							"name": "options",
 							"type": {
-								"text": "SegmentOption[] (JSON)"
+								"text": "readonly SegmentOption[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "options"
@@ -10622,7 +10622,7 @@
 							"kind": "field",
 							"name": "options",
 							"type": {
-								"text": "SelectOption[]"
+								"text": "readonly SelectOption[]"
 							},
 							"default": "[]",
 							"attribute": "options"
@@ -10779,7 +10779,7 @@
 						{
 							"name": "options",
 							"type": {
-								"text": "SelectOption[] (JSON)"
+								"text": "readonly SelectOption[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "options"
@@ -10905,7 +10905,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "SelectGridItem[]"
+								"text": "readonly SelectGridItem[]"
 							},
 							"default": "[]",
 							"attribute": "items",
@@ -10915,7 +10915,7 @@
 							"kind": "field",
 							"name": "selected",
 							"type": {
-								"text": "Array<string | number>"
+								"text": "readonly (string | number)[]"
 							},
 							"default": "[]",
 							"attribute": "selected",
@@ -10969,7 +10969,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "SelectGridItem[] (JSON)"
+								"text": "readonly SelectGridItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -10977,7 +10977,7 @@
 						{
 							"name": "selected",
 							"type": {
-								"text": "Array<string | number> (JSON)"
+								"text": "readonly (string | number)[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "selected"
@@ -11555,7 +11555,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "SortableItem[]"
+								"text": "readonly SortableItem[]"
 							},
 							"default": "[]",
 							"attribute": "items",
@@ -11640,7 +11640,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "SortableItem[] (JSON)"
+								"text": "readonly SortableItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -11756,7 +11756,7 @@
 							"kind": "field",
 							"name": "values",
 							"type": {
-								"text": "number[]"
+								"text": "readonly number[]"
 							},
 							"default": "[]",
 							"attribute": "values"
@@ -11839,7 +11839,7 @@
 						{
 							"name": "values",
 							"type": {
-								"text": "number[] (JSON)"
+								"text": "readonly number[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "values"
@@ -12452,7 +12452,7 @@
 							"kind": "field",
 							"name": "steps",
 							"type": {
-								"text": "StepItem[]"
+								"text": "readonly StepItem[]"
 							},
 							"default": "[]",
 							"attribute": "steps"
@@ -12530,7 +12530,7 @@
 						{
 							"name": "steps",
 							"type": {
-								"text": "StepItem[] (JSON)"
+								"text": "readonly StepItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "steps"
@@ -12910,7 +12910,7 @@
 							"kind": "field",
 							"name": "links",
 							"type": {
-								"text": "TabLinkItem[]"
+								"text": "readonly TabLinkItem[]"
 							},
 							"default": "[]",
 							"attribute": "links"
@@ -12937,7 +12937,7 @@
 						{
 							"name": "links",
 							"type": {
-								"text": "TabLinkItem[] (JSON)"
+								"text": "readonly TabLinkItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "links"
@@ -12998,7 +12998,7 @@
 							"kind": "field",
 							"name": "columns",
 							"type": {
-								"text": "TableColumn[]"
+								"text": "readonly TableColumn[]"
 							},
 							"default": "[]",
 							"attribute": "columns"
@@ -13007,7 +13007,7 @@
 							"kind": "field",
 							"name": "rows",
 							"type": {
-								"text": "TableRow[]"
+								"text": "readonly TableRow[]"
 							},
 							"default": "[]",
 							"attribute": "rows"
@@ -13051,7 +13051,7 @@
 						{
 							"name": "columns",
 							"type": {
-								"text": "TableColumn[] (JSON)"
+								"text": "readonly TableColumn[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "columns"
@@ -13059,7 +13059,7 @@
 						{
 							"name": "rows",
 							"type": {
-								"text": "TableRow[] (JSON)"
+								"text": "readonly TableRow[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "rows"
@@ -13128,7 +13128,7 @@
 							"kind": "field",
 							"name": "tabs",
 							"type": {
-								"text": "TabItem[]"
+								"text": "readonly TabItem[]"
 							},
 							"default": "[]",
 							"attribute": "tabs"
@@ -13163,7 +13163,7 @@
 						{
 							"name": "tabs",
 							"type": {
-								"text": "TabItem[] (JSON)"
+								"text": "readonly TabItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "tabs"
@@ -13413,7 +13413,7 @@
 							"kind": "field",
 							"name": "suggestions",
 							"type": {
-								"text": "string[]"
+								"text": "readonly string[]"
 							},
 							"default": "[]",
 							"attribute": "suggestions"
@@ -13627,7 +13627,7 @@
 						{
 							"name": "suggestions",
 							"type": {
-								"text": "string[] (JSON)"
+								"text": "readonly string[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "suggestions"
@@ -13737,7 +13737,7 @@
 							"kind": "field",
 							"name": "lines",
 							"type": {
-								"text": "TerminalLine[]"
+								"text": "readonly TerminalLine[]"
 							},
 							"default": "[]",
 							"attribute": "lines"
@@ -13837,7 +13837,7 @@
 						{
 							"name": "lines",
 							"type": {
-								"text": "TerminalLine[] (JSON)"
+								"text": "readonly TerminalLine[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "lines"
@@ -14353,7 +14353,7 @@
 							"kind": "field",
 							"name": "themes",
 							"type": {
-								"text": "ThemeOption[] | undefined"
+								"text": "readonly ThemeOption[] | undefined"
 							},
 							"attribute": "themes"
 						},
@@ -14404,7 +14404,7 @@
 						{
 							"name": "themes",
 							"type": {
-								"text": "ThemeOption[] (JSON)"
+								"text": "readonly ThemeOption[] (JSON)"
 							},
 							"fieldName": "themes"
 						},
@@ -14651,7 +14651,7 @@
 							"kind": "field",
 							"name": "items",
 							"type": {
-								"text": "TimelineItem[]"
+								"text": "readonly TimelineItem[]"
 							},
 							"default": "[]",
 							"attribute": "items"
@@ -14685,7 +14685,7 @@
 						{
 							"name": "items",
 							"type": {
-								"text": "TimelineItem[] (JSON)"
+								"text": "readonly TimelineItem[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "items"
@@ -14958,7 +14958,7 @@
 							"kind": "field",
 							"name": "nodes",
 							"type": {
-								"text": "TreeNode[]"
+								"text": "readonly TreeNode[]"
 							},
 							"default": "[]",
 							"attribute": "nodes"
@@ -14994,7 +14994,7 @@
 						{
 							"name": "nodes",
 							"type": {
-								"text": "TreeNode[] (JSON)"
+								"text": "readonly TreeNode[] (JSON)"
 							},
 							"default": "[]",
 							"fieldName": "nodes"
@@ -15070,7 +15070,7 @@
 							"kind": "field",
 							"name": "text",
 							"type": {
-								"text": "string | string[] | undefined"
+								"text": "string | readonly string[] | undefined"
 							},
 							"attribute": "text"
 						},
@@ -15144,7 +15144,7 @@
 						{
 							"name": "text",
 							"type": {
-								"text": "string | string[]"
+								"text": "string | readonly string[]"
 							},
 							"fieldName": "text"
 						},

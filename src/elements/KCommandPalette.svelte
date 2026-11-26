@@ -14,7 +14,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop commands {Command[]}
+	 * @prop commands {readonly Command[]}
 	 * @event select {string} Id of the command the user ran.
 	 * @event close The palette was closed by the user.
 	 */

@@ -21,7 +21,7 @@
 	import { watchScrollFade, type ScrollFade } from './scroll-fade.js';
 
 	interface Props {
-		tabs: TabItem[];
+		tabs: readonly TabItem[];
 		/** Id of the active tab. */
 		value?: string | undefined;
 		/** Accessible name of the tab list. */
