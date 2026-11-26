@@ -3,6 +3,7 @@
 		props: {
 			message: { type: 'String' },
 			kind: { type: 'String' },
+			tone: { type: 'String' },
 			reserve: { type: 'String' }
 		}
 	}}
@@ -15,14 +16,15 @@
 	 * `kind="status"` is polite, `kind="alert"` assertive (errors). One line of height is kept while it is
 	 * empty; `reserve="false"` turns that off.
 	 * @prop kind {'status' | 'alert'} `status` (polite) for results, `alert` (assertive) for errors.
+	 * @prop tone {'default' | 'ok'} `ok` draws a `status` line in the success colour; an `alert` keeps its danger colour.
 	 * @prop reserve {boolean | 'false'} Keep one line of height while empty (default on).
 	 */
 	import StatusMessage from '../lib/components/StatusMessage.svelte';
-	let { message, kind, reserve } = $props();
+	let { message, kind, tone, reserve } = $props();
 	const on = (v: unknown, fallback: boolean) => (v === undefined || v === null ? fallback : v !== false && v !== 'false');
 </script>
 
-<StatusMessage {message} {kind} reserve={on(reserve, true)} />
+<StatusMessage {message} {kind} {tone} reserve={on(reserve, true)} />
 
 <style>
 	:host {

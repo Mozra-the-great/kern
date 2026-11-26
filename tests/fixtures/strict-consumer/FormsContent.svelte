@@ -65,5 +65,7 @@
 <Select {options} keepHint={maybeBoolean} announce={false} aria-describedby={maybeString} />
 <CopyButton text={maybeString} showLabel={maybeBoolean} label="Copy HEX" accessibleLabel={maybeString} />
 <CopyButton text="abc" showLabel label="Copy" accessibleLabel="Copy SHA-256" />
-<StatusMessage message={result} kind={undefined} reserve={maybeBoolean} />
+<StatusMessage message={result} kind={undefined} reserve={maybeBoolean} tone={undefined} />
+<StatusMessage message={result} tone="ok" />
+<StatusMessage message={result} kind="alert" tone="default" />
 <StatusMessage message={null} kind="alert" class="x" id={maybeString} />

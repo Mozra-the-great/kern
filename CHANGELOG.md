@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- `StatusMessage` (`tone`) and `<k-status-message>` (attribute `tone`): `tone="ok"` draws a result line ("Copied", "3 matches")
+  in the success colour `--k-ok`; `default` (or unset) is unchanged. Only `kind="status"` takes it, an alert keeps its danger
+  colour. No new token: `--k-ok` already passes 4.5:1 as text on `--k-bg` and `--k-bg-raised` in every theme variant, and the
+  contrast test guards those pairs (#173).
 - `TileGrid` and `<k-tile-grid>`: the custom property `--k-tile-grid-left-w` sets the width of the grid's left line (default `--k-border-w`;
   `0` drops it). It is the way to keep the old open look inside a container that already draws the left edge, also for the element, whose
   styles live in a shadow root (#172).
