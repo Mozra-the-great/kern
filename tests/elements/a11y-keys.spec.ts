@@ -7,7 +7,7 @@
  * Each test names the element and the keys. Reading values goes through the host element's properties, the
  * same ones an app reads; events are the custom events of the element (custom-elements.json).
  */
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type FileChooser, type Page } from '@playwright/test';
 import { ALL, openPage } from './a11y-shared.js';
 
 test.beforeEach(async ({ page }) => {
@@ -51,6 +51,47 @@ const focused = (page: Page): Promise<string> =>
 
 const key = (page: Page, ...keys: string[]): Promise<void> =>
 	keys.reduce((p, k) => p.then(() => page.keyboard.press(k)), Promise.resolve());
+
+/**
+ * Counts the file choosers opened by the file input inside `selector`'s shadow root. Playwright turns the
+ * file chooser interception on in the browser only after `page.on('filechooser')` returned (a fire and forget
+ * message, no way to await it), so a chooser opened right after `page.waitForEvent('filechooser')` is
+ * sometimes a real, unseen one and the wait times out (#138). So this registers the listener first and probes
+ * with a throwaway input until a chooser arrives: from then on the interception is on and every chooser is
+ * seen. Only choosers of the input in `selector` count; the probe's own are ignored.
+ */
+async function watchFileChoosers(page: Page, selector: string): Promise<{ count: () => Promise<number> }> {
+	const opened: FileChooser[] = [];
+	page.on('filechooser', (chooser) => opened.push(chooser));
+	await expect
+		.poll(
+			async () => {
+				const seen = page.waitForEvent('filechooser', { timeout: 500 }).then(
+					() => true,
+					() => false
+				);
+				await page.evaluate(() => {
+					const probe = document.createElement('input');
+					probe.type = 'file';
+					probe.click();
+				});
+				return seen;
+			},
+			{ message: 'the file chooser interception never came on' }
+		)
+		.toBe(true);
+	const owned = (chooser: FileChooser): Promise<boolean> =>
+		chooser
+			.element()
+			.evaluate((input, sel) => {
+				const host = (input.getRootNode() as ShadowRoot).host as Element | undefined;
+				return !!host && host.matches(sel);
+			}, selector)
+			.catch(() => false);
+	return {
+		count: async () => (await Promise.all(opened.map(owned))).filter(Boolean).length
+	};
+}
 
 test.describe('actions', () => {
 	test('k-button: Enter and Space click it, a link button follows with Enter, a disabled one is out of reach', async ({ page }) => {
@@ -305,14 +346,14 @@ test.describe('fields', () => {
 	});
 
 	test('k-file-drop: Enter and Space open the file chooser', async ({ page }) => {
+		const choosers = await watchFileChoosers(page, '#filedrop');
 		const button = page.locator('#filedrop button').first();
 		await button.focus();
-		const first = page.waitForEvent('filechooser');
+		await expect(button).toBeFocused();
 		await key(page, 'Enter');
-		await first;
-		const second = page.waitForEvent('filechooser');
+		await expect.poll(choosers.count).toBe(1);
 		await key(page, 'Space');
-		await second;
+		await expect.poll(choosers.count).toBe(2);
 	});
 });
 
