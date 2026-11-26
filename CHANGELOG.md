@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- `Tabs` and `<k-tabs>` with `look="pill"`: a strip with more tabs than fit scrolls sideways inside its container again instead of
+  widening the page (#159, from #153). The component's grid had one `auto` column, which grew to the width of the strip, so the strip itself
+  never overflowed and, in Firefox, the page did (WCAG 1.4.10 at 320 px). The column is now `minmax(0, 1fr)`. The `line` look and
+  `TabLinks` were not affected and are unchanged; the edge fade, the focus ring and the Tab order of #153 stay.
 - `Modal`, `Drawer` and `Card` (and `<k-modal>`, `<k-drawer>`, `<k-card>`): the title row and the footer are no longer `banner` / `contentinfo`
   landmarks (#154, from stuffcloud#121). A `<header>` / `<footer>` that is not inside `article`, `aside`, `main`, `nav` or `section` maps to
   those roles, and a `<dialog>` is not sectioning content, so every open overlay next to the app's own header added a second banner:

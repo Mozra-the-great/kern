@@ -159,8 +159,7 @@ for (const theme of THEMES) {
 				expect(m, `${where} has a strip`).not.toBeNull();
 				if (!m) continue;
 				expect.soft(m.scrollHeight, `${where}: scrollHeight <= clientHeight`).toBeLessThanOrEqual(m.clientHeight);
-				// (a pill k-tabs strip does not scroll yet: its grid column is as wide as the strip, so the page widens; not part of #153)
-				if (strip.long && width <= 375 && !(strip.tag === 'k-tabs' && strip.look === 'pill')) {
+				if (strip.long && width <= 375) {
 					expect.soft(m.scrollWidth, `${where} scrolls sideways on a phone`).toBeGreaterThan(m.clientWidth);
 					expect.soft(m.fadeEnd, `${where} fades its end edge`).toBe(true);
 					expect.soft(m.scrolled, `${where} can be scrolled with scrollLeft`).toBeGreaterThan(0);

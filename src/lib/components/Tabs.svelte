@@ -122,6 +122,9 @@
 <style>
 	.k-tabs {
 		display: grid;
+		/* The column may shrink below the strip: an auto column is as wide as the strip's content, so a pill strip with more
+		 * tabs than fit widened the page instead of scrolling (#159). */
+		grid-template-columns: minmax(0, 1fr);
 		gap: var(--k-space-5);
 		min-width: 0;
 	}
