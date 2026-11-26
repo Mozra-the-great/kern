@@ -31,7 +31,14 @@ export function ReadonlyArrays() {
 			<k-command-palette commands={commands} />
 			<k-command-palette commands={[{ id: 'c', label: 'C', keywords: ['theme', 'dark'] }] as const} />
 			<k-context-menu items={[{ id: 'm', label: 'M' }, { type: 'separator' }] as const} />
-			<k-dropdown-menu items={[{ id: 'm', label: 'M' }, { type: 'label', label: 'L' }] as const} />
+			<k-dropdown-menu
+				items={
+					[
+						{ id: 'm', label: 'M' },
+						{ type: 'label', label: 'L' }
+					] as const
+				}
+			/>
 			<k-tree-view nodes={nodes} />
 			<k-tree-view
 				nodes={[{ id: 'root', label: 'Root', children: [{ id: 'a', label: 'A', children: [{ id: 'a1', label: 'A1' }] }] }] as const}

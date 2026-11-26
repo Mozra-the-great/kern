@@ -87,7 +87,11 @@
 	const links: readonly TabLinkItem[] = [{ href: '/a', label: 'A' }];
 	const suggestions: readonly string[] = ['one', 'two'];
 	const output: readonly string[] = ['line 1', 'line 2'];
-	const lines: readonly TerminalLine[] = [{ text: 'ls', output }, { text: 'pwd', output: ['/'] as const }, { text: 'id', output: 'me' }];
+	const lines: readonly TerminalLine[] = [
+		{ text: 'ls', output },
+		{ text: 'pwd', output: ['/'] as const },
+		{ text: 'id', output: 'me' }
+	];
 	const themes: readonly ThemeOption[] = [{ id: 'code', label: 'Code' }];
 	const timeline: readonly TimelineItem[] = [{ id: 'e', title: 'E' }];
 	// Nested `children`, readonly at every level.
@@ -123,7 +127,10 @@
 		{
 			id: 'root',
 			label: 'Root',
-			children: [{ id: 'a', label: 'A', children: [{ id: 'a1', label: 'A1' }] }, { id: 'b', label: 'B' }]
+			children: [
+				{ id: 'a', label: 'A', children: [{ id: 'a1', label: 'A1' }] },
+				{ id: 'b', label: 'B' }
+			]
 		}
 	] as const;
 	const constCommands = [{ id: 'c', label: 'C', keywords: ['theme', 'dark'] }] as const;

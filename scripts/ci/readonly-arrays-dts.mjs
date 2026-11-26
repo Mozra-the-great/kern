@@ -64,7 +64,8 @@ function isMutableArray(node) {
  * are properties of their own, visited separately).
  */
 function mutableArrays(node, found = []) {
-	if (ts.isFunctionTypeNode(node) || ts.isConstructorTypeNode(node) || ts.isTypeLiteralNode(node) || ts.isMappedTypeNode(node)) return found;
+	if (ts.isFunctionTypeNode(node) || ts.isConstructorTypeNode(node) || ts.isTypeLiteralNode(node) || ts.isMappedTypeNode(node))
+		return found;
 	if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName) && node.typeName.text === 'CustomEvent') return found;
 	if (isMutableArray(node)) found.push(node);
 	// `readonly X[]` is a TypeOperator around an ArrayType; its element type is still checked.
@@ -94,7 +95,9 @@ for (const dir of dirs) {
 		const visit = (node) => {
 			if ((ts.isPropertySignature(node) || ts.isPropertyDeclaration(node)) && node.type) {
 				const key = `${path}#${ownerOf(node)}.${node.name.getText(source)}`;
-				const arrays = mutableArrays(node.type).filter((a) => !ts.isTypeOperatorNode(a.parent) || a.parent.operator !== ts.SyntaxKind.ReadonlyKeyword);
+				const arrays = mutableArrays(node.type).filter(
+					(a) => !ts.isTypeOperatorNode(a.parent) || a.parent.operator !== ts.SyntaxKind.ReadonlyKeyword
+				);
 				if (arrays.length > 0) {
 					if (OUTPUTS.has(key)) used.add(key);
 					else {
@@ -115,7 +118,9 @@ if (files === 0) {
 }
 const stale = [...OUTPUTS.keys()].filter((k) => !used.has(k));
 if (stale.length) {
-	console.error(`Entries of OUTPUTS in scripts/ci/readonly-arrays-dts.mjs that no longer match a mutable array property:\n${stale.join('\n')}`);
+	console.error(
+		`Entries of OUTPUTS in scripts/ci/readonly-arrays-dts.mjs that no longer match a mutable array property:\n${stale.join('\n')}`
+	);
 	process.exit(1);
 }
 if (problems.length) {
