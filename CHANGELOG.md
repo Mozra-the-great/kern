@@ -23,6 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `announce` (default `true`, so nothing changes unless it is set) on every component that wraps `Field` and shows its error (#148,
+  from stuffcloud#121): `Input`, `Select`, `Textarea`, `Combobox`, `NumberInput`, `DatePicker`, `ColorPicker`, `TagInput`,
+  `PinInput`, `Rating`, `SegmentedControl`, `Slider` and `FileDrop` forward it to `Field`. `announce={false}` renders the error without
+  `role="alert"` for an app that announces the same message in its own live region (a screen reader no longer hears it twice); the
+  error stays visible, stays first in `aria-describedby` and the control stays `aria-invalid="true"`. `FileDrop` applies it to the
+  `error` prop only; its own messages for refused files were never announced. The elements take the boolean attribute `no-announce`
+  (property `noAnnounce`), spelled like `no-reject-messages` because the default is on.
+
 ### Changed
 - Types only, no runtime change, not breaking (#142, from stuffcloud#121): every list a component or element only reads is now a
   `readonly X[]`, so a consumer that keeps its data `readonly` or `as const` passes it without a copy at the call site

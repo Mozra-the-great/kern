@@ -8,6 +8,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** Show the hint under the error instead of hiding it (both are referenced, the error first). */
 		keepHint?: boolean | undefined;
 		value?: string | number | null | undefined;
@@ -20,6 +22,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		keepHint,
 		value = $bindable(),
 		id,
@@ -34,7 +37,7 @@
 	const inputId = $derived(id ?? `${uid}-input`);
 </script>
 
-<Field {label} {hint} {error} {keepHint} {required} for={inputId} class={cls}>
+<Field {label} {hint} {error} {announce} {keepHint} {required} for={inputId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-input" class:invalid>
 			{#if leading}<span class="adorn">{@render leading()}</span>{/if}

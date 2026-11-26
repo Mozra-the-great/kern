@@ -2,11 +2,13 @@
  * Field, Input, Textarea, Select, Checkbox, Switch, RadioGroup (stuffcloud: fields.test.ts "Input",
  * "Select" and "Checkbox"; `hasText` / `describedBy` are `joinIds` in kern, tested in tests/components).
  * Differences by design: kern hides the hint while there is an error unless `keepHint` is set, and the
- * error is a `role="alert"` paragraph.
+ * error is a `role="alert"` paragraph (`announce={false}` turns that off, forwarded by every Field-based component).
  */
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
+import type { Component } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
+import * as kern from '../../src/lib/index.js';
 import Checkbox from '../../src/lib/components/Checkbox.svelte';
 import Input from '../../src/lib/components/Input.svelte';
 import RadioGroup from '../../src/lib/components/RadioGroup.svelte';
@@ -423,5 +425,90 @@ describe('nullish class from untyped callers', () => {
 		const roots = document.querySelectorAll('.k-field, .k-check, .k-switch, .k-radio-group');
 		expect(roots).toHaveLength(4);
 		for (const el of roots) expect(el.getAttribute('class')).not.toMatch(/null|undefined/);
+	});
+});
+
+describe('announce is forwarded from every Field-based component', () => {
+	const options = [{ value: 'a', label: 'Alpha' }];
+	/**
+	 * Minimal props per component. `invalid` is false where nothing carries `aria-invalid` (FileDrop); `first` is false
+	 * where the Field's ids follow the component's own description (FileDrop: the prompt comes first).
+	 */
+	const cases: { name: string; props: Record<string, unknown>; invalid?: boolean; first?: boolean }[] = [
+		{ name: 'Input', props: { label: 'Name' } },
+		{ name: 'Select', props: { label: 'Expires', options } },
+		{ name: 'Textarea', props: { label: 'Message' } },
+		{ name: 'Combobox', props: { label: 'Fruit', options } },
+		{ name: 'NumberInput', props: { label: 'Amount' } },
+		{ name: 'DatePicker', props: { label: 'Date' } },
+		{ name: 'ColorPicker', props: { label: 'Colour', value: '#336699' } },
+		{ name: 'TagInput', props: { label: 'Tags' } },
+		{ name: 'PinInput', props: { label: 'Code', length: 4 } },
+		{ name: 'Rating', props: { label: 'Rating', value: 3 } },
+		{ name: 'SegmentedControl', props: { label: 'View', options } },
+		{ name: 'Slider', props: { label: 'Volume' } },
+		{ name: 'FileDrop', props: { label: 'Upload' }, invalid: false, first: false }
+	];
+	const components = kern as unknown as Record<string, Component<Record<string, unknown>>>;
+
+	/** The error paragraph, the elements whose `aria-describedby` has its id (and those with it first), the invalid ones. */
+	function errorState(): { error: HTMLElement; describes: Element[]; first: Element[]; invalid: Element[] } {
+		const error = document.querySelector<HTMLElement>('.k-field p.error');
+		if (!error) throw new Error('no error paragraph');
+		const describes = [...document.querySelectorAll('[aria-describedby]')].filter((el) =>
+			el.getAttribute('aria-describedby')?.split(' ').includes(error.id)
+		);
+		const first = describes.filter((el) => el.getAttribute('aria-describedby')?.split(' ')[0] === error.id);
+		return { error, describes, first, invalid: [...document.querySelectorAll('[aria-invalid="true"]')] };
+	}
+
+	for (const { name, props, invalid = true, first = true } of cases) {
+		it(`${name}: the error is a role="alert" by default`, () => {
+			render(components[name], { props: { ...props, error: 'Bad value' } });
+			const { error, describes } = errorState();
+			expect(error.getAttribute('role')).toBe('alert');
+			expect(screen.getAllByRole('alert')).toHaveLength(1);
+			expect(describes.length).toBeGreaterThan(0);
+		});
+
+		it(`${name}: announce=false drops role="alert", keeps the error first in aria-describedby and the control invalid`, () => {
+			render(components[name], { props: { ...props, error: 'Bad value', announce: false } });
+			const state = errorState();
+			expect(state.error.textContent.trim()).toBe('Bad value');
+			expect(state.error.hasAttribute('role')).toBe(false);
+			expect(screen.queryByRole('alert')).toBeNull();
+			expect(state.describes.length).toBeGreaterThan(0);
+			if (first) expect(state.first.length).toBeGreaterThan(0);
+			if (invalid) expect(state.invalid.length).toBeGreaterThan(0);
+		});
+
+		it(`${name}: announce=undefined behaves like a missing prop`, () => {
+			render(components[name], { props: { ...props, error: 'Bad value', announce: undefined } });
+			expect(errorState().error.getAttribute('role')).toBe('alert');
+		});
+	}
+
+	it('Input, Select and Textarea keep the error before the hint with announce=false', () => {
+		const specs: { component: Component<Record<string, unknown>>; props: Record<string, unknown>; label: string }[] = [
+			{ component: components.Input, props: { label: 'Name' }, label: 'Name' },
+			{ component: components.Select, props: { label: 'Expires', options }, label: 'Expires' },
+			{ component: components.Textarea, props: { label: 'Message' }, label: 'Message' }
+		];
+		for (const { component, props, label } of specs) {
+			const { unmount } = render(component, { props: { ...props, hint: 'A hint', error: 'Bad value', keepHint: true, announce: false } });
+			const control = screen.getByLabelText(label);
+			expect(control.getAttribute('aria-describedby')).toBe(`${screen.getByText('Bad value').id} ${screen.getByText('A hint').id}`);
+			expect(control.getAttribute('aria-invalid')).toBe('true');
+			expect(screen.queryByRole('alert')).toBeNull();
+			unmount();
+		}
+	});
+
+	it('FileDrop: announce=false silences the error prop', () => {
+		const { unmount } = render(components.FileDrop, { props: { label: 'Upload', error: 'Required', announce: false } });
+		expect(screen.queryByRole('alert')).toBeNull();
+		unmount();
+		render(components.FileDrop, { props: { label: 'Upload', error: 'Required' } });
+		expect(screen.getByRole('alert').textContent.trim()).toBe('Required');
 	});
 });

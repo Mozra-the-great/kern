@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			keepHint: { type: 'Boolean', attribute: 'keep-hint' },
 			value: { type: 'String', reflect: true },
 			options: { type: 'Array' },
@@ -21,6 +22,7 @@
 	 * Native select.
 	 * @prop options {readonly SelectOption[]}
 	 * @event change {string} The chosen value.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import Select from '../lib/components/Select.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -30,6 +32,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		keepHint = false,
 		value = $bindable(''),
 		options = [],
@@ -55,6 +58,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	{keepHint}
 	bind:value
 	{options}

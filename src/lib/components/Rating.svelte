@@ -8,6 +8,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** Number of stars chosen, 0 = none. In `readonly` mode fractions show partly filled stars. */
 		value?: number | undefined;
 		/** Number of stars. */
@@ -28,6 +30,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		value = $bindable(),
 		max = 5,
 		readonly = false,
@@ -74,7 +77,7 @@
 	const STAR = 'M12 2.6l2.83 6.07 6.65.8-4.9 4.56 1.27 6.58L12 17.3l-5.85 3.31 1.27-6.58-4.9-4.56 6.65-.8z';
 </script>
 
-<Field {hint} {error} class={cls}>
+<Field {hint} {error} {announce} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		{#if label}<Label as="span" id="{uid}-label" text={label} required={required && !readonly} />{/if}
 		{#if readonly}

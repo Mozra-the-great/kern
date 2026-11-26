@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'Number', reflect: true },
 			min: { type: 'Number' },
 			max: { type: 'Number' },
@@ -30,6 +31,7 @@
 	 * @prop format {Intl.NumberFormatOptions}
 	 * @prop value {number | null}
 	 * @event change {number | null} The committed number, or null when the field is empty.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import NumberInput from '../lib/components/NumberInput.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -38,6 +40,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		value = $bindable(null),
 		min,
 		max,
@@ -74,6 +77,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{min}
 	{max}

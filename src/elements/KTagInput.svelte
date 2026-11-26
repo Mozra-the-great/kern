@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'Array' },
 			placeholder: { type: 'String' },
 			name: { type: 'String', reflect: true },
@@ -31,6 +32,7 @@
 	 * @prop value {string[]}
 	 * @prop suggestions {readonly string[]}
 	 * @event change {string[]} All tags after the user added or removed one.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import TagInput from '../lib/components/TagInput.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -39,6 +41,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		value = $bindable([]),
 		placeholder,
 		name,
@@ -79,6 +82,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{placeholder}
 	{name}

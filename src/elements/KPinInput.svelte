@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'String', reflect: true },
 			length: { type: 'Number' },
 			type: { type: 'String' },
@@ -23,6 +24,7 @@
 	 * autocomplete="one-time-code". A partly filled code is invalid; `required` rejects an empty one.
 	 * @event change {string} The code so far.
 	 * @event complete {string} The code, once every box is filled.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import PinInput from '../lib/components/PinInput.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -31,6 +33,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		value = $bindable(''),
 		length = 6,
 		type = 'numeric',
@@ -59,6 +62,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{length}
 	{type}

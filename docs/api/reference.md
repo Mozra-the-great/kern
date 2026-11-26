@@ -731,6 +731,7 @@ Colour field with a picker popup. `swatches`: JSON list of hex strings or {"valu
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `string` |  | Hex colour, `#rrggbb` (or `#rrggbbaa` with `alpha`); '' = none. |
 | `alpha` | `boolean` | `false` | Offer an opacity slider; the value then carries alpha when not opaque. |
 | `swatches` | `readonly (string \| ColorSwatch)[]` | `[]` | Preset colours in the panel. |
@@ -762,6 +763,7 @@ Colour field with a picker popup. `swatches`: JSON list of hex strings or {"valu
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` | `value` (gespiegelt) | `string` | `''` | Hex colour, `#rrggbb` (or `#rrggbbaa` with `alpha`); '' = none. |
 | `alpha` | `alpha` | `boolean` | `false` | Offer an opacity slider; the value then carries alpha when not opaque. |
 | `swatches` (JSON) | `swatches` | `readonly (string \| ColorSwatch)[]` | `[]` | Preset colours in the panel. |
@@ -804,6 +806,7 @@ Text field with a filtered list of options; `allow-custom` also accepts free tex
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `string` |  | Value of the selected option ('' = none). With `allowCustom`, any typed text. |
 | `options` (Pflicht) | `readonly ComboboxOption[]` |  |  |
 | `placeholder` | `string` |  |  |
@@ -830,6 +833,7 @@ Text field with a filtered list of options; `allow-custom` also accepts free tex
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` | `value` (gespiegelt) | `string` | `''` | Value of the selected option ('' = none). With `allowCustom`, any typed text. |
 | `options` (JSON) | `options` | `readonly ComboboxOption[]` | `[]` |  |
 | `placeholder` | `placeholder` | `string` |  |  |
@@ -1186,6 +1190,7 @@ Date field with a calendar popup. `value`, `min` and `max` are ISO dates (yyyy-m
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `string` |  | Selected date as ISO `yyyy-mm-dd`, or ''. |
 | `min` | `string` |  | Earliest selectable date, ISO. |
 | `max` | `string` |  | Latest selectable date, ISO. |
@@ -1215,6 +1220,7 @@ Date field with a calendar popup. `value`, `min` and `max` are ISO dates (yyyy-m
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` | `value` (gespiegelt) | `string` | `''` | Selected date as ISO `yyyy-mm-dd`, or ''. |
 | `min` | `min` | `string` |  | Earliest selectable date, ISO. |
 | `max` | `max` | `string` |  | Latest selectable date, ISO. |
@@ -1524,6 +1530,7 @@ Drop zone and file picker. The chosen files are the property `el.files`; setting
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  | Error text from outside, e.g. a failed upload. Rejected files add their own message. |
+| `announce` | `boolean` |  | Announce the `error` prop as `role="alert"` (the default); turn off when the page announces it itself. Messages for refused files are never announced. |
 | `accept` | `string` |  | Same syntax as `<input accept>`: `.pdf`, `image/*`, `image/png`. Also enforced for dropped files. |
 | `multiple` | `boolean` | `false` |  |
 | `maxSize` | `number` |  | Largest allowed file in bytes. |
@@ -1558,6 +1565,7 @@ Drop zone and file picker. The chosen files are the property `el.files`; setting
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  | Error text from outside, e.g. a failed upload. Rejected files add their own message. |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error given as `error` is not announced (no `role="alert"`); the page announces it itself. Messages for refused files are never announced. |
 | `accept` | `accept` | `string` |  | Same syntax as `<input accept>`: `.pdf`, `image/*`, `image/png`. Also enforced for dropped files. |
 | `multiple` | `multiple` | `boolean` | `false` |  |
 | `max-size` | `maxSize` | `number` |  | Largest allowed file in bytes. |
@@ -1835,6 +1843,7 @@ Text field (any native `type` except checkbox, radio and file).
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `keepHint` | `boolean` |  | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` (`bind:`) | `string \| number \| null` |  |  |
 | `class` | geerbt | `''` |  |
@@ -1855,6 +1864,7 @@ Weitere Attribute aus `Omit<HTMLInputAttributes, 'value'>` gehen an das Wurzelel
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `keep-hint` | `keepHint` | `boolean` | `false` | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` | `value` (gespiegelt) | `string` | `''` |  |
 | `name` | `name` (gespiegelt) | `string` |  |  |
@@ -2272,6 +2282,7 @@ Number field with step buttons. `format`: Intl.NumberFormat options as JSON, e.g
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `number \| null` |  | The number, or null when the field is empty. |
 | `min` | `number` |  |  |
 | `max` | `number` |  |  |
@@ -2301,6 +2312,7 @@ Number field with step buttons. `format`: Intl.NumberFormat options as JSON, e.g
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` | `value` (gespiegelt) | `number \| null` | `null` | The number, or null when the field is empty. |
 | `min` | `min` | `number` |  |  |
 | `max` | `max` | `number` |  |  |
@@ -2473,6 +2485,7 @@ One-time code: `length` boxes, `type` numeric or alphanumeric. The first box has
 | `label` | `string` |  | Name of the whole group. |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `string` |  | The entered characters (gaps are left out). |
 | `length` | `number` | `6` | Number of boxes. |
 | `type` | `PinInputType` | `'numeric'` | `numeric` = digits only (numeric keyboard), `alphanumeric` = letters and digits. |
@@ -2498,6 +2511,7 @@ One-time code: `length` boxes, `type` numeric or alphanumeric. The first box has
 | `label` | `label` | `string` |  | Name of the whole group. |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` | `value` (gespiegelt) | `string` | `''` | The entered characters (gaps are left out). |
 | `length` | `length` | `number` | `6` | Number of boxes. |
 | `type` | `type` | `string` | `'numeric'` | `numeric` = digits only (numeric keyboard), `alphanumeric` = letters and digits. |
@@ -2779,6 +2793,7 @@ Star rating (radio buttons). `required` needs at least one star; `readonly` show
 | `label` | `string` |  | Name of the group. |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `number` |  | Number of stars chosen, 0 = none. In `readonly` mode fractions show partly filled stars. |
 | `max` | `number` | `5` | Number of stars. |
 | `readonly` | `boolean` | `false` | Show the value as an image with text instead of a control. |
@@ -2801,6 +2816,7 @@ Star rating (radio buttons). `required` needs at least one star; `readonly` show
 | `label` | `label` | `string` |  | Name of the group. |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` | `value` (gespiegelt) | `number` | `0` | Number of stars chosen, 0 = none. In `readonly` mode fractions show partly filled stars. |
 | `max` | `max` | `number` | `5` | Number of stars. |
 | `readonly` | `readonly` | `boolean` | `false` | Show the value as an image with text instead of a control. |
@@ -3071,6 +3087,7 @@ Single choice as a row of segments. `group-label`: accessible name when there is
 | `ariaLabel` | `string` |  | Accessible name without a visible label. |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `options` (Pflicht) | `readonly SegmentOption[]` |  |  |
 | `value` (`bind:`) | `string` |  | Value of the chosen option. |
 | `name` | `string` |  | Form field name (native radios). |
@@ -3092,6 +3109,7 @@ Single choice as a row of segments. `group-label`: accessible name when there is
 | `group-label` | `groupLabel` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `options` (JSON) | `options` | `readonly SegmentOption[]` | `[]` |  |
 | `value` | `value` (gespiegelt) | `string` | `''` | Value of the chosen option. |
 | `name` | `name` (gespiegelt) | `string` |  | Form field name (native radios). |
@@ -3125,6 +3143,7 @@ Native select.
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `keepHint` | `boolean` |  | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` (`bind:`) | `string` |  |  |
 | `options` (Pflicht) | `readonly SelectOption[]` |  |  |
@@ -3140,6 +3159,7 @@ Weitere Attribute aus `Omit<HTMLSelectAttributes, 'value'>` gehen an das Wurzele
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `keep-hint` | `keepHint` | `boolean` | `false` | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` | `value` (gespiegelt) | `string` | `''` |  |
 | `options` (JSON) | `options` | `readonly SelectOption[]` | `[]` |  |
@@ -3321,6 +3341,7 @@ Range slider. `unit`: text appended to the shown value, e.g. unit=" %".
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `number` |  | Defaults to the middle of the range, snapped to `step`. |
 | `min` | `number` | `0` |  |
 | `max` | `number` | `100` |  |
@@ -3338,6 +3359,7 @@ Weitere Attribute aus `Omit<HTMLInputAttributes, 'value' \| 'type' \| 'min' \| '
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` | `value` (gespiegelt) | `number` |  | Defaults to the middle of the range, snapped to `step`. |
 | `min` | `min` | `number` | `0` |  |
 | `max` | `max` | `number` | `100` |  |
@@ -3947,6 +3969,7 @@ Free-text tags. The form gets one entry per tag under `name`, like a multi-selec
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `value` (`bind:`) | `string[]` |  | The tags. |
 | `placeholder` | `string` |  |  |
 | `name` | `string` |  | Form field name; one hidden input per tag (repeated name). |
@@ -3979,6 +4002,7 @@ Free-text tags. The form gets one entry per tag under `name`, like a multi-selec
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `value` (JSON) | `value` | `string[]` | `[]` | The tags. |
 | `placeholder` | `placeholder` | `string` |  |  |
 | `name` | `name` (gespiegelt) | `string` |  | Form field name; one hidden input per tag (repeated name). |
@@ -4081,6 +4105,7 @@ Multi-line text field; `autosize` grows it with its content.
 | `label` | `string` |  |  |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
+| `announce` | `boolean` |  | Announce the error as `role="alert"` (the default); turn off when the page announces it itself. |
 | `keepHint` | `boolean` |  | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` (`bind:`) | `string \| null` |  |  |
 | `autosize` | `boolean` | `false` | Grow with the content (CSS field-sizing where supported). |
@@ -4096,6 +4121,7 @@ Weitere Attribute aus `Omit<HTMLTextareaAttributes, 'value'>` gehen an das Wurze
 | `label` | `label` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
+| `no-announce` | `noAnnounce` | `boolean` | `false` | The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control. |
 | `keep-hint` | `keepHint` | `boolean` | `false` | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` | `value` (gespiegelt) | `string` | `''` |  |
 | `name` | `name` (gespiegelt) | `string` |  |  |

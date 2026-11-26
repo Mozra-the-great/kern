@@ -296,3 +296,69 @@ test('StatusMessage: present and empty from the first paint, filled later (#72)'
 	await expect(page.locator('#problem p')).toHaveAttribute('role', 'alert');
 	await expect(page.locator('#problem p')).toHaveText('Not a colour');
 });
+
+/** Every element that renders a Field with an error, with the attributes it needs to render at all. */
+const ANNOUNCE_ELEMENTS: [tag: string, attrs: Record<string, string>][] = [
+	['k-input', {}],
+	['k-select', { options: '[{"value":"s","label":"Small"}]' }],
+	['k-textarea', {}],
+	['k-combobox', { options: '[{"value":"a","label":"Apple"}]' }],
+	['k-number-input', {}],
+	['k-date-picker', {}],
+	['k-color-picker', {}],
+	['k-tag-input', {}],
+	['k-pin-input', {}],
+	['k-rating', {}],
+	['k-segmented-control', { options: '[{"value":"a","label":"List"}]' }],
+	['k-slider', {}],
+	['k-file-drop', {}]
+];
+
+test('no-announce: the error loses role="alert" but stays visible, referenced and invalid (#148)', async ({ page }) => {
+	await page.evaluate((list) => {
+		for (const [tag, attrs] of list) {
+			for (const quiet of [false, true]) {
+				const el = document.createElement(tag);
+				el.id = `${quiet ? 'quiet' : 'loud'}-${tag}`;
+				el.setAttribute('label', 'Field');
+				for (const [name, value] of Object.entries(attrs)) el.setAttribute(name, value);
+				if (quiet) el.setAttribute('no-announce', '');
+				el.setAttribute('error', 'Too short');
+				document.body.append(el);
+			}
+		}
+	}, ANNOUNCE_ELEMENTS);
+	for (const [tag] of ANNOUNCE_ELEMENTS) {
+		await expect(page.locator(`#loud-${tag} [role="alert"]`), `${tag} default`).toHaveText('Too short');
+		const quiet = page.locator(`#quiet-${tag} p.error`);
+		await expect(quiet, `${tag} no-announce`).toHaveText('Too short');
+		await expect(quiet).not.toHaveAttribute('role', /.*/);
+		await expect(page.locator(`#quiet-${tag} [role="alert"]`)).toHaveCount(0);
+		if (tag !== 'k-file-drop') await expect(page.locator(`#quiet-${tag} [aria-invalid="true"]`).first()).toBeAttached();
+	}
+	// The three form controls: the error is the first description, the control invalid.
+	for (const [tag, control] of [
+		['k-input', 'input'],
+		['k-select', 'select'],
+		['k-textarea', 'textarea']
+	] as const) {
+		await expect(page.locator(`#quiet-${tag} ${control}`)).toHaveAttribute('aria-invalid', 'true');
+		await expect(page.locator(`#quiet-${tag} ${control}`)).toHaveAccessibleDescription('Too short');
+	}
+});
+
+test('noAnnounce property and no-announce attribute switch the alert role at runtime (#148)', async ({ page }) => {
+	await page.evaluate(() => ((document.getElementById('pw') as HTMLElement & { error: string }).error = 'Too short'));
+	await expect(page.locator('#pw [role="alert"]')).toHaveText('Too short');
+	await page.evaluate(() => ((document.getElementById('pw') as HTMLElement & { noAnnounce: boolean }).noAnnounce = true));
+	await expect(page.locator('#pw [role="alert"]')).toHaveCount(0);
+	await expect(page.locator('#pw p.error')).toHaveText('Too short');
+	await expect(page.locator('#pw input')).toHaveAccessibleDescription('Too short At least 8 characters.');
+	await page.evaluate(() => ((document.getElementById('pw') as HTMLElement & { noAnnounce: boolean }).noAnnounce = false));
+	await expect(page.locator('#pw [role="alert"]')).toHaveText('Too short');
+	await page.evaluate(() => document.getElementById('pw')?.setAttribute('no-announce', ''));
+	await expect(page.locator('#pw [role="alert"]')).toHaveCount(0);
+	expect(await page.evaluate(() => (document.getElementById('pw') as HTMLElement & { noAnnounce: boolean }).noAnnounce)).toBe(true);
+	await page.evaluate(() => document.getElementById('pw')?.removeAttribute('no-announce'));
+	await expect(page.locator('#pw [role="alert"]')).toHaveText('Too short');
+});

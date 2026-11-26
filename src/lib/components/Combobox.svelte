@@ -12,6 +12,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** Value of the selected option ('' = none). With `allowCustom`, any typed text. */
 		value?: string | undefined;
 		options: readonly ComboboxOption[];
@@ -36,6 +38,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		value = $bindable(),
 		options,
 		placeholder,
@@ -254,7 +257,7 @@
 	}
 </script>
 
-<Field {label} {hint} {error} {required} for={inputId} class={cls}>
+<Field {label} {hint} {error} {announce} {required} for={inputId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-combobox" class:invalid class:disabled bind:this={box}>
 			<input
