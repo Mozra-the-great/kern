@@ -230,7 +230,7 @@ Under `@media (forced-colors: active)` the browser paints every colour from the 
 box-shadows, so a theme cannot decide colour there, and must not try. What a theme can still break is covered by
 the block at the end of `base.css`: it sets the edge tokens (`--k-border`, `--k-line`, `--k-line-strong`,
 `--k-line-dashed`), the focus ring and accent (`--k-focus`, `--k-accent-mark`) to system colours, the dimming of
-disabled parts (`--k-disabled-opacity`, `--k-field-disabled-opacity`, `--k-check-disabled-opacity`) to 1,
+disabled parts (`--k-disabled-opacity`, `--k-field-disabled-opacity`, `--k-textarea-disabled-opacity`, `--k-check-disabled-opacity`) to 1,
 `--k-fg-disabled` to `GrayText`, the shadows to `none` and the Progress track to `Canvas`, all with `!important`
 (a theme's own `[data-theme^=…]` rule has the same specificity and loads later). The rest is per component
 (`@media (forced-colors: active)` in each `.svelte` file); `tests/unit/forced-colors.test.ts` fails for a component with
