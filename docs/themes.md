@@ -7,11 +7,12 @@ another token by default, so a theme only sets them when its design has its own 
 
 ## stuffcloud variables and their kern tokens (theme `code`)
 
-Source: stuffcloud's `docs/design/prototypes/stuff.css` and mockups, the app's `web/apps/web/src/styles/theme.css`
-(named literals of the mockups) and, for light, paper and contrast, the stuffcloud design system artifact
-(`tokens.json`). The design is the kern theme `code` (called `stuffcloud` until #85; the old `data-theme` values
-stay as aliases until 1.0). Values are for `data-theme="code"` (= `code-dark`). The complete, machine-readable
-list with the source of every value is `src/lib/themes/code.tokens.json` (next section).
+Reference (to orient on, not binding since #181): stuffcloud's `docs/design/prototypes/stuff.css` and mockups, the
+app's `web/apps/web/src/styles/theme.css` (named literals of the mockups) and, for light, paper and contrast, the
+stuffcloud design system artifact (`tokens.json`). kern owns the theme `code` (called `stuffcloud` until #85; the old
+`data-theme` values stay as aliases until 1.0); this table shows which reference variable each kern token was drawn
+from (#37, #111) and what its value is today. Values are for `data-theme="code"` (= `code-dark`). The complete,
+machine-readable list, with the place each value was oriented on, is `src/lib/themes/code.tokens.json` (next section).
 
 | stuffcloud | value | kern token | kern value | note |
 | --- | --- | --- | --- | --- |
@@ -26,7 +27,7 @@ list with the source of every value is `src/lib/themes/code.tokens.json` (next s
 | `--fg-disabled` | `#6a6a74` | `--k-fg-disabled` | `#6a6a74` | disabled menu items and options |
 | line | `#26262b` | `--k-line` | `#26262b` | dividers |
 | `--line2` | `#3a3a42` | `--k-line-strong` | `#3a3a42` | Card, Modal, Drawer, Toast, Popover, menus |
-| `--field-border` | `#6c6c76` | `--k-border` | `#6c6c76` | the design-system artifact's border-control is `#6e6e78`; docs/design wins (#37) |
+| `--field-border` | `#6c6c76` | `--k-border` | `#6c6c76` | the design-system artifact's border-control is `#6e6e78`; kern keeps the `#6c6c76` of docs/design (#37) |
 | `--line-drop` | `#6b5a8f` | `--k-line-dashed` | `#6b5a8f` | FileDrop edge |
 | accent | `#ff79b0` | `--k-accent`, `--k-accent-mark`, `--k-accent-text`, `--k-primary-hover` | `#ff79b0` | |
 | on-accent | `#101012` | `--k-on-accent`, `--k-on-primary` | `#101012` | |
@@ -39,7 +40,7 @@ list with the source of every value is `src/lib/themes/code.tokens.json` (next s
 | `--gray` | `#5a5a64` | not used | | |
 | shadow-pixel | `8px 8px 0 rgba(16,16,18,.6)` | `--k-shadow-overlay` | same | dialogs, popovers |
 | delete-site dialog scrim | `rgba(16,16,18,.55)` | `--k-backdrop` | same | was `rgba(0,0,0,.6)`, no design source (#37) |
-| `--sans` / `--mono` / `--pix` | `'Inter',system-ui,sans-serif` / `'JetBrains Mono',ui-monospace,monospace` / `'Silkscreen',monospace` | `--k-font-sans` / `--k-font-mono` / `--k-font-display` | same | the artifact's longer fallback stacks gave way to docs/design (#37) |
+| `--sans` / `--mono` / `--pix` | `'Inter',system-ui,sans-serif` / `'JetBrains Mono',ui-monospace,monospace` / `'Silkscreen',monospace` | `--k-font-sans` / `--k-font-mono` / `--k-font-display` | same | the artifact's longer fallback stacks gave way to those of docs/design (#37) |
 | `body` (no `line-height`) | `normal` | `--k-leading-body` | `normal` | text without a line height of its own; the other themes keep `1.5` (#145, section "Line height") |
 | shadow-pixel-sm / toast `--shadow` | `4px 4px 0 rgba(0,0,0,.4)` | `--k-shadow-sm` | same | Toast |
 | target-min | 44px | `--k-tap-min`, `--k-tap-target`, `--k-control-h-sm` | 44px | every pointer |
@@ -61,65 +62,74 @@ state surfaces, code/hint colours or drop line for them, so they keep the base d
 
 **The extra variants** (`code-light`, `code-paper`, `code-contrast`) are **not part of stuffcloud's
 design**: docs/design is dark only (stuffcloud ADR 0008, "the UI is dark only"). kern keeps them for
-other consumers, with the values of the design-system artifact; stuffcloud uses `code` (= `code-dark`).
+other consumers, with the values of the design-system artifact (also a reference); stuffcloud uses `code` (= `code-dark`).
 
 ## Code theme source (#37)
 
-**Decision: kern owns the Code theme** (option a of #37); stuffcloud's `docs/design` stays the design it
-is drawn from. The theme has one machine-readable source:
+**kern owns the Code theme** (option a of #37; since #181 stuffcloud's `docs/design` is no longer the binding
+design). The theme was drawn from stuffcloud's design and still orients on it, but a kern change (accessibility,
+consistency, a contract shared with the other themes) does not have to be ported back into stuffcloud's design folder.
+That folder, its mockups and the design PDF are a **frozen reference**: a source of ideas, not a specification.
+The theme has one machine-readable source:
 
 | File | What |
 | --- | --- |
-| `src/lib/themes/code.tokens.json` | Every token of every variant with its value and its source (`from`). Shipped as `@mozra-the-great/kern/themes/code.tokens.json`, so stuffcloud can read the kit's values. |
+| `src/lib/themes/code.tokens.json` | **The source.** Every token of every variant with its value and where it was oriented on (`from`). Shipped as `@mozra-the-great/kern/themes/code.tokens.json`, so stuffcloud can read the kit's values. |
 | `src/lib/themes/brands/code.css` | **Generated** from the JSON (`npm run tokens:code`); never edited by hand. |
-| `scripts/ci/code-theme-snapshot.json` | The design values the theme uses, read from a stuffcloud checkout and the artifact: the contract, because CI reaches neither. Records the stuffcloud commit and its `docs/design/pdf-source.sha256`. |
+| `scripts/ci/code-theme-snapshot.json` | **The frozen reference**: the design values the theme was oriented on, read once from a stuffcloud checkout and the artifact, because CI reaches neither. Records the stuffcloud commit and its `docs/design/pdf-source.sha256`. It changes only to correct an extraction error, never for a kern change. |
 | `scripts/ci/code-theme.mjs` | Generator and drift check. |
 
-A `from` names the place a value comes from:
+A `from` names the place a value was oriented on:
 
 - `design:stuff.css|.btn{font}` a declaration in `docs/design/prototypes/stuff.css` (`design:stuff.css|@media (max-width:760px)|.btn{min-height}` inside the media rule),
 - `design:S.dc.html#<text>` a literal in a mockup (the delete-site dialog has no class, so its style text is the source),
 - `app:ui/field.css|.sc-fld__hint{color}` stuffcloud's `web/apps/web/src` where docs/design has no value (the hint and error text of fields, the toast region, the drop zone, Progress, the named colours of `theme.css`),
-- `ds:surface@light` a colour of the design-system artifact for a variant, `ds:target-min` another of its tokens.
+- `ds:surface@light` a colour of the design-system artifact for a variant, `ds:target-min` another of its tokens,
+- `kern:#NNN` kern's own decision with no counterpart in the reference, made in issue or PR #NNN. It needs a `note` with the reason and is not looked up in the snapshot.
 
-`design` records the source value when the kern value is derived from it (a `font` shorthand split into
+`design` records the reference value when the kern value is derived from it (a `font` shorthand split into
 family and size, `0 28px` mapped onto `--k-space-6-5`); a token without a source carries a `note` that
-says why (`--k-dur`, `--k-ease`, the light backdrops). `unused` lists the design's root tokens the theme
+says why (`--k-dur`, `--k-ease`, the light backdrops). `unused` lists the reference's root tokens the theme
 does not take, with the reason.
 
-**Where the sources disagree, docs/design wins** (Moritz' rule): `--k-border` is `#6c6c76`
+**Where the references disagree**, kern decided once and recorded it: `--k-border` is `#6c6c76`
 (`--field-border`; the artifact has `#6e6e78`), the font stacks are those of `stuff.css`, the backdrop is
 the scrim behind the delete-site dialog (`rgba(16,16,18,.55)`; it was `rgba(0,0,0,.6)` without a source),
-and the Modal follows the design's one dialog (S/T: 520 px, 32 px heading, page background) rather than
-the app's `Dialog.svelte` (480 px, 22 px).
+and the Modal follows the reference's one dialog (S/T: 520 px, 32 px heading, page background) rather than
+the app's `Dialog.svelte` (480 px, 22 px). These are kern's decisions now; the reference is not consulted again.
 
-**The drift check.** `npm run tokens:check` runs in the `build` job: it fails when `brands/code.css` is
-not the generated file, when a recorded value disagrees with the snapshot, when the snapshot lacks a
-reference, when a mockup literal is gone, or when the design has a root token (`stuff.css :root`, the
-app's `theme.css :root`) that the theme neither uses nor lists in `unused`. Against stuffcloud itself:
+**The drift check.** `npm run tokens:check` runs in the `build` job and guards against *accidental* drift
+from the frozen reference. It fails when `brands/code.css` is not the generated file, when a recorded value
+disagrees with the snapshot, when the snapshot lacks a reference, when a mockup literal is gone, when the
+reference has a root token (`stuff.css :root`, the app's `theme.css :root`) that the theme neither uses nor lists in
+`unused`, and when a `kern:` or `diverges` entry is malformed (below). A value that differs from the snapshot
+without such an entry fails exactly as before; nothing about the check was relaxed in #181.
+
+**Changing the theme on purpose (kern's workflow).** The check is never worked around by editing the
+snapshot or by deleting a `from`:
+
+1. Change the token's `value` in `code.tokens.json` (and its component token, the demo and the docs where they name it).
+2. Record why, in one of two forms:
+   - the token has **no counterpart** in the reference (a new token, a new component token): `"from": "kern:#NNN"` and a `note` with the reason;
+   - the token **deviates from a reference value**: keep its design `from`, set `"design"` to the reference value, add `"diverges": "kern:#NNN"` and a `note` with the reason. `tokens:check` still compares `design` with the snapshot, so a drifting reference is still caught, and it fails on a `diverges` without issue, `design` or `note`, or one whose value is the reference value again (a stale entry: drop it).
+3. `npm run tokens:code` regenerates `brands/code.css`; `npm test` (contrast: a value the contract forces gets a `note`) and `npm run tokens:check` must pass.
+4. Visual change? New baselines (below) and a CHANGELOG entry. Commit the JSON and the CSS together.
+
+An entry in the list "Intentional design decisions" below is the place to explain a deviation that is visible
+to a consumer; the `note` in the JSON is the place for the reason of one token.
+
+**The snapshot against stuffcloud itself** (optional; proves that the snapshot still is the reference):
 
 ```sh
 node scripts/ci/code-theme.mjs --against <stuffcloud checkout>            # docs/design and the app
 node scripts/ci/code-theme.mjs --against <stuffcloud> --design-system tokens.json   # plus the artifact
 ```
 
-It reads every snapshot value again and fails on any change, a new root token or a removed one, so
-stuffcloud's CI can run it with a checkout of kern at the pinned tag (`actions/checkout` of
-`Mozra-the-great/kern`, then `node kern/scripts/ci/code-theme.mjs --against .`): a design token that
-changes without the kit theme changing fails there. When only unrelated parts of docs/design changed
-(the PDF fingerprint moved, no used value did) it passes with a note.
-
-**Refresh when the design changes:**
-
-1. `node scripts/ci/code-theme.mjs --against <stuffcloud>` shows what changed. For light, paper and
-   contrast, save the artifact's `project/tokens.json` ("Stuffcloud - Designsystem") and add
-   `--design-system <file>`.
-2. `node scripts/ci/code-theme.mjs --refresh <stuffcloud> [--design-system <file>]` rewrites the snapshot
-   (without `--design-system` the artifact values stay as they were).
-3. `npm run tokens:check` now lists every token whose recorded source value is stale: update its `value`
-   (and `design`) in `code.tokens.json`, or add a new design token to a block or to `unused`.
-4. `npm run tokens:code`, `npm test` (contrast: a value the contract forces stays and gets a `note`),
-   and new visual baselines (below). Commit the JSON, the CSS and the snapshot together.
+It reads every snapshot value again and fails on any change, a new root token or a removed one. stuffcloud's
+CI no longer has to run it (the reference is frozen and there is no rebuild duty), and it must not be used to pull a
+later stuffcloud change into kern: a change there is, at most, an idea that kern adopts through the workflow above.
+`--refresh <stuffcloud>` rewrites the snapshot; use it only when an extraction error made the snapshot disagree with
+the reference as it was frozen, and say so in the PR.
 
 **Instance neutrality.** `npm run neutrality:check` (also in `build`) fails on an e-mail address, a URL,
 a domain name or an IPv4 address in `src/lib/themes/**`, the snapshot or `assets/**` (contents and file
@@ -168,38 +178,7 @@ component brings it back under `@media (forced-colors: active)`, because there i
 longer does: the error icon (hint and error have the same system colour), the toast's tone dot (its shape tells
 the tones apart) and kern's checkbox (each state in its system colour, a GrayText edge when disabled).
 
-**Remaining differences** to stuffcloud's components (#111). Each item of the former list was compared again
-side by side with `web/apps/web/src/ui`, `stuff.css` and the mockups (rendered and in code), and aligned in the Code
-theme wherever that is possible without breaking WCAG 2.2 AA, `--k-tap-target`, visible focus, reduced motion,
-forced colours or an API that is the same in every theme. Only these remain, each with its reason:
-
-- Modal close button: kern keeps it. The mockup S has none, but `dismissible` (default `true`) means a visible way
-  out in every theme, and stuffcloud's own `Dialog.svelte` and its accessibility notes require one too. It now has
-  the app's look (48 px ghost icon button with a `line2` edge, ink cross).
-- Progress label row: kern keeps the label above the bar. Showing `label` unless `hideLabel` is the component's
-  contract in every theme; stuffcloud's bare bar is `hideLabel` (the label stays the accessible name).
-- Toaster position: the default stays `bottom-right` in every theme (a prop default cannot depend on the theme);
-  stuffcloud passes `position="bottom-left"`, as its toast region sits there.
-- Tabs edge fade: the end edge fades only while tabs are hidden behind it. stuffcloud's mask is static and fades
-  the last 36 px on phones even when every tab fits, which dims a visible label below 4.5:1 (WCAG 1.4.3).
-- FileDrop while dragging: the edge turns solid as well as pink. stuffcloud changes only colours (dashed edge,
-  ground); the solid line is the cue that does not rely on colour (WCAG 1.4.1).
-- FileDrop picker button: kern's is the secondary button (`size="sm"`), stuffcloud's the filled primary one
-  (`size="compact"`). The variant is the component's markup in every theme; a theme token cannot pick it, and
-  changing it would change Flower, Pop and Line.
-- Forced colours: the error icon, the toast's tone dot and kern's checkbox stay there (see above); stuffcloud has
-  no forced-colours rule for them.
-- Textarea with `rows="1"`: stuffcloud's `.sc-field` has `min-height: var(--control-h)`, so a one-row area is as tall
-  as an Input (52 px). kern's Textarea has no minimum (a one-row area is 48.5 px in Code; from `rows="2"` on, and with
-  the default 4, both are the same height): a `min-height` of `--k-control-h` would make a one-row area taller in Pop
-  (56 px) and so change a theme that is not Code.
-
-Where stuffcloud's sources disagree, kern follows docs/design: the Modal is S and T (520 px, 32 px heading, the
-page background; on phones T's sheet), not the generic `Dialog.svelte` (480 px, 22 px heading, 20 px padding), which
-has not moved on from the mockups (it is the base component of the first build, older than the last change to S
-and T). Where S and T say nothing (the close button), the app is the source.
-
-**Aligned in #111** (Code only, through component tokens; every other theme resolves each new token to what the
+**Aligned in #111** (history; Code only, through component tokens; every other theme resolves each new token to what the
 component drew before, which `tests/unit/code-theme-source.test.ts` checks): pressed buttons no longer move, the
 danger button turns pink on hover, button `line-height: normal`; field edges stay `--field-border` on hover and
 focus; Select shows the browser's arrow; field errors without an icon; the browser's checkbox with `accent-color`,
@@ -208,7 +187,66 @@ animation, T's full-width sheet below 760 px with stacked full-width actions (`<
 close button; toasts without the tone dot, text centred, the 48 px ghost dismiss, no entrance animation; FileDrop
 without the upload icon and the inset ring, wrapping as the app does; Textarea (#149) as the app's `.sc-field.area` (mono 15 px, transparent, 14 px padding, no hover or focus edge, dimmed when disabled).
 
-**Visual regression.** `tests/elements/visual.spec.ts` (part of `npm run test:elements`, so of the
+### Remaining differences to stuffcloud's components (#111, #181)
+
+stuffcloud's `docs/design` and its components are a **reference to orient on** (#181), not a specification the Code
+theme has to match. #111 compared every item side by side (`web/apps/web/src/ui`, `stuff.css` and the mockups,
+rendered and in code) and aligned the theme wherever that is possible without breaking WCAG 2.2 AA,
+`--k-tap-target`, visible focus, reduced motion, forced colours or an API that is the same in every theme. What is
+left falls into two lists: decisions kern made on purpose, and things stuffcloud still needs from kern.
+
+#### Intentional design decisions of the `code` theme
+
+Each is a decision of kern with its reason, and any may be revisited through an issue and the workflow in
+"Code theme source".
+
+- **Modal close button.** kern keeps it. The mockup S has none, but `dismissible` (default `true`) means a visible way
+  out in every theme (stuffcloud's own `Dialog.svelte` and its accessibility notes require one too). It has the look of the
+  reference app's close button (48 px ghost icon button with a `line2` edge, ink cross).
+- **Progress label row.** The label sits above the bar. Showing `label` unless `hideLabel` is the component's
+  contract in every theme; a bare bar is `hideLabel` (the label stays the accessible name).
+- **Toaster position.** The default stays `bottom-right` in every theme (a prop default cannot depend on the theme);
+  a consumer that wants the toast region at the bottom left passes `position="bottom-left"`.
+- **Tabs edge fade.** The end edge fades only while tabs are hidden behind it. A static mask that fades the last
+  36 px on phones even when every tab fits dims a visible label below 4.5:1 (WCAG 1.4.3).
+- **FileDrop while dragging.** The edge turns solid as well as pink. Changing only colours (dashed edge, ground)
+  would rely on colour alone; the solid line is the cue that does not (WCAG 1.4.1).
+- **FileDrop picker button.** It is the secondary button (`size="sm"`); the reference uses the filled primary one
+  (`size="compact"`). The variant is the component's markup in every theme: a theme token cannot pick it, and
+  changing it would change Flower, Pop and Line.
+- **Forced colours.** The error icon, the toast's tone dot and kern's checkbox come back under
+  `@media (forced-colors: active)` (see above) because there they carry state that colour no longer does; the
+  reference has no forced-colours rule for them.
+- **Textarea with `rows="1"`.** The reference's field has `min-height: var(--control-h)`, so a one-row area is as tall
+  as an Input (52 px). kern's Textarea has no minimum (a one-row area is 48.5 px in Code; from `rows="2"` on, and with
+  the default 4, both are the same height): a `min-height` of `--k-control-h` would make a one-row area taller in Pop
+  (56 px) and so change a theme that is not Code.
+- **Modal size and look.** The Modal is the reference's S and T (520 px, 32 px heading, the page background; on phones
+  T's sheet), not the generic `Dialog.svelte` (480 px, 22 px heading, 20 px padding), which is older than the last
+  change to S and T. Where S and T say nothing (the close button), the reference app is the model.
+- **Extra variants.** `code-light`, `code-paper` and `code-contrast` exist although the reference is dark only (see above).
+
+#### stuffcloud needs not yet in kern
+
+Open work items. Each is ported into kern generic and theme-driven, not as a copy of stuffcloud's code; stuffcloud
+switches over after a kern release and deletes its copy (stuffcloud#199). Everything stuffcloud already uses from kern
+is in the mapping tables of the [consumer guide](consumer-guide.md) and of [testing.md](testing.md#stuffcloud-mapping).
+
+| Need | Issue |
+| --- | --- |
+| Tool stickers (the 42 stickers and their categories) as a `Sticker` component, theme-independent bright colours | [#182](https://github.com/Mozra-the-great/kern/issues/182) |
+| Stuffy and the easter-egg cast in the `Mascot` runtime (art, grid and the rule "mascots never speak") | [#183](https://github.com/Mozra-the-great/kern/issues/183) |
+| Season and special-day sets (the 17 sets with decorations and the theme button behaviour), an optional feature | [#184](https://github.com/Mozra-the-great/kern/issues/184) |
+| Theme texts as a DE/EN catalogue that consumers can override | [#185](https://github.com/Mozra-the-great/kern/issues/185) |
+
+All four are parts of [#181](https://github.com/Mozra-the-great/kern/issues/181), the issue that made kern the
+design source. A token that stuffcloud still defines locally and kern lacks is not on the list: stuffcloud#199 files
+each one as a kern issue first, and it gets a row here when it does. (The reference's `--violet` mascot panel and
+`--gray` status dot are in `unused` of `code.tokens.json`: no kern component draws them.)
+
+### Visual regression
+
+`tests/elements/visual.spec.ts` (part of `npm run test:elements`, so of the
 `build` job) screenshots Button, Input, Select, Textarea (empty, a long unbroken string, invalid, disabled), Checkbox, Card, Tabs, Progress, FileDrop, Modal and the
 toasts in `code` and `code-light` at 1280, 375 and 320 px on `tests/elements/pages/visual.html`, with
 the real fonts (`tests/elements/pages/fonts`, OFL), reduced motion and frozen animations. `stuffcloud`
@@ -315,7 +353,7 @@ default font size (browser setting, 16px unless changed). A px size there replac
   exactly `--k-text-md` (nothing changes, no baseline), at 20px it is 20px (Line 21.25px).
 - The specificity of the root rule is 0 (`:where()`), so a page's own `html { font-size }` wins; the rule for boxes keeps
   the specificity of `[data-theme]` (`[data-theme]:where(:not(:root))`).
-- `--k-text-*` stay px (Code's values come from stuffcloud's design, `tokens:check`), so component text and heights do not
+- `--k-text-*` stay px (Code's values were taken from the stuffcloud reference and are kern's own now, guarded by `tokens:check`), so component text and heights do not
   follow the setting; text without a size of its own, `rem` and `em` lengths do. The table is in
   [docs/consumer-guide.md](consumer-guide.md#schriftgröße).
 - `tests/elements/root-font-size.spec.ts` sets the browser's default font size with the CDP command `Page.setFontSizes`
@@ -325,7 +363,7 @@ default font size (browser setting, 16px unless changed). A px size there replac
 
 `[data-theme]` sets `line-height: var(--k-leading-body)`, on `<html data-theme>` and on a theme box alike, and all text
 without a line height of its own inherits it. The token is `1.5` in `base.css` (Flower, Pop and Line draw exactly what they
-did) and `normal` in Code, all its variants and the `stuffcloud*` aliases: stuffcloud's `stuff.css` sets no `line-height` on
+did) and `normal` in Code, all its variants and the `stuffcloud*` aliases: the reference's `stuff.css` sets no `line-height` on
 `body` (source `design:stuff.css|body{line-height}`, recorded as `null` in the snapshot), so the browser's `normal` applies.
 The design sets its own where it wants one (titles 1.05 to 1.1, textarea 1.6, the toast 1.5, the offline banner 1.5).
 
@@ -338,7 +376,7 @@ The design sets its own where it wants one (titles 1.05 to 1.1, textarea 1.6, th
   sort buttons of Table's header (the row is 12px padding plus the button, so a shorter button leaves less than the 44px
   target `tests/targets` demands inside the table box; DataTable has a `min-height` for it). The line that connects the steps of
   a Stepper no longer takes clicks (`pointer-events: none`): a shorter link had moved it into the middle of the link.
-  Everything else follows the design: its text now has `normal` leading in Code, as stuffcloud's does.
+  Everything else has `normal` leading in Code, as the stuffcloud reference does.
 - `tests/elements/leading-body.spec.ts` checks the computed `line-height` of the root, a theme box and plain text in every
   variant (Code `normal`, the others 1.5), nesting in both directions, the migration override, Alert and Toast.
 

@@ -1,22 +1,31 @@
-// Source and drift check of the Code theme (#37).
+// Source and drift check of the Code theme (#37, #181).
 //
-// src/lib/themes/code.tokens.json is the one machine-readable source of the theme: every token with its
-// value and, where the design has one, the place in stuffcloud's design it comes from (`from`).
-// src/lib/themes/brands/code.css is generated from it. The design lives in the stuffcloud repository
-// (docs/design/prototypes: stuff.css and the mockups; the app in web/apps/web/src) and in the claude.ai
-// artifact "Stuffcloud - Designsystem" (light, paper, contrast). CI reaches neither, so
-// scripts/ci/code-theme-snapshot.json records the design values the theme uses: the contract.
+// src/lib/themes/code.tokens.json is the one machine-readable source of the theme, and kern owns it
+// (#181). Every token has its value and, where stuffcloud's design has a counterpart, the place it was
+// oriented on (`from`). src/lib/themes/brands/code.css is generated from it. The stuffcloud design
+// (docs/design/prototypes: stuff.css and the mockups; the app in web/apps/web/src) and the claude.ai
+// artifact "Stuffcloud - Designsystem" (light, paper, contrast) are a frozen reference: CI reaches
+// neither, so scripts/ci/code-theme-snapshot.json records the reference values the theme uses.
+//
+// The check guards against ACCIDENTAL drift from that reference. A token whose value is not the
+// reference's must say so on purpose:
+//   - a kern decision with no counterpart:  `"from": "kern:#NNN"` and a `note` with the reason;
+//   - a deliberate deviation from the reference value: keep the design `from`, record the reference
+//     value as `design`, add `"diverges": "kern:#NNN"` and a `note` with the reason.
+// Neither form lowers the check for any other token; the snapshot itself is never edited for this.
 //
 // Usage:
 //   node scripts/ci/code-theme.mjs                     CI (`npm run tokens:check`): brands/code.css is current,
-//                                                      every `from` agrees with the snapshot, every design
+//                                                      every `from` agrees with the snapshot, every `kern:` and
+//                                                      `diverges` entry is well formed, every reference
 //                                                      root token is used or listed in `unused`
 //   node scripts/ci/code-theme.mjs --write             regenerate brands/code.css (`npm run tokens:code`)
 //   node scripts/ci/code-theme.mjs --against <dir>     also extract the values from a stuffcloud checkout and
-//        [--design-system <tokens.json>]               fail on any difference to the snapshot (from kern, or
-//                                                      from stuffcloud's CI with a kern checkout)
+//        [--design-system <tokens.json>]               fail on any difference to the snapshot (proves the
+//                                                      snapshot still matches the frozen reference)
 //   node scripts/ci/code-theme.mjs --refresh <dir>     rewrite the snapshot from a stuffcloud checkout (and the
-//        [--design-system <tokens.json>]               artifact's project/tokens.json); then run the check
+//        [--design-system <tokens.json>]               artifact's project/tokens.json). The reference is frozen:
+//                                                      only to correct the snapshot, never for a kern change
 // Exit code 1 on drift, 2 on wrong arguments. docs/themes.md, "Code theme source", has the procedure.
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -137,10 +146,13 @@ export function norm(v) {
 /**
  * Parses a reference: `design:<file>|[@media (…)|]<selector>{<prop>}` (a declaration),
  * `design:<file>#<text>` (a literal in that file), the same with `app:`, or `ds:<token>[@<theme>]`,
- * `ds:type/<style>{<field>}` (the design-system artifact).
+ * `ds:type/<style>{<field>}` (the design-system artifact), or `kern:#<issue>` (a kern decision: nothing in
+ * the reference to compare with).
  */
 export function parseRef(ref) {
-	let m = /^(design|app):([^|#]+)#([\s\S]+)$/.exec(ref);
+	let m = /^kern:#([1-9]\d*)$/.exec(ref);
+	if (m) return { kind: 'kern', issue: Number(m[1]) };
+	m = /^(design|app):([^|#]+)#([\s\S]+)$/.exec(ref);
 	if (m) return { kind: 'literal', scope: m[1], file: m[2], text: m[3] };
 	m = /^(design|app):([^|#]+)\|(?:@media ([^|]+)\|)?(.+)\{([\w-]+)\}$/.exec(ref);
 	if (m) return { kind: 'decl', scope: m[1], file: m[2], media: m[3] ? normMedia(m[3]) : null, selector: normSelector(m[4]), prop: m[5] };
@@ -159,10 +171,13 @@ export function entries(src) {
 	return out;
 }
 
-/** All references the source names (tokens and `unused`). */
+/** True for a `kern:#<issue>` reference: kern's own decision, not a place in the reference design. */
+export const isKernRef = (ref) => typeof ref === 'string' && ref.startsWith('kern:');
+
+/** All references into the reference design that the source names (tokens and `unused`); no `kern:` ones. */
 export function referencedRefs(src) {
 	const refs = new Set(Object.keys(src.unused ?? {}));
-	for (const [, , e] of entries(src)) if (e.from) refs.add(e.from);
+	for (const [, , e] of entries(src)) if (e.from && !isKernRef(e.from)) refs.add(e.from);
 	return refs;
 }
 
@@ -272,8 +287,27 @@ export function checkSource(src, snapshot) {
 	const used = referencedRefs(src);
 	for (const [block, name, e] of entries(src)) {
 		const where = `${name}${block.media ? ` @media ${block.media}` : ''} (${block.variants === '*' ? 'every variant' : block.variants.map((v) => v || 'code').join(', ')})`;
+		if ('diverges' in e) {
+			if (typeof e.diverges !== 'string' || !/^kern:#[1-9]\d*$/.test(e.diverges))
+				problems.push(`${where}: \`diverges\` must be \`kern:#<issue>\`, got ${JSON.stringify(e.diverges)}`);
+			if (!e.from || isKernRef(e.from))
+				problems.push(`${where}: \`diverges\` needs a \`from\` into the reference design (a \`kern:\` token has nothing to diverge from)`);
+			if (!('design' in e)) problems.push(`${where}: \`diverges\` needs \`design\`, the reference value it deviates from`);
+			else if (norm(e.design) === norm(e.value))
+				problems.push(`${where}: \`diverges\`, but the value is the reference value: drop \`diverges\``);
+			if (!e.note) problems.push(`${where}: \`diverges\` needs a \`note\` with the reason`);
+		}
 		if (!e.from) {
 			if (name.startsWith('--') && !e.note) problems.push(`${where}: no \`from\` and no \`note\` saying where the value comes from`);
+			continue;
+		}
+		if (isKernRef(e.from)) {
+			try {
+				parseRef(e.from);
+			} catch (err) {
+				problems.push(`${where}: ${err.message}`);
+			}
+			if (!e.note) problems.push(`${where}: ${e.from} needs a \`note\` with the reason for kern's own value`);
 			continue;
 		}
 		let p;
@@ -284,7 +318,9 @@ export function checkSource(src, snapshot) {
 			continue;
 		}
 		if (!(e.from in values)) {
-			problems.push(`${where}: ${e.from} is not in the snapshot (refresh it, docs/themes.md)`);
+			problems.push(
+				`${where}: ${e.from} is not in the snapshot (the reference is frozen: use \`kern:#<issue>\` for a kern value, docs/themes.md)`
+			);
 			continue;
 		}
 		const got = values[e.from];
@@ -372,7 +408,7 @@ function main(args) {
 		}
 		const next = {
 			$comment:
-				'Generated by `node scripts/ci/code-theme.mjs --refresh <stuffcloud> --design-system <tokens.json>`. Do not edit by hand; see docs/themes.md, "Code theme source".',
+				'Generated by `node scripts/ci/code-theme.mjs --refresh <stuffcloud> --design-system <tokens.json>`. Do not edit by hand. FROZEN REFERENCE (#181): the values stay as the stuffcloud design had them; a kern change is recorded in code.tokens.json (`kern:#<issue>` or `diverges`), never here. See docs/themes.md, "Code theme source".',
 			stuffcloud: stuffcloudMeta(refresh),
 			designSystem: dsTokens
 				? { artifact: 'claude.ai artifact "Stuffcloud - Designsystem", project/tokens.json', sha256: sha256(dsBytes) }
@@ -397,19 +433,21 @@ function main(args) {
 		const meta = stuffcloudMeta(against);
 		if (diff.length === 0 && snapshot.stuffcloud?.pdfSourceSha256 && meta.pdfSourceSha256 !== snapshot.stuffcloud.pdfSourceSha256)
 			console.log(
-				`Note: docs/design changed since the snapshot (pdf-source.sha256 ${String(meta.pdfSourceSha256).slice(0, 12)}…), but no value the theme uses did.`
+				`Note: the stuffcloud reference is not at the snapshot's state (pdf-source.sha256 ${meta.pdfSourceSha256 === null ? 'removed' : meta.pdfSourceSha256.slice(0, 12)}), but no value the theme uses differs.`
 			);
 	}
 	if (problems.length > 0) {
 		console.error(`Code theme drift (${problems.length}):\n  ${problems.join('\n  ')}`);
 		console.error(
-			'If the design changed on purpose: refresh the snapshot, update code.tokens.json, run `npm run tokens:code` (docs/themes.md).'
+			'A change of kern on purpose: record it in code.tokens.json as `kern:#<issue>` or `diverges` with a note and run `npm run tokens:code` (docs/themes.md). The snapshot is a frozen reference: do not refresh it for that.'
 		);
 		return 1;
 	}
-	const n = entries(src).filter(([, , e]) => e.from).length;
+	const all = entries(src);
+	const n = all.filter(([, , e]) => e.from && !isKernRef(e.from)).length;
+	const own = all.filter(([, , e]) => isKernRef(e.from) || 'diverges' in e).length;
 	console.log(
-		`Code theme: brands/code.css is generated from code.tokens.json; ${n} values agree with the design snapshot${against ? ' and the stuffcloud checkout' : ''}.`
+		`Code theme: brands/code.css is generated from code.tokens.json; ${n} values agree with the reference snapshot${against ? ' and the stuffcloud checkout' : ''}, ${own} are kern's own (kern:/diverges).`
 	);
 	return 0;
 }

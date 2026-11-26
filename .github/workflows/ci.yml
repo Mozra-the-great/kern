@@ -64,7 +64,7 @@ jobs:
         # The manifests are the contract with the art sources; refresh: assets/README.md.
         run: npm run assets:check
       - name: Code theme source (brands/code.css generated from code.tokens.json, values against the design snapshot)
-        # The snapshot is the contract with stuffcloud's docs/design; refresh: docs/themes.md, "Code theme source".
+        # The snapshot is the frozen reference (stuffcloud docs/design); kern changes go into code.tokens.json: docs/themes.md, "Code theme source".
         run: npm run tokens:check
       - name: Instance neutrality (no operator domains, names or addresses in themes and brand art)
         # Generic patterns always; KERN_FORBIDDEN_TERMS (Actions secret or variable, never in the repo) adds the

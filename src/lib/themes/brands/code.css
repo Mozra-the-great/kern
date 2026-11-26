@@ -1,10 +1,11 @@
-/* Code — from the stuffcloud design (the app that first used it). Grid look: square corners,
+/* Code — oriented on the stuffcloud design (the app that first used it); kern owns it (#181). Grid look: square corners,
  * hard offset shadows, ink-filled buttons that turn accent on hover.
  * Fonts: Inter, JetBrains Mono, Silkscreen (load them yourself).
  *
  * GENERATED from src/lib/themes/code.tokens.json by `npm run tokens:code`: change that file,
- * never this one (docs/themes.md, 'Code theme source'). Every value there names its source in
- * stuffcloud's docs/design (or the app, or the design-system artifact for light, paper and contrast).
+ * never this one (docs/themes.md, 'Code theme source'). A value there names the place it was oriented on
+ * in stuffcloud's frozen reference (docs/design, the app, or the design-system artifact for light, paper and contrast)
+ * or says in a note why kern decides it itself.
  *
  * Sizes: target-min 44px for every target (mouse too), 48px for icon-only buttons, 52px for
  * fields and buttons, 56px below the 760px breakpoint. The component tokens (--k-button-*,
@@ -210,7 +211,7 @@
 	--k-fg: #f4f4f0;
 	--k-fg-muted: #a2a2ab;
 	--k-line: #26262b;
-	/* the design-system artifact says #6e6e78; docs/design wins (#37) */
+	/* the design-system artifact says #6e6e78; kern keeps the #6c6c76 of docs/design, the reference it was oriented on (#37) */
 	--k-border: #6c6c76;
 	--k-primary: #f4f4f0;
 	--k-on-primary: #101012;
