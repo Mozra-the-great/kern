@@ -43,7 +43,7 @@ speichert für URL-Tarballs keinen Hash).
 Die URL folgt einem festen Muster; die Version steht zweimal darin:
 
 ```bash
-V=0.12.3
+V=0.12.4
 URL="https://github.com/Mozra-the-great/kern/releases/download/v$V/mozra-the-great-kern-$V.tgz"
 
 pnpm add "$URL"                      # pnpm (stuffcloud)
@@ -66,14 +66,14 @@ Jedes Release trägt neben dem Tarball `….tgz.sha256` und `….tgz.sha512`, un
 Review) lässt sich alles gegeneinander prüfen. Die Befehle laufen unter Linux, macOS und in Git Bash unter Windows:
 
 ```bash
-V=0.12.3
+V=0.12.4
 BASE="https://github.com/Mozra-the-great/kern/releases/download/v$V"
 curl -fLO "$BASE/mozra-the-great-kern-$V.tgz"
 curl -fLO "$BASE/mozra-the-great-kern-$V.tgz.sha256"
 curl -fLO "$BASE/mozra-the-great-kern-$V.tgz.sha512"
 
-sha256sum -c "mozra-the-great-kern-$V.tgz.sha256"   # → mozra-the-great-kern-0.12.3.tgz: OK
-sha512sum -c "mozra-the-great-kern-$V.tgz.sha512"   # → mozra-the-great-kern-0.12.3.tgz: OK
+sha256sum -c "mozra-the-great-kern-$V.tgz.sha256"   # → mozra-the-great-kern-0.12.4.tgz: OK
+sha512sum -c "mozra-the-great-kern-$V.tgz.sha512"   # → mozra-the-great-kern-0.12.4.tgz: OK
 
 # Der Wert der Lock-Datei (SRI): sha512, base64
 echo "sha512-$(openssl dgst -sha512 -binary "mozra-the-great-kern-$V.tgz" | openssl base64 -A)"
