@@ -34,6 +34,9 @@
  * - bg-code: the design's terminal `term` is dark in both themes, but kern also sets
  *   `fg-muted` (line numbers) on bg-code, and light `mut` (#5f5f69) reads only 2.8:1 on
  *   it. Dark uses `term` + `term-ink`; light uses bg-sunken + `ink`.
+ * - bg-stage (#188) is not set: Line has no stage. Its Poster takes one of five colours
+ *   (`lav`, `sun`, `green`, `sky`, `pink`) per use and names no default, so the base
+ *   default (bg-sunken) stays until the design says which one is the stage.
  * - `lav`, `green`, `orange`, `sky`, `pink`, `peach`, `teal`, `fog`, `alert`, `hot` and
  *   `term-*` are illustration and tile colours that kern has no role for: not used.
  * - Inter's contextual alternates are off in the design ("3x9" stays "3x9"); kern has

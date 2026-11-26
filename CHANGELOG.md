@@ -24,6 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- New token `--k-bg-stage` (#188): the flat panel a mascot or sticker scene stands on (stuffcloud's violet panel, stuffcloud#199).
+  Paint it yourself on the box that holds `Mascot` or `Sticker`; no component draws it, and no text or control sits on it.
+  `base.css` defaults it to `--k-bg-sunken`, so every theme works without it. Values come only from the design sources: Code
+  (all variants, and the `stuffcloud*` names) `#8b5cf6` (`--violet` of the reference, the artifact's `panel`; it leaves `unused`
+  in `code.tokens.json`), Pop `#10a916` (its Stage, `green`), Flower `#f6f0e0` (`cream`). Line has no stage in its design system
+  and keeps the default. `tests/tokens/stage-art.test.ts` guards which themes set it and measures the silhouette colours of the
+  art against it (WCAG 1.4.11): Pop passes, Flower's art has no outline, and 43 of the 51 Code mascots and stickers are below
+  3:1 on the violet (recorded in the test; the design reference gives stickers on the panel a 2px white outline, which the art
+  files do not contain). `docs/themes.md`, "Stage". stuffcloud can delete `--sc-stage` after a kern bump.
 - Stuffy and the easter-egg cast are complete in the `Mascot` runtime (#183). The nine pixel-art files in `assets/code/mascots/` were
   compared with stuffcloud's current reference and are identical byte for byte, so no art changed; what was missing is the typed
   addressing and the rule. Every mascot has a typed name (`stuffy`, `mochi`, `hop`, `bun`, `bloop`, `waddle`, `ember`, `boo`, `cumulo`)

@@ -17,6 +17,8 @@
  *   dark theme (#0e9413, 3.1:1 on the `line` track, 3.6:1 on bg): `green`
  *   reaches only 2.5–2.8:1 there. Dark keeps `green`. Fills with text keep `green`.
  * - bg-sunken = `line` (hover and track fill); info-soft = `sky` in light.
+ * - bg-stage = `green`, Pop's Stage (#188): the field a mascot stands on, the same in both
+ *   themes. Nothing but art sits on it (the design puts 19px bold text on it, kern does not).
  * - Sizes: `tap-s` 44px is the smallest target for every pointer, `tap-m` 48px
  *   for icon buttons, `tap-l` 56px for buttons and inputs.
  * - `drop-line` is not used for the drop zone edge: it reaches only ~1.4:1, so the
@@ -83,6 +85,7 @@
 	--k-focus: #151714;
 	--k-backdrop: rgba(21, 23, 20, 0.45);
 	--k-selected: #e1f6dc;
+	--k-bg-stage: #10a916;
 	--k-shadow-raised: 0 1px 0 rgba(21, 23, 20, 0.04), 0 14px 30px -18px rgba(21, 23, 20, 0.35);
 	--k-shadow-overlay: 0 1px 0 rgba(21, 23, 20, 0.04), 0 14px 30px -18px rgba(21, 23, 20, 0.35);
 }
@@ -116,6 +119,7 @@
 	--k-focus: #f2f4ef;
 	--k-backdrop: rgba(0, 0, 0, 0.6);
 	--k-selected: #18331a;
+	--k-bg-stage: #10a916;
 	--k-shadow-raised: 0 1px 0 rgba(0, 0, 0, 0.5), 0 16px 34px -18px rgba(0, 0, 0, 0.9);
 	--k-shadow-overlay: 0 1px 0 rgba(0, 0, 0, 0.5), 0 16px 34px -18px rgba(0, 0, 0, 0.9);
 }

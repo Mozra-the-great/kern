@@ -146,6 +146,10 @@
 	/* code blocks and logs (Code); inline code stays on bg-sunken */
 	--k-bg-code: var(--k-bg-raised);
 	--k-fg-code: var(--k-fg);
+	/* the flat panel a mascot or sticker scene stands on (#188). Decoration only: no text and
+	 * no control sits on it. Themes whose design has such a panel set it (Code: violet, Pop:
+	 * green, Flower: cream, the colour its art is drawn for); the others keep the sunken ground. */
+	--k-bg-stage: var(--k-bg-sunken);
 	/* hints under fields and in drop zones; long running copy; disabled items */
 	--k-fg-hint: var(--k-fg-muted);
 	--k-fg-soft: var(--k-fg);

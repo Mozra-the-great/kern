@@ -461,6 +461,7 @@
 				},
 				"--k-selected": { "value": "#17171a", "from": "design:stuff.css|a.cell:hover{background}" },
 				"--k-bg-code": { "value": "#0c0c0e", "from": "app:styles/theme.css|:root{--bg-code}" },
+				"--k-bg-stage": { "value": "#8b5cf6", "from": "design:stuff.css|:root{--violet}" },
 				"--k-line-strong": { "value": "#3a3a42", "from": "design:stuff.css|:root{--line2}" },
 				"--k-line-dashed": { "value": "#6b5a8f", "from": "app:styles/theme.css|:root{--line-drop}" },
 				"--k-surface-danger": { "value": "#2a0f1a", "from": "app:styles/theme.css|:root{--bg-error}" },
@@ -506,6 +507,7 @@
 				"--k-backdrop": { "value": "rgba(16, 16, 18, 0.4)", "note": "kern's: the design system has no backdrop" },
 				"--k-selected": { "value": "#ffffff", "from": "ds:surface-raised@light" },
 				"--k-bg-code": { "value": "#f1f0ee", "from": "ds:surface-code@light" },
+				"--k-bg-stage": { "value": "#8b5cf6", "from": "ds:panel@light" },
 				"--k-line-strong": { "value": "#bdbbc3", "note": "derived: 30 % from line toward border, like the dark pair" }
 			}
 		},
@@ -542,6 +544,7 @@
 				"--k-backdrop": { "value": "rgba(0, 0, 0, 0.35)", "note": "kern's: the design system has no backdrop" },
 				"--k-selected": { "value": "#f4f3f1", "from": "ds:surface-raised@paper" },
 				"--k-bg-code": { "value": "#f4f3f1", "from": "ds:surface-code@paper" },
+				"--k-bg-stage": { "value": "#8b5cf6", "from": "ds:panel@paper" },
 				"--k-line-strong": { "value": "#b5b5b5", "note": "derived: 30 % from line toward border, like the dark pair" }
 			}
 		},
@@ -577,12 +580,12 @@
 				"--k-focus": { "value": "#ffffff", "from": "ds:ink@contrast" },
 				"--k-backdrop": { "value": "rgba(0, 0, 0, 0.75)", "note": "kern's: the design system has no backdrop" },
 				"--k-selected": { "value": "#0a0a0a", "from": "ds:surface-raised@contrast" },
-				"--k-bg-code": { "value": "#000000", "from": "ds:surface-code@contrast" }
+				"--k-bg-code": { "value": "#000000", "from": "ds:surface-code@contrast" },
+				"--k-bg-stage": { "value": "#8b5cf6", "from": "ds:panel@contrast" }
 			}
 		}
 	],
 	"unused": {
-		"design:stuff.css|:root{--violet}": "the decorative grid panel behind the mascot; no component draws it",
 		"app:styles/theme.css|:root{--gray}": "the grey status dot of a list; kern's StatusDot has no grey tone",
 		"app:styles/theme.css|:root{--shadow}": "kern takes the whole shadow value (--k-shadow-sm) from the design",
 		"app:styles/theme.css|:root{--bg-raised}": "same value as the design's raised cell, which --k-bg-raised names",
