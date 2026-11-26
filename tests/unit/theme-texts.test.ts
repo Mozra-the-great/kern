@@ -295,6 +295,9 @@ describe('the shared store', () => {
  * Type-checks `body` against theme-texts.ts and returns the diagnostics. The in-memory file sits next to the
  * real sources, so it imports them like a consumer of the package would.
  */
+/** The previous program: later calls reuse the parsed library files, so only the first one is slow. */
+let previous: ts.Program | undefined;
+
 function diagnose(body: string): string[] {
 	const dir = join(import.meta.dirname, '../../src/lib/components');
 	const file = join(dir, '__theme-texts-fixture.ts').split('\\').join('/');
@@ -318,11 +321,13 @@ function diagnose(body: string): string[] {
 	)(host.fileExists.bind(host));
 	const original = host.getSourceFile.bind(host);
 	host.getSourceFile = (name, lang, ...rest) => (name === file ? ts.createSourceFile(name, body, lang) : original(name, lang, ...rest));
-	const program = ts.createProgram([file], options, host);
+	const program = ts.createProgram([file], options, host, previous);
+	previous = program;
 	return ts.getPreEmitDiagnostics(program).map((d) => ts.flattenDiagnosticMessageText(d.messageText, '\n'));
 }
 
-describe('the types', () => {
+// A cold TypeScript program takes seconds on a busy CI runner.
+describe('the types', { timeout: 60_000 }, () => {
 	const head = `import type { ThemeTextsBundle, ThemeTextsInput, ThemeTextSet } from './theme-texts.js';\nimport { deThemeTexts } from './theme-texts-de.js';\n`;
 
 	it('accept the German bundle, a partial input and a set id', () => {
