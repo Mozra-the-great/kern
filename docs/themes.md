@@ -36,7 +36,7 @@ machine-readable list, with the place each value was oriented on, is `src/lib/th
 | `--bg-error` | `#2a0f1a` | `--k-surface-danger` | `#2a0f1a` | Alert, error Toast |
 | `--bg-warn` | `#2a200a` | `--k-surface-warn` | `#2a200a` | Alert, warning Toast |
 | `--bg-selected` | `#1a1220` | `--k-surface-selected` | `#1a1220` | drop zone while dragging, selected Tag, TreeView row, Navbar current page |
-| `--violet` / panel | `#8b5cf6` | not used | | decorative panel behind the mascot |
+| `--violet` / panel | `#8b5cf6` | `--k-bg-stage` | `#8b5cf6` | the panel behind a mascot or sticker scene (#188, section "Stage"); the artifact's `panel` is the same `#8b5cf6` in every variant |
 | `--gray` | `#5a5a64` | not used | | |
 | shadow-pixel | `8px 8px 0 rgba(16,16,18,.6)` | `--k-shadow-overlay` | same | dialogs, popovers |
 | delete-site dialog scrim | `rgba(16,16,18,.55)` | `--k-backdrop` | same | was `rgba(0,0,0,.6)`, no design source (#37) |
@@ -63,6 +63,48 @@ state surfaces, code/hint colours or drop line for them, so they keep the base d
 **The extra variants** (`code-light`, `code-paper`, `code-contrast`) are **not part of stuffcloud's
 design**: docs/design is dark only (stuffcloud ADR 0008, "the UI is dark only"). kern keeps them for
 other consumers, with the values of the design-system artifact (also a reference); stuffcloud uses `code` (= `code-dark`).
+
+## Stage: the panel behind a mascot (#188)
+
+`--k-bg-stage` is the flat panel a mascot or sticker scene stands on: stuffcloud's violet panel on the home page and
+in the gallery. A consumer paints it itself (`background: var(--k-bg-stage)` on the box that holds `Mascot` or
+`Sticker`); no component draws it. It is decoration only: **no text and no control sits on it** (the design systems
+say so too), so it has no text pair in the contrast contract.
+
+**Name.** `--k-bg-*` is the family of grounds (`--k-bg`, `--k-bg-raised`, `--k-bg-sunken`, `--k-bg-code`), and a ground
+meant for one purpose already has this shape (`--k-bg-code` for code). `--k-surface-*` is reserved for the ground of a
+state region (Alert, Toast, selected item), and `--k-stage` would sit outside both families.
+
+**Default.** `base.css` sets `--k-bg-stage: var(--k-bg-sunken)`, so a theme that does not define it still has a quiet
+panel that follows its colours. Only a design that has a stage of its own sets it. Values come from the designs and
+nowhere else:
+
+| Theme | `--k-bg-stage` | Source |
+| --- | --- | --- |
+| `code`, `code-dark` (and `stuffcloud*`) | `#8b5cf6` | `design:stuff.css`, `:root{--violet}` ("Violet panel" in docs/design/README.md) |
+| `code-light`, `code-paper`, `code-contrast` | `#8b5cf6` | design-system artifact "Stuffcloud - Designsystem", token `panel`: `#8b5cf6` in all four variants (`ds:panel@light` ...) |
+| `pop`, `pop-light`, `pop-dark` | `#10a916` | Pop-Designsystem, component Stage ("the green stage", the `green` token, the same in both themes; "a mascot stands bottom right") |
+| `flower`, `flower-creme`, `flower-wald` | `#f6f0e0` | Flower-Designs, token `cream` (a fixed colour for fields that always stay light); Card, Sheet and Hero keep this ground in wald too because the motifs are drawn for it |
+| `line`, `line-dark`, `line-light` | default (`--k-bg-sunken`) | none: the Line-Designsystem has no stage. Its Poster takes one of five colours (`lav`, `sun`, `green`, `sky`, `pink`) per use and names no default |
+
+The artifact's `panel-grid` (`rgba(16,16,18,0.18)` lines of a 64 px grid) and Pop's dot grid are decoration on top of the
+colour; kern defines no token for them.
+
+**Readability of the art (WCAG 1.4.11).** The art has fixed colours and is drawn for a dark panel, so it is measured,
+not assumed: `tests/tokens/stage-art.test.ts` reads the shipped SVG files and checks, for every theme that sets the
+stage itself, that the colours on the art's silhouette (the pixels that touch the stage) reach 3:1 against it.
+
+- **Pop:** the ink outline `#151714` of every mascot is 5.76:1 on `#10a916`. Passes.
+- **Flower:** the motifs are filled shapes without any outline, drawn for the cream the stage is. There is nothing to
+  measure; the test fails if an outline is ever added.
+- **Code on `#8b5cf6`:** this **fails for most of the art**. Of the 9 mascots and 42 stickers, 43 have a silhouette
+  colour below 3:1 (the pink of Stuffy 2.32:1 and its red tufts 1.36:1, the blue of many stickers 1.32:1, the purple
+  of `sticker-qr` 1.30:1, the red of `sticker-img-exif` 1.01:1); 8 pass (Mochi, Boo and the stickers drawn with the
+  dark `#2b2b38` frame: cron, lorem, textops, timestamp, useragent, uuid). `sticker-diff` misses by a hair (2.997:1).
+  The colour was not changed for this. The design reference solves it on the consumer side: stickers on the panel
+  get a 2px white outline (`pixel-art-and-mascots.md`; white on `#8b5cf6` is 4.23:1), which the art files do not
+  contain. The test records the 43 pieces and fails in both directions: a new piece that fails, or one that starts
+  to pass, changes the list on purpose.
 
 ## Code theme source (#37)
 
@@ -129,7 +171,10 @@ It reads every snapshot value again and fails on any change, a new root token or
 CI no longer has to run it (the reference is frozen and there is no rebuild duty), and it must not be used to pull a
 later stuffcloud change into kern: a change there is, at most, an idea that kern adopts through the workflow above.
 `--refresh <stuffcloud>` rewrites the snapshot; use it only when an extraction error made the snapshot disagree with
-the reference as it was frozen, and say so in the PR.
+the reference as it was frozen, and say so in the PR. A token that draws, for the first time, on a reference value the
+snapshot does not hold yet (#188: the artifact's `panel` for light, paper and contrast, `ds:panel@...`) gets that
+one value added by hand, read from the frozen artifact (its `sha256` in the snapshot is unchanged); no existing value
+and no stuffcloud commit is touched, because a refresh would pull stuffcloud's later changes in.
 
 **Instance neutrality.** `npm run neutrality:check` (also in `build`) fails on an e-mail address, a URL,
 a domain name or an IPv4 address in `src/lib/themes/**`, the snapshot, `assets/**` and the theme texts
@@ -254,8 +299,11 @@ same patterns.
 
 Both are parts of [#181](https://github.com/Mozra-the-great/kern/issues/181), the issue that made kern the
 design source. A token that stuffcloud still defines locally and kern lacks is not on the list: stuffcloud#199 files
-each one as a kern issue first, and it gets a row here when it does. (The reference's `--violet` mascot panel and
-`--gray` status dot are in `unused` of `code.tokens.json`: no kern component draws them.)
+each one as a kern issue first, and it gets a row here when it does. (The reference's `--gray` status dot is in `unused`
+of `code.tokens.json`: no kern component draws it.)
+
+**Met:** the panel behind the mascot (stuffcloud's `--sc-stage`, [#188](https://github.com/Mozra-the-great/kern/issues/188)) is
+`--k-bg-stage`, see "Stage" above. stuffcloud can delete `--sc-stage` after a kern bump.
 
 ### Visual regression
 
@@ -305,6 +353,8 @@ shape with a *background* (a fill, a stripe, a dot) must have a forced-colors co
 - Flower wald `--k-warn`: `#e4b76a` (ochre-500 a touch lighter, 4.5:1 on the raised surface).
 - Pop sizes: `tap-s` 44px for every pointer (`--k-tap-target`), `tap-m` 48px for icon buttons.
   Pop's `drop-line` (about 1.4:1) is not used; the drop zone keeps the 3:1 `mut` border.
+- `--k-bg-stage` (#188): Pop `#10a916` (`green`, its Stage), Flower `#f6f0e0` (`cream`, the ground its motifs are drawn for);
+  Line has none and keeps the default (section "Stage").
 - Every other derived token keeps its base default in both brands (their designs have no
   separate value), so their look does not change.
 
@@ -350,7 +400,8 @@ and the fallback, `line-light` a full second theme. Values are dark / light.
 | motion | 0.15s | `--k-dur` | 150ms | |
 
 Not used: `lav`, `green`, `orange`, `sky`, `pink`, `peach`, `teal`, `fog`, `alert`, `hot`,
-`term-mut`, `term-str` (illustration and tile colours), the hand font, `danger-h`, `sun-h`.
+`term-mut`, `term-str` (illustration and tile colours), the hand font, `danger-h`, `sun-h`. Line has no stage:
+`--k-bg-stage` keeps the default (`--k-bg-sunken`), because the Poster's colour is a choice per use, not a default.
 Inter's contextual alternates are switched off in the design; kern has no token for font
 features, so that is left to the page (`font-feature-settings: 'calt' 0`).
 
@@ -400,6 +451,8 @@ The design sets its own where it wants one (titles 1.05 to 1.1, textarea 1.6, th
 - text 4.5:1: fg, fg-muted, fg-hint, fg-soft on bg / raised / sunken; fg-code on bg-code and
   bg-sunken; on-primary, on-accent, on-danger on their fills; link, accent-text, danger, ok,
   warn, info on bg, raised and their `-soft` and `surface-*`; fg and fg-muted on every `surface-*`.
+- stage (#188): `--k-bg-stage` resolves to an opaque colour in every variant; where a theme sets it, the silhouette
+  colours of the mascot and sticker art reach 3:1 against it, except the recorded pieces of Code (section "Stage").
 - non-text 3:1: border on bg / raised / sunken, line-dashed on bg / sunken, focus on bg / raised /
   sunken, accent-mark on bg / raised / sunken, primary on bg / raised, danger on raised.
 

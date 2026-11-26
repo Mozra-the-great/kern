@@ -24,6 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- New token `--k-bg-stage` (#188): the flat panel a mascot or sticker scene stands on (stuffcloud's violet panel, stuffcloud#199).
+  Paint it yourself on the box that holds `Mascot` or `Sticker`; no component draws it, and no text or control sits on it.
+  `base.css` defaults it to `--k-bg-sunken`, so every theme works without it. Values come only from the design sources: Code
+  (all variants, and the `stuffcloud*` names) `#8b5cf6` (`--violet` of the reference, the artifact's `panel`; it leaves `unused`
+  in `code.tokens.json`), Pop `#10a916` (its Stage, `green`), Flower `#f6f0e0` (`cream`). Line has no stage in its design system
+  and keeps the default. `tests/tokens/stage-art.test.ts` guards which themes set it and measures the silhouette colours of the
+  art against it (WCAG 1.4.11): Pop passes, Flower's art has no outline, and 43 of the 51 Code mascots and stickers are below
+  3:1 on the violet (recorded in the test; the design reference gives stickers on the panel a 2px white outline, which the art
+  files do not contain). `docs/themes.md`, "Stage". stuffcloud can delete `--sc-stage` after a kern bump.
 - Theme texts catalogue (#185): the two short facts of each of the 17 season and special-day sets (`winter` to `christmas`, `THEME_TEXT_SETS`) in
   English and, complete and typed, in German (`themeTextsEn`, `deThemeTexts`; a missing German text does not compile). They are not component
   defaults, so they are a catalogue of their own with the rules of the strings: `setThemeTexts(...)`, `resetThemeTexts()`, `getThemeTexts()`,

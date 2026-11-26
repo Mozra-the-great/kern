@@ -32,7 +32,11 @@ Pixel art from the stuffcloud moodboards, also recorded in the stuffcloud design
 system; the kern theme it belongs to is `code` (the folder was called `stuffcloud/` until #85, and
 `@mozra-the-great/kern/assets/stuffcloud/*` still resolves here through an `exports` alias until 1.0). One square per pixel, `shape-rendering="crispEdges"`: show each file through
 `<img>` at whole-number scales (`image-rendering: pixelated`) so it stays sharp.
-The colours are fixed and do not follow the theme; the art is drawn for the dark panel of the Code theme.
+The colours are fixed and do not follow the theme; the art is drawn for the dark panel of the Code theme, which is the
+token `--k-bg-stage` (violet `#8b5cf6`; paint it on the box that holds the art, `docs/themes.md`, "Stage"). The art
+is not outlined: most pieces have a silhouette colour below 3:1 against that violet (43 of the 51 mascots and
+stickers), so on the stage give the art a light outline in your own CSS, as the design reference does (a 2px white
+outline; white is 4.23:1 on the violet). `tests/tokens/stage-art.test.ts` records the list.
 
 | Group | Files | Use |
 | --- | --- | --- |

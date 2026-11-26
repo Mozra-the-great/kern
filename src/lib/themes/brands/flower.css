@@ -8,6 +8,8 @@
  * only 2.5–2.9:1 on creme and 2.8:1 on wald's raised surface (WCAG 1.4.11 needs 3:1):
  * creme uses coral-600 at 6 % less lightness (#d06557, same hue), wald coral-500.
  * Fills with text on them (accent Button, solid Badge) keep coral-600.
+ * bg-stage = `cream` in both themes (#188): the design keeps the field a motif stands on
+ * light in wald too (Card, Sheet and Hero keep their ground), because the motifs are drawn for it.
  * The derived tokens (line-strong, surface-*, fg-hint, …) keep the base
  * defaults: the design has no separate tones for them. Sizes keep the base
  * (44px targets on touch); the design defines no target sizes. */
@@ -64,6 +66,7 @@
 	--k-focus: #2c4f38;
 	--k-backdrop: rgba(37, 69, 56, 0.45);
 	--k-selected: #edead6;
+	--k-bg-stage: #f6f0e0;
 }
 [data-theme='flower-wald'] {
 	color-scheme: dark;
@@ -96,4 +99,5 @@
 	--k-focus: #f2e8cf;
 	--k-backdrop: rgba(16, 30, 24, 0.6);
 	--k-selected: #1f3b30;
+	--k-bg-stage: #f6f0e0;
 }

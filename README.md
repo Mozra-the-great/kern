@@ -100,7 +100,7 @@ Außenmaße, der Rand zählt mit.
 eigenen Wert auf einen anderen zeigen: `--k-accent-mark` (Akzent als Markierung ohne Text: Fortschritt,
 aktiver Tab, gewählter Rand; braucht 3:1), `--k-line-strong` (Rand von Karten, Dialogen, Toasts,
 Menüs), `--k-line-dashed` (Ablagefläche), `--k-surface-info|ok|warn|danger|selected` (Grund ganzer
-Statusflächen), `--k-bg-code`/`--k-fg-code`, `--k-fg-hint`, `--k-fg-soft`, `--k-fg-disabled`,
+Statusflächen), `--k-bg-code`/`--k-fg-code`, `--k-bg-stage` (die Fläche, auf der ein Maskottchen oder Sticker steht: Code violett, Pop grün, Flower creme, sonst `--k-bg-sunken`; [Stage](docs/themes.md#stage-the-panel-behind-a-mascot-188)), `--k-fg-hint`, `--k-fg-soft`, `--k-fg-disabled`,
 `--k-shadow-sm` und die Zwischenabstände `--k-space-2-5|3-5|6-5` (10/14/28 px). Welche
 Stuffcloud-Variable welchem Token entspricht, steht in [`docs/themes.md`](docs/themes.md).
 
