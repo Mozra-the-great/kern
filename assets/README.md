@@ -41,7 +41,7 @@ The colours are fixed and do not follow the theme; the art is drawn for the dark
 
 115 files in all: the same set, name for name and byte for byte, as stuffcloud's
 `docs/design/prototypes` (generated there from ASCII sources by `docs/design/tools/mascots.py`
-and `stickers.py`).
+and `stickers.py`) when they were copied. That folder is a frozen reference since #181; the art is kern's to maintain (stickers: #182, Stuffy and the easter-egg cast: #183, season sets: #184).
 
 ## pop
 
@@ -122,7 +122,7 @@ source: CI cannot reach the stuffcloud repository or the claude.ai artifacts, so
 that `src/lib/components/code-art.ts` (the grid catalogue behind `Mascot`) matches the
 code SVGs.
 
-When stuffcloud's art changes:
+When the art changes (kern owns it since #181; copy from the stuffcloud reference only for art that kern does not have yet):
 
 1. Copy the new or changed SVGs from stuffcloud's `docs/design/prototypes/` into the matching group
    (`axo`/`mascot-*` → `mascots/`, `sticker-*` → `tool-stickers/`, `deco-*` → `seasonal/`,

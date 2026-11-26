@@ -2,7 +2,7 @@
 //
 // Every brand under assets/<brand>/<group>/ has a checked-in manifest.json that lists each file with
 // its size and sha256: the contract with the art's source. The Code pixel art (called stuffcloud before the rename) is drawn in the
-// stuffcloud repository (docs/design/prototypes, generated from ASCII sources by
+// stuffcloud repository (docs/design/prototypes, a frozen reference since #181; generated from ASCII sources by
 // docs/design/tools/mascots.py and stickers.py) and its manifest also records the pixel grid; the
 // pop, line and flower art is vector art from their design-system artifacts and moodboards (plus the
 // flower banner, drawn for kern in #110 because its source is a raster picture with text), and its

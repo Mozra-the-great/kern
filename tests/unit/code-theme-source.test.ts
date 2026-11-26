@@ -1,6 +1,8 @@
 /**
- * The Code theme source (#37): brands/code.css is generated from code.tokens.json, every sourced value
- * agrees with the design snapshot, and the drift check fails when the design changes without the theme.
+ * The Code theme source (#37, #181): brands/code.css is generated from code.tokens.json, every sourced value
+ * agrees with the frozen reference snapshot, and the drift check fails when the snapshot and the theme
+ * disagree by accident. A deliberate kern change is recorded as `kern:#<issue>` or `diverges`, which must be
+ * well formed and never lowers the check for any other token.
  * The guard against operator-specific values (#37) and the component tokens of #38 are checked here too.
  */
 import { readFileSync } from 'node:fs';
@@ -10,10 +12,12 @@ import {
 	checkSource,
 	diffSnapshots,
 	generateCss,
+	isKernRef,
 	norm,
 	parseCss,
 	parseRef,
 	readIfExists,
+	referencedRefs,
 	SNAPSHOT_FILE,
 	SOURCE_FILE
 } from '../../scripts/ci/code-theme.mjs';
@@ -26,6 +30,7 @@ interface Entry {
 	from?: string;
 	design?: string | null;
 	note?: string;
+	diverges?: string;
 }
 interface Block {
 	variants: '*' | string[];
@@ -82,6 +87,78 @@ describe('code.tokens.json is the source of brands/code.css', () => {
 		const first = changed.blocks[0];
 		if (first) first.tokens['--k-made-up'] = { value: '3px' };
 		expect(checkSource(changed, snapshot).join('\n')).toContain('--k-made-up');
+	});
+
+	describe('kern owns the theme (#181): deliberate changes are recorded, accidents still fail', () => {
+		const REF = 'design:stuff.css|.btn{gap}';
+		const withToken = (entry: Entry, snap: Snapshot = snapshot): string => {
+			const changed = clone(source);
+			const first = changed.blocks[0];
+			if (first) first.tokens['--k-test-token'] = entry;
+			return checkSource(changed, snap).join('\n');
+		};
+
+		it('the reference the tests use is in the snapshot', () => {
+			expect(snapshot.values[REF]).toBe('10px');
+		});
+
+		it('parses `kern:#<issue>` and keeps it out of the references read from the design', () => {
+			expect(parseRef('kern:#181')).toEqual({ kind: 'kern', issue: 181 });
+			expect(() => parseRef('kern:181')).toThrow();
+			expect(() => parseRef('kern:#0')).toThrow();
+			expect(isKernRef('kern:#7')).toBe(true);
+			expect(isKernRef('design:stuff.css|.btn{gap}')).toBe(false);
+			const changed = clone(source);
+			const first = changed.blocks[0];
+			if (first) first.tokens['--k-test-token'] = { value: '3px', from: 'kern:#181', note: 'kern decision' };
+			expect([...referencedRefs(changed)].some((r) => r.startsWith('kern:'))).toBe(false);
+		});
+
+		it('accepts a kern token with a note, without any entry in the snapshot', () => {
+			expect(withToken({ value: '3px', from: 'kern:#181', note: 'kern decision' })).toBe('');
+		});
+
+		it('rejects a kern token without a note, or with a malformed reference', () => {
+			expect(withToken({ value: '3px', from: 'kern:#181' })).toContain('needs a `note`');
+			expect(withToken({ value: '3px', from: 'kern:abc', note: 'x' })).toContain('Unknown reference');
+		});
+
+		it('an unrecorded change of a design value fails', () => {
+			expect(withToken({ value: '12px', from: REF })).toContain('the design has "10px"');
+		});
+
+		it('a change recorded with `diverges` passes: reference value in `design`, reason in `note`', () => {
+			expect(withToken({ value: '12px', from: REF, design: '10px', diverges: 'kern:#181', note: 'wider gap' })).toBe('');
+		});
+
+		it('`diverges` does not hide drift of the reference itself', () => {
+			const drifted = clone(snapshot);
+			drifted.values[REF] = '11px';
+			expect(withToken({ value: '12px', from: REF, design: '10px', diverges: 'kern:#181', note: 'wider gap' }, drifted)).toContain(
+				'the design has "11px"'
+			);
+		});
+
+		it('`diverges` needs an issue, the reference value, a note and a design `from`', () => {
+			expect(withToken({ value: '12px', from: REF, design: '10px', diverges: 'later', note: 'x' })).toContain('must be `kern:#<issue>`');
+			expect(withToken({ value: '12px', from: REF, diverges: 'kern:#181', note: 'x' })).toContain('needs `design`');
+			expect(withToken({ value: '12px', from: REF, design: '10px', diverges: 'kern:#181' })).toContain('needs a `note`');
+			expect(withToken({ value: '12px', from: 'kern:#181', design: '10px', diverges: 'kern:#181', note: 'x' })).toContain(
+				'needs a `from` into the reference design'
+			);
+		});
+
+		it('a stale `diverges` (value equals the reference) fails', () => {
+			expect(withToken({ value: '10px', from: REF, design: '10px', diverges: 'kern:#181', note: 'x' })).toContain('drop `diverges`');
+		});
+
+		it('every `kern:` and `diverges` entry of the shipped source is accounted for', () => {
+			for (const block of source.blocks)
+				for (const raw of Object.values(block.tokens)) {
+					const e = typeof raw === 'string' ? { value: raw } : raw;
+					if (isKernRef(e.from) || 'diverges' in e) expect(e.note).toBeTruthy();
+				}
+		});
 	});
 
 	it('reports a changed or new design value against a stuffcloud checkout (--against)', () => {

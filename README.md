@@ -35,7 +35,7 @@ Keine Laufzeit-Abhängigkeiten außer Svelte selbst. Kein Tailwind.
 
 | `data-theme` | Quelle |
 | --- | --- |
-| `code` (= `code-dark`), `code-light`, `code-paper`, `code-contrast` | Code-Designsystem (zuerst für stuffcloud gezeichnet) |
+| `code` (= `code-dark`), `code-light`, `code-paper`, `code-contrast` | Code-Designsystem (gehört kern, orientiert an stuffclouds Design) |
 | `flower` (= `flower-creme`), `flower-wald` | Flower-Designs |
 | `pop` (= `pop-light`), `pop-dark` | Pop-Designsystem (Look von stuffcloud) |
 | `line` (= `line-dark`), `line-light` | Line-Designsystem (Kagi-basierte Richtung) |
@@ -104,29 +104,31 @@ Statusflächen), `--k-bg-code`/`--k-fg-code`, `--k-fg-hint`, `--k-fg-soft`, `--k
 `--k-shadow-sm` und die Zwischenabstände `--k-space-2-5|3-5|6-5` (10/14/28 px). Welche
 Stuffcloud-Variable welchem Token entspricht, steht in [`docs/themes.md`](docs/themes.md).
 
-**Quelle des Code-Themes (#37).** kern besitzt das Theme `code`; gezeichnet ist es nach stuffclouds
-`docs/design` (`stuff.css` und Mockups), und wo die Quellen sich widersprechen, gilt `docs/design`. Die
-eine maschinenlesbare Quelle ist `src/lib/themes/code.tokens.json` (im Paket als
-`@mozra-the-great/kern/themes/code.tokens.json`): jeder Token mit Wert und Herkunft im Design.
-`brands/code.css` wird daraus erzeugt (`npm run tokens:code`). Ein eingecheckter Schnappschuss der
-Designwerte (`scripts/ci/code-theme-snapshot.json`) ist der Vertrag mit stuffcloud; `npm run tokens:check`
-läuft in CI und schlägt fehl, wenn CSS, Quelle und Schnappschuss auseinanderlaufen oder das Design einen
-Token bekommt, über den das Theme nicht entschieden hat. Gegen einen stuffcloud-Checkout (auch aus
-stuffclouds CI mit einem kern-Checkout): `node scripts/ci/code-theme.mjs --against <stuffcloud>`.
-Die Varianten `code-light`, `-paper` und `-contrast` gehören **nicht** zu stuffclouds Design (das ist nur
-dunkel); kern behält sie für andere Nutzer, mit den Werten des Designsystem-Artefakts.
+**Quelle des Code-Themes (#37, #181).** kern besitzt das Theme `code` und ist die Designquelle dafür. Es
+orientiert sich an stuffclouds `docs/design` (`stuff.css`, Mockups, Design-PDF), aber das ist seit #181 nur noch eine
+**eingefrorene Referenz**: eine Quelle für Ideen, keine Vorgabe. kern darf das Theme verbessern (Barrierefreiheit,
+Konsistenz, Verträge zwischen den Themes), ohne es in stuffclouds Designordner nachzuziehen. Die eine
+maschinenlesbare Quelle ist `src/lib/themes/code.tokens.json` (im Paket als
+`@mozra-the-great/kern/themes/code.tokens.json`): jeder Token mit Wert und der Stelle der Referenz, an der er sich
+orientiert (`from`). `brands/code.css` wird daraus erzeugt (`npm run tokens:code`). Der eingecheckte Schnappschuss der
+Referenzwerte (`scripts/ci/code-theme-snapshot.json`) ist eingefroren; `npm run tokens:check` läuft in CI und schlägt
+fehl, wenn CSS, Quelle und Schnappschuss **versehentlich** auseinanderlaufen. Eine bewusste Änderung trägt man in
+`code.tokens.json` ein (`"from": "kern:#NNN"` für einen Wert ohne Gegenstück, `"diverges": "kern:#NNN"` mit dem
+Referenzwert in `design` für eine Abweichung, jeweils mit `note`); den Schnappschuss ändert man dafür nie. Die
+Varianten `code-light`, `-paper` und `-contrast` gehören **nicht** zu stuffclouds Design (das ist nur dunkel); kern
+behält sie für andere Nutzer, mit den Werten des Designsystem-Artefakts.
 `npm run neutrality:check` stellt sicher, dass Themes und Marken-Grafiken keine betreiberspezifischen Werte
 enthalten (Domains, Namen, E-Mail, Hostnamen; eigene Liste über das Actions-Secret `KERN_FORBIDDEN_TERMS`).
-Ablauf zum Auffrischen und alle Details: [`docs/themes.md`](docs/themes.md#code-theme-source-37).
+Ablauf für Änderungen und alle Details: [`docs/themes.md`](docs/themes.md#code-theme-source-37).
 
 **Komponenten-Look je Theme (#38).** Button, Input, Select, Field, Checkbox, Card, Tabs, Modal, Progress,
 Toaster und FileDrop lesen eigene Tokens (`--k-button-font`, `--k-field-font`, `--k-tab-divider-w`,
 `--k-modal-title-size`, ...). Ihre Standardwerte sind genau das bisherige Aussehen; Flower, Pop und Line
-sehen unverändert aus. Code setzt sie so, dass die Komponenten wie stuffclouds eigene aussehen:
+sehen unverändert aus. Code setzt sie so, dass die Komponenten sich an stuffclouds eigenen orientieren:
 Buttons in Inter 600 15 px ohne Versalien, Felder in JetBrains Mono 15 px auf transparentem Grund,
-Tabs als Zellenleiste, der Dialog wie im Design (32-px-Titel, unter 760 px gestapelte Aktionen). Die
-Tabelle der Tokens und die Liste der bewusst verbleibenden Unterschiede steht in
-[`docs/themes.md`](docs/themes.md#component-tokens-38). Screenshot-Tests (`tests/elements/visual.spec.ts`)
+Tabs als Zellenleiste, der Dialog wie im Referenz-Design (32-px-Titel, unter 760 px gestapelte Aktionen). Die
+Tabelle der Tokens und die Liste der bewussten Entscheidungen und der offenen stuffcloud-Bedürfnisse steht in
+[`docs/themes.md`](docs/themes.md#remaining-differences-to-stuffclouds-components-111-181). Screenshot-Tests (`tests/elements/visual.spec.ts`)
 prüfen Code hell und dunkel bei 1280, 375 und 320 px, auch unter den alten `stuffcloud`-Namen.
 
 **Neues Theme.** Eine CSS-Datei `src/lib/themes/brands/<name>.css`, die die Variablen aus
