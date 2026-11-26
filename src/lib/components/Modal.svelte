@@ -2,6 +2,7 @@
 	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import { ModalDialog } from './modal-dialog.js';
+	import { hasFocus, watchScrollRegion } from './scroll-region.js';
 
 	interface Props {
 		open?: boolean | undefined;
@@ -53,6 +54,7 @@
 		children
 	}: Props = $props();
 	const closeLabel = $derived(closeLabelProp ?? strings().modal.closeLabel);
+	const bodyLabel = $derived(strings().modal.bodyLabel);
 
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();
@@ -71,6 +73,27 @@
 	});
 	$effect(() => () => control.destroy());
 
+	// The dialog scrolls as a whole. When it overflows and holds nothing tabbable (not even a close button, see
+	// `dismissible`), its content wrapper becomes a tab stop, named by the title, so the keyboard can scroll it.
+	// No tabindex otherwise: even -1 would make it the dialog's first focus target on open. While it has the focus it
+	// stays focusable (-1), so a resize that makes the content fit does not throw the focus out of the dialog.
+	let inner: HTMLElement | undefined = $state();
+	let focusableInner = $state(false);
+	let heldInner = $state(false);
+	$effect(() => {
+		if (dialog && inner) {
+			const el = inner;
+			return watchScrollRegion(
+				dialog,
+				(needs) => {
+					focusableInner = needs;
+					heldInner = !needs && hasFocus(el);
+				},
+				el
+			);
+		}
+	});
+
 	function handleClick(e: MouseEvent) {
 		if (closeOnBackdrop && e.target === dialog) control.requestClose();
 	}
@@ -88,7 +111,16 @@
 	onclose={control.onclose}
 	onclick={handleClick}
 >
-	<div class="inner">
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div
+		class="inner"
+		bind:this={inner}
+		role={focusableInner ? 'region' : undefined}
+		aria-labelledby={focusableInner && title ? `${uid}-t` : undefined}
+		aria-label={focusableInner && !title ? bodyLabel : undefined}
+		tabindex={focusableInner ? 0 : heldInner ? -1 : undefined}
+		onfocusout={() => (heldInner = false)}
+	>
 		<header>
 			<h2 id="{uid}-t">{title}</h2>
 			{#if dismissible}
@@ -135,6 +167,13 @@
 		display: grid;
 		gap: var(--k-modal-gap);
 		padding: var(--k-modal-pad);
+	}
+	/* Inside the box: the dialog clips an outside ring where the wrapper meets its edge. */
+	.inner:focus-visible {
+		border-radius: var(--k-radius-field);
+		outline: var(--k-focus-w) solid var(--k-focus);
+		/* a gap to the dialog's own edge, so the ring is not mistaken for the border (Pop draws a black one) */
+		outline-offset: calc(var(--k-focus-w) * -1 - 4px);
 	}
 	header {
 		display: flex;

@@ -22,9 +22,9 @@ lässt den Build scheitern (#25).
 
 | Prüfung | Was | Wo |
 | --- | --- | --- |
-| axe-core | WCAG 2 A/AA, 2.1, 2.2 AA und Best Practice: keine Verstöße der Stufen *serious* und *critical*, auf einer Seite mit jedem Element und in 15 geöffneten Zuständen (Modal, Drawer, Palette, Popover, Menüs, Kalender, Farbwähler, Vorschläge, Toasts, Tooltip, Fehler an Feldern, sortierte Datentabelle, Telefon-Menü), dazu auf den übrigen Testseiten | `a11y-matrix.spec.ts`, `a11y.spec.ts` |
+| axe-core | WCAG 2 A/AA, 2.1, 2.2 AA und Best Practice: keine Verstöße der Stufen *serious* und *critical*, auf einer Seite mit jedem Element und in 18 geöffneten Zuständen (Modal, Drawer, Palette, Popover, Menüs, Kalender, Farbwähler, Vorschläge, Toasts, Tooltip, Fehler an Feldern, sortierte Datentabelle, Telefon-Menü, dazu Drawer, Modal und Popover mit langem Text ohne Link und Knopf), dazu auf den übrigen Testseiten; `scrollable-region-focusable` (in axe nur *moderate*) zählt immer als Verstoß | `a11y-matrix.spec.ts`, `a11y.spec.ts` |
 | Tastatur | jedes bedienbare Element mit Tab erreichbar, mit sichtbarem Fokusring nach Tastatur (keiner nach Mausklick), ohne Tab-Schleife; jedes Element mit den Tasten seines WAI-ARIA-Musters bedienbar | `a11y-keyboard.spec.ts`, `a11y-keys.spec.ts` |
-| Overlays | modale Dialoge (Modal, Drawer, Palette): Fokus hinein, Tab bleibt darin, Escape schließt, Fokus zurück zum Auslöser; alle anderen Overlays geben den Fokus frei | `a11y-overlays.spec.ts` |
+| Overlays | modale Dialoge (Modal, Drawer, Palette): Fokus hinein, Tab bleibt darin, Escape schließt, Fokus zurück zum Auslöser; ein scrollender Körper ohne fokussierbaren Inhalt ist per Tab erreichbar und mit den Pfeiltasten und Bild-ab scrollbar; alle anderen Overlays geben den Fokus frei | `a11y-overlays.spec.ts` |
 | Reduzierte Bewegung | unter `prefers-reduced-motion: reduce` keine Animation und kein Übergang länger als einen Frame, auch nach Hover, Fokus und Bedienung; kein weiches Scrollen; Effekte zeigen sofort ihren Endzustand | `a11y-motion.spec.ts` |
 | Reflow (WCAG 1.4.10) | bei 320 × 640 px kein horizontales Scrollen der Seite und kein abgeschnittenes Bedienelement, auch in Overlays; beide Demo-Seiten (`index.html`, `elements.html`) scrollen in allen acht Theme-Varianten nicht seitwärts | `a11y-reflow.spec.ts`, `tests/targets/reflow.spec.ts` |
 | Kontrastmodus | unter `forced-colors: active` Kanten, Fokusring, Zustände ohne Hintergrundfarbe, `GrayText` für gesperrt, keine durchschlagenden Theme-Farben; axe ohne Kontrastregel | `forced-colors.spec.ts` |
@@ -42,7 +42,9 @@ ansieht. Details und wie man eine Spec lokal startet: [`docs/testing.md`](testin
   Leertaste, Escape). Die Tastenbelegung je Komponente steht in ihren Tests und, wo sie besonders ist (SelectGrid,
   Resizable), im README.
 - **Fokus:** sichtbarer Ring in `--k-focus` (in jedem Theme mit 3:1 geprüft, im Kontrastmodus `Highlight`);
-  modale Dialoge fangen den Fokus und geben ihn zurück; nach dem Entfernen eines Eintrags (Toast, Datei, Listeneintrag)
+  modale Dialoge fangen den Fokus und geben ihn zurück; scrollt der Körper von `Drawer` oder `Modal` (oder das Panel von
+  `Popover`) und enthält nichts Fokussierbares (nur Text), wird er selbst zum benannten Tab-Stopp (`role="region"`,
+  benannt nach dem Titel), damit die Tastatur ihn scrollen kann (WCAG 2.1.1); sonst gibt es keinen zusätzlichen Stopp (#132); nach dem Entfernen eines Eintrags (Toast, Datei, Listeneintrag)
   wandert der Fokus zu einem sinnvollen Nachbarn statt auf die Seite.
 - **Ansagen:** Feldfehler als `role="alert"`, Toaster und LiveAnnouncer mit von Anfang an vorhandenen Live-Regionen,
   `StatusMessage` als sichtbare Live-Region, CopyButton und DownloadButton sagen ihr Ergebnis bei jedem Klick neu an.

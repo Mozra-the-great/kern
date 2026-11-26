@@ -24,6 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- `Drawer`, `Modal` and `Popover`: a body that scrolls and holds nothing the keyboard can focus (text only, no link or button) could not
+  be scrolled with the keyboard (axe `scrollable-region-focusable`, WCAG 2.1.1, #132). While the body overflows and has no
+  tabbable content, the drawer body (and, for a `Modal` without a close button or footer, the content wrapper of the
+  dialog) is now a tab stop with `role="region"`, named by the title (`aria-labelledby`; the catalogue text `drawer.bodyLabel`
+  / `modal.bodyLabel`, English and German, when there is no title) and with a focus ring in `--k-focus`. It follows the
+  content and the viewport (resize and mutation observers, also for slotted content of the custom elements) and is gone again
+  when the content fits or holds a focusable element, so there is no extra tab stop otherwise. Initial focus, the focus
+  trap, Escape and the focus return are unchanged, and nothing fires while it renders. A `Popover` panel that scrolls and
+  holds only text is a tab stop (`tabindex="0"` instead of `-1`) in the same way.
 - `Navbar` and `<k-navbar>` without items (`items` omitted or empty) no longer render the menu button, the phone panel and an empty
   `<nav>` landmark at any width: only `brand` and `actions` are shown (#131). `items` is now optional
   (`items?: NavbarItem[] | undefined`, a non-breaking widening; the element's `items` attribute and property were already optional).

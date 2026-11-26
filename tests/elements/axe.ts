@@ -1,7 +1,8 @@
 /**
  * Runs axe-core (devDependency, never shipped) on the current page. axe walks open shadow roots
  * itself, so the custom elements' internals are checked too. Returns only the violations at
- * `serious` or `critical` impact, which is what CI fails on (#25, #50, #51).
+ * `serious` or `critical` impact, which is what CI fails on (#25, #50, #51), plus the rules in
+ * `ALWAYS`: axe rates them lower than the WCAG failure they stand for.
  */
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
@@ -15,12 +16,14 @@ export interface AxeFinding {
 }
 
 const require = createRequire(import.meta.url);
+/** Reported whatever axe rates them: `scrollable-region-focusable` is `moderate` but a WCAG 2.1.1 failure (#132). */
+const ALWAYS = ['scrollable-region-focusable'];
 let source: string | undefined;
 
 export async function axeViolations(page: Page, options: { disable?: string[] } = {}): Promise<AxeFinding[]> {
 	source ??= await readFile(require.resolve('axe-core/axe.min.js'), 'utf8');
 	await page.addScriptTag({ content: source });
-	return page.evaluate(async (disabled) => {
+	const found = await page.evaluate(async (disabled) => {
 		interface Node {
 			target: unknown[];
 			failureSummary?: string;
@@ -37,13 +40,12 @@ export async function axeViolations(page: Page, options: { disable?: string[] } 
 			resultTypes: ['violations'],
 			rules: Object.fromEntries(disabled.map((id) => [id, { enabled: false }]))
 		});
-		return violations
-			.filter((v) => v.impact === 'serious' || v.impact === 'critical')
-			.map((v) => ({
-				id: v.id,
-				impact: v.impact ?? '',
-				help: v.help,
-				targets: v.nodes.map((n) => `${JSON.stringify(n.target)} ${(n.failureSummary ?? '').replace(/\s+/g, ' ')}`)
-			}));
+		return violations.map((v) => ({
+			id: v.id,
+			impact: v.impact ?? '',
+			help: v.help,
+			targets: v.nodes.map((n) => `${JSON.stringify(n.target)} ${(n.failureSummary ?? '').replace(/\s+/g, ' ')}`)
+		}));
 	}, options.disable ?? []);
+	return found.filter((v) => v.impact === 'serious' || v.impact === 'critical' || ALWAYS.includes(v.id));
 }

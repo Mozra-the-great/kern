@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { anchorTo, composedContains, eventWithin, focusFirstIn, type Placement } from './anchor.js';
+	import { watchScrollRegion } from './scroll-region.js';
 
 	export type PopoverPlacement = Placement;
 
@@ -41,6 +42,17 @@
 			if (!focusFirstIn(target)) target.focus();
 		});
 		return stop;
+	});
+
+	// A panel that scrolls but holds nothing tabbable (text only) is a tab stop itself, so the keyboard can scroll it.
+	let scrolls = $state(false);
+	$effect(() => {
+		if (!panel) return;
+		const stop = watchScrollRegion(panel, (needs) => (scrolls = needs));
+		return () => {
+			stop();
+			scrolls = false;
+		};
 	});
 
 	function show() {
@@ -104,7 +116,7 @@
 			role="dialog"
 			id="{uid}-panel"
 			aria-label={label}
-			tabindex="-1"
+			tabindex={scrolls ? 0 : -1}
 			bind:this={panel}
 			onkeydown={onPanelKey}
 			onfocusout={onFocusOut}

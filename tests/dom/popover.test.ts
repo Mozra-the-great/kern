@@ -9,6 +9,7 @@ import { createRawSnippet } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import Popover from '../../src/lib/components/Popover.svelte';
 import Tooltip from '../../src/lib/components/Tooltip.svelte';
+import { triggerResize } from './env.js';
 import { flush, textSnippet } from './helpers.js';
 import { reactive } from './reactive.svelte.js';
 
@@ -32,6 +33,35 @@ function outsideButton(name: string): HTMLButtonElement {
 afterEach(() => {
 	vi.restoreAllMocks();
 	for (const el of extras.splice(0)) el.remove();
+});
+
+describe('Popover: a scrolling panel without tabbable content (#132)', () => {
+	function layout(el: Element, scrollHeight: number, clientHeight: number): void {
+		Object.defineProperty(el, 'scrollHeight', { configurable: true, value: scrollHeight });
+		Object.defineProperty(el, 'clientHeight', { configurable: true, value: clientHeight });
+	}
+
+	it('is a tab stop while it overflows and holds only text, and not otherwise', async () => {
+		const text = createRawSnippet(() => ({ render: () => '<p>Only text</p>' }));
+		render(Popover, { label: 'Filters', open: true, children: text });
+		const panel = screen.getByRole('dialog', { name: 'Filters' });
+		expect(panel.getAttribute('tabindex')).toBe('-1');
+		layout(panel, 900, 300);
+		triggerResize(panel);
+		await vi.waitFor(() => expect(panel.getAttribute('tabindex')).toBe('0'));
+		layout(panel, 300, 300);
+		triggerResize(panel);
+		await vi.waitFor(() => expect(panel.getAttribute('tabindex')).toBe('-1'));
+	});
+
+	it('is no extra stop next to a button in the panel', async () => {
+		render(Popover, { label: 'Filters', open: true, children: panelContent });
+		const panel = screen.getByRole('dialog', { name: 'Filters' });
+		layout(panel, 900, 300);
+		triggerResize(panel);
+		await flush();
+		expect(panel.getAttribute('tabindex')).toBe('-1');
+	});
 });
 
 describe('Popover', () => {

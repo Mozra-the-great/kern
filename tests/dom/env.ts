@@ -130,10 +130,33 @@ class FakeIntersectionObserver {
 	}
 }
 
+/** Resize observers that never fire on their own; a test calls `triggerResize` after it changed a measurement. */
+const resizes = new Set<{ callback: ResizeObserverCallback; elements: Set<Element> }>();
+
+/** Tells the resize observers that watch `element` that it changed size. */
+export function triggerResize(element: Element): void {
+	for (const observer of [...resizes]) {
+		if (!observer.elements.has(element)) continue;
+		observer.callback([{ target: element } as ResizeObserverEntry], {} as ResizeObserver);
+	}
+}
+
 class FakeResizeObserver {
-	observe(): void {}
-	unobserve(): void {}
-	disconnect(): void {}
+	#entry: { callback: ResizeObserverCallback; elements: Set<Element> };
+	constructor(callback: ResizeObserverCallback) {
+		this.#entry = { callback, elements: new Set() };
+		resizes.add(this.#entry);
+	}
+	observe(element: Element): void {
+		this.#entry.elements.add(element);
+	}
+	unobserve(element: Element): void {
+		this.#entry.elements.delete(element);
+	}
+	disconnect(): void {
+		this.#entry.elements.clear();
+		resizes.delete(this.#entry);
+	}
 }
 
 function define(target: object, name: string, value: unknown): void {

@@ -99,7 +99,7 @@ const catalogue = {
 		/** File name (and of `saveBlob` / `saveText`) when the given one is empty after cleaning. */
 		fallbackName: 'download'
 	},
-	drawer: { closeLabel: 'Close' },
+	drawer: { closeLabel: 'Close', bodyLabel: 'Scrollable content' },
 	fileDrop: {
 		removeLabel: 'Remove',
 		listLabel: 'Selected files',
@@ -144,7 +144,7 @@ const catalogue = {
 		externalLabel: '(opens in a new tab)'
 	},
 	marquee: { pauseLabel: 'Pause', playLabel: 'Play' },
-	modal: { closeLabel: 'Close' },
+	modal: { closeLabel: 'Close', bodyLabel: 'Scrollable content' },
 	navbar: { label: 'Main', menuLabel: 'Menu' },
 	numberInput: { decrementLabel: 'Decrease', incrementLabel: 'Increase' },
 	onlineStatus: {
