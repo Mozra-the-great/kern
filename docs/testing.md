@@ -136,6 +136,7 @@ holds nothing the keyboard can focus, [#132](https://github.com/Mozra-the-great/
 | `a11y-scroll-regions.spec.ts`     | a `k-resizable` panel or a `k-table` / `k-data-table` wrapper that scrolls and holds only text ([#137](https://github.com/Mozra-the-great/kern/issues/137)): Tab reaches it, it has a name and a ring in `--k-focus`, the arrows and PageDown scroll it, Tab goes on to the next control; no stop with a sortable header, a checkbox or a button, nor for the stacked cards of a phone | 8 themes x 3 boxes (1280 px), 3 single tests (Code) |
 | `a11y-motion.spec.ts`             | reduced motion: no running animation or transition longer than a frame (`getAnimations()` on the document and every shadow root), no smooth scrolling, effects at their end state | 8 themes x 12 pages, 2 themes x 21 states, 8 themes x an interaction run |
 | `a11y-reflow.spec.ts`             | 320 x 640: no horizontal page scroll, no control cut off by a container or the screen; a long or unbreakable `<k-button>` label wraps inside a 200 px box ([#121](https://github.com/Mozra-the-great/kern/issues/121)) | 8 themes x (12 pages + 21 states + 1 label)   |
+| `hit-target.spec.ts`              | `<k-checkbox>`, `<k-switch>` and `<k-radio-group>` ([#150](https://github.com/Mozra-the-great/kern/issues/150)): the row-wide `label::after` must not cover the box. `shadowRoot.elementFromPoint` at the centre and inside the edges is the `<input>`, `check()` / `uncheck()` work without `force`, the focused control is not obscured (WCAG 2.4.11), a click on the label text or at the far end of the row still toggles; a canary without the stacking fails. The same probes run on the Svelte demo in `tests/targets/hit-target.spec.ts` (`tests/shared/hit-target.ts`) | 8 themes x 2 (normal, forced colors) x 4 + 1 canary |
 | `modal-footer.spec.ts`            | `<k-button>` in the `<k-modal>` footer ([#120](https://github.com/Mozra-the-great/kern/issues/120)): stacked below 520 px (Code up to 760 px) the host and the button fill the row, in a row footer they keep their width | 8 themes x 3 widths                           |
 
 The demo itself has a reflow guard of its own ([#116](https://github.com/Mozra-the-great/kern/issues/116)):
@@ -171,6 +172,10 @@ Rules the checks encode:
 
 Not automated, because it needs people and assistive technology: screen reader output (NVDA, JAWS, VoiceOver), 200 %
 text size and text spacing, magnifier use, voice control, and the quality of the texts an app passes in.
+
+Firefox: CI runs Chromium only. The hit-target specs also pass in Firefox, run by hand: `npx playwright install firefox`, then
+`KERN_FIREFOX=1 npx playwright test -c tests/elements/playwright.config.ts --project=firefox` (and
+`-c tests/targets` for the demo); the `firefox` project exists only with `KERN_FIREFOX` and runs `hit-target.spec.ts` only.
 
 Run one spec while working: `npm run build`, then
 `npx playwright test -c tests/elements/playwright.config.ts a11y-keys` (add `-g "k-tabs"` for one test, `KERN_TEST_PORT`

@@ -23,6 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- The box of `Checkbox`, the switch of `Switch` and the radio of `RadioGroup` are their own hit target again (#150, from
+  stuffcloud#121): the row-wide `label::after` (the tap target, the whole row toggles the control) covered the `<input>`, so
+  `elementFromPoint` at the centre of the box returned the label, Playwright's `check()` / `uncheck()` hung waiting for the
+  input to receive the click, and a focused box counted as obscured (WCAG 2.4.11 Focus Not Obscured). The row keeps its hit area
+  and every click outside the box still toggles; the box now stacks above it (`z-index: 1`, inside a row that is its own stacking
+  context, `isolation: isolate`, so nothing leaks to overlays, tooltips or sticky headers around it), in every theme, with the
+  browser's own box in Code and with kern's box in forced colors. No visual change. Covered by `tests/elements/hit-target.spec.ts`
+  (custom elements, `shadowRoot.elementFromPoint`) and `tests/targets/hit-target.spec.ts` (Svelte demo): the eight theme variants
+  and forced colors, a canary that fails without the stacking.
+
 ## [0.13.0] - 2026-11-26
 
 ### Added

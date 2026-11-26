@@ -32,6 +32,8 @@
 <style>
 	.k-switch {
 		position: relative;
+		/* its own stacking context: the z-index of the switch below stays inside the row */
+		isolation: isolate;
 		display: flex;
 		gap: var(--k-space-3);
 		align-items: flex-start;
@@ -48,6 +50,8 @@
 		width: 44px;
 		height: 26px;
 		margin: 0;
+		/* above the row-wide label::after: the switch itself is the hit target */
+		z-index: 1;
 		border: calc(var(--k-border-w) + 0.5px) solid var(--k-border);
 		border-radius: max(var(--k-radius-control), 0px);
 		background: var(--k-bg-sunken);
@@ -93,7 +97,8 @@
 	label {
 		cursor: pointer;
 	}
-	/* The whole row, padded to the tap target, toggles the control through its label. */
+	/* The whole row, padded to the tap target, toggles the control through its label; the switch
+	 * (z-index 1) stays on top of it. */
 	label::after {
 		content: '';
 		position: absolute;
