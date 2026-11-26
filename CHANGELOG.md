@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `StatusMessage` (`tone`) and `<k-status-message>` (attribute `tone`): `tone="ok"` draws a result line ("Copied", "3 matches")
+  in the success colour `--k-ok`; `default` (or unset) is unchanged. Only `kind="status"` takes it, an alert keeps its danger
+  colour. No new token: `--k-ok` already passes 4.5:1 as text on `--k-bg` and `--k-bg-raised` in every theme variant, and the
+  contrast test guards those pairs (#173).
+
 ## [0.13.4] - 2026-11-26
 
 ### Added

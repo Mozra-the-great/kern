@@ -363,4 +363,10 @@ describe('CopyButton and StatusMessage (#72)', () => {
 		expect(p.attrs).toMatchObject({ role: 'alert', id: 's', 'data-kind': 'alert' });
 		expect(classes(p.attrs)).not.toContain('reserve');
 	});
+	it('StatusMessage tone=ok marks a status only; an alert and the default carry no data-tone (#173)', () => {
+		expect(one(html(StatusMessage, { tone: 'ok' }), 'p').attrs['data-tone']).toBe('ok');
+		expect(one(html(StatusMessage, {}), 'p').attrs['data-tone']).toBeUndefined();
+		expect(one(html(StatusMessage, { tone: 'default' }), 'p').attrs['data-tone']).toBeUndefined();
+		expect(one(html(StatusMessage, { kind: 'alert', tone: 'ok' }), 'p').attrs['data-tone']).toBeUndefined();
+	});
 });

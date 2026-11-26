@@ -760,11 +760,16 @@ Knopf sonst nicht. kern prüft das nicht und warnt nicht; die Texte der Meldung 
 gleichen Ergebnis erneut angesagt, und bleibt bis zum nächsten Klick; nur das Symbol springt
 nach `resetAfter` zurück. `StatusMessage` ist eine sichtbare Live-Region (`kind="status"`
 höflich, `kind="alert"` für Fehler): von Anfang an leer einbinden und nur `message` ändern.
+`tone="ok"` (Standard `default`, Attribut `tone` an `<k-status-message>`) färbt eine Ergebniszeile
+(„Kopiert“, „3 Treffer“) in der Erfolgsfarbe `--k-ok`; nur `kind="status"` nimmt sie an, ein Alert bleibt
+in der Gefahrfarbe. Der Text sagt, was passiert ist, die Farbe verstärkt es nur (kein Symbol nötig).
+`--k-ok` erreicht als Text auf `--k-bg` und `--k-bg-raised` in jeder Variante 4,5:1 (Kontrasttest).
 
 ```svelte
 <CopyButton text={hex} label="HEX kopieren" showLabel copiedLabel="{hex} kopiert" />
 <CopyButton text={sha} label="Kopieren" accessibleLabel="SHA-256 kopieren" showLabel />
 <StatusMessage message={result} />
+<StatusMessage message={result} tone="ok" />
 <StatusMessage message={problem} kind="alert" />
 ```
 

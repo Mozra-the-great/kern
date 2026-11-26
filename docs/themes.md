@@ -48,6 +48,13 @@ list with the source of every value is `src/lib/themes/code.tokens.json` (next s
 | spacing 4 … 56 | | `--k-space-1` … `--k-space-9` | same | |
 | spacing 10 / 14 / 28 | | `--k-space-2-5` / `--k-space-3-5` / `--k-space-6-5` | same | |
 
+**`--k-ok` as text (#173).** `StatusMessage tone="ok"` draws a result line in `--k-ok` itself; there is no separate
+text token because `--k-ok` already passes 4.5:1 as text on `--k-bg` and `--k-bg-raised` in every variant of every
+theme (`tests/tokens/contrast.test.ts`, the "ok text" pairs; Code dark `#3ddc84` is 10.65:1 on `--k-bg`). The test
+fails when a theme changes `--k-ok` below that. Only an alert keeps `--k-danger`: `tone` does nothing with
+`kind="alert"`. On a `--k-bg-sunken` ground `--k-ok` is not guaranteed (Pop and Line light: 4.34:1 and 4.32:1), so
+put an `ok` line on the page or on a card, not on a sunken surface.
+
 The light, paper and contrast variants exist only in the design system; it has no tinted
 state surfaces, code/hint colours or drop line for them, so they keep the base defaults.
 `--k-line-strong` there is derived (30 % from `line` toward `border`, the ratio of the dark pair).

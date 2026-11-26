@@ -348,6 +348,36 @@ test('StatusMessage: present and empty from the first paint, filled later (#72)'
 	await expect(page.locator('#problem p')).toHaveText('Not a colour');
 });
 
+test('StatusMessage: tone="ok" is the success colour of a status, an alert keeps danger (#173)', async ({ page }) => {
+	const colourOf = (selector: string): Promise<string> => page.locator(selector).evaluate((el) => getComputedStyle(el).color);
+	const token = (name: string): Promise<string> =>
+		page.evaluate((n) => {
+			const probe = document.createElement('span');
+			probe.style.color = `var(${n})`;
+			document.body.append(probe);
+			const colour = getComputedStyle(probe).color;
+			probe.remove();
+			return colour;
+		}, name);
+	const ok = await token('--k-ok');
+	const fg = await token('--k-fg');
+	const danger = await token('--k-danger');
+	expect(ok).not.toBe(fg);
+	// default unchanged, ok green, alert danger even with tone="ok"
+	expect(await colourOf('#status p')).toBe(fg);
+	expect(await colourOf('#status-ok p')).toBe(ok);
+	await expect(page.locator('#status-ok p')).toHaveAttribute('role', 'status');
+	expect(await colourOf('#status-ok-alert p')).toBe(danger);
+	await expect(page.locator('#status-ok-alert p')).toHaveAttribute('role', 'alert');
+	// attribute and property follow
+	await page.evaluate(() => document.getElementById('status-ok')?.removeAttribute('tone'));
+	await expect.poll(() => colourOf('#status-ok p')).toBe(fg);
+	await page.evaluate(() => document.getElementById('status-ok')?.setAttribute('tone', 'ok'));
+	await expect.poll(() => colourOf('#status-ok p')).toBe(ok);
+	await page.evaluate(() => document.getElementById('status-ok')?.setAttribute('tone', 'default'));
+	await expect.poll(() => colourOf('#status-ok p')).toBe(fg);
+});
+
 /** Every element that renders a Field with an error, with the attributes it needs to render at all. */
 const ANNOUNCE_ELEMENTS: [tag: string, attrs: Record<string, string>][] = [
 	['k-input', {}],
