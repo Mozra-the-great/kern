@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- `Textarea` reads the field tokens of `Input` and `Select` (#149, from stuffcloud#121): `--k-field-bg`, `--k-field-font`,
+  `--k-field-size`, `--k-field-pad-x`, `--k-field-hover-border`, `--k-field-focus-border` and, new, `--k-textarea-disabled-opacity`.
+  Under `code` (and its variants and aliases) a text area now looks like stuffcloud's `.sc-field.area`: transparent, JetBrains Mono
+  15 px, 14 px side padding, no hover or focus edge (focus is the ring), dimmed when disabled; its own `1.5` line height stays. Flower,
+  Pop and Line are unchanged: every token defaults to what the component drew before (`--k-textarea-disabled-opacity: 1`, so a
+  disabled Textarea is still not dimmed there; set it to `var(--k-field-disabled-opacity)` to dim it like an Input). Visible in
+  `code` only, except for the wrapping fix below.
+- `Textarea` sets `overflow-wrap: anywhere` in every theme, as stuffcloud's `.area` does, so a long unbroken word (a JWT, a Base64
+  blob, a hash) breaks at the edge of the box and never has to widen it or the page at 320 px. Covered by a reflow case in the eight
+  theme variants (`tests/elements/a11y-reflow.spec.ts`, block, flex and shrink-to-fit boxes, `autosize` too).
 - The box of `Checkbox`, the switch of `Switch` and the radio of `RadioGroup` are their own hit target again (#150, from
   stuffcloud#121): the row-wide `label::after` (the tap target, the whole row toggles the control) covered the `<input>`, so
   `elementFromPoint` at the centre of the box returned the label, Playwright's `check()` / `uncheck()` hung waiting for the

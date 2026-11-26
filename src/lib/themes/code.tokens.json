@@ -126,6 +126,12 @@
 					"from": "app:ui/field.css|.sc-field:disabled{opacity}",
 					"design": "0.4"
 				},
+				"--k-textarea-disabled-opacity": {
+					"value": "var(--k-field-disabled-opacity)",
+					"from": "app:ui/field.css|.sc-field:disabled{opacity}",
+					"design": "0.4",
+					"note": "Textarea has no dimmed disabled look in the other themes; Code draws it like Input (the app's TextArea shares .sc-field)"
+				},
 				"--k-field-label-color": { "value": "var(--k-fg-muted)", "from": "design:stuff.css|.label{color}", "design": "var(--mut)" },
 				"--k-field-hint-font": {
 					"value": "var(--k-font-mono)",

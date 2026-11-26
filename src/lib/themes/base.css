@@ -196,6 +196,9 @@
 	--k-select-appearance: none;
 	--k-select-chevron: block;
 	--k-select-pad-end: calc(var(--k-field-pad-x) + 24px);
+	/* Textarea reads the field tokens above like Input; a disabled one is not dimmed by default (1), as before.
+	 * Code sets it to --k-field-disabled-opacity, like the input next to it */
+	--k-textarea-disabled-opacity: 1;
 	/* Checkbox */
 	--k-check-gap: var(--k-space-3);
 	--k-check-checked: var(--k-primary);
@@ -358,6 +361,7 @@
 		/* disabled is GrayText, not a dimmed colour (dimming makes the text unreadable) */
 		--k-disabled-opacity: 1 !important;
 		--k-field-disabled-opacity: 1 !important;
+		--k-textarea-disabled-opacity: 1 !important;
 		--k-check-disabled-opacity: 1 !important;
 		--k-fg-disabled: GrayText !important;
 		/* depth is dropped by the browser anyway; the parts that read the tokens say so too */

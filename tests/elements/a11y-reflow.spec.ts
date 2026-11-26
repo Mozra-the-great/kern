@@ -209,3 +209,65 @@ for (const theme of THEMES) {
 		await expectReflow(page);
 	});
 }
+
+/**
+ * A long word in a Textarea breaks instead of widening it (#149): a JWT, a Base64 blob or a hash has no space to wrap
+ * at. Three boxes, each narrower than the page: a block, a flex item and a shrink-to-fit box (the case where the
+ * text, not the width, sizes the box, as with `autosize`). The area stays inside its box and the page does not scroll.
+ */
+const TOKEN =
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
+interface AreaFit {
+	box: { left: number; right: number };
+	areas: { name: string; left: number; right: number; wraps: boolean; overflowWrap: string }[];
+}
+
+/** Runs in the browser. */
+function measureAreas(): AreaFit[] {
+	return [...document.querySelectorAll<HTMLElement>('.area-box')].map((box) => {
+		const b = box.getBoundingClientRect();
+		const areas = [...box.querySelectorAll<HTMLElement>('k-textarea')].map((host) => {
+			const area = host.shadowRoot?.querySelector('textarea');
+			if (!area) throw new Error('k-textarea has not rendered');
+			const r = area.getBoundingClientRect();
+			return {
+				name: host.getAttribute('data-area') ?? '',
+				left: r.left,
+				right: r.right,
+				// the text wraps inside the area: nothing to scroll sideways
+				wraps: area.scrollWidth <= area.clientWidth,
+				overflowWrap: getComputedStyle(area).overflowWrap
+			};
+		});
+		return { box: { left: b.left, right: b.right }, areas };
+	});
+}
+
+for (const theme of THEMES) {
+	test(`320 px: a long unbroken word in a Textarea wraps inside its box in ${theme}`, async ({ page }) => {
+		await openPage(page, ALL, { theme, width: 320, height: 640 });
+		await page.evaluate((token) => {
+			const area = (name: string, extra = ''): string =>
+				`<k-textarea data-area="${name}" label="${name}" value="${token}" ${extra}></k-textarea>`;
+			document.querySelector('main')?.insertAdjacentHTML(
+				'beforeend',
+				`<div class="area-box" style="width:240px">${area('block')}${area('block autosize', 'autosize')}</div>
+				<div class="area-box" style="width:240px;display:flex">${area('flex')}${area('flex autosize', 'autosize')}</div>
+				<div class="area-box" style="width:240px"><div style="display:inline-block;max-width:100%">${area('shrink', 'autosize')}</div></div>`
+			);
+		}, TOKEN);
+		await elementsReady(page);
+		await settle(page);
+		const fits = await page.evaluate(measureAreas);
+		expect(fits).toHaveLength(3);
+		for (const fit of fits)
+			for (const a of fit.areas) {
+				expect(a.left, `${a.name} starts inside the box`).toBeGreaterThanOrEqual(fit.box.left - 1);
+				expect(a.right, `${a.name} ends inside the box`).toBeLessThanOrEqual(fit.box.right + 1);
+				expect(a.wraps, `${a.name}: the text wraps instead of scrolling sideways`).toBe(true);
+				expect(a.overflowWrap, `${a.name}: breaks anywhere`).toBe('anywhere');
+			}
+		await expectReflow(page);
+	});
+}

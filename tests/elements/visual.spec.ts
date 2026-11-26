@@ -1,6 +1,6 @@
 /**
  * Visual regression of the Code theme (#38): the components that stuffcloud replaces with kern
- * (Button, Input, Select, Checkbox, Card, Tabs, Progress, FileDrop, Modal, Toaster) on an isolated
+ * (Button, Input, Select, Textarea, Checkbox, Card, Tabs, Progress, FileDrop, Modal, Toaster) on an isolated
  * test page, dark and light, at 1280, 375 and 320 px. Each component is its own screenshot, so a
  * change shows where it happened. The deprecated `stuffcloud` names render against the same
  * baselines: an alias that drifts from `code` fails here.
@@ -23,7 +23,7 @@ const THEMES = [
 	['stuffcloud', 'code'],
 	['stuffcloud-light', 'code-light']
 ] as const;
-const SHOTS = ['button', 'input', 'select', 'checkbox', 'card', 'tabs', 'progress', 'filedrop'] as const;
+const SHOTS = ['button', 'input', 'select', 'textarea', 'checkbox', 'card', 'tabs', 'progress', 'filedrop'] as const;
 
 test.describe.configure({ retries: 0 });
 

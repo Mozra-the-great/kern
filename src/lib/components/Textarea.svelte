@@ -54,23 +54,31 @@
 	.k-textarea {
 		width: 100%;
 		box-sizing: border-box;
-		padding: var(--k-space-3) var(--k-space-4);
+		padding: var(--k-space-3) var(--k-field-pad-x);
 		border: var(--k-border-w) solid var(--k-border);
 		border-radius: var(--k-radius-field);
-		background: var(--k-bg-raised);
+		background: var(--k-field-bg);
 		color: var(--k-fg);
 		font: inherit;
-		font-size: var(--k-text-md);
+		font-family: var(--k-field-font);
+		font-size: var(--k-field-size);
+		/* its own leading, not --k-leading-body: a block of text keeps 1.5 under Code too (stuffcloud's .area) */
 		line-height: 1.5;
+		/* a JWT, a Base64 blob or a hash breaks at the edge of the box, in every theme (stuffcloud's .area) */
+		overflow-wrap: anywhere;
 		resize: vertical;
 	}
 	.k-textarea:hover {
-		border-color: var(--k-fg-muted);
+		border-color: var(--k-field-hover-border);
 	}
 	.k-textarea:focus-visible {
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: var(--k-focus-offset);
-		border-color: var(--k-accent-mark);
+		border-color: var(--k-field-focus-border, var(--k-accent-mark));
+	}
+	.k-textarea:disabled {
+		opacity: var(--k-textarea-disabled-opacity);
+		cursor: not-allowed;
 	}
 	.k-textarea::placeholder {
 		color: var(--k-fg-muted);

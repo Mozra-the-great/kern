@@ -282,6 +282,25 @@ describe('Field, Input, Select, Textarea (#54, stuffcloud fields.test.ts)', () =
 			expect(one(renderControl({ label: 'L', 'aria-describedby': 'strength' }), tag).attrs['aria-describedby']).toBe('strength');
 		});
 	}
+
+	it('Textarea reads the field tokens of Input and Select and breaks long words (#149)', async () => {
+		const { readFile } = await import('node:fs/promises');
+		const source = await readFile('src/lib/components/Textarea.svelte', 'utf8');
+		for (const token of [
+			'--k-field-bg',
+			'--k-field-font',
+			'--k-field-size',
+			'--k-field-pad-x',
+			'--k-field-hover-border',
+			'--k-field-focus-border',
+			'--k-textarea-disabled-opacity'
+		])
+			expect(source, token).toContain(`var(${token}`);
+		expect(source).toContain('overflow-wrap: anywhere');
+		// its own leading: a text block keeps 1.5 under Code, where --k-leading-body is `normal`
+		expect(source).toContain('line-height: 1.5');
+		expect(source).not.toMatch(/--k-bg-raised|--k-text-md|--k-space-4/);
+	});
 });
 
 describe('FileDrop (#53)', () => {
