@@ -282,6 +282,24 @@ Not used: `lav`, `green`, `orange`, `sky`, `pink`, `peach`, `teal`, `fog`, `aler
 Inter's contextual alternates are switched off in the design; kern has no token for font
 features, so that is left to the page (`font-feature-settings: 'calt' 0`).
 
+## Base font size (#144)
+
+`[data-theme]` sets background, colour, font family and line height on every themed element. The base size
+`--k-text-md` is set as px on theme boxes in the page (`<div data-theme>`, `<body data-theme>`) but **not on the
+document root**: `<html data-theme>` takes `calc(var(--k-root-scale) * 1rem)`, and the root's `1rem` is the reader's
+default font size (browser setting, 16px unless changed). A px size there replaced the setting and froze every `rem`.
+
+- `--k-root-scale` is `--k-text-md` / 16px as a plain number: `1` in `base.css` (Code, Flower, Pop), `1.0625` in Line
+  (`--k-text-md` 17px = 17 / 16). A theme whose `--k-text-md` is not 16px sets both. At the default 16px the root is
+  exactly `--k-text-md` (nothing changes, no baseline), at 20px it is 20px (Line 21.25px).
+- The specificity of the root rule is 0 (`:where()`), so a page's own `html { font-size }` wins; the rule for boxes keeps
+  the specificity of `[data-theme]` (`[data-theme]:where(:not(:root))`).
+- `--k-text-*` stay px (Code's values come from stuffcloud's design, `tokens:check`), so component text and heights do not
+  follow the setting; text without a size of its own, `rem` and `em` lengths do. The table is in
+  [docs/consumer-guide.md](consumer-guide.md#schriftgröße).
+- `tests/elements/root-font-size.spec.ts` sets the browser's default font size with the CDP command `Page.setFontSizes`
+  (the value of Chrome's Settings > Appearance > Font size) to 16 and 20px and checks every variant.
+
 ## Contract
 
 `npm test` checks, for every `data-theme` value a theme file names:

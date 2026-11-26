@@ -158,7 +158,8 @@ Stylesheet sehen sie ungestaltet aus. Ohne Bundler lädt `<marke>.css` seine Tei
 | Line | `line` (= `line-dark`), `line-light` | dunkel, hell |
 
 Jede Variante setzt `color-scheme` selbst (Formularfelder und Scrollbalken des Browsers passen dazu) und gibt dem
-Element mit `data-theme` Hintergrund, Textfarbe und Schrift. Die alten `stuffcloud*`-Werte sind Aliase von `code*`
+Element mit `data-theme` Hintergrund, Textfarbe, Schrift und (außer auf `<html>`, siehe [Schriftgröße](#schriftgröße))
+die Grundschriftgröße. Die alten `stuffcloud*`-Werte sind Aliase von `code*`
 bis 1.0. Herkunft der Themes und alle Tokens: README [Themes](../README.md#themes), [`docs/themes.md`](themes.md).
 
 **Vor dem ersten Paint.** Ein gespeichertes Theme (ThemeToggle mit `persist`) oder das System-Schema setzt
@@ -180,6 +181,25 @@ das Theme aus dem HTML. Unter strenger CSP braucht das Script ein Nonce oder sei
 und JetBrains Mono, Line Outfit, Inter und JetBrains Mono (Schnitte im README unter
 [Themes](../README.md#themes)). Die App lädt sie selbst, am besten als eigene Dateien vom eigenen Origin; ohne sie
 greifen die System-Ersatzschriften der Token-Stacks (`--k-font-*`).
+
+### Schriftgröße
+
+`data-theme` darf auf `<html>` stehen (so zeigen es die Beispiele); die Schriftgröße, die der Browser dort einstellt,
+bleibt dabei erhalten. Wer in den Browser-Einstellungen eine größere Standardschrift wählt (z. B. 20 statt 16 px),
+sieht sie auch mit kern. Früher setzte `base.css` auf jedes Element mit `data-theme` eine feste px-Größe, auch auf
+`<html>`; sie ersetzte die Einstellung, und jedes `rem` blieb bei 16 px (#144).
+
+| Was | Folgt der Browser-Einstellung? |
+| --- | --- |
+| `<html data-theme>`: Schriftgröße des Wurzelelements und damit alles, was darauf aufbaut: `rem`, `em`, `%` und Text ohne eigene Größe (Fließtext, eigene Überschriften der Seite) | **ja**. Bei 16 px unverändert `--k-text-md` (Code, Flower, Pop 16 px; Line 17 px), bei 20 px 20 px (Line 21,25 px = 20 × 17 ⁄ 16) |
+| Längen in `rem` (in kern die Vorgabehöhe von `Resizable` und `Marquee`, Mindestbreiten in `TagInput` und `SortableList`) | **ja** |
+| Text und Maße der Komponenten: Schriftgrößen aus `--k-text-*` und den Komponenten-Tokens (`--k-button-size` …), Steuerhöhen, Abstände, Radien | **nein**. Das sind px-Werte des Designs (die von Code stammen aus stuffclouds Design und bleiben unverändert); Komponenten lesen sie als px |
+| `<div data-theme>` (Teilbaum) und `<body data-theme>` | **nein**. Sie setzen weiter `--k-text-md` als px-Grundgröße, auch innerhalb einer Seite mit Wurzel-Theme. Für die Seite selbst `data-theme` auf `<html>` setzen, nicht auf `<body>` |
+
+Eine eigene Regel der Seite (`html { font-size: 62.5% }`) hat Vorrang vor dem Theme, weil dessen Regel auf `<html>` die
+Spezifität 0 hat. Ein eigenes Theme auf `base.css`, dessen `--k-text-md` nicht 16 px ist, setzt zusätzlich
+`--k-root-scale` (`--k-text-md` ÷ 16 px als Zahl, Line `1.0625`), sonst ist die Wurzel bei 16 px 16 px.
+Test: `tests/elements/root-font-size.spec.ts` (Browser-Standardschrift 16 und 20 px, alle Varianten).
 
 ### Eigene Akzentfarbe
 
