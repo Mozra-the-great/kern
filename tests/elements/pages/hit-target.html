@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-theme="code">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: hit target</title>
+		<script>
+			// ?theme=flower picks the theme before the CSS applies.
+			const params = new URLSearchParams(location.search);
+			document.documentElement.dataset.theme = params.get('theme') || 'code';
+		</script>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+				background: var(--k-bg);
+				color: var(--k-fg);
+				font-family: var(--k-font-sans);
+			}
+			/* a wide row, so that its far end is far from the box and from the label text */
+			main {
+				display: grid;
+				gap: 16px;
+				width: 480px;
+			}
+			k-checkbox,
+			k-switch,
+			k-radio-group {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- The controls whose row-wide label::after must leave the box itself as the hit target (#150). -->
+		<main>
+			<k-checkbox id="check" name="a" label="Newsletter"></k-checkbox>
+			<k-checkbox id="check-hint" name="b" label="With a hint" hint="Once a month."></k-checkbox>
+			<k-checkbox id="check-mixed" name="c" label="Some selected" indeterminate></k-checkbox>
+			<k-switch id="switch" name="s1" label="Notifications"></k-switch>
+			<k-switch id="switch-first" name="s2" label="Label first" label-first></k-switch>
+			<k-radio-group
+				id="radio"
+				name="ship"
+				label="Shipping"
+				value="standard"
+				options='[{"value":"standard","label":"Standard"},{"value":"express","label":"Express","hint":"Next day"},{"value":"pickup","label":"Pickup"}]'
+			></k-radio-group>
+		</main>
+	</body>
+</html>

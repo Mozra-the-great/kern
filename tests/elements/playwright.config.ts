@@ -19,7 +19,12 @@ export default defineConfig({
 	updateSnapshots: 'missing',
 	expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: 'disabled', caret: 'hide', scale: 'css' } },
 	use: { baseURL: `http://127.0.0.1:${port}` },
-	projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+	// CI runs Chromium only. `KERN_FIREFOX=1 npx playwright install firefox` and `--project=firefox` runs the
+	// hit-target spec (#150) in Firefox as well, by hand.
+	projects: [
+		{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+		...(process.env.KERN_FIREFOX ? [{ name: 'firefox', testMatch: 'hit-target.spec.ts', use: { ...devices['Desktop Firefox'] } }] : [])
+	],
 	webServer: {
 		command: 'node server.mjs',
 		cwd: import.meta.dirname,

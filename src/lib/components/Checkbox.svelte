@@ -45,6 +45,9 @@
 <style>
 	.k-check {
 		position: relative;
+		/* its own stacking context: the z-index of the box below stays inside the row and cannot reach
+		 * an overlay, a tooltip or a sticky header around it */
+		isolation: isolate;
 		display: flex;
 		gap: var(--k-check-gap);
 		align-items: flex-start;
@@ -59,6 +62,9 @@
 		/* 1px above and below: the row is at least 24px even with a smaller label (Code: 15px), so the
 		 * padding below still pads it to the full tap target */
 		margin-block: 1px;
+		/* above the row-wide label::after, so the box itself is the hit target (a Playwright check(),
+		 * WCAG 2.4.11 Focus Not Obscured, a click on the box in every theme and in forced colors) */
+		z-index: 1;
 	}
 	input {
 		appearance: var(--k-check-appearance);
@@ -114,7 +120,8 @@
 		font-size: var(--k-check-label-size);
 		line-height: 1.5;
 	}
-	/* The whole row, padded to the tap target, toggles the control through its label. */
+	/* The whole row, padded to the tap target, toggles the control through its label; the box
+	 * (.box, z-index 1) stays on top of it. */
 	label::after {
 		content: '';
 		position: absolute;

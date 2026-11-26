@@ -75,6 +75,8 @@
 	}
 	.opt {
 		position: relative;
+		/* its own stacking context: the z-index of the radio below stays inside the row */
+		isolation: isolate;
 		display: flex;
 		gap: var(--k-space-3);
 		align-items: flex-start;
@@ -82,6 +84,9 @@
 	}
 	input {
 		appearance: none;
+		/* above the row-wide label::after: the radio itself is the hit target */
+		position: relative;
+		z-index: 1;
 		flex: none;
 		display: grid;
 		place-items: center;
@@ -126,7 +131,8 @@
 	label {
 		cursor: pointer;
 	}
-	/* The whole row, padded to the tap target, toggles the control through its label. */
+	/* The whole row, padded to the tap target, toggles the control through its label; the radio
+	 * (z-index 1) stays on top of it. */
 	label::after {
 		content: '';
 		position: absolute;
