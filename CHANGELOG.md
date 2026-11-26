@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.2] - 2026-11-26
+
 ## [0.13.1] - 2026-11-26
 
 ### Fixed
