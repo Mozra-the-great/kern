@@ -158,6 +158,7 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 		'--k-select-appearance': 'none',
 		'--k-select-chevron': 'block',
 		'--k-select-pad-end': 'calc(var(--k-field-pad-x) + 24px)',
+		'--k-textarea-disabled-opacity': '1',
 		'--k-check-gap': '--k-space-3',
 		'--k-check-checked': '--k-primary',
 		'--k-check-mark': '--k-on-primary',

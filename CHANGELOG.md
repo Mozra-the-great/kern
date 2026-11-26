@@ -28,6 +28,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   widening the page (#159, from #153). The component's grid had one `auto` column, which grew to the width of the strip, so the strip itself
   never overflowed and, in Firefox, the page did (WCAG 1.4.10 at 320 px). The column is now `minmax(0, 1fr)`. The `line` look and
   `TabLinks` were not affected and are unchanged; the edge fade, the focus ring and the Tab order of #153 stay.
+- `Textarea` reads the field tokens of `Input` and `Select` (#149, from stuffcloud#121): `--k-field-bg`, `--k-field-font`,
+  `--k-field-size`, `--k-field-pad-x`, `--k-field-hover-border`, `--k-field-focus-border` and, new, `--k-textarea-disabled-opacity`.
+  Under `code` (and its variants and aliases) a text area now looks like stuffcloud's `.sc-field.area`: transparent, JetBrains Mono
+  15 px, 14 px side padding, no hover or focus edge (focus is the ring), dimmed when disabled; its own `1.5` line height stays. Flower,
+  Pop and Line are unchanged: every token defaults to what the component drew before (`--k-textarea-disabled-opacity: 1`, so a
+  disabled Textarea is still not dimmed there; set it to `var(--k-field-disabled-opacity)` to dim it like an Input). Visible in
+  `code` only, except for the wrapping fix below.
+- `Textarea` sets `overflow-wrap: anywhere` in every theme, as stuffcloud's `.area` does, so a long unbroken word (a JWT, a Base64
+  blob, a hash) breaks at the edge of the box and never has to widen it or the page at 320 px. Covered by a reflow case in the eight
+  theme variants (`tests/elements/a11y-reflow.spec.ts`, block, flex and shrink-to-fit boxes, `autosize` too).
 - `Modal`, `Drawer` and `Card` (and `<k-modal>`, `<k-drawer>`, `<k-card>`): the title row and the footer are no longer `banner` / `contentinfo`
   landmarks (#154, from stuffcloud#121). A `<header>` / `<footer>` that is not inside `article`, `aside`, `main`, `nav` or `section` maps to
   those roles, and a `<dialog>` is not sectioning content, so every open overlay next to the app's own header added a second banner:

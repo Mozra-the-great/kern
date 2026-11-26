@@ -79,6 +79,8 @@
 	--k-select-bg: var(--k-bg);
 	--k-field-pad-x: var(--k-space-3-5);
 	--k-field-disabled-opacity: var(--k-disabled-opacity);
+	/* Textarea has no dimmed disabled look in the other themes; Code draws it like Input (the app's TextArea shares .sc-field) */
+	--k-textarea-disabled-opacity: var(--k-field-disabled-opacity);
 	--k-field-label-color: var(--k-fg-muted);
 	--k-field-hint-font: var(--k-font-mono);
 	--k-field-hint-size: 13px;
