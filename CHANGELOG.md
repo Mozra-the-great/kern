@@ -48,8 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   taller than the design. The line height is the new token `--k-leading-body` (`1.5` in `base.css`, `normal` in Code, source
   `design:stuff.css|body{line-height}` in the drift check): Flower, Pop and Line stay exactly as they were. Visible in Code only: text
   without a line height of its own (Card and Modal body, Field hints, Switch and Checkbox hints, Table cells, Accordion panels, ...) gets
-  tighter lines, so blocks of text are a few pixels shorter and the Code baselines changed. `Alert` and `Toast` keep an own `1.5`
-  (icon and dot offsets are set against it, stuffcloud's toast sets 1.5 as well). **Migration:** to keep the old Code look set
+  tighter lines, so blocks of text are a few pixels shorter and the Code baselines changed. `Alert`, `Toast` and the sort buttons in
+  `Table`'s header keep an own `1.5` (icon, dot and hit area are set against it; stuffcloud's toast sets 1.5 as well); the line between the
+  steps of a `Stepper` no longer takes clicks away from a step's link (`pointer-events: none`). **Migration:** to keep the old Code look set
   `--k-leading-body: 1.5` on the themed element (`html[data-theme] { --k-leading-body: 1.5 }`). A theme box nested in another theme
   takes its own theme's value. Documented in docs/themes.md ("Line height") and docs/consumer-guide.md; tested in
   `tests/elements/leading-body.spec.ts` and the token-default test.

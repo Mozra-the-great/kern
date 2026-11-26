@@ -313,8 +313,11 @@ The design sets its own where it wants one (titles 1.05 to 1.1, textarea 1.6, th
   (a Flower box in a Code page is 1.5, a Code box in a Flower page is `normal`), not the one it inherits.
 - To keep the old look in Code, set `--k-leading-body: 1.5` on the themed element (`html[data-theme] { --k-leading-body: 1.5 }`).
 - Components that set their own line height (Prose `--k-prose-leading`, Code, Terminal, Button, Modal title, Badge, Label, Textarea,
-  Timeline, ...) do not follow the token. Two take a fixed `1.5` of their own so Code does not move them: Alert (the icon's
-  offset is set against a 1.5 line) and Toast (the dot and `--k-toast-text-offset` are; stuffcloud's toast sets 1.5 as well).
+  Timeline, ...) do not follow the token. Three take a fixed `1.5` of their own so Code does not move them: Alert (the icon's
+  offset is set against a 1.5 line), Toast (the dot and `--k-toast-text-offset` are; stuffcloud's toast sets 1.5 as well) and the
+  sort buttons of Table's header (the row is 12px padding plus the button, so a shorter button leaves less than the 44px
+  target `tests/targets` demands inside the table box; DataTable has a `min-height` for it). The line that connects the steps of
+  a Stepper no longer takes clicks (`pointer-events: none`): a shorter link had moved it into the middle of the link.
   Everything else follows the design: its text now has `normal` leading in Code, as stuffcloud's does.
 - `tests/elements/leading-body.spec.ts` checks the computed `line-height` of the root, a theme box and plain text in every
   variant (Code `normal`, the others 1.5), nesting in both directions, the migration override, Alert and Toast.

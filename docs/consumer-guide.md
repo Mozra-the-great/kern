@@ -205,7 +205,7 @@ Test: `tests/elements/root-font-size.spec.ts` (Browser-Standardschrift 16 und 20
 sie (#145). Das Token ist in Flower, Pop und Line `1.5` wie bisher; in Code (alle Varianten, auch die `stuffcloud*`-Namen) ist es
 `normal`, wie in stuffclouds Design, das auf `body` keine Zeilenhöhe setzt. Wer in Code die alte Zeilenhöhe behalten will, setzt
 `--k-leading-body: 1.5` auf das Element mit `data-theme`. Komponenten mit eigener Zeilenhöhe (Prose, Code, Terminal, Button,
-Textarea …) folgen dem Token nicht; Alert und Toast haben dafür eine feste `1.5`, weil Icon und Punkt darauf abgestimmt sind.
+Textarea …) folgen dem Token nicht; Alert, Toast und die Sortier-Buttons im Kopf von Table haben dafür eine feste `1.5`, weil Icon, Punkt und Trefferfläche darauf abgestimmt sind.
 
 ### Eigene Akzentfarbe
 
