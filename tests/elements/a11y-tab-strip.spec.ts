@@ -3,7 +3,7 @@
  * the tab used to be 1px taller than the room left by the strip's own border (a negative margin made it overlap), so the
  * strip had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that makes it a scroll container, and Firefox adds a
  * scroll container as an unnamed keyboard stop before the first tab. Chromium does not, so this spec also runs in the
- * Firefox project of playwright.config.ts (the only spec that does).
+ * Firefox project of playwright.config.ts (besides the pill-strip test of a11y-reflow.spec.ts, #159).
  *
  * Per theme variant and width (1280, 375, 320 px), for both looks and for strips that fit and strips that scroll sideways:
  * `scrollHeight <= clientHeight`; the sideways strips still scroll, fade their edge and keep the focus ring inside the strip;
