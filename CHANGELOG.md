@@ -23,6 +23,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- `Tabs` and `TabLinks`: the tab strip no longer overflows by one pixel vertically, so Firefox no longer makes it an unnamed Tab stop
+  before the first tab or link (#153, from stuffcloud#121). In the line look a tab was `--k-tab-h` tall but overlapped the strip's
+  `border-bottom` through a negative margin, so `.list` had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that is a scroll
+  container, and Firefox adds one to the Tab order (Chromium does not). The tab is now `--k-tab-h` minus the border (with the label
+  centred as before and the selected bar unchanged, 2px minus the border), and the strip has `overflow-y: hidden`, so only the
+  sideways overflow scrolls. A `TabLinks` strip that really scrolls sideways (many links on a phone) got the same extra stop in
+  Firefox and now has `tabindex="-1"` like the `Tabs` strip; the links stay the stops. No visual change in any theme.
+  Tested in Chromium and Firefox (`tests/elements/a11y-tab-strip.spec.ts`; CI installs Firefox for it).
+- The box of `Checkbox`, the switch of `Switch` and the radio of `RadioGroup` are their own hit target again (#150, from
+  stuffcloud#121): the row-wide `label::after` (the tap target, the whole row toggles the control) covered the `<input>`, so
+  `elementFromPoint` at the centre of the box returned the label, Playwright's `check()` / `uncheck()` hung waiting for the
+  input to receive the click, and a focused box counted as obscured (WCAG 2.4.11 Focus Not Obscured). The row keeps its hit area
+  and every click outside the box still toggles; the box now stacks above it (`z-index: 1`, inside a row that is its own stacking
+  context, `isolation: isolate`, so nothing leaks to overlays, tooltips or sticky headers around it), in every theme, with the
+  browser's own box in Code and with kern's box in forced colors. No visual change. Covered by `tests/elements/hit-target.spec.ts`
+  (custom elements, `shadowRoot.elementFromPoint`) and `tests/targets/hit-target.spec.ts` (Svelte demo): the eight theme variants
+  and forced colors, a canary that fails without the stacking.
+
+## [0.13.0] - 2026-11-26
+
 ### Added
 - `announce` (default `true`, so nothing changes unless it is set) on every component that wraps `Field` and shows its error (#148,
   from stuffcloud#121): `Input`, `Select`, `Textarea`, `Combobox`, `NumberInput`, `DatePicker`, `ColorPicker`, `TagInput`,
@@ -50,17 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `npm run check:dts` also fails when a published `.d.ts` has a mutable array property that is not a bindable output
   (`scripts/ci/readonly-arrays-dts.mjs`), and the strict consumer and React fixtures pass `readonly` arrays and `as const`
   literals, nested `children` and `keywords` included, to every one of these props.
-
-### Fixed
-- `Tabs` and `TabLinks`: the tab strip no longer overflows by one pixel vertically, so Firefox no longer makes it an unnamed Tab stop
-  before the first tab or link (#153, from stuffcloud#121). In the line look a tab was `--k-tab-h` tall but overlapped the strip's
-  `border-bottom` through a negative margin, so `.list` had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that is a scroll
-  container, and Firefox adds one to the Tab order (Chromium does not). The tab is now `--k-tab-h` minus the border (with the label
-  centred as before and the selected bar unchanged, 2px minus the border), and the strip has `overflow-y: hidden`, so only the
-  sideways overflow scrolls. A `TabLinks` strip that really scrolls sideways (many links on a phone) got the same extra stop in
-  Firefox and now has `tabindex="-1"` like the `Tabs` strip; the links stay the stops. No visual change in any theme.
-  Tested in Chromium and Firefox (`tests/elements/a11y-tab-strip.spec.ts`; CI installs Firefox for it).
-- `Code` theme (all variants and the deprecated `stuffcloud*` names): the themed element now has `line-height: normal`, like stuffcloud's design
+- **BREAKING:** `Code` theme (all variants and the deprecated `stuffcloud*` names): the themed element now has `line-height: normal`, like stuffcloud's design
   (#145, from stuffcloud#121). `[data-theme]` set a fixed `1.5`; stuffcloud's `stuff.css` sets no line height on `body`, so Code text was
   taller than the design. The line height is the new token `--k-leading-body` (`1.5` in `base.css`, `normal` in Code, source
   `design:stuff.css|body{line-height}` in the drift check): Flower, Pop and Line stay exactly as they were. Visible in Code only: text
@@ -71,6 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `--k-leading-body: 1.5` on the themed element (`html[data-theme] { --k-leading-body: 1.5 }`). A theme box nested in another theme
   takes its own theme's value. Documented in docs/themes.md ("Line height") and docs/consumer-guide.md; tested in
   `tests/elements/leading-body.spec.ts` and the token-default test.
+
+### Fixed
 - `data-theme` on `<html>` no longer overrides the reader's default font size (#144, from stuffcloud#121): `base.css` set a px
   `font-size` (`--k-text-md`) on every `[data-theme]` element, so a themed root ignored the browser setting and froze every `rem`
   at 16px (17px in Line). The root now takes `calc(var(--k-root-scale) * 1rem)`, i.e. the reader's default size times a new token
