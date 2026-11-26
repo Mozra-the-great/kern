@@ -23,13 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [0.13.1] - 2026-11-26
+## [0.13.2] - 2026-11-26
 
 ### Fixed
 - `Tabs` and `<k-tabs>` with `look="pill"`: a strip with more tabs than fit scrolls sideways inside its container again instead of
   widening the page (#159, from #153). The component's grid had one `auto` column, which grew to the width of the strip, so the strip itself
   never overflowed and, in Firefox, the page did (WCAG 1.4.10 at 320 px). The column is now `minmax(0, 1fr)`. The `line` look and
   `TabLinks` were not affected and are unchanged; the edge fade, the focus ring and the Tab order of #153 stay.
+
+## [0.13.1] - 2026-11-26
+
+### Fixed
 - `Textarea` reads the field tokens of `Input` and `Select` (#149, from stuffcloud#121): `--k-field-bg`, `--k-field-font`,
   `--k-field-size`, `--k-field-pad-x`, `--k-field-hover-border`, `--k-field-focus-border` and, new, `--k-textarea-disabled-opacity`.
   Under `code` (and its variants and aliases) a text area now looks like stuffcloud's `.sc-field.area`: transparent, JetBrains Mono
