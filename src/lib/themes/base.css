@@ -124,6 +124,10 @@
  * resolves against the theme of the nearest data-theme box, not the page root. */
 :root,
 [data-theme] {
+	/* line height of the themed element, inherited by all text without a line height of its own (#145). Declared
+	 * here, not in :root above, so a theme box nested in a Code page goes back to 1.5 instead of inheriting
+	 * Code's `normal`. Code sets `normal` (stuffcloud's body sets none); set 1.5 on the element to restore the old look. */
+	--k-leading-body: 1.5;
 	/* non-text accent: progress and slider fill, current-tab and nav markers,
 	 * selected and focused borders. Must reach 3:1 on bg, bg-raised and bg-sunken;
 	 * --k-accent stays the fill behind --k-on-accent text. */
@@ -298,7 +302,7 @@
 	background: var(--k-bg);
 	color: var(--k-fg);
 	font-family: var(--k-font-sans);
-	line-height: 1.5;
+	line-height: var(--k-leading-body);
 }
 
 /* The base size is set on theme boxes in the page (`<div data-theme>`), as before. On the document root it is

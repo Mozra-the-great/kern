@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-11-26
+
 ### Added
 - `announce` (default `true`, so nothing changes unless it is set) on every component that wraps `Field` and shows its error (#148,
   from stuffcloud#121): `Input`, `Select`, `Textarea`, `Combobox`, `NumberInput`, `DatePicker`, `ColorPicker`, `TagInput`,
@@ -50,6 +52,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `npm run check:dts` also fails when a published `.d.ts` has a mutable array property that is not a bindable output
   (`scripts/ci/readonly-arrays-dts.mjs`), and the strict consumer and React fixtures pass `readonly` arrays and `as const`
   literals, nested `children` and `keywords` included, to every one of these props.
+- **BREAKING:** `Code` theme (all variants and the deprecated `stuffcloud*` names): the themed element now has `line-height: normal`, like stuffcloud's design
+  (#145, from stuffcloud#121). `[data-theme]` set a fixed `1.5`; stuffcloud's `stuff.css` sets no line height on `body`, so Code text was
+  taller than the design. The line height is the new token `--k-leading-body` (`1.5` in `base.css`, `normal` in Code, source
+  `design:stuff.css|body{line-height}` in the drift check): Flower, Pop and Line stay exactly as they were. Visible in Code only: text
+  without a line height of its own (Card and Modal body, Field hints, Switch and Checkbox hints, Table cells, Accordion panels, ...) gets
+  tighter lines, so blocks of text are a few pixels shorter and the Code baselines changed. `Alert`, `Toast` and the sort buttons in
+  `Table`'s header keep an own `1.5` (icon, dot and hit area are set against it; stuffcloud's toast sets 1.5 as well); the line between the
+  steps of a `Stepper` no longer takes clicks away from a step's link (`pointer-events: none`). **Migration:** to keep the old Code look set
+  `--k-leading-body: 1.5` on the themed element (`html[data-theme] { --k-leading-body: 1.5 }`). A theme box nested in another theme
+  takes its own theme's value. Documented in docs/themes.md ("Line height") and docs/consumer-guide.md; tested in
+  `tests/elements/leading-body.spec.ts` and the token-default test.
 
 ### Fixed
 - The box of `Checkbox`, the switch of `Switch` and the radio of `RadioGroup` are their own hit target again (#150, from
