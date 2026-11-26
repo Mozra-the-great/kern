@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-11-26
+
 ### Added
 - New token `--k-bg-stage` (#188): the flat panel a mascot or sticker scene stands on (stuffcloud's violet panel, stuffcloud#199).
   Paint it yourself on the box that holds `Mascot` or `Sticker`; no component draws it, and no text or control sits on it.

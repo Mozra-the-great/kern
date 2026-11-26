@@ -1,6 +1,6 @@
 {
 	"name": "@mozra-the-great/kern",
-	"version": "0.14.0",
+	"version": "0.15.0",
 	"description": "Svelte 5 component kit with brand themes set by CSS variables, also shipped as custom elements.",
 	"license": "GPL-3.0-or-later",
 	"author": "Mozra-the-great",
