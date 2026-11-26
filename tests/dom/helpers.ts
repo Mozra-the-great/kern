@@ -38,3 +38,22 @@ export function dragEvent(type: string, files: readonly File[] = []): Event {
 	Object.defineProperty(event, 'dataTransfer', { value: { files, types: files.length > 0 ? ['Files'] : [], dropEffect: 'none' } });
 	return event;
 }
+
+/** Box sizes of a scroller as jsdom cannot compute them (a missing one equals its client size: nothing overflows there). */
+export interface BoxSize {
+	scrollHeight?: number;
+	clientHeight?: number;
+	scrollWidth?: number;
+	clientWidth?: number;
+}
+
+/** Makes `el` a scroller (`overflow: auto`; jsdom has no UA or component styles) of the given measured size. */
+export function scrollBox(el: Element, size: BoxSize): void {
+	if (el instanceof HTMLElement) el.style.overflow = 'auto';
+	const height = size.clientHeight ?? 100;
+	const width = size.clientWidth ?? 100;
+	Object.defineProperty(el, 'scrollHeight', { configurable: true, value: size.scrollHeight ?? height });
+	Object.defineProperty(el, 'clientHeight', { configurable: true, value: height });
+	Object.defineProperty(el, 'scrollWidth', { configurable: true, value: size.scrollWidth ?? width });
+	Object.defineProperty(el, 'clientWidth', { configurable: true, value: width });
+}

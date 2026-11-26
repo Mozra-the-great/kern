@@ -51,9 +51,18 @@ export function hasFocus(el: Element): boolean {
 	return (root instanceof Document || root instanceof ShadowRoot) && root.activeElement === el;
 }
 
-/** True when the box has more content than it shows, in either direction. */
+/** True when the user can scroll in this direction of the box: not `visible` (the content spills out), `hidden` or `clip` (no scrolling by the user). */
+function userScrolls(overflow: string): boolean {
+	return overflow !== 'visible' && overflow !== 'hidden' && overflow !== 'clip';
+}
+
+/** True when the box has more content than it shows and the user can scroll to it, in either direction (a stacked table lets its content spill: no scroller). */
 function overflows(node: HTMLElement): boolean {
-	return node.scrollHeight - node.clientHeight > 1 || node.scrollWidth - node.clientWidth > 1;
+	const style = getComputedStyle(node);
+	return (
+		(node.scrollHeight - node.clientHeight > 1 && userScrolls(style.overflowY)) ||
+		(node.scrollWidth - node.clientWidth > 1 && userScrolls(style.overflowX))
+	);
 }
 
 /** The things the layout of `node` depends on: its children, with slots replaced by what they show. */
@@ -70,7 +79,8 @@ function layoutChildren(node: HTMLElement): Element[] {
  * Watches a scrolling box and reports `true` while it needs a tab stop of its own (it overflows and holds
  * nothing tabbable) and `false` otherwise. The tab stop is the box itself, or `stop`, an element inside it
  * that the caller makes tabbable while the report is `true` (a dialog scrolls as a whole, so its stop is its
- * content wrapper); `stop` does not count as the tabbable content it replaces. Reports the current state at once and then only changes.
+ * content wrapper); `stop` does not count as the tabbable content it replaces. Only a box the user can scroll counts
+ * (`overflow` other than `visible`, `hidden`, `clip` in the overflowing direction). Reports the current state at once and then only changes.
  * Re-measures when the box or its content resizes, when the content, its attributes or (in a custom
  * element) the host's light DOM change, and when web fonts load. Returns the cleanup.
  */

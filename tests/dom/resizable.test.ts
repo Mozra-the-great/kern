@@ -7,10 +7,13 @@
  */
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { tick } from 'svelte';
+import { createRawSnippet, tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Resizable, { type ResizablePanel } from '../../src/lib/components/Resizable.svelte';
-import { mapSnippet2 } from './helpers.js';
+import { de } from '../../src/lib/components/strings-de.js';
+import { resetStrings, setStrings } from '../../src/lib/components/strings.js';
+import { triggerResize } from './env.js';
+import { flush, mapSnippet2, scrollBox } from './helpers.js';
 import { reactive } from './reactive.svelte.js';
 
 /** Size of one panel in px, in both axes. */
@@ -297,5 +300,111 @@ describe('Resizable', () => {
 		handle.dispatchEvent(pointer('pointermove', { x: 200 }));
 		expect(props.sizes).toBeUndefined();
 		expect(document.activeElement).not.toBe(handle);
+	});
+});
+
+describe('Resizable: a panel that scrolls without tabbable content (#137)', () => {
+	const unlabelled: ResizablePanel[] = [{ id: 'nav' }, { id: 'main' }];
+	const withButton = createRawSnippet(() => ({ render: () => '<div><p>Text</p><button>Retry</button></div>' }));
+	const panelEl = (i: number): HTMLElement => {
+		const el = document.querySelectorAll<HTMLElement>('.panel')[i];
+		if (el === undefined) throw new Error(`no panel ${String(i)}`);
+		return el;
+	};
+	/** Panel `i` is 100px high and holds 400px of content. */
+	async function overflow(i: number): Promise<void> {
+		scrollBox(panelEl(i), { clientHeight: 100, scrollHeight: 400 });
+		triggerResize(panelEl(i));
+		await flush();
+	}
+
+	afterEach(() => {
+		resetStrings();
+	});
+
+	it('is a tab stop with role region, named by its label, only for the panel that scrolls', async () => {
+		render(Resizable, { panels: two, panel });
+		await overflow(1);
+		await vi.waitFor(() => expect(panelEl(1).getAttribute('tabindex')).toBe('0'));
+		expect(screen.getByRole('region', { name: 'Content' })).toBe(panelEl(1));
+		expect(screen.getAllByRole('region')).toHaveLength(1);
+		expect(panelEl(0).hasAttribute('tabindex')).toBe(false);
+		expect(panelEl(0).hasAttribute('role')).toBe(false);
+		panelEl(1).focus();
+		expect(document.activeElement).toBe(panelEl(1));
+		// the handles stay the only other stops
+		expect(handles().every((h) => h.getAttribute('tabindex') === '0')).toBe(true);
+	});
+
+	it('is named by its place in the group without a label, in English and German', async () => {
+		const { unmount } = render(Resizable, { panels: unlabelled, panel });
+		await overflow(0);
+		await overflow(1);
+		await vi.waitFor(() => expect(screen.getAllByRole('region')).toHaveLength(2));
+		expect(panelEl(0).getAttribute('aria-label')).toBe('Panel 1 of 2');
+		expect(panelEl(1).getAttribute('aria-label')).toBe('Panel 2 of 2');
+		unmount();
+		setStrings(de);
+		render(Resizable, { panels: [{ id: 'a', label: '' }, { id: 'b' }, { id: 'c' }], panel });
+		await overflow(2);
+		await vi.waitFor(() => expect(screen.getByRole('region', { name: 'Bereich 3 von 3' })).toBe(panelEl(2)));
+	});
+
+	it('is no stop while the content fits', async () => {
+		render(Resizable, { panels: two, panel });
+		scrollBox(panelEl(0), { clientHeight: 100, scrollHeight: 100 });
+		triggerResize(panelEl(0));
+		await flush();
+		expect(panelEl(0).hasAttribute('tabindex')).toBe(false);
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('adds no stop next to a button inside the panel', async () => {
+		render(Resizable, { panels: two, panel: withButton });
+		await overflow(0);
+		expect(panelEl(0).hasAttribute('tabindex')).toBe(false);
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('follows its panel when the panels change: the stop stays with the panel it belongs to', async () => {
+		const props = reactive<Props>({ panels: unlabelled, panel });
+		render(Resizable, { props });
+		await overflow(1);
+		await vi.waitFor(() => expect(panelEl(1).getAttribute('aria-label')).toBe('Panel 2 of 2'));
+		props.panels = [{ id: 'first' }, ...unlabelled];
+		await vi.waitFor(() => expect(document.querySelectorAll('.panel')).toHaveLength(3));
+		expect(panelEl(0).hasAttribute('tabindex')).toBe(false);
+		expect(panelEl(1).hasAttribute('tabindex')).toBe(false);
+		expect(panelEl(2).getAttribute('tabindex')).toBe('0');
+		await vi.waitFor(() => expect(panelEl(2).getAttribute('aria-label')).toBe('Panel 3 of 3'));
+		props.panels = [{ id: 'first' }, unlabelled[0] as ResizablePanel];
+		await vi.waitFor(() => expect(document.querySelectorAll('.panel')).toHaveLength(2));
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('keeps the focus when the content starts to fit while the stop has it: focusable, but not a stop', async () => {
+		render(Resizable, { panels: two, panel });
+		await overflow(0);
+		await vi.waitFor(() => expect(panelEl(0).getAttribute('tabindex')).toBe('0'));
+		panelEl(0).focus();
+		scrollBox(panelEl(0), { clientHeight: 100, scrollHeight: 100 });
+		triggerResize(panelEl(0));
+		await vi.waitFor(() => expect(panelEl(0).getAttribute('tabindex')).toBe('-1'));
+		expect(document.activeElement).toBe(panelEl(0));
+		expect(panelEl(0).hasAttribute('role')).toBe(false);
+		panelEl(0).blur();
+		await vi.waitFor(() => expect(panelEl(0).hasAttribute('tabindex')).toBe(false));
+	});
+
+	it('does not change the size keys: the handle still resizes while a panel is a stop', async () => {
+		const onchange = vi.fn<(sizes: number[]) => void>();
+		render(Resizable, { panels: two, panel, onchange });
+		await overflow(0);
+		await vi.waitFor(() => expect(panelEl(0).getAttribute('tabindex')).toBe('0'));
+		const user = userEvent.setup();
+		await user.click(handles()[0] as HTMLElement);
+		handles()[0]?.focus();
+		await user.keyboard('{ArrowRight}');
+		expect(onchange).toHaveBeenCalledWith([52, 48]);
 	});
 });

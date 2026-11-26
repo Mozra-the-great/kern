@@ -20,6 +20,7 @@
 	import Pagination from './Pagination.svelte';
 	import Skeleton from './Skeleton.svelte';
 	import { fill } from './data-utils.js';
+	import { hasFocus, watchScrollRegion } from './scroll-region.js';
 
 	interface Props {
 		columns: DataColumn<Row>[];
@@ -138,6 +139,8 @@
 	const selectAllLabel = $derived(selectAllLabelProp ?? strings().dataTable.selectAllLabel);
 	const selectRowLabel = $derived(selectRowLabelProp ?? strings().dataTable.selectRowLabel);
 	const paginationLabel = $derived(paginationLabelProp ?? strings().dataTable.paginationLabel);
+	const scrollLabel = $derived(strings().dataTable.scrollLabel);
+	const uid = $props.id();
 
 	interface Entry {
 		row: Row;
@@ -237,6 +240,22 @@
 
 	const skeletonRows = $derived(Array.from({ length: Math.max(1, Math.floor(loadingRows ?? Math.min(size || 10, 10))) }, (_, i) => i));
 	const span = $derived(columns.length + (selectable ? 1 : 0));
+
+	// A wrapper that scrolls sideways (`stack={false}`, or a table wider than its container) but holds nothing tabbable
+	// (no sortable header, no checkbox, no link in a cell) is a tab stop itself, so the keyboard can scroll it. No tabindex
+	// otherwise; while it has the focus it stays focusable (-1), so content that now fits does not drop the focus onto the page.
+	let wrap: HTMLElement | undefined = $state();
+	let scrolls = $state(false);
+	let held = $state(false);
+	$effect(() => {
+		if (wrap) {
+			const el = wrap;
+			return watchScrollRegion(el, (needs) => {
+				scrolls = needs;
+				held = !needs && hasFocus(el);
+			});
+		}
+	});
 </script>
 
 <div class="k-datatable {cls}">
@@ -262,9 +281,19 @@
 		</p>
 	</div>
 
-	<div class="k-table" class:stack>
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div
+		class="k-table"
+		class:stack
+		bind:this={wrap}
+		role={scrolls ? 'region' : undefined}
+		aria-labelledby={scrolls && caption ? `${uid}-c` : undefined}
+		aria-label={scrolls && !caption ? scrollLabel : undefined}
+		tabindex={scrolls ? 0 : held ? -1 : undefined}
+		onfocusout={() => (held = false)}
+	>
 		<table aria-busy={loading || undefined}>
-			<caption class:sr={captionHidden}>{caption}</caption>
+			<caption id="{uid}-c" class:sr={captionHidden}>{caption}</caption>
 			<thead>
 				<tr>
 					{#if selectable}
@@ -409,6 +438,12 @@
 		border: var(--k-border-w) solid var(--k-line);
 		border-radius: var(--k-radius-card);
 		background: var(--k-bg-raised);
+	}
+	/* Inside the box: the wrapper clips an outside ring where it meets its edge. */
+	.k-table:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		/* a gap to the border, so the ring is not mistaken for it (Pop draws a black one) */
+		outline-offset: calc(var(--k-focus-w) * -1 - 2px);
 	}
 	table {
 		width: 100%;

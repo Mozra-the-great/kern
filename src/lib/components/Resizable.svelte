@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
+	import { fill } from './data-utils.js';
+	import { hasFocus, watchScrollRegion } from './scroll-region.js';
 
 	export interface ResizablePanel {
 		/** Unique within the group. */
 		id: string;
-		/** Name of the panel, used in the label of its handle. Default: the id. */
+		/**
+		 * Name of the panel: used in the label of its handle (default: the id) and as the name of the panel while it scrolls
+		 * and is a tab stop (default: the text `resizable.panelLabel`, "Panel 1 of 2").
+		 */
 		label?: string | undefined;
 		/** Smallest size in % of the group. Default 10. */
 		min?: number | undefined;
@@ -46,6 +52,7 @@
 		class: cls = ''
 	}: Props = $props();
 	const handleLabel = $derived(handleLabelProp ?? strings().resizable.handleLabel);
+	const panelLabel = $derived(strings().resizable.panelLabel);
 	const uid = $props.id();
 
 	const DEFAULT_MIN = 10;
@@ -209,12 +216,47 @@
 	function nameOf(i: number): string {
 		return handleLabel.replace('{panel}', panels[i].label ?? panels[i].id);
 	}
+
+	// A panel that scrolls but holds nothing tabbable (text only) is a tab stop itself, named by its label or its place in the
+	// group, so the keyboard can scroll it. No tabindex otherwise; while it has the focus it stays focusable (-1), so content
+	// that now fits does not drop the focus onto the page. Keyed by panel id: the keyed `each` keeps a node with its panel.
+	const regions = new SvelteMap<string, 'stop' | 'held'>();
+	function scrollRegion(node: HTMLElement, id: string): { destroy: () => void } {
+		const stop = watchScrollRegion(node, (needs) => {
+			if (needs) regions.set(id, 'stop');
+			else if (hasFocus(node)) regions.set(id, 'held');
+			else regions.delete(id);
+		});
+		return {
+			destroy() {
+				stop();
+				regions.delete(id);
+			}
+		};
+	}
+	function panelName(p: ResizablePanel, i: number): string {
+		return p.label ? p.label : fill(panelLabel, { n: i + 1, total: panels.length });
+	}
 </script>
 
 <div class="k-resizable {cls}" style:--rz-height={heightCss}>
 	<div class="group" class:dragging={active !== undefined} data-direction={direction} bind:this={group}>
 		{#each panels as p, i (p.id)}
-			<div class="panel" id="{uid}-p{i}" style:flex-grow={current[i]}>{@render panel(p, i)}</div>
+			<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+			<div
+				class="panel"
+				id="{uid}-p{i}"
+				style:flex-grow={current[i]}
+				use:scrollRegion={p.id}
+				role={regions.get(p.id) === 'stop' ? 'region' : undefined}
+				aria-label={regions.get(p.id) === 'stop' ? panelName(p, i) : undefined}
+				tabindex={regions.get(p.id) === 'stop' ? 0 : regions.get(p.id) === 'held' ? -1 : undefined}
+				onfocusout={() => {
+					if (regions.get(p.id) === 'held') regions.delete(p.id);
+				}}
+			>
+				{@render panel(p, i)}
+			</div>
 			{#if i < panels.length - 1}
 				{@const [lo, hi] = bounds(i, current)}
 				<!-- A focusable separator is the WAI-ARIA window splitter (a widget), which svelte does not know. -->
@@ -284,6 +326,12 @@
 		min-width: 0;
 		min-height: 0;
 		overflow: auto;
+	}
+	/* Inside the box: the group clips an outside ring. */
+	.panel:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		/* a gap to the border, so the ring is not mistaken for it (Pop draws a black one) */
+		outline-offset: calc(var(--k-focus-w) * -1 - 2px);
 	}
 
 	.handle {
