@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - A standalone `TileGrid` had no left edge: the first column of tiles was open on the left, which read as a missing line next to a bordered
   `Card` or `Table`. The grid now draws it, joining the top line at the corner, without a double line between tiles (#172, reported in
   wazuh-ai-analyzer#112).
+- `SelectGrid` (and `<k-select-grid>`) threw `TypeError: Cannot read properties of null (reading 'getRootNode')` when its last item was
+  removed: `bind:this` sets the grid element to `null` when the grid goes away, and the focus helpers only guarded `undefined`. The same
+  guard is now `== null` in `SortableList`, `DownloadButton`, `Resizable` and `Mascot`, whose bound elements are `null` after unmount (a
+  review of every `bind:this` in the kit found no other `undefined`-only guard), and `PinInput`'s box list is typed for the `null` entries
+  `bind:this` leaves when `count` shrinks. A list that is emptied and filled again keeps working, with the focus returning to the Tab
+  stop (#175, from stuffcloud#121).
 
 ## [0.13.4] - 2026-11-26
 

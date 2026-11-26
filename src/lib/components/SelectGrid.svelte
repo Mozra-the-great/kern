@@ -87,7 +87,8 @@
 	const canMove = $derived(reorderable);
 	const showCaption = $derived(caption ?? itemSnippet === undefined);
 
-	let root: HTMLDivElement | undefined = $state();
+	/** `bind:this` sets this to `null` when the grid goes away (the last item is removed), not to `undefined`: guard with `== null`. */
+	let root: HTMLDivElement | null | undefined = $state();
 	/** Index of the item that holds the Tab stop (roving tabindex). */
 	let current = $state(0);
 	/** Where Shift+arrow and Shift+Space start their range. */
@@ -98,12 +99,12 @@
 	const active = $derived(Math.min(Math.max(current, 0), Math.max(list.length - 1, 0)));
 
 	function options(): HTMLElement[] {
-		return root === undefined ? [] : Array.from(root.children).filter((child): child is HTMLElement => child instanceof HTMLElement);
+		return root == null ? [] : Array.from(root.children).filter((child): child is HTMLElement => child instanceof HTMLElement);
 	}
 
 	/** True while the focus is inside the grid (also inside a shadow root). */
 	function hasFocus(): boolean {
-		if (root === undefined) return false;
+		if (root == null) return false;
 		const focused = (root.getRootNode() as Document | ShadowRoot).activeElement;
 		return focused !== null && root.contains(focused);
 	}
@@ -174,7 +175,7 @@
 		const position = options().indexOf(target);
 		// Cmd+A selects all; other Cmd shortcuts belong to the system.
 		if (position < 0 || (event.metaKey && event.key.toLowerCase() !== 'a')) return;
-		const rtl = root !== undefined && getComputedStyle(root).direction === 'rtl';
+		const rtl = root != null && getComputedStyle(root).direction === 'rtl';
 		const key = rtl && event.key === 'ArrowLeft' ? 'ArrowRight' : rtl && event.key === 'ArrowRight' ? 'ArrowLeft' : event.key;
 
 		if ((event.ctrlKey || event.metaKey) && key.toLowerCase() === 'a') {

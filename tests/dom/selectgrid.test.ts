@@ -5,7 +5,8 @@
  * Escape; nothing for an unchanged selection), arrow keys by place and by row (the column count is measured
  * from `offsetTop`, stubbed here), Home/End/PageUp/PageDown, right-to-left arrows, Alt+arrow and dragging with
  * `reorderable` (`onmove`, the reorder hint, focus that follows the moved item), focus handed back when the
- * grid itself or a removed item had it, and an empty list.
+ * grid itself or a removed item had it, and an empty list (also one that is emptied and refilled: `bind:this`
+ * sets the grid to `null` when its last item goes, #175).
  */
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { createRawSnippet } from 'svelte';
@@ -13,6 +14,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import SelectGrid, { type SelectGridItem } from '../../src/lib/components/SelectGrid.svelte';
 import type { ItemKey } from '../../src/lib/components/reorder.js';
+import SelectGridBoundary from './harness/SelectGridBoundary.svelte';
 import { flush, mapSnippet } from './helpers.js';
 import { reactive } from './reactive.svelte.js';
 
@@ -372,5 +374,76 @@ describe('SelectGrid', () => {
 	it('ignores a selected value that is not an array', () => {
 		render(SelectGrid<SelectGridItem>, { items, selected: 'a' as unknown as ItemKey[] });
 		expect(screen.getAllByRole('option').every((o) => o.getAttribute('aria-selected') === 'false')).toBe(true);
+	});
+
+	describe('emptied and refilled (#175)', () => {
+		/** Props of a host whose errors land in `errors`, because the grid sits in a `svelte:boundary`. */
+		function bounded(initial: SelectGridItem[]): {
+			props: { items: SelectGridItem[]; onerror: (error: unknown) => void };
+			errors: unknown[];
+		} {
+			const errors: unknown[] = [];
+			const props = reactive<{ items: SelectGridItem[]; onerror: (error: unknown) => void }>({
+				items: initial,
+				onerror: (error) => errors.push(error)
+			});
+			return { props, errors };
+		}
+
+		it('does not throw when the last item is removed while the focus is inside, and works again after a refill', async () => {
+			const user = userEvent.setup();
+			const { props, errors } = bounded(items);
+			render(SelectGridBoundary, { props });
+			await user.click(option('Gamma'));
+			expect(document.activeElement).toBe(option('Gamma'));
+
+			props.items = [];
+			await flush();
+			expect(errors).toEqual([]);
+			expect(screen.queryByRole('alert')).toBeNull();
+			expect(screen.queryByRole('listbox')).toBeNull();
+
+			props.items = items.slice(0, 3);
+			await flush();
+			expect(errors).toEqual([]);
+			expect(screen.queryByRole('alert')).toBeNull();
+			expect(screen.getAllByRole('option')).toHaveLength(3);
+			expect(tabStops()).toHaveLength(1);
+			// The grid works again: Tab reaches the stop, the arrow keys move the focus.
+			await user.tab();
+			const stop = screen.getAllByRole('option').find((o) => o.tabIndex === 0);
+			expect(document.activeElement).toBe(stop);
+			// The stop is where the user was (Gamma, the last of three now): ArrowLeft moves on to Beta.
+			expect(stop).toBe(option('Gamma'));
+			await user.keyboard('{ArrowLeft}');
+			expect(document.activeElement).toBe(option('Beta'));
+		});
+
+		it('survives several rounds of n -> 0 -> n and keeps one Tab stop', async () => {
+			const { props, errors } = bounded(items);
+			render(SelectGridBoundary, { props });
+			for (let round = 0; round < 3; round++) {
+				option('Delta').focus();
+				props.items = [];
+				await flush();
+				expect(screen.queryAllByRole('option')).toHaveLength(0);
+				props.items = items;
+				await flush();
+				expect(screen.getAllByRole('option')).toHaveLength(items.length);
+				expect(tabStops()).toHaveLength(1);
+			}
+			expect(errors).toEqual([]);
+			expect(screen.queryByRole('alert')).toBeNull();
+		});
+
+		it('hands the focus to the Tab stop when items go away but some remain', async () => {
+			const { props, errors } = bounded(items);
+			render(SelectGridBoundary, { props });
+			option('Epsilon').focus();
+			props.items = items.slice(0, 2);
+			await flush();
+			expect(document.activeElement).toBe(option('Beta'));
+			expect(errors).toEqual([]);
+		});
 	});
 });

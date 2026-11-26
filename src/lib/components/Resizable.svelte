@@ -112,7 +112,8 @@
 		return true;
 	}
 
-	let group: HTMLElement | undefined = $state();
+	/** `bind:this` sets this to `null` on unmount: guard with `== null`. */
+	let group: HTMLElement | null | undefined = $state();
 	let active: number | undefined = $state();
 	const heightCss = $derived(typeof height === 'number' ? `${height}px` : height);
 	const horizontal = $derived(direction === 'horizontal');
@@ -120,7 +121,7 @@
 	const memo = new Map<number, number>();
 
 	function isRtl(): boolean {
-		return group !== undefined && getComputedStyle(group).direction === 'rtl';
+		return group != null && getComputedStyle(group).direction === 'rtl';
 	}
 
 	function onkeydown(e: KeyboardEvent, i: number): void {

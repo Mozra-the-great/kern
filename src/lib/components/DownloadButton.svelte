@@ -97,7 +97,8 @@
 	const variant = $derived(variantProp ?? (showLabel ? 'secondary' : 'ghost'));
 
 	let status = $state<DownloadStatus>('idle');
-	let host: HTMLSpanElement | undefined = $state();
+	/** `bind:this` sets this to `null` on unmount (a click can still finish after it): guard with `== null`. */
+	let host: HTMLSpanElement | null | undefined = $state();
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	let gone = false;
 	$effect(() => {
@@ -157,7 +158,7 @@
 		const id = ++run;
 		started = '';
 		problem = '';
-		const refocus = host !== undefined && isFocusInside(host);
+		const refocus = host != null && isFocusInside(host);
 		let content: unknown;
 		try {
 			content = typeof getContent === 'function' ? getContent() : (blob ?? text);

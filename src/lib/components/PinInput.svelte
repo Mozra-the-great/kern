@@ -60,7 +60,8 @@
 	const allowed = $derived(type === 'alphanumeric' ? /[\p{L}\p{N}]/u : /[0-9]/);
 
 	let chars = $state<string[]>([]);
-	const boxes: HTMLInputElement[] = $state([]);
+	/** `bind:this` sets a box to `null` when `count` shrinks. */
+	const boxes: (HTMLInputElement | null | undefined)[] = $state([]);
 
 	function clean(s: string): string[] {
 		// Full-width digits (e.g. from Japanese keyboards) count as digits.
