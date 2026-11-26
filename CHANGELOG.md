@@ -23,8 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [0.12.3] - 2026-11-26
-
 ### Fixed
 - `Resizable`, `Table` and `DataTable` (and `<k-resizable>`, `<k-table>`, `<k-data-table>`): a panel or table wrapper that scrolls and
   holds nothing the keyboard can focus (text only; a table without sortable header, checkbox or link in a cell, wider than its
@@ -35,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   catalogue text `table.scrollLabel` / `dataTable.scrollLabel` ("Scrollable table", German "Scrollbare Tabelle") without one; a panel by its
   `label` (`data-label` of the element), else `resizable.panelLabel` ("Panel 1 of 2", German "Bereich 1 von 2"). No new props. A box
   whose overflow is `visible` or `hidden` (the stacked rows of a table on a phone) is no scroller and gets no stop.
+
+## [0.12.3] - 2026-11-26
+
+### Fixed
 - `Drawer`, `Modal` and `Popover`: a body that scrolls and holds nothing the keyboard can focus (text only, no link or button) could not
   be scrolled with the keyboard (axe `scrollable-region-focusable`, WCAG 2.1.1, #132). While the body overflows and has no
   tabbable content, the drawer body (and, for a `Modal` without a close button or footer, the content wrapper of the
