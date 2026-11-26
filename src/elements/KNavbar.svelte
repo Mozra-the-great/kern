@@ -8,7 +8,8 @@
 	 */
 	import Navbar from '../lib/components/Navbar.svelte';
 	import { hasSlot } from './form.js';
-	/* items: JSON list of { label, href, current? }. Slots: brand, actions. */
+	/* items: JSON list of { label, href, current? }, optional: without items (missing or []) only the brand and actions
+	 * render, no menu button and no nav. Slots: brand, actions. */
 	let { items = [], label, menuLabel } = $props();
 	const host = $host();
 	const brand = hasSlot(host, 'brand');

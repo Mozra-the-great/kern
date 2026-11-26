@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- `Navbar` and `<k-navbar>` without items (`items` omitted or empty) no longer render the menu button, the phone panel and an empty
+  `<nav>` landmark at any width: only `brand` and `actions` are shown (#131). `items` is now optional
+  (`items?: NavbarItem[] | undefined`, a non-breaking widening; the element's `items` attribute and property were already optional).
+  A navbar with items is unchanged.
+
 ## [0.12.2] - 2026-11-25
 
 ### Added

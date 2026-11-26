@@ -2226,7 +2226,7 @@ items: JSON list of { label, href, current? }. Slots: brand, actions.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` (Pflicht) | `NavbarItem[]` |  |  |
+| `items` | `NavbarItem[]` | `[]` | Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. |
 | `label` | `string` | Katalog `navbar.label` | Accessible name of the navigation landmark. |
 | `menuLabel` | `string` | Katalog `navbar.menuLabel` | Accessible name of the menu button shown on narrow widths. |
 | `class` | `string` | `''` |  |
@@ -2242,7 +2242,7 @@ items: JSON list of { label, href, current? }. Slots: brand, actions.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `NavbarItem[]` | `[]` |  |
+| `items` (JSON) | `items` | `NavbarItem[]` | `[]` | Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. |
 | `label` | `label` | `string` | Katalog `navbar.label` (wie Navbar) | Accessible name of the navigation landmark. |
 | `menu-label` | `menuLabel` | `string` | Katalog `navbar.menuLabel` (wie Navbar) | Accessible name of the menu button shown on narrow widths. |
 
