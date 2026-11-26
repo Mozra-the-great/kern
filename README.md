@@ -686,6 +686,53 @@ dafür keinen `brand`-Schalter. Zeig sie als normales Bild in der Größe, die d
 die Box. Wer trotzdem `<k-mascot>` nimmt (`src` plus `cols`/`rows` = `viewBox`-Breite/-Höhe, `scale={1}`),
 bekommt die Grafik in ihrer `viewBox`-Größe; andere Größen gehen damit nicht.
 
+## Sticker (Tool-Sticker)
+
+Die 42 Tool-Sticker aus `assets/code/tool-stickers/` zeichnet `Sticker` (Custom Element `<k-sticker>`) über ihren Namen,
+den Dateinamen ohne `sticker-` und `.svg` (`qr`, `pdf-merge`, `json`). Es ist die schmale Schwester von `Mascot`: dieselbe
+Art, dieselbe URL-Regel, aber ein Sticker bewegt sich nie.
+
+- nur ganzzahlige Skalen: `scale` (Standard 4) und `compactScale` unter 760 px; Bruchteile werden abgeschnitten, alles
+  unter 1 wird 1. `width`/`height` reservieren die Box (kein Layout-Shift), `image-rendering: pixelated`;
+- feste Farben: die Grafik bringt ihre eigenen mit und folgt keinem Theme, gezeichnet für eine dunkle Fläche;
+- dekorativ (`alt=""`, `aria-hidden`, nie fokussierbar), mit `label` ein benanntes Bild. `label` nur setzen, wenn der
+  Sticker allein sagt, was gemeint ist; steht der Name des Tools daneben, bleibt er dekorativ;
+- ein `<img>` auf eine Datei vom eigenen Origin, also reicht `img-src 'self'` (keine `data:`-URIs, siehe „Mascot“, CSP).
+
+```svelte
+<script>
+  import { Sticker } from '@mozra-the-great/kern';
+  import qr from '@mozra-the-great/kern/assets/code/tool-stickers/sticker-qr.svg?url';
+</script>
+
+<Sticker name="qr" src={qr} />
+<Sticker name="pdf-merge" base="/art/code" scale={6} compactScale={4} label="PDFs zusammenfügen" />
+```
+
+```html
+<k-sticker name="qr" base="/art/code" scale="6"></k-sticker>
+<k-sticker name="pdf-merge" base="/art/code" label="PDFs zusammenfügen"></k-sticker>
+```
+
+`name` ist typisiert (`StickerName`, die Liste steht in `STICKER_NAMES`); ein unbekannter Name aus untypisiertem Code
+zeichnet nichts und wirft nicht. Die URL kommt aus `src` oder aus `base` (wo du `assets/code/` ausspielst) plus Pfad;
+`src` gewinnt. Weitere Exporte: `stickerUrl(base, name)`, `stickerPath(name)`, `stickerGrid(name)` (Pixelraster),
+`isStickerName`.
+
+**Kategorien:** `STICKER_CATEGORY` ordnet jedem Sticker eine Tool-Kategorie zu, `STICKERS_BY_CATEGORY` und
+`stickersOfCategory(category)` liefern die Sticker einer Kategorie in Anzeigereihenfolge. Die Kategorienamen sind
+neutrale Wörter (`STICKER_CATEGORIES`): `pdf`, `images`, `convert`, `time`, `network`, `text`, `dev`, `hosting`.
+
+```ts
+import { STICKER_CATEGORY, stickersOfCategory } from '@mozra-the-great/kern';
+
+STICKER_CATEGORY.qr; // 'text'
+stickersOfCategory('network'); // ['subnet', 'mac']
+```
+
+Welche Sticker in welche Kategorie gehören, steht in `assets/README.md` („Tool stickers“), dort auch Lizenz und
+Namensnennung der Grafiken.
+
 ## Formulare und Inhalt: Abgleich mit stuffcloud und nagellacke
 
 **Button / LinkButton (stuffcloud → kern):**
@@ -1276,7 +1323,7 @@ Daten: DataTable (Filter, Sortierung, Seiten, Zeilenauswahl), Stat, Sparkline, H
 Overlays: Modal, Drawer, Tooltip, Popover ·
 Navigation: Navbar, Breadcrumb, Pagination, Stepper, Tabs, TabLinks, Accordion/AccordionItem, TreeView ·
 Effekte: Typewriter, Caret, Scramble, CountUp, Odometer, Marquee, Reveal, Highlight, GridBackground, Terminal ·
-Pixel-Art: Mascot ·
+Pixel-Art: Mascot, Sticker ·
 Text und Barrierefreiheit: Prose, SkipLink, LiveAnnouncer, OnlineStatus
 
 Ziel ist ein Umfang wie [cock](https://github.com/JoshiCodes/cock) oder größer.

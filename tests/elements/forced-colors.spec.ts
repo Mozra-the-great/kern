@@ -586,6 +586,7 @@ const CASES: Record<string, Case> = {
 			{ name: 'current vs upcoming', a: '#stepper [data-state=current] .marker', b: '#stepper [data-state=upcoming] .marker' }
 		]
 	},
+	'k-sticker': { exempt: 'a raster or vector image, which forced colors leave alone' },
 	'k-switch': {
 		edge: ['#switch-off input'],
 		focus: ['#switch-off input'],

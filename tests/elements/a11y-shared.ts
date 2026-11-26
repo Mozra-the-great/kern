@@ -539,6 +539,7 @@ export const KEYBOARD: Record<string, 'keys' | 'overlays' | { static: string }> 
 	'k-status-dot': { static: 'a glyph with a text label' },
 	'k-status-message': { static: 'a live region' },
 	'k-stepper': 'keys',
+	'k-sticker': { static: 'an image' },
 	'k-switch': 'keys',
 	'k-tab-links': 'keys',
 	'k-table': 'keys',

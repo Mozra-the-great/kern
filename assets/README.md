@@ -5,7 +5,7 @@ Optional artwork per brand, shipped with the package as plain files
 use them in your own pages, for example as an `EmptyState` icon or seasonal decoration. The
 Code pixel art can also be drawn with the `Mascot` component (`<k-mascot>`), which takes any
 file of `code/` by name (`stuffy`, `tool-stickers/sticker-qr`) and the URL you serve it from
-(README, "Mascot"). The pop, line and flower art is vector art: show it with a plain `<img>` at any
+(README, "Mascot"); the tool stickers have their own component, `Sticker` (`<k-sticker>`, README, "Sticker"). The pop, line and flower art is vector art: show it with a plain `<img>` at any
 size (README, "Mascot", last part).
 
 Rules for every brand:
@@ -38,13 +38,42 @@ The colours are fixed and do not follow the theme; the art is drawn for the dark
 | --- | --- | --- |
 | `logo/` | 1 | The pixel logo. |
 | `mascots/` | 9 | `axo.svg` (Stuffy, the pink axolotl and main mascot) plus the easter-egg cast: cat (Mochi), frog (Hop), bunny (Bun), jellyfish (Bloop), penguin (Waddle), fox (Ember), ghost (Boo) and cloud (Cumulo). Each has a typed name in `Mascot` / `<k-mascot>` (`stuffy`, `mochi`, `hop`, `bun`, `bloop`, `waddle`, `ember`, `boo`, `cumulo`) and aliases (`axo`, `axolotl`, `cat`, `frog`, `bunny`, `jelly`, `jellyfish`, `penguin`, `fox`, `ghost`, `cloudy`, `cloud`; README, "Mascot"). Mascots never speak, never block content and never take focus. One frame per animal; the idle bob is done by the runtime. |
-| `tool-stickers/` | 42 | One sticker per stuffcloud tool: Base64, burn after reading, colour, cron, diff, download, expiry, hash, image tools (background, convert, crop, EXIF, pixelate, resize), JSON, JWT, lorem ipsum, MAC address, Markdown, password, paste, PDF tools (compress, merge, protect, rotate, split), QR code, regex, report, shield, site, SQL, subnet, text operations, timestamp, trash, units, URL, user agent, UUID, XML, YAML. |
+| `tool-stickers/` | 42 | One sticker per tool (drawn with `Sticker`, sorted into categories, see "Tool stickers" below): Base64, burn after reading, colour, cron, diff, download, expiry, hash, image tools (background, convert, crop, EXIF, pixelate, resize), JSON, JWT, lorem ipsum, MAC address, Markdown, password, paste, PDF tools (compress, merge, protect, rotate, split), QR code, regex, report, shield, site, SQL, subnet, text operations, timestamp, trash, units, URL, user agent, UUID, XML, YAML. |
 | `marks/` | 11 | Build, convert, dice, document, folder, globe, letter, lock, mountain (image), QR code, template. Always next to a text label. |
 | `seasonal/` | 52 | Particles, header and footer strips, corner sprites and mascot accessories for the seasonal sets (winter to Christmas, Advent with one to four candles; summer: bubbles, flowers, flower row, petals, sun, sun hat, waves). One set at a time, behind content, still under reduced motion. |
 
 115 files in all: the same set, name for name and byte for byte, as stuffcloud's
 `docs/design/prototypes` (generated there from ASCII sources by `docs/design/tools/mascots.py`
 and `stickers.py`) when they were copied. That folder is a frozen reference since #181; the art is kern's to maintain (stickers: #182, Stuffy and the easter-egg cast: #183, season sets: #184).
+
+### Tool stickers
+
+The 42 files of `tool-stickers/` are `sticker-<name>.svg` (7 to 12 art pixels wide, 4 to 12 high). `Sticker`
+(`<k-sticker>`) draws one by `name` (the file name without `sticker-` and `.svg`: `qr`, `pdf-merge`), at a whole
+number of CSS pixels per art pixel (`scale`, default 4), with `image-rendering: pixelated`, through `<img>` (so
+`img-src 'self'` is enough). The art keeps its own bright colours in every theme and is drawn for a dark panel; a
+sticker never moves and never takes focus. Without `label` it is decoration (`alt=""`, `aria-hidden`); give it a
+`label` only where the sticker is the only thing that says what it stands for.
+
+`STICKER_CATEGORY` maps every sticker to a tool category, `STICKERS_BY_CATEGORY` and `stickersOfCategory(category)`
+list the stickers of one category in display order. The category names are plain words for the kind of tool, not
+product names:
+
+| Category | Stickers |
+| --- | --- |
+| `pdf` | `pdf-merge`, `pdf-split`, `pdf-rotate`, `pdf-compress`, `pdf-protect` |
+| `images` | `img-resize`, `img-crop`, `img-convert`, `img-background`, `img-pixel`, `img-exif` |
+| `convert` | `json`, `yaml`, `xml`, `base64`, `colour`, `units` |
+| `time` (time and agents) | `cron`, `timestamp`, `useragent` |
+| `network` | `subnet`, `mac` |
+| `text` (text and generators) | `lorem`, `uuid`, `qr`, `diff`, `textops` |
+| `dev` | `hash`, `password`, `regex`, `url`, `jwt`, `markdown`, `sql` |
+| `hosting` (hosting and misc) | `paste`, `site`, `expiry`, `report`, `shield`, `trash`, `download`, `burn` |
+
+The grouping is the one of the design reference's sticker table. A consumer's own tool list may use other
+categories (an app can have fewer or different areas): `STICKER_CATEGORY` says where the art belongs, not how an
+app groups its tools. `src/lib/components/stickers.ts` holds the data; `tests/unit/stickers.test.ts` keeps the
+names, the files in `tool-stickers/` and the catalogue in step, in both directions.
 
 ## pop
 
@@ -144,9 +173,17 @@ presentation attributes of the root such as `class`, `width` or `aria-hidden`), 
 name, run `npm run assets:manifest` and commit file and manifest together. New art comes from the
 sources only; kern does not draw its own (the one exception is the text-free flower banner, see above).
 
-Licence: same as the project (GPL-3.0-or-later), see `NOTICE`. The Code art (logo, mascots, marks, stickers,
-seasonal sprites) is original pixel art by the author, drawn from ASCII sources in stuffcloud; stuffcloud's
-`THIRD-PARTY-ASSETS.md` states that this artwork is "ours and GPL-3.0-or-later like the code" and therefore lists it
-nowhere, so no third-party attribution applies to `code/` (no font, model or foreign sprite is in it). The pop, line and
-flower art comes from the design-system artifacts named above; its licence is not recorded in this repository and is an
-open question for the owner (see the PR of #183).
+## Licence and attribution
+
+Same as the project: GPL-3.0-or-later, see `NOTICE` (copyright holder: the author named there).
+
+- **code (pixel art, including the 42 tool stickers):** original artwork of the same author, generated from ASCII
+  sources by the author's own scripts (`mascots.py`, `stickers.py`) and not derived from third-party material. The
+  source repository records it as original work under GPL-3.0-or-later like its code and lists no attribution
+  duty for it (its register of third-party assets holds only fonts, models and WASM builds, none of them
+  shipped here). Nothing in `assets/code/` needs an attribution notice; keep this licence note when you
+  redistribute the files.
+- **pop, line, flower:** art from the design-system artifacts named in their sections; same licence as the project.
+
+Where a file carries third-party material, it gets its own entry here and its licence in `NOTICE` in the PR that
+adds it.

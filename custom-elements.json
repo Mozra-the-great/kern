@@ -12896,6 +12896,134 @@
 		},
 		{
 			"kind": "javascript-module",
+			"path": "dist-elements/elements/sticker.js",
+			"declarations": [
+				{
+					"kind": "class",
+					"customElement": true,
+					"tagName": "k-sticker",
+					"name": "KStickerElement",
+					"description": "One tool sticker (pixel art) through <img>, at whole-number scales, in the art's own colours. Still, decorative by default.",
+					"superclass": {
+						"name": "HTMLElement"
+					},
+					"members": [
+						{
+							"kind": "field",
+							"name": "name",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "name",
+							"description": "The sticker (qr, pdf-merge, json, ...); the 42 names of STICKER_NAMES."
+						},
+						{
+							"kind": "field",
+							"name": "src",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "src",
+							"description": "URL of the SVG file (same origin); wins over base."
+						},
+						{
+							"kind": "field",
+							"name": "base",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "base",
+							"description": "URL where the assets/code/ folder is served; with name it gives the file URL."
+						},
+						{
+							"kind": "field",
+							"name": "scale",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "scale",
+							"description": "Whole CSS pixels per art pixel (default 4)."
+						},
+						{
+							"kind": "field",
+							"name": "compactScale",
+							"type": {
+								"text": "number | undefined"
+							},
+							"attribute": "compact-scale",
+							"description": "Scale at max-width 760px; defaults to scale."
+						},
+						{
+							"kind": "field",
+							"name": "label",
+							"type": {
+								"text": "string | undefined"
+							},
+							"attribute": "label",
+							"description": "Text alternative; without it the sticker is decorative (alt=\"\", aria-hidden)."
+						}
+					],
+					"attributes": [
+						{
+							"name": "name",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "name"
+						},
+						{
+							"name": "src",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "src"
+						},
+						{
+							"name": "base",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "base"
+						},
+						{
+							"name": "scale",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "scale"
+						},
+						{
+							"name": "compact-scale",
+							"type": {
+								"text": "number"
+							},
+							"fieldName": "compactScale"
+						},
+						{
+							"name": "label",
+							"type": {
+								"text": "string"
+							},
+							"fieldName": "label"
+						}
+					],
+					"events": [],
+					"slots": []
+				}
+			],
+			"exports": [
+				{
+					"kind": "custom-element-definition",
+					"name": "k-sticker",
+					"declaration": {
+						"name": "KStickerElement",
+						"module": "dist-elements/elements/sticker.js"
+					}
+				}
+			]
+		},
+		{
+			"kind": "javascript-module",
 			"path": "dist-elements/elements/switch.js",
 			"declarations": [
 				{
@@ -16288,6 +16416,14 @@
 					"declaration": {
 						"name": "KStepperElement",
 						"module": "dist-elements/elements/stepper.js"
+					}
+				},
+				{
+					"kind": "custom-element-definition",
+					"name": "k-sticker",
+					"declaration": {
+						"name": "KStickerElement",
+						"module": "dist-elements/elements/sticker.js"
 					}
 				},
 				{

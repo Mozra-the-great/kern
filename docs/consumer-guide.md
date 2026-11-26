@@ -385,5 +385,5 @@ Was in stuffcloud bleibt: App-Layout, Routen, eigene Seiten und alles, was nur s
 Theme `code` und ist dessen Designquelle (#181); stuffclouds `docs/design` ist eine eingefrorene Referenz, an der sich das
 Theme orientiert, keine Vorgabe. `tokens:check` schützt vor versehentlicher Abweichung von dieser Referenz, eine bewusste
 Änderung steht mit Grund in `code.tokens.json` ([Code-Theme-Quelle](themes.md#code-theme-source-37)). Was stuffcloud von
-kern noch braucht und nicht hat (Sticker, Saison-Sets, Theme-Texte), steht mit Issue-Nummern in
+kern noch braucht und nicht hat (Saison-Sets, Theme-Texte), steht mit Issue-Nummern in
 [„Remaining differences“](themes.md#remaining-differences-to-stuffclouds-components-111-181).

@@ -66,6 +66,7 @@
 		Stat,
 		StatusDot,
 		Stepper,
+		Sticker,
 		Switch,
 		Table,
 		Tabs,
@@ -306,6 +307,15 @@
 <Stat label="Stat" value={1} unit={maybeString} delta={maybeNumber} description={maybeString} />
 <StatusDot status="ok" label={maybeString} statusLabels={{ ok: maybeString }} pulse={maybeBoolean} />
 <Stepper {steps} current={maybeNumber} orientation={undefined} onstep={undefined} />
+<Sticker
+	name="qr"
+	src={maybeString}
+	base={maybeString}
+	scale={maybeNumber}
+	compactScale={maybeNumber}
+	label={maybeString}
+	class={maybeString}
+/>
 <Switch bind:checked label="Switch" hint={maybeString} labelFirst={maybeBoolean} />
 <Table {rows} {columns} caption={maybeString} stack={maybeBoolean} empty={maybeString} />
 <Tabs {tabs} bind:value={text} label={maybeString} look={undefined}>

@@ -7,10 +7,10 @@ Elements, erzeugt aus den Quellen. Wie man die Tabellen liest (Attribut oder Pro
 bei Nutzereingaben, Katalogtexte), steht in [`docs/api/README.md`](README.md). Die Beschreibungen stammen aus den
 Quelltext-Kommentaren und sind deshalb englisch.
 
-89 Komponenten, 88 Custom Elements, 42 Datentypen der Svelte-Komponenten und 32 der
+90 Komponenten, 89 Custom Elements, 42 Datentypen der Svelte-Komponenten und 32 der
 Elemente.
 
-[Accordion](#accordion) · [AccordionItem](#accordionitem) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumb](#breadcrumb) · [Button](#button) · [Card](#card) · [Caret](#caret) · [Carousel](#carousel) · [Checkbox](#checkbox) · [Code](#code) · [CodeBlock](#codeblock) · [Collapsible](#collapsible) · [ColorPicker](#colorpicker) · [Combobox](#combobox) · [CommandPalette](#commandpalette) · [ContextMenu](#contextmenu) · [CopyButton](#copybutton) · [CountUp](#countup) · [DataTable](#datatable) · [DatePicker](#datepicker) · [Divider](#divider) · [DownloadButton](#downloadbutton) · [Drawer](#drawer) · [DropdownMenu](#dropdownmenu) · [EmptyState](#emptystate) · [Field](#field) · [FileDrop](#filedrop) · [GridBackground](#gridbackground) · [Heatmap](#heatmap) · [Highlight](#highlight) · [HistoryBar](#historybar) · [IconButton](#iconbutton) · [Input](#input) · [Kbd](#kbd) · [Label](#label) · [Link](#link) · [LiveAnnouncer](#liveannouncer) · [Marquee](#marquee) · [Mascot](#mascot) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Odometer](#odometer) · [OnlineStatus](#onlinestatus) · [Pagination](#pagination) · [PinInput](#pininput) · [Popover](#popover) · [Progress](#progress) · [ProgressRing](#progressring) · [Prose](#prose) · [RadioGroup](#radiogroup) · [Rating](#rating) · [RelativeTime](#relativetime) · [Resizable](#resizable) · [Reveal](#reveal) · [Scramble](#scramble) · [ScrollArea](#scrollarea) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [SelectGrid](#selectgrid) · [Skeleton](#skeleton) · [SkipLink](#skiplink) · [Slider](#slider) · [SortableList](#sortablelist) · [Sparkline](#sparkline) · [Spinner](#spinner) · [Stat](#stat) · [StatusDot](#statusdot) · [StatusMessage](#statusmessage) · [Stepper](#stepper) · [Switch](#switch) · [Table](#table) · [TabLinks](#tablinks) · [Tabs](#tabs) · [Tag](#tag) · [TagInput](#taginput) · [Terminal](#terminal) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [Tile](#tile) · [TileGrid](#tilegrid) · [Timeline](#timeline) · [Toaster](#toaster) · [Tooltip](#tooltip) · [TreeView](#treeview) · [Typewriter](#typewriter) · [VisuallyHidden](#visuallyhidden) · [Datentypen (Svelte)](#datentypen-svelte) · [Datentypen (Elemente)](#datentypen-elemente)
+[Accordion](#accordion) · [AccordionItem](#accordionitem) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumb](#breadcrumb) · [Button](#button) · [Card](#card) · [Caret](#caret) · [Carousel](#carousel) · [Checkbox](#checkbox) · [Code](#code) · [CodeBlock](#codeblock) · [Collapsible](#collapsible) · [ColorPicker](#colorpicker) · [Combobox](#combobox) · [CommandPalette](#commandpalette) · [ContextMenu](#contextmenu) · [CopyButton](#copybutton) · [CountUp](#countup) · [DataTable](#datatable) · [DatePicker](#datepicker) · [Divider](#divider) · [DownloadButton](#downloadbutton) · [Drawer](#drawer) · [DropdownMenu](#dropdownmenu) · [EmptyState](#emptystate) · [Field](#field) · [FileDrop](#filedrop) · [GridBackground](#gridbackground) · [Heatmap](#heatmap) · [Highlight](#highlight) · [HistoryBar](#historybar) · [IconButton](#iconbutton) · [Input](#input) · [Kbd](#kbd) · [Label](#label) · [Link](#link) · [LiveAnnouncer](#liveannouncer) · [Marquee](#marquee) · [Mascot](#mascot) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Odometer](#odometer) · [OnlineStatus](#onlinestatus) · [Pagination](#pagination) · [PinInput](#pininput) · [Popover](#popover) · [Progress](#progress) · [ProgressRing](#progressring) · [Prose](#prose) · [RadioGroup](#radiogroup) · [Rating](#rating) · [RelativeTime](#relativetime) · [Resizable](#resizable) · [Reveal](#reveal) · [Scramble](#scramble) · [ScrollArea](#scrollarea) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [SelectGrid](#selectgrid) · [Skeleton](#skeleton) · [SkipLink](#skiplink) · [Slider](#slider) · [SortableList](#sortablelist) · [Sparkline](#sparkline) · [Spinner](#spinner) · [Stat](#stat) · [StatusDot](#statusdot) · [StatusMessage](#statusmessage) · [Stepper](#stepper) · [Sticker](#sticker) · [Switch](#switch) · [Table](#table) · [TabLinks](#tablinks) · [Tabs](#tabs) · [Tag](#tag) · [TagInput](#taginput) · [Terminal](#terminal) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [Tile](#tile) · [TileGrid](#tilegrid) · [Timeline](#timeline) · [Toaster](#toaster) · [Tooltip](#tooltip) · [TreeView](#treeview) · [Typewriter](#typewriter) · [VisuallyHidden](#visuallyhidden) · [Datentypen (Svelte)](#datentypen-svelte) · [Datentypen (Elemente)](#datentypen-elemente)
 
 ## Accordion
 
@@ -3726,6 +3726,45 @@ clickable: completed steps become buttons; a click moves `current` there and fir
 | Ereignis | `detail` | Beschreibung |
 | --- | --- | --- |
 | `step` | `number` | Index of the completed step the user clicked (`clickable`). |
+
+### Element: Slots
+
+Keine Slots.
+
+## Sticker
+
+Svelte: `import { Sticker } from '@mozra-the-great/kern'` · Element: `<k-sticker>` aus `@mozra-the-great/kern/elements/sticker`
+
+Quelle: [`Sticker.svelte`](../../src/lib/components/Sticker.svelte), [`KSticker.svelte`](../../src/elements/KSticker.svelte)
+
+One tool sticker (pixel art) through &lt;img>, at whole-number scales, in the art's own colours. Still, decorative by default.
+
+### Svelte: Props
+
+| Prop | Typ | Vorgabe | Beschreibung |
+| --- | --- | --- | --- |
+| `name` (Pflicht) | `StickerName` |  | The sticker: one of `STICKER_NAMES` (`qr`, `pdf-merge`). Anything else draws nothing. |
+| `src` | `string` |  | URL of the SVG file (same origin, a file, not a `data:` URI). Wins over `base`. |
+| `base` | `string` |  | URL where the `assets/code/` folder is served; with `name` it gives the file URL. |
+| `scale` | `number` | `4` | Whole CSS pixels per art pixel (fractions are cut off, minimum 1). |
+| `compactScale` | `number` |  | Scale on phones (max-width 760px); defaults to `scale`. |
+| `label` | `string` |  | Text alternative; leave unset for the usual decorative sticker (hidden from assistive tech). |
+| `class` | `string` | `''` |  |
+
+### Element: Attribute und Properties
+
+| Attribut | Property | Typ | Vorgabe | Beschreibung |
+| --- | --- | --- | --- | --- |
+| `name` | `name` | `string` |  | The sticker (qr, pdf-merge, json, ...); the 42 names of STICKER_NAMES. |
+| `src` | `src` | `string` |  | URL of the SVG file (same origin); wins over base. |
+| `base` | `base` | `string` |  | URL where the assets/code/ folder is served; with name it gives the file URL. |
+| `scale` | `scale` | `number` | `4` (wie Sticker) | Whole CSS pixels per art pixel (default 4). |
+| `compact-scale` | `compactScale` | `number` |  | Scale at max-width 760px; defaults to scale. |
+| `label` | `label` | `string` |  | Text alternative; without it the sticker is decorative (alt="", aria-hidden). |
+
+### Element: Ereignisse
+
+Keine eigenen Ereignisse.
 
 ### Element: Slots
 

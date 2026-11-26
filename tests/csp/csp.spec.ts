@@ -339,6 +339,9 @@ const CASES: Record<string, Case> = {
 	StatusDot: 'static',
 	StatusMessage: 'static',
 	Stepper: 'static',
+	Sticker: async (_page, s) => {
+		await expect.poll(() => s.locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+	},
 	Switch: async (_page, s) => {
 		await s.getByText('Notifications').click();
 		await expect(s.getByRole('switch')).toBeChecked();
@@ -384,6 +387,10 @@ const CASES: Record<string, Case> = {
 		await page.mouse.move(0, 0);
 	},
 	TreeView: async (page, s) => {
+		// The toasts of the cases before stay in the bottom-right corner and can cover the tree: dismiss them first.
+		const dismiss = page.getByRole('region', { name: 'Notifications' }).getByRole('button', { name: 'Dismiss' });
+		for (let open = await dismiss.count(); open > 0; open -= 1) await dismiss.first().click();
+		await expect(dismiss).toHaveCount(0);
 		await s.getByRole('treeitem', { name: 'main.ts' }).click();
 		await page.keyboard.press('ArrowUp');
 	},
