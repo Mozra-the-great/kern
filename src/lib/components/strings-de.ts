@@ -74,7 +74,7 @@ export const de: KernBundle = {
 		errorLabel: 'Download fehlgeschlagen',
 		fallbackName: 'datei'
 	},
-	drawer: { closeLabel: 'Schließen' },
+	drawer: { closeLabel: 'Schließen', bodyLabel: 'Scrollbarer Inhalt' },
 	fileDrop: {
 		removeLabel: 'Entfernen',
 		listLabel: 'Ausgewählte Dateien',
@@ -111,7 +111,7 @@ export const de: KernBundle = {
 	},
 	link: { externalLabel: '(öffnet in einem neuen Tab)' },
 	marquee: { pauseLabel: 'Anhalten', playLabel: 'Fortsetzen' },
-	modal: { closeLabel: 'Schließen' },
+	modal: { closeLabel: 'Schließen', bodyLabel: 'Scrollbarer Inhalt' },
 	navbar: { label: 'Hauptnavigation', menuLabel: 'Menü' },
 	numberInput: { decrementLabel: 'Verringern', incrementLabel: 'Erhöhen' },
 	onlineStatus: {

@@ -48,6 +48,20 @@ test('axe finds a violation (the matrix is not vacuous)', async ({ page }) => {
 	expect(ids).toEqual(expect.arrayContaining(['image-alt', 'button-name']));
 });
 
+test('axe finds a scrolling region the keyboard cannot reach, whatever its impact rating (#132)', async ({ page }) => {
+	await openPage(page, ALL);
+	await page.evaluate(() =>
+		document
+			.querySelector('main')
+			?.insertAdjacentHTML(
+				'beforeend',
+				'<div style="height:40px;overflow:auto"><p>Text only</p><p>Text only</p><p>Text only</p><p>Text only</p><p>Text only</p></div>'
+			)
+	);
+	const ids = (await axeViolations(page)).map((f) => f.id);
+	expect(ids).toContain('scrollable-region-focusable');
+});
+
 for (const theme of THEMES) {
 	test(`axe: every element in ${theme}`, async ({ page }) => {
 		await openPage(page, ALL, { theme });

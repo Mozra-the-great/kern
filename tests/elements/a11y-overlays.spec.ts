@@ -6,7 +6,7 @@
  * back to its trigger, and lets Tab leave. Page: tests/elements/pages/forced-colors.html, Code theme.
  */
 import { expect, test, type Page } from '@playwright/test';
-import { ALL, openPage } from './a11y-shared.js';
+import { ALL, openLongPopover, openLongText, openPage, THEMES } from './a11y-shared.js';
 
 /**
  * True when the focus is inside the element: its shadow tree, its light DOM children, and what is slotted into it.
@@ -118,6 +118,183 @@ test.describe('modal dialogs: focus moves in, is trapped, Escape closes, focus g
 		await expect(page.locator('#palette dialog[open]')).toBeHidden();
 		expect(await collected(page)).toBe(1);
 		await expect(page.locator('#btn-primary button')).toBeFocused();
+	});
+});
+
+/**
+ * A drawer or modal whose body is long text only (#132): nothing in it can take focus, so the scrolling body is a tab stop
+ * itself (while it overflows and holds nothing else), named by the title, with a focus ring in every theme, and the keys
+ * of a scroll container scroll it. The focus trap, Escape and the focus return are the ones tested above.
+ */
+test.describe('a body that scrolls and holds nothing focusable can be reached and scrolled with the keyboard', () => {
+	const scrolling = [
+		{ tag: 'k-drawer' as const, scroller: '#long-text dialog .body', stop: '#long-text dialog .body' },
+		{ tag: 'k-modal' as const, scroller: '#long-text dialog', stop: '#long-text dialog .inner' }
+	];
+	for (const theme of THEMES) {
+		for (const { tag, scroller, stop } of scrolling) {
+			test(`${tag} in ${theme}: Tab reaches the body, it has a ring, PageDown and the arrows scroll it`, async ({ page }) => {
+				await openPage(page, ALL, { theme, width: 1280, height: 480 });
+				await page.locator('#open-modal button').focus();
+				await openLongText(page, tag);
+				const region = page.getByRole('region', { name: 'Terms of use' });
+				await expect(region).toHaveCount(1);
+				// Tab reaches it (a drawer has the close button before it, a modal without a close button has nothing else)
+				for (let i = 0; i < 3 && !(await region.evaluate((el) => el.matches(':focus'))); i++) await page.keyboard.press('Tab');
+				await expect(region, 'Tab reached the scrolling body').toBeFocused();
+				const ring = await region.evaluate((el) => {
+					const c = getComputedStyle(el);
+					return { visible: el.matches(':focus-visible'), style: c.outlineStyle, width: parseFloat(c.outlineWidth), color: c.outlineColor };
+				});
+				expect(ring.visible, 'the ring is shown after keyboard focus').toBe(true);
+				expect(ring.style).not.toBe('none');
+				expect(ring.width).toBeGreaterThan(0);
+				expect(ring.color).not.toMatch(/rgba\([^)]*,\s*0\)$/);
+				const top = (): Promise<number> => page.locator(scroller).evaluate((el) => el.scrollTop);
+				// a key scroll is animated by the browser, and a key pressed during the animation can be swallowed: let it come to rest
+				const rest = async (): Promise<number> => {
+					let last = -1;
+					for (let i = 0; i < 60; i++) {
+						const now = await top();
+						if (now === last) return now;
+						last = now;
+						await frames(page);
+					}
+					return last;
+				};
+				expect(await top()).toBe(0);
+				await page.keyboard.press('PageDown');
+				await expect.poll(top, { message: 'PageDown scrolls the body' }).toBeGreaterThan(100);
+				const afterPage = await rest();
+				await page.keyboard.press('ArrowDown');
+				await expect.poll(top, { message: 'ArrowDown scrolls the body' }).toBeGreaterThan(afterPage);
+				await rest();
+				await page.keyboard.press('End');
+				await expect
+					.poll(() => page.locator(scroller).evaluate((el) => el.scrollHeight - el.clientHeight - el.scrollTop), {
+						message: 'End reaches the end'
+					})
+					.toBeLessThan(2);
+				await page.keyboard.press('ArrowUp');
+				await expect(page.locator(stop), 'the focus stays on the body').toBeFocused();
+				// the close behaves as before
+				await page.keyboard.press('Escape');
+				if (tag === 'k-drawer') {
+					await expect(page.locator('#long-text dialog[open]')).toBeHidden();
+				} else {
+					await expect(page.locator('#long-text dialog[open]'), 'dismissible=false keeps it open').toBeVisible();
+					expect(await inside(page, '#long-text')).toBe(true);
+				}
+			});
+		}
+	}
+
+	test('k-popover: a panel of long text has the focus, a ring and PageDown scrolls it; Escape closes it', async ({ page }) => {
+		const trigger = page.locator('#popover .trigger');
+		await openLongPopover(page);
+		const panel = page.locator('#popover .panel');
+		await expect(panel).toBeFocused();
+		await page.keyboard.press('Shift+Tab');
+		await page.keyboard.press('Tab');
+		await expect(panel, 'Tab reaches the panel after the trigger').toBeFocused();
+		expect(await panel.evaluate((el) => el.matches(':focus-visible') && getComputedStyle(el).outlineStyle !== 'none')).toBe(true);
+		await page.keyboard.press('PageDown');
+		await expect.poll(() => panel.evaluate((el) => el.scrollTop), { message: 'PageDown scrolls the panel' }).toBeGreaterThan(50);
+		await page.keyboard.press('Escape');
+		await expect(panel).toBeHidden();
+		await expect(trigger).toBeFocused();
+	});
+
+	test('k-drawer: Escape closes it and the focus goes back to the opener, as with a short body', async ({ page }) => {
+		const opener = page.locator('#open-drawer button');
+		await opener.focus();
+		await page.evaluate(() => {
+			const host = document.createElement('k-drawer') as HTMLElement & { open: boolean };
+			host.id = 'long-text';
+			host.setAttribute('title', 'Terms of use');
+			for (let i = 1; i <= 40; i++) host.insertAdjacentHTML('beforeend', `<p>Paragraph ${i} of a long text that needs room.</p>`);
+			document.body.append(host);
+			host.open = true;
+		});
+		await expect(page.locator('#long-text [role=region][tabindex="0"]')).toHaveCount(1);
+		// the initial focus is still the close button: the stop only appears once the dialog is measured
+		expect(await inside(page, '#long-text')).toBe(true);
+		await expect(page.locator('#long-text .x')).toBeFocused();
+		await page.keyboard.press('Tab');
+		await expect(page.locator('#long-text .body')).toBeFocused();
+		await page.keyboard.press('Escape');
+		await expect(page.locator('#long-text dialog[open]')).toBeHidden();
+		await expect(opener).toBeFocused();
+	});
+
+	test('no extra tab stop: a body that does not scroll, a button in the body, a modal with a close button', async ({ page }) => {
+		const stops = (sel: string): Promise<number> => page.locator(sel).evaluateAll((els) => els.length);
+		// the page's own drawer: short text, a button in the footer
+		await page.evaluate(() => {
+			(document.querySelector('#drawer') as HTMLElement & { open: boolean }).open = true;
+		});
+		await expect(page.locator('#drawer dialog[open]')).toBeVisible();
+		await frames(page);
+		expect(await stops('#drawer [tabindex="0"]')).toBe(0);
+		await page.evaluate(() => {
+			(document.querySelector('#drawer') as HTMLElement & { open: boolean }).open = false;
+		});
+		// long text and a button in the body
+		await page.evaluate(() => {
+			const host = document.createElement('k-drawer') as HTMLElement & { open: boolean };
+			host.id = 'with-button';
+			host.setAttribute('title', 'Filters');
+			for (let i = 0; i < 40; i++) host.insertAdjacentHTML('beforeend', `<p>Paragraph ${i} of a long text that needs room.</p>`);
+			host.insertAdjacentHTML('beforeend', '<k-button id="inside">Reset</k-button>');
+			document.body.append(host);
+			host.open = true;
+		});
+		await expect(page.locator('#with-button dialog[open]')).toBeVisible();
+		await frames(page);
+		expect(await page.locator('#with-button .body').evaluate((el) => el.scrollHeight > el.clientHeight), 'the body scrolls').toBe(true);
+		expect(await stops('#with-button [tabindex="0"]'), 'a k-button in the body is the way in').toBe(0);
+		// a modal with a close button scrolls as a whole and the close button is a way in
+		await page.evaluate(() => {
+			const host = document.createElement('k-modal') as HTMLElement & { open: boolean };
+			host.id = 'with-close';
+			host.setAttribute('title', 'Terms');
+			for (let i = 0; i < 40; i++) host.insertAdjacentHTML('beforeend', `<p>Paragraph ${i} of a long text that needs room.</p>`);
+			document.body.append(host);
+			host.open = true;
+		});
+		await expect(page.locator('#with-close dialog[open]')).toBeVisible();
+		await frames(page);
+		expect(await page.locator('#with-close dialog').evaluate((el) => el.scrollHeight > el.clientHeight), 'the dialog scrolls').toBe(true);
+		expect(await stops('#with-close [tabindex="0"]')).toBe(0);
+	});
+
+	test('the stop appears and disappears with the content and the viewport', async ({ page }) => {
+		await openLongText(page, 'k-drawer');
+		const body = page.locator('#long-text dialog .body');
+		// a button added to the light DOM of the element is slotted into the body: the stop goes
+		await page.evaluate(() => document.querySelector('#long-text')?.insertAdjacentHTML('beforeend', '<k-button id="late">Late</k-button>'));
+		await expect(body).not.toHaveAttribute('tabindex', /.*/);
+		await expect(page.getByRole('region', { name: 'Terms of use' })).toHaveCount(0);
+		await page.evaluate(() => document.querySelector('#late')?.remove());
+		await expect(body).toHaveAttribute('tabindex', '0');
+		// a taller viewport that shows all of it removes the stop, a short one brings it back
+		await page.setViewportSize({ width: 1280, height: 4000 });
+		await expect(body).not.toHaveAttribute('tabindex', /.*/);
+		await page.setViewportSize({ width: 1280, height: 480 });
+		await expect(body).toHaveAttribute('tabindex', '0');
+	});
+
+	test('no event fires while it renders and the open state is unchanged', async ({ page }) => {
+		await page.evaluate(() => {
+			const w = window as unknown as { __events: string[] };
+			w.__events = [];
+			document.addEventListener('close', (e) => w.__events.push(`close ${(e.target as Element).id}`), true);
+			document.addEventListener('cancel', (e) => w.__events.push(`cancel ${(e.target as Element).id}`), true);
+		});
+		await openLongText(page, 'k-drawer');
+		await page.evaluate(() => new Promise((r) => setTimeout(r, 200)));
+		expect(await page.evaluate(() => (window as unknown as { __events: string[] }).__events)).toEqual([]);
+		expect(await page.evaluate(() => (document.querySelector('#long-text') as HTMLElement & { open: boolean }).open)).toBe(true);
 	});
 });
 

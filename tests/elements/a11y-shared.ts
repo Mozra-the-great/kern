@@ -122,6 +122,41 @@ export interface State {
 const setOpen = (id: string) => (page: Page) =>
 	page.evaluate((i) => ((document.querySelector(i) as HTMLElement & { open: boolean }).open = true), id);
 
+/**
+ * Opens a drawer or a modal whose body is long text and nothing else (no link, no button; a modal without a footer and
+ * with `dismissible="false"` has not even a close button), so it scrolls and offers the keyboard nothing to focus (#132).
+ * Resolves once the browser has measured it and the scrolling body has become a tab stop.
+ */
+export async function openLongText(page: Page, tag: 'k-drawer' | 'k-modal'): Promise<void> {
+	await page.evaluate((t) => {
+		const host = document.createElement(t) as HTMLElement & { open: boolean };
+		host.id = 'long-text';
+		host.setAttribute('title', 'Terms of use');
+		if (t === 'k-modal') host.setAttribute('dismissible', 'false');
+		for (let i = 1; i <= 40; i++) {
+			const p = document.createElement('p');
+			p.textContent = `Paragraph ${i}: the terms are long and have neither a link nor a button, so only the scrolling itself is left to the keyboard.`;
+			host.append(p);
+		}
+		document.body.append(host);
+		host.open = true;
+	}, tag);
+	await expect(page.locator('#long-text dialog[open]')).toBeVisible();
+	await expect(page.locator('#long-text [role=region][tabindex="0"]')).toHaveCount(1);
+}
+
+/** Opens the popover of the page with a panel of long text and nothing else: it scrolls and has nothing to focus (#132). */
+export async function openLongPopover(page: Page): Promise<void> {
+	await page.evaluate(() => {
+		const popover = document.querySelector('#popover') as HTMLElement;
+		popover.replaceChildren();
+		for (let i = 1; i <= 80; i++) popover.insertAdjacentHTML('beforeend', `<p>Line ${i} of a text without a link or a button.</p>`);
+	});
+	await page.locator('#popover .trigger').click();
+	await expect(page.locator('#popover .panel')).toBeVisible();
+	await expect(page.locator('#popover .panel[tabindex="0"]')).toHaveCount(1);
+}
+
 /** The open states of tests/elements/pages/forced-colors.html. */
 export const STATES: Record<string, State> = {
 	modal: {
@@ -137,6 +172,18 @@ export const STATES: Record<string, State> = {
 			await setOpen('#drawer')(page);
 			await expect(page.locator('#drawer dialog[open]')).toBeVisible();
 		}
+	},
+	'drawer-long-text': {
+		tags: ['k-drawer'],
+		prepare: (page) => openLongText(page, 'k-drawer')
+	},
+	'modal-long-text': {
+		tags: ['k-modal'],
+		prepare: (page) => openLongText(page, 'k-modal')
+	},
+	'popover-long-text': {
+		tags: ['k-popover'],
+		prepare: openLongPopover
 	},
 	'command-palette': {
 		tags: ['k-command-palette'],

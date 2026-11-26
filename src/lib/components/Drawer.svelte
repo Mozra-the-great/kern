@@ -2,6 +2,7 @@
 	import { strings } from './strings.svelte.js';
 	import type { Snippet } from 'svelte';
 	import { ModalDialog } from './modal-dialog.js';
+	import { hasFocus, watchScrollRegion } from './scroll-region.js';
 
 	interface Props {
 		open?: boolean | undefined;
@@ -47,6 +48,7 @@
 		children
 	}: Props = $props();
 	const closeLabel = $derived(closeLabelProp ?? strings().drawer.closeLabel);
+	const bodyLabel = $derived(strings().drawer.bodyLabel);
 	let dialog: HTMLDialogElement | undefined = $state();
 	const uid = $props.id();
 	// Same open/close, scroll lock and focus handling as Modal.
@@ -64,6 +66,22 @@
 		if (dialog) control.sync(dialog, !!open);
 	});
 	$effect(() => () => control.destroy());
+
+	// A body that scrolls but holds nothing tabbable is a tab stop itself (named by the title), so the keyboard can scroll it.
+	// No tabindex otherwise: even -1 would make it the dialog's first focus target on open. While it has the focus it
+	// stays focusable (-1), so a resize that makes the content fit does not throw the focus out of the dialog.
+	let body: HTMLElement | undefined = $state();
+	let focusableBody = $state(false);
+	let heldBody = $state(false);
+	$effect(() => {
+		if (body) {
+			const el = body;
+			return watchScrollRegion(el, (needs) => {
+				focusableBody = needs;
+				heldBody = !needs && hasFocus(el);
+			});
+		}
+	});
 </script>
 
 <dialog
@@ -87,7 +105,18 @@
 				</button>
 			{/if}
 		</header>
-		<div class="body">{@render children?.()}</div>
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+		<div
+			class="body"
+			bind:this={body}
+			role={focusableBody ? 'region' : undefined}
+			aria-labelledby={focusableBody && title ? `${uid}-t` : undefined}
+			aria-label={focusableBody && !title ? bodyLabel : undefined}
+			tabindex={focusableBody ? 0 : heldBody ? -1 : undefined}
+			onfocusout={() => (heldBody = false)}
+		>
+			{@render children?.()}
+		</div>
 		{#if footer}<footer>{@render footer()}</footer>{/if}
 	</div>
 </dialog>
@@ -161,6 +190,11 @@
 		flex: 1;
 		overflow: auto;
 		padding: var(--k-space-6);
+	}
+	/* Inside the box: the dialog clips an outside ring where the body meets its edge. */
+	.body:focus-visible {
+		outline: var(--k-focus-w) solid var(--k-focus);
+		outline-offset: calc(var(--k-focus-w) * -1);
 	}
 	footer {
 		display: flex;
