@@ -23,8 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [0.12.4] - 2026-11-26
-
 ### Fixed
 - `data-theme` on `<html>` no longer overrides the reader's default font size (#144, from stuffcloud#121): `base.css` set a px
   `font-size` (`--k-text-md`) on every `[data-theme]` element, so a themed root ignored the browser setting and froze every `rem`
@@ -35,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `--k-text-md` as px, and the px `--k-text-*` tokens stay as they are, so component text and heights do not follow the setting.
   The rule on the root has specificity 0: a page's own `html { font-size }` now wins over the theme. Documented in
   docs/consumer-guide.md (Schriftgröße) and docs/themes.md; tested with a 20px browser default in all variants.
+
+## [0.12.4] - 2026-11-26
+
+### Fixed
 - `Resizable`, `Table` and `DataTable` (and `<k-resizable>`, `<k-table>`, `<k-data-table>`): a panel or table wrapper that scrolls and
   holds nothing the keyboard can focus (text only; a table without sortable header, checkbox or link in a cell, wider than its
   container or with `stack={false}`) could not be scrolled with the keyboard (axe `scrollable-region-focusable`, WCAG 2.1.1, #137;
