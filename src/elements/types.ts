@@ -186,7 +186,10 @@ export interface ThemeOption {
 export interface ResizablePanel {
 	/** Unique within the group. */
 	id: string;
-	/** Name of the panel, used in the label of its handle. Default: the id. */
+	/**
+	 * Name of the panel: used in the label of its handle (default: the id) and as the name of the panel while it scrolls
+	 * and is a tab stop (default: the text `resizable.panelLabel`, "Panel 1 of 2").
+	 */
 	label?: string | undefined;
 	/** Smallest size in % of the group. Default 10. */
 	min?: number | undefined;
