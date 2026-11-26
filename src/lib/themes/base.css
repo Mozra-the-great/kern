@@ -175,7 +175,7 @@
 	 * read by the button itself, so an accent set on a subtree reaches them */
 	--k-button-danger-hover-as-primary: 0;
 	--k-button-danger-hover-filter: brightness(0.92);
-	/* Input, Select (the control) and Field, Label (label, hint and error) */
+	/* Input, Select, Textarea (the control) and Field, Label (label, hint and error) */
 	--k-field-font: initial;
 	--k-field-size: var(--k-text-md);
 	--k-field-bg: var(--k-bg-raised);
@@ -186,7 +186,7 @@
 	--k-field-hint-font: initial;
 	--k-field-hint-size: var(--k-text-sm);
 	--k-field-hint-color: var(--k-fg-hint);
-	/* edge of Input and Select on hover; while focused (the ring is drawn as well) the edge is
+	/* edge of Input, Select and Textarea on hover; while focused (the ring is drawn as well) the edge is
 	 * --k-field-focus-border, which has no default here: the component falls back to --k-accent-mark
 	 * itself, so an accent set on a subtree (applyAccent) still reaches it */
 	--k-field-hover-border: var(--k-fg-muted);
