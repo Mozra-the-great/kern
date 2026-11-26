@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openPage, THEMES } from './a11y-shared.js';
 
 // Navigation and content (#46 CodeBlock, #47 TabLinks, #48 Tabs without panels, #49 Tile/TileGrid), in
 // the browser through the built custom elements, which render the same Svelte components.
@@ -328,9 +329,12 @@ test.describe('Tile and TileGrid (#49)', () => {
 		expect(link?.height).toBeCloseTo(cell?.height ?? 0, 0);
 	});
 
-	test('hairlines: the grid draws the top, every tile its right and bottom; rows on phones', async ({ page }) => {
+	test('hairlines: the grid draws the top and left, every tile its right and bottom; rows on phones', async ({ page }) => {
 		const grid = page.locator('#grid .k-tile-grid');
 		await expect(grid).toHaveCSS('border-top-style', 'solid');
+		await expect(grid).toHaveCSS('border-left-style', 'solid');
+		await expect(grid).toHaveCSS('border-right-style', 'none');
+		await expect(grid).toHaveCSS('border-bottom-style', 'none');
 		const tile = page.locator('#plain-tile .k-tile');
 		await expect(tile).toHaveCSS('border-right-style', 'solid');
 		await expect(tile).toHaveCSS('border-bottom-style', 'solid');
@@ -349,5 +353,98 @@ test.describe('Tile and TileGrid (#49)', () => {
 		expect(await columns()).toBe(1);
 		await expect(page.locator('#plain-tile .cell')).toHaveCSS('flex-direction', 'row');
 		await expect(page.locator('#grid k-tile').first().locator('a')).toHaveCSS('flex-direction', 'row');
+	});
+});
+
+/** The border widths and colours of the grid and of its first and last tile, and where the first tile starts. */
+interface Edges {
+	gridTop: string;
+	gridLeft: string;
+	gridLeftColor: string;
+	gridTopColor: string;
+	tileRightColor: string;
+	tileRightWidth: string;
+	tileLeftWidth: string;
+	tileLeft: number;
+	gridLeftEdge: number;
+	gridInnerLeft: number;
+	overflow: number;
+}
+
+function edges(page: Page): Promise<Edges> {
+	return page.evaluate(() => {
+		const grid = document.querySelector('#grid')?.shadowRoot?.querySelector('.k-tile-grid') as HTMLElement;
+		const tile = document.querySelector('#plain-tile')?.shadowRoot?.querySelector('.k-tile') as HTMLElement;
+		const first = document.querySelector('#grid k-tile')?.shadowRoot?.querySelector('.k-tile') as HTMLElement;
+		const g = getComputedStyle(grid);
+		const t = getComputedStyle(tile);
+		const gridBox = grid.getBoundingClientRect();
+		return {
+			gridTop: g.borderTopWidth,
+			gridLeft: g.borderLeftWidth,
+			gridLeftColor: g.borderLeftColor,
+			gridTopColor: g.borderTopColor,
+			tileRightColor: t.borderRightColor,
+			tileRightWidth: t.borderRightWidth,
+			tileLeftWidth: t.borderLeftWidth,
+			tileLeft: first.getBoundingClientRect().left,
+			gridLeftEdge: gridBox.left,
+			gridInnerLeft: gridBox.left + parseFloat(g.borderLeftWidth),
+			overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+		};
+	});
+}
+
+test.describe('TileGrid is closed on the left (#172)', () => {
+	for (const theme of THEMES) {
+		test(`${theme}: the left edge is as wide and as dark as the top edge and nothing is drawn twice`, async ({ page }) => {
+			await openPage(page, 'navigation', { theme });
+			const e = await edges(page);
+			expect(parseFloat(e.gridTop)).toBeGreaterThan(0);
+			expect(e.gridLeft, 'left line as wide as the top line').toBe(e.gridTop);
+			expect(e.gridLeftColor, 'left line has the colour of the top line').toBe(e.gridTopColor);
+			expect(e.gridLeftColor, 'and of the lines the tiles draw').toBe(e.tileRightColor);
+			expect(e.tileLeftWidth, 'the tiles draw no left line of their own').toBe('0px');
+			// The first column starts exactly at the inner edge of the grid: one line, no gap, no overlap.
+			expect(e.tileLeft).toBeCloseTo(e.gridInnerLeft, 1);
+			expect(e.gridInnerLeft - e.gridLeftEdge).toBeCloseTo(parseFloat(e.gridLeft), 1);
+		});
+	}
+
+	test('at 320 and 375 px the grid still fits the page (the left line adds no width)', async ({ page }) => {
+		for (const width of [320, 375, 1280]) {
+			await openPage(page, 'navigation', { width });
+			const e = await edges(page);
+			expect(e.overflow, `${width} px: no horizontal scroll`).toBeLessThanOrEqual(0);
+			const box = await page.locator('#grid').boundingBox();
+			expect((box?.x ?? 0) + (box?.width ?? 0), `${width} px: the grid ends inside the viewport`).toBeLessThanOrEqual(width + 0.5);
+		}
+	});
+
+	test('--k-tile-grid-left-w: 0 drops the left line for a grid inside a bordered container', async ({ page }) => {
+		await openPage(page, 'navigation');
+		await page.evaluate(() => document.getElementById('grid')?.style.setProperty('--k-tile-grid-left-w', '0'));
+		const e = await edges(page);
+		expect(e.gridLeft).toBe('0px');
+		expect(e.gridTop).not.toBe('0px');
+		expect(e.tileLeft).toBeCloseTo(e.gridLeftEdge, 1);
+	});
+
+	test('forced colors: the left line is CanvasText like the other edges', async ({ page }) => {
+		await page.emulateMedia({ forcedColors: 'active' });
+		await openPage(page, 'navigation');
+		const e = await edges(page);
+		expect(parseFloat(e.gridLeft)).toBeGreaterThan(0);
+		expect(e.gridLeftColor).toBe(e.tileRightColor);
+		expect(e.gridTopColor).toBe(e.tileRightColor);
+		const canvasText = await page.evaluate(() => {
+			const probe = document.createElement('span');
+			probe.style.color = 'CanvasText';
+			document.body.append(probe);
+			const color = getComputedStyle(probe).color;
+			probe.remove();
+			return color;
+		});
+		expect(e.gridLeftColor).toBe(canvasText);
 	});
 });

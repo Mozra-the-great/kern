@@ -3,7 +3,9 @@
 <script lang="ts">
 	/**
 	 * Ruled grid of `<k-tile>` children (stuffcloud's TileGrid): as many columns of at least `min`
-	 * (default 280px) as fit, one hairline between all cells; narrow grids switch the tiles to rows.
+	 * (default 280px) as fit, one hairline between all cells; narrow grids switch the tiles to rows. The sheet is closed on all
+	 * four sides (top and left on the grid, right and bottom on the tiles); set `--k-tile-grid-left-w: 0` on the element when it sits
+	 * against a bordered container that already draws the left line.
 	 * `as="ul"` / `as="ol"` give the element the role `list` (use `<k-tile as="li">` inside); name the
 	 * grid with `aria-label` on the element.
 	 * @prop as {'div' | 'ul' | 'ol'} `ul`/`ol` set `role="list"` on the element itself.

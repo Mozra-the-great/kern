@@ -23,6 +23,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `TileGrid` and `<k-tile-grid>`: the custom property `--k-tile-grid-left-w` sets the width of the grid's left line (default `--k-border-w`;
+  `0` drops it). It is the way to keep the old open look inside a container that already draws the left edge, also for the element, whose
+  styles live in a shadow root (#172).
+
+### Changed
+- **BREAKING:** `TileGrid` (and `<k-tile-grid>`) now draws a left line, so the ruled sheet is closed on all four sides (before, only the top
+  line of the grid and the right and bottom line of each `Tile` were drawn). Themes: all; the line has the width and colour of the other
+  edges and is `CanvasText` in forced colors. Migration: a grid that sits flush against a container with its own left border (it would
+  now show two lines) sets `--k-tile-grid-left-w: 0` on the grid or on `<k-tile-grid>`; a grid with free space on its left needs nothing.
+
+### Fixed
+- A standalone `TileGrid` had no left edge: the first column of tiles was open on the left, which read as a missing line next to a bordered
+  `Card` or `Table`. The grid now draws it, joining the top line at the corner, without a double line between tiles (#172, reported in
+  wazuh-ai-analyzer#112).
+
 ## [0.13.4] - 2026-11-26
 
 ### Added
