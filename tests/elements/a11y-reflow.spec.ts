@@ -212,8 +212,9 @@ for (const theme of THEMES) {
 
 /**
  * A long word in a Textarea breaks instead of widening it (#149): a JWT, a Base64 blob or a hash has no space to wrap
- * at. Three boxes, each narrower than the page: a block, a flex item and a shrink-to-fit box (the case where the
- * text, not the width, sizes the box, as with `autosize`). The area stays inside its box and the page does not scroll.
+ * at. Five boxes, each narrower than the page: a block and a flex item (each with and without `autosize`) and a
+ * shrink-to-fit box (where the text, not the width, sizes the box). One area per box, so a sibling cannot squeeze it
+ * below its own padding. The area stays inside its box and the page does not scroll.
  */
 const TOKEN =
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
@@ -252,15 +253,17 @@ for (const theme of THEMES) {
 				`<k-textarea data-area="${name}" label="${name}" value="${token}" ${extra}></k-textarea>`;
 			document.querySelector('main')?.insertAdjacentHTML(
 				'beforeend',
-				`<div class="area-box" style="width:240px">${area('block')}${area('block autosize', 'autosize')}</div>
-				<div class="area-box" style="width:240px;display:flex">${area('flex')}${area('flex autosize', 'autosize')}</div>
+				`<div class="area-box" style="width:240px">${area('block')}</div>
+				<div class="area-box" style="width:240px">${area('block autosize', 'autosize')}</div>
+				<div class="area-box" style="width:240px;display:flex">${area('flex')}</div>
+				<div class="area-box" style="width:240px;display:flex">${area('flex autosize', 'autosize')}</div>
 				<div class="area-box" style="width:240px"><div style="display:inline-block;max-width:100%">${area('shrink', 'autosize')}</div></div>`
 			);
 		}, TOKEN);
 		await elementsReady(page);
 		await settle(page);
 		const fits = await page.evaluate(measureAreas);
-		expect(fits).toHaveLength(3);
+		expect(fits).toHaveLength(5);
 		for (const fit of fits)
 			for (const a of fit.areas) {
 				expect(a.left, `${a.name} starts inside the box`).toBeGreaterThanOrEqual(fit.box.left - 1);
