@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.12.3] - 2026-11-26
+
 ### Fixed
 - `Resizable`, `Table` and `DataTable` (and `<k-resizable>`, `<k-table>`, `<k-data-table>`): a panel or table wrapper that scrolls and
   holds nothing the keyboard can focus (text only; a table without sortable header, checkbox or link in a cell, wider than its
