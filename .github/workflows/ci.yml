@@ -105,7 +105,8 @@ jobs:
       - name: Size budget (custom elements)
         run: npm run size
       - name: Install Chromium and Firefox for Playwright
-        # Firefox only for tests/elements/a11y-tab-strip.spec.ts (#153: Firefox adds a scrolling strip as a Tab stop).
+        # Firefox only for tests/elements/a11y-tab-strip.spec.ts (#153: Firefox adds a scrolling strip as a Tab stop) and the
+        # pill-strip test of a11y-reflow.spec.ts (#159: only Firefox widened the page).
         run: npx playwright install --with-deps chromium firefox
       - name: Touch targets (Playwright, built demo)
         run: npm run test:targets

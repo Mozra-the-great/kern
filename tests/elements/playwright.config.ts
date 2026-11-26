@@ -29,6 +29,15 @@ export default defineConfig({
 			name: 'firefox',
 			testMatch: process.env.KERN_FIREFOX ? ['a11y-tab-strip.spec.ts', 'hit-target.spec.ts'] : 'a11y-tab-strip.spec.ts',
 			use: { ...devices['Desktop Firefox'] }
+		},
+		// A pill strip with more tabs than fit widened the page in Firefox only (#159: its grid column was as wide as the
+		// strip, Chromium sized it right anyway). The one test of a11y-reflow.spec.ts for it runs there too; `grep` keeps the
+		// rest of that spec in Chromium.
+		{
+			name: 'firefox-reflow',
+			testMatch: 'a11y-reflow.spec.ts',
+			grep: /pill tab strip with many tabs/,
+			use: { ...devices['Desktop Firefox'] }
 		}
 	],
 	webServer: {

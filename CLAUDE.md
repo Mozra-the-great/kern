@@ -51,7 +51,7 @@ npm run build   # dist/ (package), dist-elements/kern-elements.js, demo-dist/
 npm test        # Vitest, both projects: node (theme contrast, brand isolation, units, markup) + dom (jsdom component behaviour)
 npm run test:coverage # Vitest + v8 coverage over src/lib (text report, coverage/lcov.info); fails below the ratchet in vitest.config.ts
 npm run test:targets  # Playwright touch targets (after build; npx playwright install chromium)
-npm run test:elements # Playwright custom elements (after build; npx playwright install chromium firefox, Firefox runs only a11y-tab-strip.spec.ts)
+npm run test:elements # Playwright custom elements (after build; npx playwright install chromium firefox, Firefox runs only a11y-tab-strip.spec.ts and the pill-strip test of a11y-reflow.spec.ts)
 npm run test:types    # tsc on the React 19 typing fixture
 npm run test:consumer # svelte-check --fail-on-warnings on tests/fixtures/strict-consumer (after build)
 npm run check:dts     # published .d.ts: no `any`, no mutable input array (readonly-arrays-dts.mjs; after build)

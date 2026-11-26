@@ -3,7 +3,7 @@
  * the tab used to be 1px taller than the room left by the strip's own border (a negative margin made it overlap), so the
  * strip had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that makes it a scroll container, and Firefox adds a
  * scroll container as an unnamed keyboard stop before the first tab. Chromium does not, so this spec also runs in the
- * Firefox project of playwright.config.ts (the only spec that does).
+ * Firefox project of playwright.config.ts (besides the pill-strip test of a11y-reflow.spec.ts, #159).
  *
  * Per theme variant and width (1280, 375, 320 px), for both looks and for strips that fit and strips that scroll sideways:
  * `scrollHeight <= clientHeight`; the sideways strips still scroll, fade their edge and keep the focus ring inside the strip;
@@ -159,8 +159,7 @@ for (const theme of THEMES) {
 				expect(m, `${where} has a strip`).not.toBeNull();
 				if (!m) continue;
 				expect.soft(m.scrollHeight, `${where}: scrollHeight <= clientHeight`).toBeLessThanOrEqual(m.clientHeight);
-				// (a pill k-tabs strip does not scroll yet: its grid column is as wide as the strip, so the page widens; not part of #153)
-				if (strip.long && width <= 375 && !(strip.tag === 'k-tabs' && strip.look === 'pill')) {
+				if (strip.long && width <= 375) {
 					expect.soft(m.scrollWidth, `${where} scrolls sideways on a phone`).toBeGreaterThan(m.clientWidth);
 					expect.soft(m.fadeEnd, `${where} fades its end edge`).toBe(true);
 					expect.soft(m.scrolled, `${where} can be scrolled with scrollLeft`).toBeGreaterThan(0);

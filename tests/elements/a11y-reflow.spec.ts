@@ -211,6 +211,56 @@ for (const theme of THEMES) {
 }
 
 /**
+ * A pill tab strip with more tabs than fit scrolls inside its container instead of widening the page (#159). The
+ * component's own grid column used to be as wide as the strip, so the strip never overflowed, the page did. The strip
+ * sits directly in the page here (no `minmax(0, 1fr)` row around it, which would hide the bug), and the line look
+ * next to it must keep working. 1280 px: enough tabs that they do not fit there either. Chromium sized the column right
+ * anyway; the bug showed in Firefox, so this test also runs in the `firefox-reflow` project (playwright.config.ts).
+ */
+const MANY = Array.from({ length: 40 }, (_, i) => `Section ${i + 1}`);
+
+for (const theme of THEMES) {
+	for (const width of [1280, 375, 320] as const) {
+		test(`${width}px: a pill tab strip with many tabs scrolls inside its container in ${theme}`, async ({ page }) => {
+			await openPage(page, ALL, { theme, width, height: 640 });
+			await page.evaluate((names) => {
+				const tabs = JSON.stringify(names.map((label, i) => ({ id: `t${i}`, label, badge: i === 1 ? 3 : undefined })));
+				document
+					.querySelector('main')
+					?.insertAdjacentHTML(
+						'beforeend',
+						`<k-tabs id="many-pill" look="pill" label="Many pills" tabs='${tabs}'></k-tabs><k-tabs id="many-line" look="line" label="Many lines" tabs='${tabs}'></k-tabs>`
+					);
+			}, MANY);
+			await elementsReady(page);
+			await settle(page);
+			const strips = await page.evaluate(() =>
+				['many-pill', 'many-line'].map((id) => {
+					const host = document.getElementById(id);
+					const list = host?.shadowRoot?.querySelector<HTMLElement>('.list');
+					const h = host?.getBoundingClientRect();
+					const parent = host?.parentElement?.getBoundingClientRect();
+					return {
+						id,
+						scrollWidth: list?.scrollWidth ?? 0,
+						clientWidth: list?.clientWidth ?? 0,
+						fadeEnd: list?.hasAttribute('data-fade-end') ?? false,
+						hostRight: h?.right ?? 0,
+						parentRight: parent?.right ?? 0
+					};
+				})
+			);
+			for (const s of strips) {
+				expect(s.scrollWidth, `${s.id} has more tabs than fit`).toBeGreaterThan(s.clientWidth);
+				expect(s.fadeEnd, `${s.id} fades its end edge`).toBe(true);
+				expect(s.hostRight, `${s.id} stays inside the page`).toBeLessThanOrEqual(s.parentRight + 1);
+			}
+			await expectReflow(page);
+		});
+	}
+}
+
+/**
  * A long word in a Textarea breaks instead of widening it (#149): a JWT, a Base64 blob or a hash has no space to wrap
  * at. Five boxes, each narrower than the page: a block and a flex item (each with and without `autosize`) and a
  * shrink-to-fit box (where the text, not the width, sizes the box). One area per box, so a sibling cannot squeeze it
