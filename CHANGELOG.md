@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- `Textarea` reads the field tokens of `Input` and `Select` (#149, from stuffcloud#121): `--k-field-bg`, `--k-field-font`,
+  `--k-field-size`, `--k-field-pad-x`, `--k-field-hover-border`, `--k-field-focus-border` and, new, `--k-textarea-disabled-opacity`.
+  Under `code` (and its variants and aliases) a text area now looks like stuffcloud's `.sc-field.area`: transparent, JetBrains Mono
+  15 px, 14 px side padding, no hover or focus edge (focus is the ring), dimmed when disabled; its own `1.5` line height stays. Flower,
+  Pop and Line are unchanged: every token defaults to what the component drew before (`--k-textarea-disabled-opacity: 1`, so a
+  disabled Textarea is still not dimmed there; set it to `var(--k-field-disabled-opacity)` to dim it like an Input). Visible in
+  `code` only, except for the wrapping fix below.
+- `Textarea` sets `overflow-wrap: anywhere` in every theme, as stuffcloud's `.area` does, so a long unbroken word (a JWT, a Base64
+  blob, a hash) breaks at the edge of the box and never has to widen it or the page at 320 px. Covered by a reflow case in the eight
+  theme variants (`tests/elements/a11y-reflow.spec.ts`, block, flex and shrink-to-fit boxes, `autosize` too).
 - `Tabs` and `TabLinks`: the tab strip no longer overflows by one pixel vertically, so Firefox no longer makes it an unnamed Tab stop
   before the first tab or link (#153, from stuffcloud#121). In the line look a tab was `--k-tab-h` tall but overlapped the strip's
   `border-bottom` through a negative margin, so `.list` had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that is a scroll

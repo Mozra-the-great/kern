@@ -132,7 +132,7 @@ Flower, Pop and Line.
 | Component | Tokens | Code value |
 | --- | --- | --- |
 | Button | `--k-button-font`, `-size`, `-weight`, `-transform`, `-tracking` (default: the label tokens), `-pad-x`, `-gap`, `--k-button-secondary-border`, `-weight`, `-hover-bg`, `--k-button-leading`, `--k-button-press-offset`, `--k-button-danger-hover-as-primary`, `--k-button-danger-hover-filter` | Inter 600 15 px sentence case, 28 px padding, 10 px gap, `line-height: normal`; secondary = the design's ghost button (`line2` edge, 500, no fill on hover); pressed buttons do not move; danger turns pink on hover like every `.btn` |
-| Input, Select | `--k-field-font` (`initial` = inherit), `--k-field-size`, `--k-field-bg`, `--k-select-bg`, `--k-field-pad-x`, `--k-field-disabled-opacity`, `--k-field-hover-border`, `--k-field-focus-border` (no default: the component falls back to `--k-accent-mark`), `--k-select-appearance`, `--k-select-chevron` (`display`), `--k-select-pad-end` | JetBrains Mono 15 px, transparent (select on `--k-bg`), 14 px padding, 0.4; the edge stays `--field-border` on hover and focus (focus is the ring); Select uses the browser's arrow |
+| Input, Select, Textarea | `--k-field-font` (`initial` = inherit), `--k-field-size`, `--k-field-bg`, `--k-select-bg`, `--k-field-pad-x`, `--k-field-disabled-opacity`, `--k-field-hover-border`, `--k-field-focus-border` (no default: the component falls back to `--k-accent-mark`), `--k-select-appearance`, `--k-select-chevron` (`display`), `--k-select-pad-end`, `--k-textarea-disabled-opacity` (Textarea only; default `1`) | JetBrains Mono 15 px, transparent (select on `--k-bg`), 14 px padding, 0.4; the edge stays `--field-border` on hover and focus (focus is the ring); Select uses the browser's arrow |
 | Field, Label | `--k-field-label-color`, `--k-field-hint-font`, `--k-field-hint-size`, `--k-field-hint-color`, `--k-field-error-icon` (`display`) | muted label (mono 12 px caps), hint and error mono 13 px, hint muted, error without icon |
 | Checkbox | `--k-check-gap`, `--k-check-checked`, `--k-check-mark`, `--k-check-label-size` (`initial` = inherit), `--k-check-disabled-opacity`, `--k-check-appearance`, `--k-check-tick` (`display`), `--k-check-row-h`, `--k-check-disabled-fg` (`initial` = inherit) | 14 px gap, the browser's checkbox filled pink (`accent-color`), 15 px label, 48 px row; disabled greys the label and leaves the box to the browser |
 | Card | `--k-card-bg`, `--k-card-pad` (one length), `--k-card-gap` | transparent, 20 px, 10 px |
@@ -142,6 +142,15 @@ Flower, Pop and Line.
 | Progress | `--k-progress-track`, `--k-progress-track-border-w` | `line` track without an edge |
 | Toaster | `--k-toaster-width` (includes the offset on both sides), `--k-toast-pad`, `--k-toast-msg-size`, `--k-toast-ok-border`, `--k-toast-warn-border`, `--k-toast-dot` (`display`), `--k-toast-align`, `--k-toast-text-offset`, `--k-toast-close-size`, `--k-toast-close-icon`, `--k-toast-enter-dur` | 420 px of toasts, 8/8/8/16 px, 15 px, green and amber edges, no tone dot, text centred, 48 px dismiss, no entrance animation |
 | FileDrop | `--k-filedrop-bg`, `--k-filedrop-pad`, `--k-filedrop-prompt-font`, `-size`, `-weight`, `-transform`, `-tracking`, `--k-filedrop-icon` (`display`), `--k-filedrop-drag-ring`, `--k-filedrop-split-gap`, `--k-filedrop-prompt-basis` | transparent, 24/28 px, mono 14 px sentence case, no icon, no inset ring while dragging, 16 px gap, the button wraps as soon as prompt and button do not fit side by side |
+
+**Textarea (#149)** reads the field tokens of Input and Select (background, font, size, horizontal padding, hover and
+focus edge), so it is the same field in every theme; the vertical padding stays `--k-space-3` (12 px, what stuffcloud's
+`.area` has). Its line height is its own `1.5` (stuffcloud's `TextArea.svelte` sets 1.5 as well, the design mockup has 1.6),
+not `--k-leading-body`, so Code's `normal` does not squeeze a block of text. `overflow-wrap: anywhere` is set in every
+theme: a JWT, a Base64 blob or a hash breaks at the edge of the box and never widens it or the page at 320 px (the reflow case in `a11y-reflow.spec.ts` guards it). A disabled
+Textarea was never dimmed (the browser's own disabled colours are overridden), and Flower, Pop and Line keep that:
+`--k-textarea-disabled-opacity` is `1` in `base.css` and `--k-field-disabled-opacity` (0.4) in Code, which makes it
+the app's `.sc-field:disabled`. Set the token to `var(--k-field-disabled-opacity)` to dim it like an Input in another theme.
 
 **Phone breakpoint.** A custom property cannot be used in a media query, so a theme switches tokens in
 its own `@media` rule at its breakpoint (Code: `max-width: 760px`, the design system's `breakpoint`):
@@ -173,6 +182,10 @@ forced colours or an API that is the same in every theme. Only these remain, eac
   changing it would change Flower, Pop and Line.
 - Forced colours: the error icon, the toast's tone dot and kern's checkbox stay there (see above); stuffcloud has
   no forced-colours rule for them.
+- Textarea with `rows="1"`: stuffcloud's `.sc-field` has `min-height: var(--control-h)`, so a one-row area is as tall
+  as an Input (52 px). kern's Textarea has no minimum (a one-row area is 48.5 px in Code; from `rows="2"` on, and with
+  the default 4, both are the same height): a `min-height` of `--k-control-h` would make a one-row area taller in Pop
+  (56 px) and so change a theme that is not Code.
 
 Where stuffcloud's sources disagree, kern follows docs/design: the Modal is S and T (520 px, 32 px heading, the
 page background; on phones T's sheet), not the generic `Dialog.svelte` (480 px, 22 px heading, 20 px padding), which
@@ -186,10 +199,10 @@ focus; Select shows the browser's arrow; field errors without an icon; the brows
 a 48 px row, a grey label when disabled; no tab fade on desktop and only the end edge on phones; no Modal open
 animation, T's full-width sheet below 760 px with stacked full-width actions (`<k-button>` hosts too), the app's
 close button; toasts without the tone dot, text centred, the 48 px ghost dismiss, no entrance animation; FileDrop
-without the upload icon and the inset ring, wrapping as the app does.
+without the upload icon and the inset ring, wrapping as the app does; Textarea (#149) as the app's `.sc-field.area` (mono 15 px, transparent, 14 px padding, no hover or focus edge, dimmed when disabled).
 
 **Visual regression.** `tests/elements/visual.spec.ts` (part of `npm run test:elements`, so of the
-`build` job) screenshots Button, Input, Select, Checkbox, Card, Tabs, Progress, FileDrop, Modal and the
+`build` job) screenshots Button, Input, Select, Textarea (empty, a long unbroken string, invalid, disabled), Checkbox, Card, Tabs, Progress, FileDrop, Modal and the
 toasts in `code` and `code-light` at 1280, 375 and 320 px on `tests/elements/pages/visual.html`, with
 the real fonts (`tests/elements/pages/fonts`, OFL), reduced motion and frozen animations. `stuffcloud`
 and `stuffcloud-light` render against the same baselines. Baselines are per platform in
@@ -217,7 +230,7 @@ Under `@media (forced-colors: active)` the browser paints every colour from the 
 box-shadows, so a theme cannot decide colour there, and must not try. What a theme can still break is covered by
 the block at the end of `base.css`: it sets the edge tokens (`--k-border`, `--k-line`, `--k-line-strong`,
 `--k-line-dashed`), the focus ring and accent (`--k-focus`, `--k-accent-mark`) to system colours, the dimming of
-disabled parts (`--k-disabled-opacity`, `--k-field-disabled-opacity`, `--k-check-disabled-opacity`) to 1,
+disabled parts (`--k-disabled-opacity`, `--k-field-disabled-opacity`, `--k-textarea-disabled-opacity`, `--k-check-disabled-opacity`) to 1,
 `--k-fg-disabled` to `GrayText`, the shadows to `none` and the Progress track to `Canvas`, all with `!important`
 (a theme's own `[data-theme^=…]` rule has the same specificity and loads later). The rest is per component
 (`@media (forced-colors: active)` in each `.svelte` file); `tests/unit/forced-colors.test.ts` fails for a component with

@@ -155,6 +155,17 @@
 			></k-stepper>
 		</section>
 
+		<!-- Last on purpose: a section above the others would move them by a fractional pixel (Textarea's 22.5px lines) and re-rasterise their text in the baselines. -->
+		<section data-shot="textarea">
+			<k-textarea label="Notes" placeholder="Paste text" hint="Plain text, up to 2000 characters."></k-textarea>
+			<k-textarea
+				label="Checksum"
+				rows="7"
+				value="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+			></k-textarea>
+			<k-textarea label="Description" value="Too short" error="Write at least 20 characters."></k-textarea>
+			<k-textarea label="Disabled" value="read only" disabled></k-textarea>
+		</section>
 		<k-modal id="modal" title="Delete this site?" description="It goes away for good.">
 			<p style="margin: 0">14 files · 1.2 MB · expires in 7 days</p>
 			<k-button slot="footer" variant="secondary">Cancel</k-button>
