@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.12.3] - 2026-11-26
+
 ### Fixed
 - `Drawer`, `Modal` and `Popover`: a body that scrolls and holds nothing the keyboard can focus (text only, no link or button) could not
   be scrolled with the keyboard (axe `scrollable-region-focusable`, WCAG 2.1.1, #132). While the body overflows and has no
