@@ -8,7 +8,7 @@
 	export type StepState = 'complete' | 'current' | 'upcoming';
 
 	interface Props {
-		steps: StepItem[];
+		steps: readonly StepItem[];
 		/** Index of the current step (0-based). `steps.length` marks every step complete. */
 		current?: number | undefined;
 		orientation?: 'horizontal' | 'vertical' | undefined;

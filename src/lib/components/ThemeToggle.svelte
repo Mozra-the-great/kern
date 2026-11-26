@@ -8,7 +8,7 @@
 		 * Themes to switch between. Two entries give a toggle button, more give a menu.
 		 * Default: the light/dark pair of the family of the current `data-theme`.
 		 */
-		themes?: ThemeOption[] | undefined;
+		themes?: readonly ThemeOption[] | undefined;
 		/** Id of the active theme (`data-theme` of the target). */
 		value?: string | undefined;
 		/**
@@ -28,7 +28,7 @@
 	}
 	let { themes, value = $bindable(), target, persist, followSystem = false, label, onchange, class: cls = '' }: Props = $props();
 
-	const list = $derived<ThemeOption[]>(themes ?? themePair(value));
+	const list = $derived<readonly ThemeOption[]>(themes ?? themePair(value));
 	const roles = $derived(toggleRoles(list));
 	const pressed = $derived(
 		roles !== undefined && value !== undefined && (value === roles.on.id || (value !== roles.off.id && isDarkTheme(value)))

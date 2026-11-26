@@ -6,7 +6,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop nodes {TreeNode[]}
+	 * @prop nodes {readonly TreeNode[]}
 	 * @prop expanded {string[]}
 	 * @event select {string} Id of the node the user selected.
 	 * @event toggle {{ id: string; expanded: boolean }} A node the user expanded or collapsed.

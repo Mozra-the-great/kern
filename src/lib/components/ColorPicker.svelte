@@ -20,7 +20,7 @@
 		/** Offer an opacity slider; the value then carries alpha when not opaque. */
 		alpha?: boolean | undefined;
 		/** Preset colours in the panel. */
-		swatches?: (string | ColorSwatch)[] | undefined;
+		swatches?: readonly (string | ColorSwatch)[] | undefined;
 		/** Form field name; a hidden input carries `value`. */
 		name?: string | undefined;
 		required?: boolean | undefined;

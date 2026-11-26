@@ -22,7 +22,7 @@ Quelle: [`Accordion.svelte`](../../src/lib/components/Accordion.svelte), [`KAcco
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` | `AccordionEntry[]` |  | Data-driven items; or pass &lt;AccordionItem> children instead. |
+| `items` | `readonly AccordionEntry[]` |  | Data-driven items; or pass &lt;AccordionItem> children instead. |
 | `single` | `boolean` | `false` | Only one item open at a time (applies to `items`). |
 | `class` | `string` | `''` |  |
 
@@ -216,7 +216,7 @@ items: JSON list of { label, href? }; the last item is the current page.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` (Pflicht) | `BreadcrumbItem[]` |  |  |
+| `items` (Pflicht) | `readonly BreadcrumbItem[]` |  |  |
 | `label` | `string` | Katalog `breadcrumb.label` | Accessible name of the navigation landmark. |
 | `max` | `number` |  | Show at most this many items (first, an ellipsis button, the last ones). Without it, trails of four or more items collapse on narrow containers only. |
 | `expandLabel` | `string` | Katalog `breadcrumb.expandLabel` | Accessible name of the ellipsis button. |
@@ -226,7 +226,7 @@ items: JSON list of { label, href? }; the last item is the current page.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `BreadcrumbItem[]` | `[]` |  |
+| `items` (JSON) | `items` | `readonly BreadcrumbItem[]` | `[]` |  |
 | `label` | `label` | `string` | Katalog `breadcrumb.label` (wie Breadcrumb) | Accessible name of the navigation landmark. |
 | `max` | `max` | `number` |  | Show at most this many items (first, an ellipsis button, the last ones). Without it, trails of four or more items collapse on narrow containers only. |
 | `expand-label` | `expandLabel` | `string` | Katalog `breadcrumb.expandLabel` (wie Breadcrumb) | Accessible name of the ellipsis button. |
@@ -433,7 +433,7 @@ Generisch über `T`.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` | `T[]` |  | Data of the slides; each one is rendered with the `slide` snippet. |
+| `items` | `readonly T[]` |  | Data of the slides; each one is rendered with the `slide` snippet. |
 | `index` (`bind:`) | `number` |  | Index of the visible slide. |
 | `label` | `string` | Katalog `carousel.label` | Accessible name of the carousel. |
 | `prevLabel` | `string` | Katalog `carousel.prevLabel` |  |
@@ -733,7 +733,7 @@ Colour field with a picker popup. `swatches`: JSON list of hex strings or {"valu
 | `error` | `string` |  |  |
 | `value` (`bind:`) | `string` |  | Hex colour, `#rrggbb` (or `#rrggbbaa` with `alpha`); '' = none. |
 | `alpha` | `boolean` | `false` | Offer an opacity slider; the value then carries alpha when not opaque. |
-| `swatches` | `(string \| ColorSwatch)[]` | `[]` | Preset colours in the panel. |
+| `swatches` | `readonly (string \| ColorSwatch)[]` | `[]` | Preset colours in the panel. |
 | `name` | `string` |  | Form field name; a hidden input carries `value`. |
 | `required` | `boolean` | `false` |  |
 | `disabled` | `boolean` | `false` |  |
@@ -764,7 +764,7 @@ Colour field with a picker popup. `swatches`: JSON list of hex strings or {"valu
 | `error` | `error` | `string` |  |  |
 | `value` | `value` (gespiegelt) | `string` | `''` | Hex colour, `#rrggbb` (or `#rrggbbaa` with `alpha`); '' = none. |
 | `alpha` | `alpha` | `boolean` | `false` | Offer an opacity slider; the value then carries alpha when not opaque. |
-| `swatches` (JSON) | `swatches` | `(string \| ColorSwatch)[]` | `[]` | Preset colours in the panel. |
+| `swatches` (JSON) | `swatches` | `readonly (string \| ColorSwatch)[]` | `[]` | Preset colours in the panel. |
 | `name` | `name` (gespiegelt) | `string` |  | Form field name; a hidden input carries `value`. |
 | `required` | `required` | `boolean` | `false` |  |
 | `disabled` | `disabled` (gespiegelt) | `boolean` | `false` |  |
@@ -805,7 +805,7 @@ Text field with a filtered list of options; `allow-custom` also accepts free tex
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
 | `value` (`bind:`) | `string` |  | Value of the selected option ('' = none). With `allowCustom`, any typed text. |
-| `options` (Pflicht) | `ComboboxOption[]` |  |  |
+| `options` (Pflicht) | `readonly ComboboxOption[]` |  |  |
 | `placeholder` | `string` |  |  |
 | `name` | `string` |  | Form field name; a hidden input carries `value`. |
 | `required` | `boolean` | `false` |  |
@@ -831,7 +831,7 @@ Text field with a filtered list of options; `allow-custom` also accepts free tex
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
 | `value` | `value` (gespiegelt) | `string` | `''` | Value of the selected option ('' = none). With `allowCustom`, any typed text. |
-| `options` (JSON) | `options` | `ComboboxOption[]` | `[]` |  |
+| `options` (JSON) | `options` | `readonly ComboboxOption[]` | `[]` |  |
 | `placeholder` | `placeholder` | `string` |  |  |
 | `name` | `name` (gespiegelt) | `string` |  | Form field name; a hidden input carries `value`. |
 | `required` | `required` | `boolean` | `false` |  |
@@ -865,7 +865,7 @@ commands: JSON list [{id,label,group?,keywords?,shortcut?}]; running one fires "
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
 | `open` (`bind:`) | `boolean` |  |  |
-| `commands` (Pflicht) | `Command[]` |  |  |
+| `commands` (Pflicht) | `readonly Command[]` |  |  |
 | `label` | `string` | Katalog `commandPalette.label` | Accessible name of the dialog and the search field. |
 | `placeholder` | `string` | Katalog `commandPalette.placeholder` |  |
 | `empty` | `string` | Katalog `commandPalette.empty` | Shown when nothing matches. |
@@ -884,7 +884,7 @@ commands: JSON list [{id,label,group?,keywords?,shortcut?}]; running one fires "
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
 | `open` | `open` (gespiegelt) | `boolean` | `false` |  |
-| `commands` (JSON) | `commands` | `Command[]` | `[]` |  |
+| `commands` (JSON) | `commands` | `readonly Command[]` | `[]` |  |
 | `label` | `label` | `string` | Katalog `commandPalette.label` (wie CommandPalette) | Accessible name of the dialog and the search field. |
 | `placeholder` | `placeholder` | `string` | Katalog `commandPalette.placeholder` (wie CommandPalette) |  |
 | `empty` | `empty` | `string` | Katalog `commandPalette.empty` (wie CommandPalette) | Shown when nothing matches. |
@@ -914,7 +914,7 @@ Default slot = target area. items: JSON list like k-dropdown-menu; choosing an i
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` (Pflicht) | `MenuEntry[]` |  |  |
+| `items` (Pflicht) | `readonly MenuEntry[]` |  |  |
 | `label` | `string` | Katalog `contextMenu.label` | Accessible name of the menu. |
 | `areaLabel` | `string` |  | Accessible name of the target area (role="group"). Recommended when the area is focusable. |
 | `focusable` | `boolean` | `true` | Make the target area itself focusable so keyboard users can open the menu. Turn off when it holds focusable content. |
@@ -932,7 +932,7 @@ Default slot = target area. items: JSON list like k-dropdown-menu; choosing an i
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `MenuEntry[]` | `[]` |  |
+| `items` (JSON) | `items` | `readonly MenuEntry[]` | `[]` |  |
 | `label` | `label` | `string` | Katalog `contextMenu.label` (wie ContextMenu) | Accessible name of the menu. |
 | `area-label` | `areaLabel` | `string` |  | Accessible name of the target area (role="group"). Recommended when the area is focusable. |
 | `focusable` | `focusable` | `string` | `true` (wie ContextMenu) | Make the target area itself focusable so keyboard users can open the menu. Turn off when it holds focusable content. |
@@ -1070,8 +1070,8 @@ Generisch über `Row extends Record<string, unknown>`.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `columns` (Pflicht) | `DataColumn<Row>[]` |  |  |
-| `rows` (Pflicht) | `Row[]` |  |  |
+| `columns` (Pflicht) | `readonly DataColumn<Row>[]` |  |  |
+| `rows` (Pflicht) | `readonly Row[]` |  |  |
 | `caption` (Pflicht) | `string` |  | Table caption; also its accessible name. |
 | `captionHidden` | `boolean` | `false` | Hide the caption visually. |
 | `rowKey` | `Extract<keyof Row, string>` |  | Field whose value identifies a row. Default: the position in `rows`. |
@@ -1124,8 +1124,8 @@ Generisch über `Row extends Record<string, unknown>`.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `columns` (JSON) | `columns` | `TableColumn[]` | `[]` |  |
-| `rows` (JSON) | `rows` | `TableRow[]` | `[]` |  |
+| `columns` (JSON) | `columns` | `readonly TableColumn[]` | `[]` |  |
+| `rows` (JSON) | `rows` | `readonly TableRow[]` | `[]` |  |
 | `caption` | `caption` | `string` | `''` | Table caption; also its accessible name. |
 | `caption-hidden` | `captionHidden` | `boolean` | `false` | Hide the caption visually. |
 | `row-key` | `rowKey` | `string` |  | Field whose value identifies a row. Default: the position in `rows`. |
@@ -1406,7 +1406,7 @@ items: JSON list like the Svelte prop; choosing an item fires "select" with its 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
 | `label` (Pflicht) | `string` |  | Text of the trigger button. |
-| `items` (Pflicht) | `MenuEntry[]` |  |  |
+| `items` (Pflicht) | `readonly MenuEntry[]` |  |  |
 | `align` | `'start' \| 'end'` | `'start'` |  |
 | `triggerVariant` | `'secondary' \| 'ghost'` | `'secondary'` |  |
 | `class` | `string` | `''` |  |
@@ -1422,7 +1422,7 @@ items: JSON list like the Svelte prop; choosing an item fires "select" with its 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
 | `label` | `label` | `string` | `''` | Text of the trigger button. |
-| `items` (JSON) | `items` | `MenuEntry[]` | `[]` |  |
+| `items` (JSON) | `items` | `readonly MenuEntry[]` | `[]` |  |
 | `align` | `align` | `string` | `'start'` (wie DropdownMenu) |  |
 | `trigger-variant` | `triggerVariant` | `string` | `'secondary'` (wie DropdownMenu) |  |
 
@@ -1646,7 +1646,7 @@ Event "select" on Enter, Space or click: detail = {date, value}.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `data` (Pflicht) | `HeatmapDatum[]` |  |  |
+| `data` (Pflicht) | `readonly HeatmapDatum[]` |  |  |
 | `label` (Pflicht) | `string` |  | Accessible name of the grid. |
 | `start` | `string` |  | First day of the range, ISO. Default: the earliest date in `data`. |
 | `end` | `string` |  | Last day of the range, ISO. Default: the latest date in `data`. |
@@ -1671,7 +1671,7 @@ Event "select" on Enter, Space or click: detail = {date, value}.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `data` (JSON) | `data` | `HeatmapDatum[]` | `[]` |  |
+| `data` (JSON) | `data` | `readonly HeatmapDatum[]` | `[]` |  |
 | `label` | `label` | `string` | `''` | Accessible name of the grid. |
 | `start` | `start` | `string` |  | First day of the range, ISO. Default: the earliest date in `data`. |
 | `end` | `end` | `string` |  | Last day of the range, ISO. Default: the latest date in `data`. |
@@ -1744,7 +1744,7 @@ Quelle: [`HistoryBar.svelte`](../../src/lib/components/HistoryBar.svelte), [`KHi
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` (Pflicht) | `HistoryItem[]` |  |  |
+| `items` (Pflicht) | `readonly HistoryItem[]` |  |  |
 | `label` (Pflicht) | `string` |  | Accessible name of the bars. |
 | `summaryLabel` | `string` | Katalog `historyBar.summaryLabel` | Summary above the bars. Placeholders: {percent} {ok} {total}. |
 | `noDataLabel` | `string` | Katalog `historyBar.noDataLabel` | Summary when no period has data. |
@@ -1759,7 +1759,7 @@ Quelle: [`HistoryBar.svelte`](../../src/lib/components/HistoryBar.svelte), [`KHi
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `HistoryItem[]` | `[]` |  |
+| `items` (JSON) | `items` | `readonly HistoryItem[]` | `[]` |  |
 | `label` | `label` | `string` | `''` | Accessible name of the bars. |
 | `summary-label` | `summaryLabel` | `string` | Katalog `historyBar.summaryLabel` (wie HistoryBar) | Summary above the bars. Placeholders: {percent} {ok} {total}. |
 | `no-data-label` | `noDataLabel` | `string` | Katalog `historyBar.noDataLabel` (wie HistoryBar) | Summary when no period has data. |
@@ -1891,7 +1891,7 @@ keys: JSON, e.g. keys='["mod","K"]'. Without keys the slot is one key. labels: J
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `keys` | `string[]` |  | The keys of one shortcut, e.g. `['mod', 'K']`. Names like `mod`, `ctrl`, `alt`, `shift`, `enter`, `esc`, `up` become symbols with a spoken name; anything else is shown as it is. |
+| `keys` | `readonly string[]` |  | The keys of one shortcut, e.g. `['mod', 'K']`. Names like `mod`, `ctrl`, `alt`, `shift`, `enter`, `esc`, `up` become symbols with a spoken name; anything else is shown as it is. |
 | `separator` | `string` | `'+'` | Drawn between the keys. Empty string for none. |
 | `size` | `'sm' \| 'md'` | `'md'` |  |
 | `platform` | `'auto' \| 'mac' \| 'other'` | `'auto'` | `auto` reads the platform in the browser; `mac` and `other` force it (`mod` = ⌘ or Ctrl). |
@@ -1908,7 +1908,7 @@ keys: JSON, e.g. keys='["mod","K"]'. Without keys the slot is one key. labels: J
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `keys` (JSON) | `keys` | `string[]` |  | The keys of one shortcut, e.g. `['mod', 'K']`. Names like `mod`, `ctrl`, `alt`, `shift`, `enter`, `esc`, `up` become symbols with a spoken name; anything else is shown as it is. |
+| `keys` (JSON) | `keys` | `readonly string[]` |  | The keys of one shortcut, e.g. `['mod', 'K']`. Names like `mod`, `ctrl`, `alt`, `shift`, `enter`, `esc`, `up` become symbols with a spoken name; anything else is shown as it is. |
 | `separator` | `separator` | `string` | `'+'` (wie Kbd) | Drawn between the keys. Empty string for none. |
 | `size` | `size` | `string` | `'md'` (wie Kbd) |  |
 | `platform` | `platform` | `string` | `'auto'` (wie Kbd) | `auto` reads the platform in the browser; `mac` and `other` force it (`mod` = ⌘ or Ctrl). |
@@ -2226,7 +2226,7 @@ items: JSON list of { label, href, current? }, optional: without items (missing 
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` | `NavbarItem[]` | `[]` | Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. |
+| `items` | `readonly NavbarItem[]` | `[]` | Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. |
 | `label` | `string` | Katalog `navbar.label` | Accessible name of the navigation landmark. |
 | `menuLabel` | `string` | Katalog `navbar.menuLabel` | Accessible name of the menu button shown on narrow widths. |
 | `class` | `string` | `''` |  |
@@ -2242,7 +2242,7 @@ items: JSON list of { label, href, current? }, optional: without items (missing 
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `NavbarItem[]` | `[]` | Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. |
+| `items` (JSON) | `items` | `readonly NavbarItem[]` | `[]` | Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. |
 | `label` | `label` | `string` | Katalog `navbar.label` (wie Navbar) | Accessible name of the navigation landmark. |
 | `menu-label` | `menuLabel` | `string` | Katalog `navbar.menuLabel` (wie Navbar) | Accessible name of the menu button shown on narrow widths. |
 
@@ -2727,7 +2727,7 @@ Group of radio buttons in a fieldset. `required` needs a choice.
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
 | `label` (Pflicht) | `string` |  | Group label (legend). |
-| `options` (Pflicht) | `RadioOption[]` |  |  |
+| `options` (Pflicht) | `readonly RadioOption[]` |  |  |
 | `value` (`bind:`) | `string` |  |  |
 | `name` | `string` |  |  |
 | `inline` | `boolean` | `false` | Lay options out in a row. |
@@ -2745,7 +2745,7 @@ Group of radio buttons in a fieldset. `required` needs a choice.
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
 | `label` | `label` | `string` | `''` | Group label (legend). |
-| `options` (JSON) | `options` | `RadioOption[]` | `[]` |  |
+| `options` (JSON) | `options` | `readonly RadioOption[]` | `[]` |  |
 | `value` | `value` (gespiegelt) | `string` | `''` |  |
 | `name` | `name` (gespiegelt) | `string` |  |  |
 | `inline` | `inline` | `boolean` | `false` | Lay options out in a row. |
@@ -2873,7 +2873,7 @@ Panels are the light-DOM children with data-panel="&lt;id>" (up to 8, in order);
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `panels` (Pflicht) | `ResizablePanel[]` |  | The panels in order; a handle sits between each two neighbours. |
+| `panels` (Pflicht) | `readonly ResizablePanel[]` |  | The panels in order; a handle sits between each two neighbours. |
 | `sizes` (`bind:`) | `number[]` |  | Sizes in %, one per panel, summing to 100. Default: equal shares. |
 | `direction` | `'horizontal' \| 'vertical'` | `'horizontal'` | `horizontal` = panels side by side, `vertical` = stacked. |
 | `height` | `number \| string` |  | Height of the group: px as a number, or any CSS length. Stacked groups need one (default 20rem). |
@@ -2900,7 +2900,7 @@ Panels are the light-DOM children with data-panel="&lt;id>" (up to 8, in order);
 | --- | --- | --- | --- | --- |
 | `direction` | `direction` | `string` | `'horizontal'` (wie Resizable) | `horizontal` = panels side by side, `vertical` = stacked. |
 | `sizes` (JSON) | `sizes` | `number[]` |  | Sizes in %, one per panel, summing to 100. Default: equal shares. |
-| `panels` (JSON) | `panels` | `ResizablePanel[]` |  | The panels in order; a handle sits between each two neighbours. |
+| `panels` (JSON) | `panels` | `readonly ResizablePanel[]` |  | The panels in order; a handle sits between each two neighbours. |
 | `height` | `height` | `string` |  | Height of the group: px as a number, or any CSS length. Stacked groups need one (default 20rem). |
 | `step` | `step` | `number` | `2` (wie Resizable) | Size change of an Arrow key, in % of the group. |
 | `large-step` | `largeStep` | `number` | `10` (wie Resizable) | Size change of Shift + Arrow key. |
@@ -3071,7 +3071,7 @@ Single choice as a row of segments. `group-label`: accessible name when there is
 | `ariaLabel` | `string` |  | Accessible name without a visible label. |
 | `hint` | `string` |  |  |
 | `error` | `string` |  |  |
-| `options` (Pflicht) | `SegmentOption[]` |  |  |
+| `options` (Pflicht) | `readonly SegmentOption[]` |  |  |
 | `value` (`bind:`) | `string` |  | Value of the chosen option. |
 | `name` | `string` |  | Form field name (native radios). |
 | `disabled` | `boolean` | `false` |  |
@@ -3092,7 +3092,7 @@ Single choice as a row of segments. `group-label`: accessible name when there is
 | `group-label` | `groupLabel` | `string` |  |  |
 | `hint` | `hint` | `string` |  |  |
 | `error` | `error` | `string` |  |  |
-| `options` (JSON) | `options` | `SegmentOption[]` | `[]` |  |
+| `options` (JSON) | `options` | `readonly SegmentOption[]` | `[]` |  |
 | `value` | `value` (gespiegelt) | `string` | `''` | Value of the chosen option. |
 | `name` | `name` (gespiegelt) | `string` |  | Form field name (native radios). |
 | `disabled` | `disabled` (gespiegelt) | `boolean` | `false` |  |
@@ -3127,7 +3127,7 @@ Native select.
 | `error` | `string` |  |  |
 | `keepHint` | `boolean` |  | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` (`bind:`) | `string` |  |  |
-| `options` (Pflicht) | `SelectOption[]` |  |  |
+| `options` (Pflicht) | `readonly SelectOption[]` |  |  |
 | `placeholder` | `string` |  | Text of an empty first option. |
 | `class` | geerbt | `''` |  |
 
@@ -3142,7 +3142,7 @@ Weitere Attribute aus `Omit<HTMLSelectAttributes, 'value'>` gehen an das Wurzele
 | `error` | `error` | `string` |  |  |
 | `keep-hint` | `keepHint` | `boolean` | `false` | Show the hint under the error instead of hiding it (both are referenced, the error first). |
 | `value` | `value` (gespiegelt) | `string` | `''` |  |
-| `options` (JSON) | `options` | `SelectOption[]` | `[]` |  |
+| `options` (JSON) | `options` | `readonly SelectOption[]` | `[]` |  |
 | `placeholder` | `placeholder` | `string` |  | Text of an empty first option. |
 | `name` | `name` (gespiegelt) | `string` |  |  |
 | `required` | `required` | `boolean` | `false` |  |
@@ -3209,8 +3209,8 @@ Generisch über `T`.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `SelectGridItem[]` | `[]` | `{ id, label, src?, description? }`. |
-| `selected` (JSON) | `selected` | `Array<string \| number>` | `[]` | The `id`s of the selected items. |
+| `items` (JSON) | `items` | `readonly SelectGridItem[]` | `[]` | `{ id, label, src?, description? }`. |
+| `selected` (JSON) | `selected` | `readonly (string \| number)[]` | `[]` | The `id`s of the selected items. |
 | `label` | `label` | `string` | Katalog `selectGrid.label` (wie SelectGrid) | Accessible name of the grid. |
 | `min` | `min` | `string` |  | Smallest column width (CSS length). Default `150px`. |
 | `reorderable` | `reorderable` | `boolean` | `false` | Alt + arrow keys and dragging move the focused item (`onmove`). Default false. |
@@ -3408,7 +3408,7 @@ Generisch über `T`.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `SortableItem[]` | `[]` | `{ id, label, description? }`, in their current order. |
+| `items` (JSON) | `items` | `readonly SortableItem[]` | `[]` | `{ id, label, description? }`, in their current order. |
 | `label` | `label` | `string` | Katalog `sortableList.label` (wie SortableList) | Accessible name of the list. |
 | `up-text` | `upText` | `string` | Katalog `sortableList.upText` (wie SortableList) | Visible texts of the buttons (default: the catalogue). |
 | `down-text` | `downText` | `string` | Katalog `sortableList.downText` (wie SortableList) |  |
@@ -3440,7 +3440,7 @@ Quelle: [`Sparkline.svelte`](../../src/lib/components/Sparkline.svelte), [`KSpar
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `values` (Pflicht) | `number[]` |  |  |
+| `values` (Pflicht) | `readonly number[]` |  |  |
 | `variant` | `'line' \| 'area' \| 'bar'` | `'line'` | `line`, `area` (line with a filled area) or `bar`. |
 | `min` | `number` |  | Lower end of the scale. Default: the smallest value (bars: 0 or the smallest value if negative). |
 | `max` | `number` |  | Upper end of the scale. Default: the largest value. |
@@ -3456,7 +3456,7 @@ Quelle: [`Sparkline.svelte`](../../src/lib/components/Sparkline.svelte), [`KSpar
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `values` (JSON) | `values` | `number[]` | `[]` |  |
+| `values` (JSON) | `values` | `readonly number[]` | `[]` |  |
 | `variant` | `variant` | `string` | `'line'` (wie Sparkline) | `line`, `area` (line with a filled area) or `bar`. |
 | `min` | `min` | `number` |  | Lower end of the scale. Default: the smallest value (bars: 0 or the smallest value if negative). |
 | `max` | `max` | `number` |  | Upper end of the scale. Default: the largest value. |
@@ -3659,7 +3659,7 @@ clickable: completed steps become buttons; a click moves `current` there and fir
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `steps` (Pflicht) | `StepItem[]` |  |  |
+| `steps` (Pflicht) | `readonly StepItem[]` |  |  |
 | `current` | `number` | `0` | Index of the current step (0-based). `steps.length` marks every step complete. |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |  |
 | `label` | `string` | Katalog `stepper.label` | Accessible name of the list. |
@@ -3679,7 +3679,7 @@ clickable: completed steps become buttons; a click moves `current` there and fir
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `steps` (JSON) | `steps` | `StepItem[]` | `[]` |  |
+| `steps` (JSON) | `steps` | `readonly StepItem[]` | `[]` |  |
 | `current` | `current` (gespiegelt) | `number` | `0` | Index of the current step (0-based). `steps.length` marks every step complete. |
 | `orientation` | `orientation` | `string` | `'horizontal'` |  |
 | `label` | `label` | `string` | Katalog `stepper.label` (wie Stepper) | Accessible name of the list. |
@@ -3757,8 +3757,8 @@ Generisch über `Row extends Record<string, unknown>`.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `columns` (Pflicht) | `Column<Row>[]` |  |  |
-| `rows` (Pflicht) | `Row[]` |  |  |
+| `columns` (Pflicht) | `readonly Column<Row>[]` |  |  |
+| `rows` (Pflicht) | `readonly Row[]` |  |  |
 | `caption` | `string` |  | Table caption; also its accessible name. |
 | `captionHidden` | `boolean` | `false` | Hide the caption visually. |
 | `stack` | `boolean` | `true` | Below the breakpoint, show rows as stacked cards. |
@@ -3775,8 +3775,8 @@ Generisch über `Row extends Record<string, unknown>`.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `columns` (JSON) | `columns` | `TableColumn[]` | `[]` |  |
-| `rows` (JSON) | `rows` | `TableRow[]` | `[]` |  |
+| `columns` (JSON) | `columns` | `readonly TableColumn[]` | `[]` |  |
+| `rows` (JSON) | `rows` | `readonly TableRow[]` | `[]` |  |
 | `caption` | `caption` | `string` |  | Table caption; also its accessible name. |
 | `caption-hidden` | `captionHidden` | `boolean` | `false` | Hide the caption visually. |
 | `stack` | `stack` | `boolean` | `true` | Below the breakpoint, show rows as stacked cards. |
@@ -3802,7 +3802,7 @@ Navigation tabs as links (stuffcloud's TabLinks): a `<nav>` landmark named by `l
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `links` (Pflicht) | `TabLinkItem[]` |  |  |
+| `links` (Pflicht) | `readonly TabLinkItem[]` |  |  |
 | `label` (Pflicht) | `string` |  | Accessible name of the navigation landmark, e.g. "Sections". |
 | `look` | `'line' \| 'pill'` | `'line'` | Same looks as Tabs: `line` = underline marker, `pill` = filled segment. |
 | `class` | `string` | `''` |  |
@@ -3817,7 +3817,7 @@ Navigation tabs as links (stuffcloud's TabLinks): a `<nav>` landmark named by `l
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `links` (JSON) | `links` | `TabLinkItem[]` | `[]` |  |
+| `links` (JSON) | `links` | `readonly TabLinkItem[]` | `[]` |  |
 | `label` | `label` | `string` | `''` | Accessible name of the navigation landmark, e.g. "Sections". |
 | `look` | `look` | `'line' \| 'pill'` | `'line'` (wie TabLinks) | Same looks as Tabs: `line` = underline marker, `pill` = filled segment. |
 
@@ -3843,7 +3843,7 @@ Tabs. Panels are children with `data-tab="<id>"`; only the active one is shown. 
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `tabs` (Pflicht) | `TabItem[]` |  |  |
+| `tabs` (Pflicht) | `readonly TabItem[]` |  |  |
 | `value` (`bind:`) | `string` |  | Id of the active tab. |
 | `label` | `string` |  | Accessible name of the tab list. |
 | `look` | `'line' \| 'pill'` | `'line'` | `line` = underline marker, `pill` = filled segment. |
@@ -3865,7 +3865,7 @@ Tabs. Panels are children with `data-tab="<id>"`; only the active one is shown. 
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `tabs` (JSON) | `tabs` | `TabItem[]` | `[]` |  |
+| `tabs` (JSON) | `tabs` | `readonly TabItem[]` | `[]` |  |
 | `value` | `value` (gespiegelt) | `string` |  | Id of the active tab. |
 | `label` | `label` | `string` |  | Accessible name of the tab list. |
 | `look` | `look` | `'line' \| 'pill'` | `'line'` (wie Tabs) | `line` = underline marker, `pill` = filled segment. |
@@ -3954,7 +3954,7 @@ Free-text tags. The form gets one entry per tag under `name`, like a multi-selec
 | `disabled` | `boolean` | `false` |  |
 | `max` | `number` |  | Most tags allowed. |
 | `caseSensitive` | `boolean` | `false` | Treat "Gel" and "gel" as different tags. Default: duplicates are found ignoring case. |
-| `suggestions` | `string[]` | `[]` | Offered while typing (listbox autocomplete); free text stays allowed. |
+| `suggestions` | `readonly string[]` | `[]` | Offered while typing (listbox autocomplete); free text stays allowed. |
 | `addOnBlur` | `boolean` | `true` | Turn leftover text into a tag when the field loses focus. |
 | `removeLabel` | `string` | Katalog `tagInput.removeLabel` | Accessible name of each remove button; `{tag}` is replaced. |
 | `instructions` | `string` | Katalog `tagInput.instructions` | Screen-reader instructions for the text field. |
@@ -3986,7 +3986,7 @@ Free-text tags. The form gets one entry per tag under `name`, like a multi-selec
 | `disabled` | `disabled` (gespiegelt) | `boolean` | `false` |  |
 | `max` | `max` | `number` |  | Most tags allowed. |
 | `case-sensitive` | `caseSensitive` | `boolean` | `false` | Treat "Gel" and "gel" as different tags. Default: duplicates are found ignoring case. |
-| `suggestions` (JSON) | `suggestions` | `string[]` | `[]` | Offered while typing (listbox autocomplete); free text stays allowed. |
+| `suggestions` (JSON) | `suggestions` | `readonly string[]` | `[]` | Offered while typing (listbox autocomplete); free text stays allowed. |
 | `remove-label` | `removeLabel` | `string` | Katalog `tagInput.removeLabel` (wie TagInput) | Accessible name of each remove button; `{tag}` is replaced. |
 | `instructions` | `instructions` | `string` | Katalog `tagInput.instructions` (wie TagInput) | Screen-reader instructions for the text field. |
 | `added-text` | `addedText` | `string` | Katalog `tagInput.addedText` (wie TagInput) | Announcements (polite live region); `{tag}` and `{max}` are replaced. |
@@ -4019,7 +4019,7 @@ lines: JSON, e.g. lines='[{"text":"npm i @mozra-the-great/kern","output":"added 
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `lines` (Pflicht) | `TerminalLine[]` |  |  |
+| `lines` (Pflicht) | `readonly TerminalLine[]` |  |  |
 | `title` | `string` | Katalog `terminal.label` | Text in the title bar. |
 | `prompt` | `string` | `'$'` | Default prompt of every line. |
 | `typewriter` | `boolean` | `false` | Type the commands one after another. The complete text is always available to assistive technology. |
@@ -4043,7 +4043,7 @@ lines: JSON, e.g. lines='[{"text":"npm i @mozra-the-great/kern","output":"added 
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `lines` (JSON) | `lines` | `TerminalLine[]` | `[]` |  |
+| `lines` (JSON) | `lines` | `readonly TerminalLine[]` | `[]` |  |
 | `title` | `title` | `string` | Katalog `terminal.label` (wie Terminal) | Text in the title bar. |
 | `prompt` | `prompt` | `string` | `'$'` (wie Terminal) | Default prompt of every line. |
 | `typewriter` | `typewriter` | `boolean` | `false` | Type the commands one after another. The complete text is always available to assistive technology. |
@@ -4131,7 +4131,7 @@ themes: JSON list of {id,label}; default = light/dark pair of the current brand.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `themes` | `ThemeOption[]` |  | Themes to switch between. Two entries give a toggle button, more give a menu. Default: the light/dark pair of the family of the current `data-theme`. |
+| `themes` | `readonly ThemeOption[]` |  | Themes to switch between. Two entries give a toggle button, more give a menu. Default: the light/dark pair of the family of the current `data-theme`. |
 | `value` (`bind:`) | `string` |  | Id of the active theme (`data-theme` of the target). |
 | `target` | `HTMLElement \| string \| null` |  | Element whose `data-theme` is switched: an element, or a CSS selector looked up in the document. Default `document.documentElement`; `null` = none yet (waits). |
 | `persist` | `string` |  | localStorage key that remembers the user's choice. Pair it with `themeScript`. |
@@ -4149,7 +4149,7 @@ themes: JSON list of {id,label}; default = light/dark pair of the current brand.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `themes` (JSON) | `themes` | `ThemeOption[]` |  | Themes to switch between. Two entries give a toggle button, more give a menu. Default: the light/dark pair of the family of the current `data-theme`. |
+| `themes` (JSON) | `themes` | `readonly ThemeOption[]` |  | Themes to switch between. Two entries give a toggle button, more give a menu. Default: the light/dark pair of the family of the current `data-theme`. |
 | `value` | `value` (gespiegelt) | `string` |  | Id of the active theme (`data-theme` of the target). |
 | `target` | `target` | `string` |  | Element whose `data-theme` is switched: an element, or a CSS selector looked up in the document. Default `document.documentElement`; `null` = none yet (waits). |
 | `persist` | `persist` | `string` |  | localStorage key that remembers the user's choice. Pair it with `themeScript`. |
@@ -4264,7 +4264,7 @@ The custom `item` snippet of the Svelte component is not available here.
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `items` (Pflicht) | `TimelineItem[]` |  |  |
+| `items` (Pflicht) | `readonly TimelineItem[]` |  |  |
 | `label` | `string` |  | Accessible name of the list. |
 | `statusLabels` | `{ [K in TimelineStatus]?: string \| undefined }` |  | Spoken status before each title. |
 | `locale` | `string` |  | Locale of the dates. Default: the chosen strings language, else the browser's. |
@@ -4280,7 +4280,7 @@ The custom `item` snippet of the Svelte component is not available here.
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `items` (JSON) | `items` | `TimelineItem[]` | `[]` |  |
+| `items` (JSON) | `items` | `readonly TimelineItem[]` | `[]` |  |
 | `label` | `label` | `string` |  | Accessible name of the list. |
 | `status-labels` (JSON) | `statusLabels` | `Partial<Record<TimelineStatus, string>>` |  | Spoken status before each title. |
 | `locale` | `locale` | `string` |  | Locale of the dates. Default: the chosen strings language, else the browser's. |
@@ -4395,7 +4395,7 @@ nodes: JSON tree [{id,label,children?,disabled?}]. Fires "select" (detail = id) 
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `nodes` (Pflicht) | `TreeNode[]` |  |  |
+| `nodes` (Pflicht) | `readonly TreeNode[]` |  |  |
 | `selected` (`bind:`) | `string` |  | Id of the selected node. |
 | `expanded` (`bind:`) | `string[]` |  | Ids of the expanded nodes. |
 | `label` | `string` |  | Accessible name of the tree. |
@@ -4418,7 +4418,7 @@ nodes: JSON tree [{id,label,children?,disabled?}]. Fires "select" (detail = id) 
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `nodes` (JSON) | `nodes` | `TreeNode[]` | `[]` |  |
+| `nodes` (JSON) | `nodes` | `readonly TreeNode[]` | `[]` |  |
 | `selected` | `selected` (gespiegelt) | `string` |  | Id of the selected node. |
 | `expanded` (JSON) | `expanded` | `string[]` | `[]` | Ids of the expanded nodes. |
 | `label` | `label` | `string` |  | Accessible name of the tree. |
@@ -4446,7 +4446,7 @@ text: a string, or a JSON array of strings to cycle (text='["a","b"]'). Without 
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `text` (Pflicht) | `string \| string[]` |  | Text to type. With several strings each one is typed, held, erased and replaced by the next. |
+| `text` (Pflicht) | `string \| readonly string[]` |  | Text to type. With several strings each one is typed, held, erased and replaced by the next. |
 | `speed` | `number` | `60` | Milliseconds per typed character. |
 | `eraseSpeed` | `number` |  | Milliseconds per erased character. Defaults to half of `speed`. |
 | `delay` | `number` | `0` | Milliseconds before typing starts. |
@@ -4467,7 +4467,7 @@ text: a string, or a JSON array of strings to cycle (text='["a","b"]'). Without 
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `text` | `text` | `string \| string[]` |  | Text to type. With several strings each one is typed, held, erased and replaced by the next. |
+| `text` | `text` | `string \| readonly string[]` |  | Text to type. With several strings each one is typed, held, erased and replaced by the next. |
 | `speed` | `speed` | `number` | `60` (wie Typewriter) | Milliseconds per typed character. |
 | `erase-speed` | `eraseSpeed` | `number` |  | Milliseconds per erased character. Defaults to half of `speed`. |
 | `delay` | `delay` | `number` | `0` (wie Typewriter) | Milliseconds before typing starts. |
@@ -4589,7 +4589,7 @@ Aus [`CommandPalette.svelte`](../../src/lib/components/CommandPalette.svelte).
 | `id` (Pflicht) | `string` |  |
 | `label` (Pflicht) | `string` |  |
 | `group` | `string` | Heading the command is listed under. |
-| `keywords` | `string[]` | Extra search terms. |
+| `keywords` | `readonly string[]` | Extra search terms. |
 | `shortcut` | `string` | Shortcut hint shown on the right, e.g. "Ctrl+S". |
 | `onselect` | `(() => void)` |  |
 
@@ -4898,7 +4898,7 @@ Aus [`Terminal.svelte`](../../src/lib/components/Terminal.svelte).
 | --- | --- | --- |
 | `prompt` | `string` | Prompt in front of the command. Defaults to the `prompt` prop. |
 | `text` (Pflicht) | `string` | The command that is typed. |
-| `output` | `string \| string[]` | What the command prints. One string = one line. |
+| `output` | `string \| readonly string[]` | What the command prints. One string = one line. |
 
 ### TimeInput
 
@@ -4947,7 +4947,7 @@ Aus [`TreeView.svelte`](../../src/lib/components/TreeView.svelte).
 | --- | --- | --- |
 | `id` (Pflicht) | `string` |  |
 | `label` (Pflicht) | `string` |  |
-| `children` | `TreeNode[]` |  |
+| `children` | `readonly TreeNode[]` |  |
 | `disabled` | `boolean` | Can be focused and expanded, but not selected. |
 
 ## Datentypen (Elemente)
@@ -4991,7 +4991,7 @@ Aus [`types.ts`](../../src/elements/types.ts).
 | `id` (Pflicht) | `string` |  |
 | `label` (Pflicht) | `string` |  |
 | `group` | `string` | Heading the command is listed under. |
-| `keywords` | `string[]` | Extra search terms. |
+| `keywords` | `readonly string[]` | Extra search terms. |
 | `shortcut` | `string` | Shortcut hint shown on the right, e.g. "Ctrl+S". |
 
 ### DataRowKey (Element)
@@ -5232,7 +5232,7 @@ Aus [`types.ts`](../../src/elements/types.ts).
 | --- | --- | --- |
 | `prompt` | `string` | Prompt in front of the command. Defaults to the `prompt` attribute. |
 | `text` (Pflicht) | `string` | The command that is typed. |
-| `output` | `string \| string[]` | What the command prints. One string = one line. |
+| `output` | `string \| readonly string[]` | What the command prints. One string = one line. |
 
 ### ThemeOption (Element)
 
@@ -5280,5 +5280,5 @@ Aus [`types.ts`](../../src/elements/types.ts).
 | --- | --- | --- |
 | `id` (Pflicht) | `string` |  |
 | `label` (Pflicht) | `string` |  |
-| `children` | `TreeNode[]` |  |
+| `children` | `readonly TreeNode[]` |  |
 | `disabled` | `boolean` | Can be focused and expanded, but not selected. |

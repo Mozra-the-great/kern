@@ -23,8 +23,8 @@
 	import { hasFocus, watchScrollRegion } from './scroll-region.js';
 
 	interface Props {
-		columns: DataColumn<Row>[];
-		rows: Row[];
+		columns: readonly DataColumn<Row>[];
+		rows: readonly Row[];
 		/** Table caption; also its accessible name. */
 		caption: string;
 		/** Hide the caption visually. */

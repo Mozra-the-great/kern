@@ -21,7 +21,7 @@
 <script lang="ts">
 	/**
 	 * Text field with a filtered list of options; `allow-custom` also accepts free text.
-	 * @prop options {ComboboxOption[]}
+	 * @prop options {readonly ComboboxOption[]}
 	 * @event change {string} The chosen value.
 	 */
 	import Combobox from '../lib/components/Combobox.svelte';

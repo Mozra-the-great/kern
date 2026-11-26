@@ -16,7 +16,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop steps {StepItem[]}
+	 * @prop steps {readonly StepItem[]}
 	 * @event step {number} Index of the completed step the user clicked (`clickable`).
 	 */
 	import Stepper from '../lib/components/Stepper.svelte';

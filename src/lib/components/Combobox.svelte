@@ -14,7 +14,7 @@
 		error?: string | undefined;
 		/** Value of the selected option ('' = none). With `allowCustom`, any typed text. */
 		value?: string | undefined;
-		options: ComboboxOption[];
+		options: readonly ComboboxOption[];
 		placeholder?: string | undefined;
 		/** Form field name; a hidden input carries `value`. */
 		name?: string | undefined;

@@ -54,7 +54,7 @@ npm run test:targets  # Playwright touch targets (after build; npx playwright in
 npm run test:elements # Playwright custom elements (after build)
 npm run test:types    # tsc on the React 19 typing fixture
 npm run test:consumer # svelte-check --fail-on-warnings on tests/fixtures/strict-consumer (after build)
-npm run check:dts     # no `any` in the published .d.ts (after build)
+npm run check:dts     # published .d.ts: no `any`, no mutable input array (readonly-arrays-dts.mjs; after build)
 npm run check:html    # no {@html}/innerHTML & co. in src/lib and src/elements (also a CI step)
 npm run size          # size budget of the elements bundles (+10 % over baseline fails)
 ```
@@ -97,6 +97,12 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
   format numbers or dates use `formatLocale(locale)`. The state is shared with the other build via
   `globalThis[Symbol.for('kern.strings')]` (like the toast queue and `kern.announcer`). Never use
   `{@html}`, `innerHTML` & co. (`check:html`); text from props is always a text node (`Prose`, `parseProse`).
+- Input-only list props and the array fields of exported item types are `readonly X[]` (like SortableList/SelectGrid),
+  so a consumer's `readonly` or `as const` data is accepted (#142); copy before `sort`/`splice`/`reverse`. Only bindable
+  outputs (`FileDrop.files`, `TagInput.value`, `DataTable.selected`, `TreeView.expanded`, `Resizable.sizes`) and callback
+  arguments stay mutable. The wrappers' `@prop` types (src/elements/types.ts too) follow the same rule.
+  `scripts/ci/readonly-arrays-dts.mjs` (part of `check:dts`) fails on any other mutable array property in the
+  published `.d.ts`; a new bindable output goes into its `OUTPUTS` list.
 - Optional props are declared `foo?: T | undefined` (consumers use `exactOptionalPropertyTypes`),
   and `undefined` must behave like a missing prop. `$bindable()` gets no fallback value
   (Svelte throws for `bind:x={undefined}` when it has one); apply the default where the value is

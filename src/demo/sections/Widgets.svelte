@@ -107,7 +107,7 @@
 		{ id: 'notizen', label: 'notizen.md' }
 	];
 	const nodeLabel = (id: string | undefined): string => {
-		const find = (list: TreeNode[]): TreeNode | undefined => {
+		const find = (list: readonly TreeNode[]): TreeNode | undefined => {
 			for (const n of list) {
 				if (n.id === id) return n;
 				const hit = n.children ? find(n.children) : undefined;

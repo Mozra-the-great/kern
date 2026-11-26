@@ -20,7 +20,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop data {HeatmapDatum[]}
+	 * @prop data {readonly HeatmapDatum[]}
 	 * @event select {HeatmapDatum} The day the user picked (Enter, Space or click).
 	 */
 	import Heatmap from '../lib/components/Heatmap.svelte';

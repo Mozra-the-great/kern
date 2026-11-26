@@ -9,7 +9,7 @@
 	}
 	interface Props {
 		/** Data-driven items; or pass <AccordionItem> children instead. */
-		items?: AccordionEntry[] | undefined;
+		items?: readonly AccordionEntry[] | undefined;
 		/** Only one item open at a time (applies to `items`). */
 		single?: boolean | undefined;
 		/** Renders the content of the given item id. */

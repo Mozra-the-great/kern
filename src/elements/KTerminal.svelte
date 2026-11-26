@@ -19,7 +19,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop lines {TerminalLine[]}
+	 * @prop lines {readonly TerminalLine[]}
 	 * @event complete The typewriter finished the last line.
 	 */
 	import Terminal from '../lib/components/Terminal.svelte';

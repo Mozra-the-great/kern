@@ -23,6 +23,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Types only, no runtime change, not breaking (#142, from stuffcloud#121): every list a component or element only reads is now a
+  `readonly X[]`, so a consumer that keeps its data `readonly` or `as const` passes it without a copy at the call site
+  (`options={[...options]}`). A mutable array is still assignable to a `readonly` one, so existing code compiles unchanged;
+  only code that reads such a prop back and mutates it (the element properties, `item.keywords.push(...)` on a value taken from a
+  kern type) needs a copy. Props: `Accordion.items`, `Breadcrumb.items`, `Carousel.items`, `ColorPicker.swatches`,
+  `Combobox.options`, `CommandPalette.commands`, `ContextMenu.items`, `DataTable.columns` / `rows`, `DropdownMenu.items`,
+  `Heatmap.data`, `HistoryBar.items`, `Kbd.keys`, `Navbar.items`, `RadioGroup.options`, `Resizable.panels`,
+  `SegmentedControl.options`, `Select.options`, `Sparkline.values`, `Stepper.steps`, `Table.columns` / `rows`,
+  `TabLinks.links`, `Tabs.tabs`, `TagInput.suggestions`, `Terminal.lines`, `ThemeToggle.themes`, `Timeline.items`,
+  `TreeView.nodes`, `Typewriter.text`. Array fields of item types: `Command.keywords`, `TreeNode.children`,
+  `TerminalLine.output`. The same on the custom elements (`src/elements/types.ts`, `kern-elements.d.ts`,
+  `custom-elements.json`, `<k-select-grid>` `selected` as well). `SortableList.items` and `SelectGrid.items` /
+  `selected` were already readonly. Bindable outputs stay mutable: `FileDrop.files`, `TagInput.value`, `DataTable.selected`,
+  `TreeView.expanded`, `Resizable.sizes`, and the arrays of callbacks and events.
+- `npm run check:dts` also fails when a published `.d.ts` has a mutable array property that is not a bindable output
+  (`scripts/ci/readonly-arrays-dts.mjs`), and the strict consumer and React fixtures pass `readonly` arrays and `as const`
+  literals, nested `children` and `keywords` included, to every one of these props.
+
 ### Fixed
 - `data-theme` on `<html>` no longer overrides the reader's default font size (#144, from stuffcloud#121): `base.css` set a px
   `font-size` (`--k-text-md`) on every `[data-theme]` element, so a themed root ignored the browser setting and froze every `rem`

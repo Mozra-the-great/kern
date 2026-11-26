@@ -13,7 +13,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop themes {ThemeOption[]}
+	 * @prop themes {readonly ThemeOption[]}
 	 * @event change {string} Id of the theme the user picked.
 	 */
 	import ThemeToggle from '../lib/components/ThemeToggle.svelte';

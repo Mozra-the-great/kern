@@ -8,7 +8,7 @@
 	interface Props {
 		/** Group label (legend). */
 		label: string;
-		options: RadioOption[];
+		options: readonly RadioOption[];
 		value?: string | undefined;
 		name?: string | undefined;
 		/** Lay options out in a row. */

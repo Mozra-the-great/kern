@@ -13,8 +13,8 @@
 
 <script lang="ts">
 	/**
-	 * @prop columns {TableColumn[]}
-	 * @prop rows {TableRow[]}
+	 * @prop columns {readonly TableColumn[]}
+	 * @prop rows {readonly TableRow[]}
 	 */
 	import Table from '../lib/components/Table.svelte';
 	let { columns = [], rows = [], caption, captionHidden = false, stack = true, empty } = $props();

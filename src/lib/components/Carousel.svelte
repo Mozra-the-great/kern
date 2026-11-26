@@ -4,7 +4,7 @@
 
 	interface Props {
 		/** Data of the slides; each one is rendered with the `slide` snippet. */
-		items?: T[] | undefined;
+		items?: readonly T[] | undefined;
 		slide?: Snippet<[T, number]> | undefined;
 		/** Alternative to `items`/`slide`: slides as direct child elements, one element per slide. */
 		children?: Snippet | undefined;

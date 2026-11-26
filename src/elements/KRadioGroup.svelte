@@ -16,7 +16,7 @@
 <script lang="ts">
 	/**
 	 * Group of radio buttons in a fieldset. `required` needs a choice.
-	 * @prop options {RadioOption[]}
+	 * @prop options {readonly RadioOption[]}
 	 * @event change {string} The picked value (user input only, not when value/options are set).
 	 */
 	import RadioGroup from '../lib/components/RadioGroup.svelte';

@@ -11,7 +11,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop items {MenuEntry[]}
+	 * @prop items {readonly MenuEntry[]}
 	 * @event select {string} Id of the chosen item.
 	 */
 	import DropdownMenu from '../lib/components/DropdownMenu.svelte';

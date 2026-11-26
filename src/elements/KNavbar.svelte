@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop items {NavbarItem[]}
+	 * @prop items {readonly NavbarItem[]}
 	 */
 	import Navbar from '../lib/components/Navbar.svelte';
 	import { hasSlot } from './form.js';

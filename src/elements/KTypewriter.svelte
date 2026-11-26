@@ -16,7 +16,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop text {string | string[]}
+	 * @prop text {string | readonly string[]}
 	 * @event complete Typing finished (not with `loop`).
 	 */
 	import Typewriter from '../lib/components/Typewriter.svelte';

@@ -4,7 +4,7 @@
 	export interface TreeNode {
 		id: string;
 		label: string;
-		children?: TreeNode[] | undefined;
+		children?: readonly TreeNode[] | undefined;
 		/** Can be focused and expanded, but not selected. */
 		disabled?: boolean | undefined;
 	}
@@ -15,7 +15,7 @@
 		hasChildren: boolean;
 	}
 	interface Props {
-		nodes: TreeNode[];
+		nodes: readonly TreeNode[];
 		/** Id of the selected node. */
 		selected?: string | undefined;
 		/** Ids of the expanded nodes. */
@@ -36,7 +36,7 @@
 		node: TreeNode;
 		level: number;
 		parent: string | null;
-		siblings: TreeNode[];
+		siblings: readonly TreeNode[];
 	}
 	let root: HTMLElement | undefined = $state();
 	let focusId = $state<string>();
@@ -49,7 +49,7 @@
 	/** Every node with its level and parent, for parent lookup and `*`. */
 	const index = $derived.by(() => {
 		const map = new Map<string, Entry>();
-		const walk = (list: TreeNode[], level: number, parent: string | null) => {
+		const walk = (list: readonly TreeNode[], level: number, parent: string | null) => {
 			for (const node of list) {
 				map.set(node.id, { node, level, parent, siblings: list });
 				if (node.children) walk(node.children, level + 1, node.id);
@@ -61,7 +61,7 @@
 	/** Visible nodes in display order (children of collapsed nodes are skipped). */
 	const visible = $derived.by(() => {
 		const out: TreeNode[] = [];
-		const walk = (list: TreeNode[]) => {
+		const walk = (list: readonly TreeNode[]) => {
 			for (const node of list) {
 				out.push(node);
 				if (hasKids(node) && open.has(node.id)) walk(node.children ?? []);
@@ -182,7 +182,7 @@
 	}
 </script>
 
-{#snippet branch(list: TreeNode[], level: number)}
+{#snippet branch(list: readonly TreeNode[], level: number)}
 	{#each list as node, i (node.id)}
 		{@const kids = hasKids(node)}
 		{@const isOpen = kids && open.has(node.id)}

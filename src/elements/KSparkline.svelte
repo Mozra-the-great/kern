@@ -17,7 +17,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop values {number[]}
+	 * @prop values {readonly number[]}
 	 */
 	import Sparkline from '../lib/components/Sparkline.svelte';
 	let { values = [], variant, min, max, label, emptyLabel, noLastDot = false, height, width, locale } = $props();

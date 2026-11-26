@@ -18,7 +18,7 @@
 	import { formatLocale, strings } from './strings.svelte.js';
 
 	interface Props {
-		items: TimelineItem[];
+		items: readonly TimelineItem[];
 		/** Accessible name of the list. */
 		label?: string | undefined;
 		/** Spoken status before each title. */

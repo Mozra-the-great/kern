@@ -12,7 +12,7 @@
 
 <script lang="ts">
 	/**
-	 * @prop keys {string[]}
+	 * @prop keys {readonly string[]}
 	 * @prop labels {Record<string, string>}
 	 */
 	import Kbd from '../lib/components/Kbd.svelte';
