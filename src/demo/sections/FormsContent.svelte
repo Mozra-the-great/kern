@@ -98,7 +98,7 @@
 				}}
 				onreject={(files) => (refused = `${files.map((f) => f.name).join(', ')}: nur JSON-Dateien.`)}
 			/>
-			<StatusMessage message={picked} />
+			<StatusMessage message={picked} tone="ok" />
 			<StatusMessage message={refused} kind="alert" />
 		</div>
 		<div class="stack">

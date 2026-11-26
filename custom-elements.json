@@ -12648,6 +12648,15 @@
 						},
 						{
 							"kind": "field",
+							"name": "tone",
+							"type": {
+								"text": "'default' | 'ok' | undefined"
+							},
+							"attribute": "tone",
+							"description": "`ok` draws a `status` line in the success colour; an `alert` keeps its danger colour."
+						},
+						{
+							"kind": "field",
 							"name": "reserve",
 							"type": {
 								"text": "boolean | 'false' | undefined"
@@ -12670,6 +12679,13 @@
 								"text": "'status' | 'alert'"
 							},
 							"fieldName": "kind"
+						},
+						{
+							"name": "tone",
+							"type": {
+								"text": "'default' | 'ok'"
+							},
+							"fieldName": "tone"
 						},
 						{
 							"name": "reserve",

@@ -3657,6 +3657,7 @@ Visible live region for the result of an action: put the element on the page emp
 | `message` | `string \| null` |  | The text; empty until there is something to say. Render the component from the start and change only this: a live region that appears together with its text is not announced by every screen reader. |
 | `kind` | `'status' \| 'alert'` | `'status'` | `status` (polite, `role="status"`) for results; `alert` (assertive, `role="alert"`) for errors. |
 | `reserve` | `boolean` | `true` | Keep one line of height while empty, so the layout does not jump when the text arrives. |
+| `tone` | `'default' \| 'ok'` | `'default'` | `ok` draws the text in the success colour (`--k-ok`) for a result line ("Copied", "3 matches"). Only `kind="status"` takes it: an alert keeps its danger colour. The text says what happened, the colour only reinforces it, so `ok` needs no icon. `undefined` is `default` (`--k-fg`). |
 | `class` | geerbt | `''` |  |
 
 Weitere Attribute aus `Omit<HTMLAttributes<HTMLParagraphElement>, 'role' \| 'children'>` gehen an das Wurzelelement.
@@ -3667,6 +3668,7 @@ Weitere Attribute aus `Omit<HTMLAttributes<HTMLParagraphElement>, 'role' \| 'chi
 | --- | --- | --- | --- | --- |
 | `message` | `message` | `string` |  | The text; empty until there is something to say. Render the component from the start and change only this: a live region that appears together with its text is not announced by every screen reader. |
 | `kind` | `kind` | `'status' \| 'alert'` | `'status'` (wie StatusMessage) | `status` (polite) for results, `alert` (assertive) for errors. |
+| `tone` | `tone` | `'default' \| 'ok'` | `'default'` (wie StatusMessage) | `ok` draws a `status` line in the success colour; an `alert` keeps its danger colour. |
 | `reserve` | `reserve` | `boolean \| 'false'` | `true` (wie StatusMessage) | Keep one line of height while empty (default on). |
 
 ### Element: Ereignisse
