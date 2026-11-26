@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.12.4] - 2026-11-26
+
 ### Fixed
 - `data-theme` on `<html>` no longer overrides the reader's default font size (#144, from stuffcloud#121): `base.css` set a px
   `font-size` (`--k-text-md`) on every `[data-theme]` element, so a themed root ignored the browser setting and froze every `rem`
