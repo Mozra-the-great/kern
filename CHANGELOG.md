@@ -33,6 +33,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   art against it (WCAG 1.4.11): Pop passes, Flower's art has no outline, and 43 of the 51 Code mascots and stickers are below
   3:1 on the violet (recorded in the test; the design reference gives stickers on the panel a 2px white outline, which the art
   files do not contain). `docs/themes.md`, "Stage". stuffcloud can delete `--sc-stage` after a kern bump.
+- Theme texts catalogue (#185): the two short facts of each of the 17 season and special-day sets (`winter` to `christmas`, `THEME_TEXT_SETS`) in
+  English and, complete and typed, in German (`themeTextsEn`, `deThemeTexts`; a missing German text does not compile). They are not component
+  defaults, so they are a catalogue of their own with the rules of the strings: `setThemeTexts(...)`, `resetThemeTexts()`, `getThemeTexts()`,
+  `registerThemeTexts()`, `setThemeTextsLocale()`, `fillThemeText()` (the Advent line `Today: {lit} of {total} candles.`), the reactive
+  `themeTexts()` / `themeTextsLang()` for Svelte, and the shared store on `globalThis[Symbol.for('kern.themeTexts')]`
+  (`createThemeTextsStore`, `sharedThemeTextsStore`; types `ThemeTexts`, `ThemeTextSet`, `ThemeTextsBundle`, `ThemeTextsInput`,
+  `ThemeTextsStore`). Ported from the reference `THEME-TEXTS.md` without product names and without claims about the app that shows them; the
+  custom elements do not load them yet. `createStringsStore` and `StringsStore` take an optional type parameter for the input (default
+  `KernStringsInput`, no change for existing code). `neutrality:check` also scans the two catalogue files.
 - Stuffy and the easter-egg cast are complete in the `Mascot` runtime (#183). The nine pixel-art files in `assets/code/mascots/` were
   compared with stuffcloud's current reference and are identical byte for byte, so no art changed; what was missing is the typed
   addressing and the rule. Every mascot has a typed name (`stuffy`, `mochi`, `hop`, `bun`, `bloop`, `waddle`, `ember`, `boo`, `cumulo`)

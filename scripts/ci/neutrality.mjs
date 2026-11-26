@@ -1,9 +1,11 @@
 // Instance-neutrality guard (#37): the themes, their token source and snapshot, and the packaged brand art
 // carry no operator-specific values. kern is a general kit; stuffcloud (and any other app) is an instance
-// that brings its own domain, names and contact data, never the kit.
+// that brings its own domain, names and contact data, never the kit. The theme texts (#185) are shipped words,
+// so their two catalogue files are in scope too.
 //
 // Always checked (no configuration): e-mail addresses, URLs, domain names and IPv4 addresses in
-// src/lib/themes/**, scripts/ci/code-theme-snapshot.json and assets/** (file contents and file names).
+// src/lib/themes/**, scripts/ci/code-theme-snapshot.json, assets/** and the theme texts (src/lib/components/theme-texts*.ts)
+// (file contents and file names).
 // Allowed: the SVG namespace (www.w3.org), claude.ai (where the design-system artifacts live, named in
 // the asset manifests) and the names reserved for documentation (RFC 2606 / 6761: example.com/.org/.net,
 // *.example, *.test, *.invalid, *.localhost).
@@ -20,7 +22,13 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(import.meta.dirname, '../..');
-export const SCOPE = ['src/lib/themes', 'scripts/ci/code-theme-snapshot.json', 'assets'];
+export const SCOPE = [
+	'src/lib/themes',
+	'scripts/ci/code-theme-snapshot.json',
+	'assets',
+	'src/lib/components/theme-texts.ts',
+	'src/lib/components/theme-texts-de.ts'
+];
 
 const ALLOWED_HOSTS = ['www.w3.org', 'w3.org', 'claude.ai'];
 const RESERVED_DOMAINS = ['example.com', 'example.org', 'example.net'];
@@ -97,7 +105,9 @@ function main() {
 	}
 	if (findings.length > 0) {
 		console.error(`Instance-neutrality guard (${findings.length}):\n  ${findings.join('\n  ')}`);
-		console.error('Themes and brand art carry no operator-specific values (domains, names, e-mail, hostnames); see docs/themes.md.');
+		console.error(
+			'Themes, brand art and theme texts carry no operator-specific values (domains, names, e-mail, hostnames); see docs/themes.md.'
+		);
 		return 1;
 	}
 	const mode = terms.length > 0 ? `and ${terms.length} forbidden terms` : '(generic patterns only: KERN_FORBIDDEN_TERMS is not set)';
