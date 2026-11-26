@@ -121,7 +121,7 @@
 		tabindex={focusableInner ? 0 : heldInner ? -1 : undefined}
 		onfocusout={() => (heldInner = false)}
 	>
-		<header>
+		<header role="none">
 			<h2 id="{uid}-t">{title}</h2>
 			{#if dismissible}
 				<button type="button" class="x" aria-label={closeLabel} onclick={() => control.requestClose()}>
@@ -131,7 +131,7 @@
 		</header>
 		{#if description}<p class="desc" id="{uid}-d">{description}</p>{/if}
 		{#if children}<div class="body">{@render children()}</div>{/if}
-		{#if footer}<footer>{@render footer()}</footer>{/if}
+		{#if footer}<footer role="none">{@render footer()}</footer>{/if}
 	</div>
 </dialog>
 

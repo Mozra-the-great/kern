@@ -34,6 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `Textarea` sets `overflow-wrap: anywhere` in every theme, as stuffcloud's `.area` does, so a long unbroken word (a JWT, a Base64
   blob, a hash) breaks at the edge of the box and never has to widen it or the page at 320 px. Covered by a reflow case in the eight
   theme variants (`tests/elements/a11y-reflow.spec.ts`, block, flex and shrink-to-fit boxes, `autosize` too).
+- `Modal`, `Drawer` and `Card` (and `<k-modal>`, `<k-drawer>`, `<k-card>`): the title row and the footer are no longer `banner` / `contentinfo`
+  landmarks (#154, from stuffcloud#121). A `<header>` / `<footer>` that is not inside `article`, `aside`, `main`, `nav` or `section` maps to
+  those roles, and a `<dialog>` is not sectioning content, so every open overlay next to the app's own header added a second banner:
+  axe reported `landmark-no-duplicate-banner`, `landmark-no-duplicate-contentinfo` and `landmark-unique`, and screen readers listed an extra
+  banner. Both elements now carry `role="none"` (allowed on `header` and `footer`), so the markup, the selectors and the look are unchanged
+  and the dialog is still named by its `h2`. A `Card` that is not an `article` (`as="div"`, `as="li"`) had the same problem.
 - `Tabs` and `TabLinks`: the tab strip no longer overflows by one pixel vertically, so Firefox no longer makes it an unnamed Tab stop
   before the first tab or link (#153, from stuffcloud#121). In the line look a tab was `--k-tab-h` tall but overlapped the strip's
   `border-bottom` through a negative margin, so `.list` had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that is a scroll

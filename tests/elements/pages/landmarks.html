@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-theme="code">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>kern elements: overlays next to the page landmarks</title>
+		<script>
+			// ?theme=flower picks the theme before the CSS applies.
+			const params = new URLSearchParams(location.search);
+			document.documentElement.dataset.theme = params.get('theme') || 'code';
+			window.errors = [];
+			window.addEventListener('error', (e) => window.errors.push(String(e.message)));
+		</script>
+		<link rel="stylesheet" href="/dist/themes/index.css" />
+		<script type="module" src="/dist-elements/kern-elements.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 16px;
+				background: var(--k-bg);
+				color: var(--k-fg);
+				font-family: var(--k-font-sans);
+			}
+			a {
+				color: inherit;
+			}
+			.row {
+				display: flex;
+				gap: 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+			An app shell as a real app has it (#154): the page's own <header> (banner), <main> and <footer> (contentinfo).
+			The overlays sit at the top level of the body, next to the shell and outside every sectioning element, so
+			the <header>/<footer> inside them would be a second banner and contentinfo if they were landmarks.
+			The shell has a <nav> and a complementary <aside> too, so the unique-landmark rules see more than one.
+		-->
+		<header id="page-header">
+			<strong>Cloud</strong>
+			<nav aria-label="Main"><a href="#main">Files</a> <a href="#main">Settings</a></nav>
+		</header>
+		<main id="main">
+			<h1>Files</h1>
+			<p>214 files in this folder.</p>
+			<aside aria-label="Storage"><p>12 of 50 GB used.</p></aside>
+		</main>
+		<footer id="page-footer"><p>kern test page</p></footer>
+		<!-- a card that is not an <article> (as="div") at the top level: its title row and footer must not be landmarks either -->
+		<k-card id="card" as="div" title="Plan" description="Free"><p>Cards have a title row and a footer too.</p><k-button slot="footer">Upgrade</k-button></k-card>
+		<k-modal id="modal" title="Delete folder?" description="214 files go to the bin.">
+			<p>You can undo this for 30 days.</p>
+			<div slot="footer" class="row"><k-button variant="secondary">Cancel</k-button><k-button variant="danger">Delete</k-button></div>
+		</k-modal>
+		<k-drawer id="drawer" title="Filter">
+			<p>Show images only.</p>
+			<k-button slot="footer">Apply</k-button>
+		</k-drawer>
+	</body>
+</html>

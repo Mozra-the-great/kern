@@ -124,11 +124,14 @@ The page behind the matrix is `tests/elements/pages/forced-colors.html`: it hold
 combobox, tag input, date picker, colour picker, toaster, tooltip, invalid fields, sorted and selected data table, the
 phone menu of the navbar) put it in the state an overlay or error shows. axe fails on `serious` and `critical` findings
 and, whatever its rating, on `scrollable-region-focusable` (rated `moderate`, a WCAG 2.1.1 failure: a box that scrolls and
-holds nothing the keyboard can focus, [#132](https://github.com/Mozra-the-great/kern/issues/132)).
+holds nothing the keyboard can focus, [#132](https://github.com/Mozra-the-great/kern/issues/132)). On
+`tests/elements/pages/landmarks.html` (an app shell with its own header, main and footer, and the open modal, the open drawer
+and a `div` card at the top level of the body) every `landmark-*` rule fails as well, whatever its rating: the duplicate
+banner is `moderate`, and it is what the `<header>` of an overlay used to cause ([#154](https://github.com/Mozra-the-great/kern/issues/154)).
 
 | Spec                              | Checks                                                                                                                                                                         | Matrix                                        |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
-| `a11y-matrix.spec.ts`             | axe (serious and critical fail) on the all-elements page, closed and in every open state; coverage test: the page has every element, every overlay has a state; a canary that axe finds a violation | 8 themes x (1 page + 21 states)               |
+| `a11y-matrix.spec.ts`             | axe (serious and critical fail) on the all-elements page, closed and in every open state; coverage test: the page has every element, every overlay has a state; canaries that axe finds a violation (also a second banner and contentinfo); `landmarks.html`: every `landmark-*` rule fails (closed with card, modal open, drawer open) | 8 themes x (1 page + 21 states + 3 landmark states) |
 | `a11y.spec.ts`                    | axe on the other pages (parity, feedback, form, navigation, reorder, download, strings, primitives and their states)                                                           | 8 themes x 11 cases                           |
 | `a11y-keyboard.spec.ts`           | tab order of the whole page: a computed focus ring on every stop, no loop, every control of `REACHABLE` reached; ring after Tab and none after a mouse click; coverage table `KEYBOARD` | 8 themes (tab order), 1 (the rest)            |
 | `a11y-keys.spec.ts`               | each interactive element with the keys of its WAI-ARIA pattern, no mouse                                                                                                       | one test per element (Code)                   |
