@@ -97,7 +97,7 @@
 	}}
 >
 	<div class="inner">
-		<header>
+		<header role="none">
 			<h2 id="{uid}-t">{title}</h2>
 			{#if dismissible}
 				<button type="button" class="x" aria-label={closeLabel} onclick={() => control.requestClose()}>
@@ -117,7 +117,7 @@
 		>
 			{@render children?.()}
 		</div>
-		{#if footer}<footer>{@render footer()}</footer>{/if}
+		{#if footer}<footer role="none">{@render footer()}</footer>{/if}
 	</div>
 </dialog>
 

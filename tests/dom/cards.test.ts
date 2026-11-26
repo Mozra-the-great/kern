@@ -22,6 +22,14 @@ describe('Card', () => {
 		expect(card.getAttribute('data-look')).toBe('raised');
 	});
 
+	it('has no banner or contentinfo landmark for its title row and footer (#154)', () => {
+		render(Card, { title: 'Plan', description: 'Details', footer: textSnippet('Actions'), children: textSnippet('Hello') });
+		expect(screen.queryByRole('banner')).toBeNull();
+		expect(screen.queryByRole('contentinfo')).toBeNull();
+		expect(screen.getByRole('heading', { name: 'Plan' })).toBeTruthy();
+		expect(screen.getByText('Actions')).toBeTruthy();
+	});
+
 	it.each(['section', 'div', 'li', 'article'] as const)('can render as %s', (as) => {
 		render(Card, { as, children: textSnippet('x'), 'data-testid': 'card' });
 		expect(screen.getByTestId('card').tagName).toBe(as.toUpperCase());

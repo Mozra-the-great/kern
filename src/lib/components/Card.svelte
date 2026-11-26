@@ -74,7 +74,7 @@
 		{/if}
 	{/if}
 	{#if title || description}
-		<header>
+		<header role="none">
 			{#if title}
 				<svelte:element this={`h${level}`} class="title">
 					{#if action === 'link'}
@@ -91,7 +91,7 @@
 	{/if}
 	{#if badges}<div class="badges">{@render badges()}</div>{/if}
 	{#if children}<div class="body">{@render children()}</div>{/if}
-	{#if footer}<footer>{@render footer()}</footer>{/if}
+	{#if footer}<footer role="none">{@render footer()}</footer>{/if}
 </svelte:element>
 
 <style>
