@@ -121,6 +121,15 @@
 					<span slot="brand">kern</span>
 					<k-button slot="actions" size="sm" variant="secondary">Sign in</k-button>
 				</k-navbar>
+				<!-- no items (#131): only brand and actions, no menu button and no empty nav landmark -->
+				<k-navbar id="navbar-bare">
+					<span slot="brand">kern</span>
+					<k-button slot="actions" size="sm" variant="secondary">Sign in</k-button>
+				</k-navbar>
+				<k-navbar id="navbar-empty" items="[]">
+					<span slot="brand">kern</span>
+					<k-button slot="actions" size="sm" variant="secondary">Register</k-button>
+				</k-navbar>
 				<k-breadcrumb id="breadcrumb" label="Breadcrumb" items='[{"label":"Home","href":"#"},{"label":"Collection","href":"#"},{"label":"Item"}]'></k-breadcrumb>
 				<k-tabs id="tabs" label="Sections" tabs='[{"id":"one","label":"One"},{"id":"two","label":"Two"},{"id":"three","label":"Three","disabled":true}]'>
 					<div data-tab="one">First panel</div>

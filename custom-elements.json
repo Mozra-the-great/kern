@@ -7512,7 +7512,7 @@
 					"customElement": true,
 					"tagName": "k-navbar",
 					"name": "KNavbarElement",
-					"description": "items: JSON list of { label, href, current? }. Slots: brand, actions.",
+					"description": "items: JSON list of { label, href, current? }, optional: without items (missing or []) only the brand and actions render, no menu button and no nav. Slots: brand, actions.",
 					"superclass": {
 						"name": "HTMLElement"
 					},

@@ -257,6 +257,12 @@
 </Modal>
 <Modal title="Focus" initialFocus={focusTarget} dismissible={false}><button type="button" bind:this={focusTarget}>Go</button></Modal>
 <Navbar items={nav} label={maybeString} menuLabel={maybeString} />
+<!-- #131: items is optional; without it the bar is brand and actions only -->
+<Navbar />
+<Navbar items={undefined} label={maybeString} menuLabel={maybeString}>
+	{#snippet brand()}kern{/snippet}
+	{#snippet actions()}<button type="button">Sign in</button>{/snippet}
+</Navbar>
 <NumberInput bind:value={nullableNum} min={maybeNumber} max={maybeNumber} step={maybeNumber} format={undefined} />
 <Odometer value={1} duration={maybeNumber} locale={maybeString} />
 <Pagination bind:page={num} pageCount={5} siblings={maybeNumber} onchange={undefined} />

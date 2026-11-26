@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   when the content fits or holds a focusable element, so there is no extra tab stop otherwise. Initial focus, the focus
   trap, Escape and the focus return are unchanged, and nothing fires while it renders. A `Popover` panel that scrolls and
   holds only text is a tab stop (`tabindex="0"` instead of `-1`) in the same way.
+- `Navbar` and `<k-navbar>` without items (`items` omitted or empty) no longer render the menu button, the phone panel and an empty
+  `<nav>` landmark at any width: only `brand` and `actions` are shown (#131). `items` is now optional
+  (`items?: NavbarItem[] | undefined`, a non-breaking widening; the element's `items` attribute and property were already optional).
+  A navbar with items is unchanged.
 
 ## [0.12.2] - 2026-11-25
 

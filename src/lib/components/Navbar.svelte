@@ -12,7 +12,8 @@
 	import { tick, type Snippet } from 'svelte';
 
 	interface Props {
-		items: NavbarItem[];
+		/** Links of the bar. Without any (omitted or empty) the bar shows only `brand` and `actions`: no menu button, no `<nav>`. */
+		items?: NavbarItem[] | undefined;
 		/** Logo or product name, on the left. */
 		brand?: Snippet | undefined;
 		/** Controls on the right, e.g. a theme switch or a sign-in button. Stays in the bar on narrow widths. */
@@ -23,10 +24,12 @@
 		menuLabel?: string | undefined;
 		class?: string | undefined;
 	}
-	let { items, brand, actions, label: labelProp, menuLabel: menuLabelProp, class: cls = '' }: Props = $props();
+	let { items = [], brand, actions, label: labelProp, menuLabel: menuLabelProp, class: cls = '' }: Props = $props();
 	const label = $derived(labelProp ?? strings().navbar.label);
 	const menuLabel = $derived(menuLabelProp ?? strings().navbar.menuLabel);
 	const uid = $props.id();
+	/* No links, no navigation: the landmark, the panel and the menu button would all be empty. */
+	const hasItems = $derived(items.length > 0);
 
 	let open = $state(false);
 	let header: HTMLElement | undefined = $state();
@@ -41,6 +44,11 @@
 		await tick();
 		panel?.querySelector<HTMLElement>('a')?.focus();
 	}
+
+	/* Losing the last link closes the panel, so it does not reopen when links come back. */
+	$effect(() => {
+		if (!hasItems) open = false;
+	});
 
 	/* Escape closes the panel and gives the focus back to the menu button. */
 	$effect(() => {
@@ -66,35 +74,39 @@
 <header class="k-navbar {cls}" class:open bind:this={header}>
 	<div class="bar">
 		{#if brand}<div class="brand">{@render brand()}</div>{/if}
-		<nav class="panel" id="{uid}-panel" bind:this={panel} aria-label={label} data-open={open}>
-			<ul>
-				{#each items as item (item.href + item.label)}
-					<li>
-						<a href={item.href} aria-current={item.current ? 'page' : undefined} onclick={() => (open = false)}>{item.label}</a>
-					</li>
-				{/each}
-			</ul>
-		</nav>
+		{#if hasItems}
+			<nav class="panel" id="{uid}-panel" bind:this={panel} aria-label={label} data-open={open}>
+				<ul>
+					{#each items as item (item.href + item.label)}
+						<li>
+							<a href={item.href} aria-current={item.current ? 'page' : undefined} onclick={() => (open = false)}>{item.label}</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{/if}
 		{#if actions}<div class="actions">{@render actions()}</div>{/if}
-		<button
-			type="button"
-			bind:this={toggle}
-			class="toggle"
-			aria-label={menuLabel}
-			aria-expanded={open}
-			aria-controls="{uid}-panel"
-			onclick={onToggle}
-		>
-			{#if open}
-				<svg viewBox="0 0 20 20" aria-hidden="true">
-					<path d="M4 4l12 12M16 4L4 16" fill="none" stroke="currentColor" stroke-width="2" />
-				</svg>
-			{:else}
-				<svg viewBox="0 0 20 20" aria-hidden="true">
-					<path d="M3 5h14M3 10h14M3 15h14" fill="none" stroke="currentColor" stroke-width="2" />
-				</svg>
-			{/if}
-		</button>
+		{#if hasItems}
+			<button
+				type="button"
+				bind:this={toggle}
+				class="toggle"
+				aria-label={menuLabel}
+				aria-expanded={open}
+				aria-controls="{uid}-panel"
+				onclick={onToggle}
+			>
+				{#if open}
+					<svg viewBox="0 0 20 20" aria-hidden="true">
+						<path d="M4 4l12 12M16 4L4 16" fill="none" stroke="currentColor" stroke-width="2" />
+					</svg>
+				{:else}
+					<svg viewBox="0 0 20 20" aria-hidden="true">
+						<path d="M3 5h14M3 10h14M3 15h14" fill="none" stroke="currentColor" stroke-width="2" />
+					</svg>
+				{/if}
+			</button>
+		{/if}
 	</div>
 </header>
 
