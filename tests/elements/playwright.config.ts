@@ -19,7 +19,13 @@ export default defineConfig({
 	updateSnapshots: 'missing',
 	expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: 'disabled', caret: 'hide', scale: 'css' } },
 	use: { baseURL: `http://127.0.0.1:${port}` },
-	projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+	projects: [
+		{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+		// Firefox makes a scroll container a keyboard stop of its own (a tab strip that overflowed by 1px, #153), Chromium
+		// does not: the one spec that checks the strips' Tab order and scroll metrics runs there too (`npm run test:elements`
+		// needs `npx playwright install firefox`). It has no screenshots, so there are no Firefox baselines.
+		{ name: 'firefox', testMatch: 'a11y-tab-strip.spec.ts', use: { ...devices['Desktop Firefox'] } }
+	],
 	webServer: {
 		command: 'node server.mjs',
 		cwd: import.meta.dirname,

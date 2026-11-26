@@ -24,6 +24,11 @@
 			.narrow {
 				max-width: 300px;
 			}
+			/* The element hosts are inline, so the margin above does not apply to them: the 21px button sat flush on the first
+			 * tab, and axe (target-size, forced colors) wants 24px of room around a target that small. */
+			#before {
+				margin-bottom: 8px;
+			}
 		</style>
 	</head>
 	<body>

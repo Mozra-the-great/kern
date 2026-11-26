@@ -52,6 +52,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   literals, nested `children` and `keywords` included, to every one of these props.
 
 ### Fixed
+- `Tabs` and `TabLinks`: the tab strip no longer overflows by one pixel vertically, so Firefox no longer makes it an unnamed Tab stop
+  before the first tab or link (#153, from stuffcloud#121). In the line look a tab was `--k-tab-h` tall but overlapped the strip's
+  `border-bottom` through a negative margin, so `.list` had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that is a scroll
+  container, and Firefox adds one to the Tab order (Chromium does not). The tab is now `--k-tab-h` minus the border (with the label
+  centred as before and the selected bar unchanged, 2px minus the border), and the strip has `overflow-y: hidden`, so only the
+  sideways overflow scrolls. A `TabLinks` strip that really scrolls sideways (many links on a phone) got the same extra stop in
+  Firefox and now has `tabindex="-1"` like the `Tabs` strip; the links stay the stops. No visual change in any theme.
+  Tested in Chromium and Firefox (`tests/elements/a11y-tab-strip.spec.ts`; CI installs Firefox for it).
 - `Code` theme (all variants and the deprecated `stuffcloud*` names): the themed element now has `line-height: normal`, like stuffcloud's design
   (#145, from stuffcloud#121). `[data-theme]` set a fixed `1.5`; stuffcloud's `stuff.css` sets no line height on `body`, so Code text was
   taller than the design. The line height is the new token `--k-leading-body` (`1.5` in `base.css`, `normal` in Code, source
