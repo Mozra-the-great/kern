@@ -23,6 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `Code` (`copyAccessibleLabel`), `CodeBlock` (`copyAccessibleLabel`) and their elements `<k-code>`, `<k-code-block>` (attribute
+  `copy-accessible-label`): the accessible name of the copy button when it should say more than `copyLabel`, e.g. "Copy" on screen and
+  "Copy install command" for a screen reader on a page with several blocks (#168, follow-up to #166). It is forwarded to the `CopyButton`'s
+  `accessibleLabel`, so the same rules apply: it is the button's `aria-label` and wins over `copyLabel` as the name, with the visible copy
+  label (`copyShowLabel`; `showCopyLabel`, the default of `CodeBlock`) and without it (icon-only: the name and the tooltip). Empty,
+  whitespace-only or `null` counts as not set; the status texts (`copiedLabel`, `copyErrorLabel`) are unchanged. With the visible copy label
+  the name must contain it (WCAG 2.5.3 Label in Name); this is documented, not checked. Nothing changes for existing uses.
+
 ## [0.13.3] - 2026-11-26
 
 ### Added

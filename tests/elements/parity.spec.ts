@@ -306,6 +306,33 @@ test('CopyButton and DownloadButton: accessible-label is the name, the visible l
 	await expect(long).toHaveAttribute('aria-label', 'Copy digest');
 });
 
+test('Code and CodeBlock: copy-accessible-label is the name of the copy button (#168)', async ({ page }) => {
+	// CodeBlock shows the copy label by default: the visible text stays `copy-label`, the name is `copy-accessible-label`.
+	const long = page.locator('#codeblock-long .k-copy-button button');
+	await expect(long).toHaveText('Copy');
+	await expect(long).toHaveAttribute('aria-label', 'Copy install command');
+	await expect(long).not.toHaveAttribute('title');
+	await expect(page.getByRole('button', { name: 'Copy install command' })).toBeVisible();
+	// Icon-only (`copy-icon`): the name and the tooltip.
+	const icon = page.locator('#codeblock-icon .k-copy-button button');
+	await expect(icon).toHaveAttribute('aria-label', 'Copy build command');
+	await expect(icon).toHaveAttribute('title', 'Copy build command');
+	// Code is icon-only unless the copy label is shown.
+	const code = page.locator('#code-icon .k-copy-button button');
+	await expect(code).toHaveAttribute('aria-label', 'Copy test command');
+	await expect(code).toHaveAttribute('title', 'Copy test command');
+	// The attribute is reactive and removing it falls back to `copy-label`.
+	await page.evaluate(() => {
+		document.getElementById('codeblock-long')?.removeAttribute('copy-accessible-label');
+		document.getElementById('code-icon')?.removeAttribute('copy-accessible-label');
+	});
+	await expect(long).not.toHaveAttribute('aria-label');
+	await expect(page.getByRole('button', { name: 'Copy', exact: true }).first()).toBeVisible();
+	await expect(code).toHaveAttribute('aria-label', 'Copy');
+	await page.evaluate(() => document.getElementById('codeblock-long')?.setAttribute('copy-accessible-label', 'Copy digest'));
+	await expect(long).toHaveAttribute('aria-label', 'Copy digest');
+});
+
 test('StatusMessage: present and empty from the first paint, filled later (#72)', async ({ page }) => {
 	const status = page.locator('#status p');
 	await expect(status).toHaveAttribute('role', 'status');

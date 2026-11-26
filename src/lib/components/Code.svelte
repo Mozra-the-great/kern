@@ -18,6 +18,14 @@
 		/** Block only: shows a button that copies the code. */
 		copy?: boolean | undefined;
 		copyLabel?: string | undefined;
+		/**
+		 * Block only: accessible name of the copy button when it should say more than `copyLabel`, e.g. `copyLabel` "Copy" and
+		 * `copyAccessibleLabel` "Copy SHA-256" in a list of values. Forwarded to `CopyButton.accessibleLabel`: it is the button's
+		 * `aria-label`, with and without `copyShowLabel` (icon-only: also the tooltip), and wins over `copyLabel` as the name.
+		 * WCAG 2.5.3 (Label in Name): with `copyShowLabel` it must contain the visible `copyLabel`. Empty, whitespace-only or
+		 * `null` counts as not set. The spoken results (`copiedLabel`, `copyErrorLabel`) are not affected.
+		 */
+		copyAccessibleLabel?: string | undefined;
 		copiedLabel?: string | undefined;
 		copyErrorLabel?: string | undefined;
 		/** Accessible name of the block when it can scroll. Defaults to "<language> code" or "Code". */
@@ -41,6 +49,7 @@
 		startLine = 1,
 		copy = false,
 		copyLabel: copyLabelProp,
+		copyAccessibleLabel,
 		copiedLabel: copiedLabelProp,
 		copyErrorLabel: copyErrorLabelProp,
 		label,
@@ -103,6 +112,7 @@
 						size="sm"
 						label={copyLabel}
 						showLabel={copyShowLabel}
+						accessibleLabel={copyAccessibleLabel}
 						{copiedLabel}
 						errorLabel={copyErrorLabel}
 						{oncopy}

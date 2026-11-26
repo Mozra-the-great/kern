@@ -558,6 +558,7 @@ Inline: the slot is the code. Block (or a `code` attribute): the text of the ele
 | `startLine` | `number` | `1` | Number of the first line. |
 | `copy` | `boolean` | `false` | Block only: shows a button that copies the code. |
 | `copyLabel` | `string` | Katalog `code.copyLabel` |  |
+| `copyAccessibleLabel` | `string` |  | Block only: accessible name of the copy button when it should say more than `copyLabel`, e.g. `copyLabel` "Copy" and `copyAccessibleLabel` "Copy SHA-256" in a list of values. Forwarded to `CopyButton.accessibleLabel`: it is the button's `aria-label`, with and without `copyShowLabel` (icon-only: also the tooltip), and wins over `copyLabel` as the name. WCAG 2.5.3 (Label in Name): with `copyShowLabel` it must contain the visible `copyLabel`. Empty, whitespace-only or `null` counts as not set. The spoken results (`copiedLabel`, `copyErrorLabel`) are not affected. |
 | `copiedLabel` | `string` | Katalog `code.copiedLabel` |  |
 | `copyErrorLabel` | `string` | Katalog `code.copyErrorLabel` |  |
 | `label` | `string` |  | Accessible name of the block when it can scroll. Defaults to "&lt;language> code" or "Code". |
@@ -589,6 +590,7 @@ Inline: the slot is the code. Block (or a `code` attribute): the text of the ele
 | `start-line` | `startLine` | `number` | `1` (wie Code) | Number of the first line. |
 | `copy` | `copy` | `boolean` | `false` | Block only: shows a button that copies the code. |
 | `copy-label` | `copyLabel` | `string` | Katalog `code.copyLabel` (wie Code) |  |
+| `copy-accessible-label` | `copyAccessibleLabel` | `string` |  | Block only: accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3). |
 | `copied-label` | `copiedLabel` | `string` | Katalog `code.copiedLabel` (wie Code) |  |
 | `copy-error-label` | `copyErrorLabel` | `string` | Katalog `code.copyErrorLabel` (wie Code) |  |
 | `label` | `label` | `string` |  | Accessible name of the block when it can scroll. Defaults to "&lt;language> code" or "Code". |
@@ -624,9 +626,10 @@ Code block (stuffcloud's CodeBlock): the `code` attribute or the element's text 
 | `startLine` | `number` |  |  |
 | `copy` | `boolean` |  | Shows the copy button. Default: on when `copyLabel` is set (stuffcloud), else off. |
 | `copyLabel` | `string` |  | Visible text of the copy button. Default "Copy". |
+| `copyAccessibleLabel` | `string` |  | Accessible name of the copy button when it should say more than `copyLabel`, e.g. `copyLabel` "Copy" and `copyAccessibleLabel` "Copy command" on a page with several blocks. It is the button's `aria-label`, with and without `showCopyLabel` (icon-only: also the tooltip), and wins over `copyLabel` as the name; `copyLabel` stays the visible text. WCAG 2.5.3 (Label in Name): with `showCopyLabel` (the default) it must contain the visible `copyLabel`. Empty, whitespace-only or `null` counts as not set. The spoken results (`copiedLabel`, `copyErrorLabel`) are not affected. |
 | `copiedLabel` | `string` |  | Announced after a successful copy. Default "Copied". |
 | `copyErrorLabel` | `string` |  | Announced when copying failed. Default "Copy failed". |
-| `showCopyLabel` | `boolean` | `true` | `false`: an icon-only copy button with `copyLabel` as its name. Default true. |
+| `showCopyLabel` | `boolean` | `true` | `false`: an icon-only copy button with `copyLabel` as its name (or `copyAccessibleLabel`, if set). Default true. |
 | `hideScrollbar` | `boolean` | `true` | `false` keeps the scrollbar visible. Default true (stuffcloud: no visible scrollbar). |
 | `class` | `string` |  |  |
 
@@ -647,9 +650,10 @@ Code block (stuffcloud's CodeBlock): the `code` attribute or the element's text 
 | `start-line` | `startLine` | `number` |  |  |
 | `copy` | `copy` | `boolean` |  | Shows the copy button. Default: on when `copy-label` is set. |
 | `copy-label` | `copyLabel` | `string` |  | Visible text of the copy button. Default "Copy". |
+| `copy-accessible-label` | `copyAccessibleLabel` | `string` |  | Accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3). |
 | `copied-label` | `copiedLabel` | `string` |  | Announced after a successful copy. Default "Copied". |
 | `copy-error-label` | `copyErrorLabel` | `string` |  | Announced when copying failed. Default "Copy failed". |
-| `copy-icon` | `copyIcon` | `boolean` | `false` | Icon-only copy button (`copy-label` becomes its accessible name). |
+| `copy-icon` | `copyIcon` | `boolean` | `false` | Icon-only copy button (`copy-label` becomes its accessible name, unless `copy-accessible-label` is set). |
 | `show-scrollbar` | `showScrollbar` | `boolean` | `false` | Keeps the scrollbar visible. |
 
 ### Element: Ereignisse

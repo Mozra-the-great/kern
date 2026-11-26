@@ -14,11 +14,19 @@
 		copy?: boolean | undefined;
 		/** Visible text of the copy button. Default "Copy". */
 		copyLabel?: string | undefined;
+		/**
+		 * Accessible name of the copy button when it should say more than `copyLabel`, e.g. `copyLabel` "Copy" and
+		 * `copyAccessibleLabel` "Copy command" on a page with several blocks. It is the button's `aria-label`, with and without
+		 * `showCopyLabel` (icon-only: also the tooltip), and wins over `copyLabel` as the name; `copyLabel` stays the visible text.
+		 * WCAG 2.5.3 (Label in Name): with `showCopyLabel` (the default) it must contain the visible `copyLabel`. Empty,
+		 * whitespace-only or `null` counts as not set. The spoken results (`copiedLabel`, `copyErrorLabel`) are not affected.
+		 */
+		copyAccessibleLabel?: string | undefined;
 		/** Announced after a successful copy. Default "Copied". */
 		copiedLabel?: string | undefined;
 		/** Announced when copying failed. Default "Copy failed". */
 		copyErrorLabel?: string | undefined;
-		/** `false`: an icon-only copy button with `copyLabel` as its name. Default true. */
+		/** `false`: an icon-only copy button with `copyLabel` as its name (or `copyAccessibleLabel`, if set). Default true. */
 		showCopyLabel?: boolean | undefined;
 		/** `false` keeps the scrollbar visible. Default true (stuffcloud: no visible scrollbar). */
 		hideScrollbar?: boolean | undefined;
@@ -34,6 +42,7 @@
 		startLine,
 		copy,
 		copyLabel,
+		copyAccessibleLabel,
 		copiedLabel,
 		copyErrorLabel,
 		showCopyLabel = true,
@@ -54,6 +63,7 @@
 	{startLine}
 	copy={withCopy}
 	{copyLabel}
+	{copyAccessibleLabel}
 	{copiedLabel}
 	{copyErrorLabel}
 	copyShowLabel={showCopyLabel}
