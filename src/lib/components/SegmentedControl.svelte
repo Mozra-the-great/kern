@@ -14,6 +14,8 @@
 		ariaLabel?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		options: readonly SegmentOption[];
 		/** Value of the chosen option. */
 		value?: string | undefined;
@@ -31,6 +33,7 @@
 		ariaLabel,
 		hint,
 		error,
+		announce,
 		options,
 		value = $bindable(),
 		name,
@@ -50,7 +53,7 @@
 	}
 </script>
 
-<Field {hint} {error} class={cls}>
+<Field {hint} {error} {announce} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		{#if label}<Label as="span" id="{uid}-label" text={label} />{/if}
 		<div

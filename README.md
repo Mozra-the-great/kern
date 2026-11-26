@@ -271,7 +271,8 @@ Listen (`options`, `items`, `tabs`, `columns`, `rows`, `commands`, `nodes`, `exp
 `panels`, bei TagInput `value`, bei Typewriter `text`) werden als
 JSON-Attribut übergeben. Attribute mit Vorgabe `true` (`pausable`, `pause-on-hover`, `once`, `in-view`,
 `caret`, `blink` …) schaltet `="false"` ab; bei den Daten-Elementen heißen sie umgekehrt (`no-search`,
-`no-stack`, `no-legend`, `no-last-dot`, `rising-is-bad`, `no-pulse`). `<k-stat>` nimmt eine `<k-sparkline>` im Slot `spark`.
+`no-stack`, `no-legend`, `no-last-dot`, `rising-is-bad`, `no-pulse`) und bei den Formularfeldern (`no-announce`,
+`no-reject-messages`). `<k-stat>` nimmt eine `<k-sparkline>` im Slot `spark`.
 
 Ereignisse (alle `bubbles` und `composed`, Wert in `detail`). **Ereignisse feuern nur bei
 Nutzereingaben:** Setzt der Code `value`, `tabs`, `options`, `open`, `index` usw., kommt kein
@@ -738,7 +739,13 @@ nie ihren Inhalt, und sendet nichts.
 erscheint oder sich ändert, nicht bei jedem Rendern. `keepHint` (Element: `keep-hint`) zeigt
 Hinweis und Fehler zusammen; `aria-describedby` nennt zuerst den Fehler, dann den Hinweis, dann
 ein eigenes `aria-describedby` des Aufrufers (wird nicht mehr überschrieben). Wer `Field` um ein
-eigenes Steuerelement legt, bekommt im Snippet `{ describedby, invalid, required }`.
+eigenes Steuerelement legt, bekommt im Snippet `{ describedby, invalid, required }`. Sagt die Seite die Meldung
+schon selbst an (eine eigene `role="status"`-Region), macht `announce={false}` den Fehler stumm: er bleibt
+sichtbar, `aria-describedby` nennt ihn weiter zuerst und das Steuerelement bleibt `aria-invalid`, nur das
+`role="alert"` entfällt. `announce` (Vorgabe `true`) gibt es an `Input`, `Select`, `Textarea`, `Combobox`,
+`NumberInput`, `DatePicker`, `ColorPicker`, `TagInput`, `PinInput`, `Rating`, `SegmentedControl`, `Slider` und
+`FileDrop` (dort nur für den `error`-Prop, die eigenen Meldungen zu abgelehnten Dateien bleiben still). Die
+Elemente schalten es mit dem Attribut `no-announce` (Property `noAnnounce`) ab, wie `no-reject-messages`.
 
 **CopyButton und StatusMessage:** `text` ist gleichbedeutend mit `value`. `showLabel` zeigt
 `label` als Text („HEX kopieren“), der dann der zugängliche Name ist. Die Meldung

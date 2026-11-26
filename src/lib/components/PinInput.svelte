@@ -11,6 +11,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** The entered characters (gaps are left out). */
 		value?: string | undefined;
 		/** Number of boxes. */
@@ -36,6 +38,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		value = $bindable(),
 		length = 6,
 		type = 'numeric',
@@ -169,7 +172,7 @@
 	}
 </script>
 
-<Field {hint} {error} class={cls}>
+<Field {hint} {error} {announce} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		{#if label}<Label id="{baseId}-label" for="{baseId}-0" text={label} {required} />{/if}
 		<div class="k-pin" role="group" aria-labelledby={label ? `${baseId}-label` : undefined} aria-describedby={describedby}>

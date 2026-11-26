@@ -2123,6 +2123,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -2339,6 +2349,14 @@
 							"fieldName": "error"
 						},
 						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
+						},
+						{
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -2519,6 +2537,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -2693,6 +2721,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "value",
@@ -4068,6 +4104,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -4272,6 +4318,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "value",
@@ -5128,6 +5182,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error given as `error` is not announced (no `role=\"alert\"`); the page announces it itself. Messages for refused files are never announced."
+						},
+						{
+							"kind": "field",
 							"name": "accept",
 							"type": {
 								"text": "string | undefined"
@@ -5376,6 +5440,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "accept",
@@ -6238,6 +6310,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "keepHint",
 							"type": {
 								"text": "boolean"
@@ -6412,6 +6494,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "keep-hint",
@@ -7629,6 +7719,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "number | null"
@@ -7835,6 +7935,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "value",
@@ -8386,6 +8494,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string"
@@ -8553,6 +8671,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "value",
@@ -9436,6 +9562,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "number"
@@ -9594,6 +9730,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "value",
@@ -10335,6 +10479,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "options",
 							"type": {
 								"text": "readonly SegmentOption[]"
@@ -10485,6 +10639,14 @@
 							"fieldName": "error"
 						},
 						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
+						},
+						{
 							"name": "options",
 							"type": {
 								"text": "readonly SegmentOption[] (JSON)"
@@ -10598,6 +10760,16 @@
 								"text": "string | undefined"
 							},
 							"attribute": "error"
+						},
+						{
+							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
 						},
 						{
 							"kind": "field",
@@ -10759,6 +10931,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "keep-hint",
@@ -11243,6 +11423,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "number | undefined"
@@ -11409,6 +11599,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "value",
@@ -13349,6 +13547,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "value",
 							"type": {
 								"text": "string[]"
@@ -13570,6 +13778,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "value",
@@ -13985,6 +14201,16 @@
 						},
 						{
 							"kind": "field",
+							"name": "noAnnounce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"attribute": "no-announce",
+							"description": "The error is not announced (no `role=\"alert\"`); use it when the page announces the message itself. The error stays visible and keeps describing the control."
+						},
+						{
+							"kind": "field",
 							"name": "keepHint",
 							"type": {
 								"text": "boolean"
@@ -14151,6 +14377,14 @@
 								"text": "string"
 							},
 							"fieldName": "error"
+						},
+						{
+							"name": "no-announce",
+							"type": {
+								"text": "boolean"
+							},
+							"default": "false",
+							"fieldName": "noAnnounce"
 						},
 						{
 							"name": "keep-hint",

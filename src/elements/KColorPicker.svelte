@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'String', reflect: true },
 			alpha: { type: 'Boolean' },
 			swatches: { type: 'Array' },
@@ -28,6 +29,7 @@
 	 * Colour field with a picker popup. `swatches`: JSON list of hex strings or {"value","label"} objects.
 	 * @prop swatches {readonly (string | ColorSwatch)[]}
 	 * @event change {string} The chosen colour as hex, or "" when cleared.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import ColorPicker from '../lib/components/ColorPicker.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -36,6 +38,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		value = $bindable(''),
 		alpha = false,
 		swatches = [],
@@ -70,6 +73,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{alpha}
 	{swatches}

@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'String', reflect: true },
 			options: { type: 'Array' },
 			placeholder: { type: 'String' },
@@ -23,6 +24,7 @@
 	 * Text field with a filtered list of options; `allow-custom` also accepts free text.
 	 * @prop options {readonly ComboboxOption[]}
 	 * @event change {string} The chosen value.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import Combobox from '../lib/components/Combobox.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -31,6 +33,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		value = $bindable(''),
 		options = [],
 		placeholder,
@@ -60,6 +63,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{options}
 	{placeholder}

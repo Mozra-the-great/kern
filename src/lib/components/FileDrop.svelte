@@ -11,6 +11,8 @@
 		hint?: string | undefined;
 		/** Error text from outside, e.g. a failed upload. Rejected files add their own message. */
 		error?: string | undefined;
+		/** Announce the `error` prop as `role="alert"` (the default); turn off when the page announces it itself. Messages for refused files are never announced. */
+		announce?: boolean | undefined;
 		/** Same syntax as `<input accept>`: `.pdf`, `image/*`, `image/png`. Also enforced for dropped files. */
 		accept?: string | undefined;
 		multiple?: boolean | undefined;
@@ -67,6 +69,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		accept,
 		multiple = false,
 		maxSize,
@@ -251,7 +254,7 @@
 	{label}
 	{hint}
 	error={shownError}
-	announce={!!error}
+	announce={announce !== false && !!error}
 	{required}
 	for={buttonLabel ? undefined : zoneId}
 	labelId={buttonLabel && label ? labelId : undefined}

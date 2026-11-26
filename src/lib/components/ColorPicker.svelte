@@ -15,6 +15,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** Hex colour, `#rrggbb` (or `#rrggbbaa` with `alpha`); '' = none. */
 		value?: string | undefined;
 		/** Offer an opacity slider; the value then carries alpha when not opaque. */
@@ -48,6 +50,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		value = $bindable(),
 		alpha = false,
 		swatches = [],
@@ -289,7 +292,7 @@
 
 <svelte:window onpointerdown={onWindowPointer} />
 
-<Field {label} {hint} error={error ?? (invalidInput ? invalidText : undefined)} {required} for={inputId} class={cls}>
+<Field {label} {hint} error={error ?? (invalidInput ? invalidText : undefined)} {announce} {required} for={inputId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-color" class:invalid class:disabled bind:this={box}>
 			<button

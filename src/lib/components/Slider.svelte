@@ -6,6 +6,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** Defaults to the middle of the range, snapped to `step`. */
 		value?: number | undefined;
 		min?: number | undefined;
@@ -20,6 +22,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		value = $bindable(),
 		min = 0,
 		max = 100,
@@ -47,7 +50,7 @@
 	const shown = $derived(format ? format(current) : String(current));
 </script>
 
-<Field {label} {hint} {error} for={sliderId} class={cls}>
+<Field {label} {hint} {error} {announce} for={sliderId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-slider" class:invalid>
 			<input
