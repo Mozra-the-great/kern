@@ -20,7 +20,14 @@ const require = createRequire(import.meta.url);
 const ALWAYS = ['scrollable-region-focusable'];
 let source: string | undefined;
 
-export async function axeViolations(page: Page, options: { disable?: string[] } = {}): Promise<AxeFinding[]> {
+export interface AxeOptions {
+	/** Rule ids to switch off. */
+	disable?: string[];
+	/** Also report every violation of these rule ids whatever its impact; a string ending in `-` is a prefix (`landmark-`). */
+	also?: string[];
+}
+
+export async function axeViolations(page: Page, options: AxeOptions = {}): Promise<AxeFinding[]> {
 	source ??= await readFile(require.resolve('axe-core/axe.min.js'), 'utf8');
 	await page.addScriptTag({ content: source });
 	const found = await page.evaluate(async (disabled) => {
@@ -47,5 +54,7 @@ export async function axeViolations(page: Page, options: { disable?: string[] } 
 			targets: v.nodes.map((n) => `${JSON.stringify(n.target)} ${(n.failureSummary ?? '').replace(/\s+/g, ' ')}`)
 		}));
 	}, options.disable ?? []);
-	return found.filter((v) => v.impact === 'serious' || v.impact === 'critical' || ALWAYS.includes(v.id));
+	const also = [...ALWAYS, ...(options.also ?? [])];
+	const listed = (id: string): boolean => also.some((a) => (a.endsWith('-') ? id.startsWith(a) : id === a));
+	return found.filter((v) => v.impact === 'serious' || v.impact === 'critical' || listed(v.id));
 }

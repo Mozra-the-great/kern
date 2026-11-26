@@ -44,6 +44,17 @@ describe.each([
 		expect(screen.getByRole('button', { name: 'Close' })).toBeTruthy();
 	});
 
+	it('has no banner or contentinfo landmark: the title row and the footer are not page landmarks (#154)', () => {
+		// at the top level of the document, next to the page's own header and footer, which are the real landmarks
+		render(Component, { ...base, open: true });
+		expect(screen.queryByRole('banner')).toBeNull();
+		expect(screen.queryByRole('contentinfo')).toBeNull();
+		const dialog = dialogElement();
+		for (const el of [dialog.querySelector('header'), dialog.querySelector('footer')]) {
+			expect(el?.getAttribute('role')).toBe('none');
+		}
+	});
+
 	it('opens and closes when the open prop changes, without reporting the app-driven close', async () => {
 		const onclose = vi.fn();
 		const { rerender } = render(Component, { ...base, open: false, onclose });

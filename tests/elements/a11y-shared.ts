@@ -28,6 +28,9 @@ export const PAGES = [
 /** The page with every custom element on it; the coverage tests and the open states use it. */
 export const ALL = 'forced-colors';
 
+/** The page with an app shell (header, main, footer) and the overlays and a card at the top level of its body (#154). */
+export const LANDMARKS = 'landmarks';
+
 /** All tag names of custom-elements.json, sorted. */
 export async function elementTags(): Promise<string[]> {
 	const manifest = JSON.parse(await readFile(new URL('../../custom-elements.json', import.meta.url), 'utf8')) as {

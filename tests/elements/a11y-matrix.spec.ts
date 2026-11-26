@@ -4,11 +4,14 @@
  * theme variants (code, code-light, flower, flower-wald, pop, pop-dark, line, line-light). Serious and critical
  * violations fail. A new element that is not on the page fails the coverage test, as in forced-colors.spec.ts.
  *
+ * landmarks.html: the open Modal and Drawer and a Card at the top level of an app shell with its own header, main and
+ * footer (#154); there every `landmark-*` rule counts, whatever axe rates it (the duplicate banner is `moderate`).
+ *
  * The other pages are checked by a11y.spec.ts, and forced colors by forced-colors.spec.ts (#27).
  */
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { axeViolations } from './axe.js';
-import { ALL, elementTags, openPage, STATES, THEMES } from './a11y-shared.js';
+import { ALL, elementTags, LANDMARKS, openPage, STATES, THEMES } from './a11y-shared.js';
 
 /** Elements whose main part exists only while they are open: each needs an open state in STATES. */
 const OVERLAYS = [
@@ -76,6 +79,41 @@ for (const theme of THEMES) {
 			await state.prepare(page);
 			const findings = await axeViolations(page);
 			expect(findings, JSON.stringify(findings, null, 2)).toEqual([]);
+		});
+	}
+}
+
+/** The states of landmarks.html: the shell alone (card included), then each overlay open at the top level. */
+const LANDMARK_STATES: Record<string, (page: Page) => Promise<void>> = {
+	closed: async () => undefined,
+	'modal with footer': async (page) => {
+		await page.evaluate(() => ((document.querySelector('#modal') as HTMLElement & { open: boolean }).open = true));
+		await expect(page.locator('#modal dialog[open]')).toBeVisible();
+	},
+	'drawer with footer': async (page) => {
+		await page.evaluate(() => ((document.querySelector('#drawer') as HTMLElement & { open: boolean }).open = true));
+		await expect(page.locator('#drawer dialog[open]')).toBeVisible();
+	}
+};
+
+test('axe flags a second banner and contentinfo at the top level (the landmark case is not vacuous)', async ({ page }) => {
+	await openPage(page, LANDMARKS);
+	await page.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<header>Extra</header><footer>Extra</footer>'));
+	const ids = (await axeViolations(page, { also: ['landmark-'] })).map((f) => f.id);
+	expect(ids).toEqual(expect.arrayContaining(['landmark-no-duplicate-banner', 'landmark-no-duplicate-contentinfo']));
+});
+
+for (const theme of THEMES) {
+	for (const [name, prepare] of Object.entries(LANDMARK_STATES)) {
+		test(`axe landmarks: ${name} next to the page's header, main and footer in ${theme}`, async ({ page }) => {
+			await openPage(page, LANDMARKS, { theme });
+			await prepare(page);
+			const findings = await axeViolations(page, { also: ['landmark-'] });
+			expect(findings, JSON.stringify(findings, null, 2)).toEqual([]);
+			// the page's own header and footer are the only landmarks of their kind, in the page and inside the overlays
+			for (const role of ['banner', 'contentinfo'] as const) {
+				await expect(page.locator('#modal, #drawer, #card').getByRole(role)).toHaveCount(0);
+			}
 		});
 	}
 }
