@@ -378,6 +378,7 @@ Abschnitten zum Abgleich; welche Tests stuffclouds Tests ersetzen, steht in
 | `TabLinks` | `TabLinks` | `onnavigate` für Routing im Client |
 | `Tile`, `TileGrid` | `Tile`, `TileGrid` | |
 | `Mascot`, `mascots.ts`, `motion.ts` | `Mascot`, `MASCOT_NAMES`, `MASCOT_ALIASES`, `MASCOT_SOURCES`, `BOB_PERIOD_MS`, `BOB_OFFSET_PX`, `COMPACT_MAX_WIDTH_PX` | [Mascot](../README.md#mascot-pixel-art) |
+| `THEME-TEXTS.md` (Theme- und Saisontexte) | `themeTexts()`, `setThemeTexts`, `deThemeTexts`, `THEME_TEXT_SETS` | neutral formuliert, ohne Produktaussagen: eigene Zeilen per `setThemeTexts`; [Theme-Texte](../README.md#theme-texte) |
 | `ReorderList`, `PageGrid` | `SortableList`, `SelectGrid` | [Sortieren und Auswählen](../README.md#sortieren-und-auswählen-abgleich-mit-stuffcloud) |
 | `button.css`, Design-Tokens | Theme `code` | Token-Zuordnung in [`docs/themes.md`](themes.md#stuffcloud-variables-and-their-kern-tokens-theme-code) |
 
@@ -385,5 +386,5 @@ Was in stuffcloud bleibt: App-Layout, Routen, eigene Seiten und alles, was nur s
 Theme `code` und ist dessen Designquelle (#181); stuffclouds `docs/design` ist eine eingefrorene Referenz, an der sich das
 Theme orientiert, keine Vorgabe. `tokens:check` schützt vor versehentlicher Abweichung von dieser Referenz, eine bewusste
 Änderung steht mit Grund in `code.tokens.json` ([Code-Theme-Quelle](themes.md#code-theme-source-37)). Was stuffcloud von
-kern noch braucht und nicht hat (Saison-Sets, Theme-Texte), steht mit Issue-Nummern in
+kern noch braucht und nicht hat (die Saison-Sets), steht mit Issue-Nummern in
 [„Remaining differences“](themes.md#remaining-differences-to-stuffclouds-components-111-181).
