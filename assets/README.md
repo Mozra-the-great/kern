@@ -12,6 +12,9 @@ Rules for every brand:
 
 - **Decorative by default.** Give the `<img>` an empty `alt=""`. When a picture carries meaning (a
   mascot that says "done", an empty state), describe it in `alt` or in the surrounding text.
+- **Mascots never speak, no filler copy.** No speech bubbles, greetings or marketing text next to a mascot or
+  anywhere in the art: pages carry labels, state and data only. A mascot adds company, it is never the only
+  carrier of a message.
 - **Never in the way.** Art sits beside or behind content: it never covers text or controls, never
   takes focus, is never the only carrier of a state and stands still under `prefers-reduced-motion`.
 - **Fixed colours.** No file follows the theme: none uses `currentColor`, a CSS variable or a
@@ -34,7 +37,7 @@ The colours are fixed and do not follow the theme; the art is drawn for the dark
 | Group | Files | Use |
 | --- | --- | --- |
 | `logo/` | 1 | The pixel logo. |
-| `mascots/` | 9 | `axo.svg` (the pink axolotl, main mascot) plus cat, frog, bunny, jellyfish, penguin, fox, ghost and cloud for easter eggs. Mascots never block content or take focus. |
+| `mascots/` | 9 | `axo.svg` (Stuffy, the pink axolotl and main mascot) plus the easter-egg cast: cat (Mochi), frog (Hop), bunny (Bun), jellyfish (Bloop), penguin (Waddle), fox (Ember), ghost (Boo) and cloud (Cumulo). Each has a typed name in `Mascot` / `<k-mascot>` (`stuffy`, `mochi`, `hop`, `bun`, `bloop`, `waddle`, `ember`, `boo`, `cumulo`) and aliases (`axo`, `axolotl`, `cat`, `frog`, `bunny`, `jelly`, `jellyfish`, `penguin`, `fox`, `ghost`, `cloudy`, `cloud`; README, "Mascot"). Mascots never speak, never block content and never take focus. One frame per animal; the idle bob is done by the runtime. |
 | `tool-stickers/` | 42 | One sticker per tool (drawn with `Sticker`, sorted into categories, see "Tool stickers" below): Base64, burn after reading, colour, cron, diff, download, expiry, hash, image tools (background, convert, crop, EXIF, pixelate, resize), JSON, JWT, lorem ipsum, MAC address, Markdown, password, paste, PDF tools (compress, merge, protect, rotate, split), QR code, regex, report, shield, site, SQL, subnet, text operations, timestamp, trash, units, URL, user agent, UUID, XML, YAML. |
 | `marks/` | 11 | Build, convert, dice, document, folder, globe, letter, lock, mountain (image), QR code, template. Always next to a text label. |
 | `seasonal/` | 52 | Particles, header and footer strips, corner sprites and mascot accessories for the seasonal sets (winter to Christmas, Advent with one to four candles; summer: bubbles, flowers, flower row, petals, sun, sun hat, waves). One set at a time, behind content, still under reduced motion. |
@@ -149,7 +152,8 @@ source: CI cannot reach the stuffcloud repository or the claude.ai artifacts, so
 `npm run assets:check`. It fails on a missing, extra or changed file, on an SVG without `xmlns` or
 `viewBox`, on an unsafe construct (list above) and on a brand folder it does not know, and it checks
 that `src/lib/components/code-art.ts` (the grid catalogue behind `Mascot`) matches the
-code SVGs.
+code SVGs and that every file in `code/mascots/` has exactly one name in `MASCOT_SOURCES`
+(`src/lib/components/mascots.ts`) and every name a file.
 
 When the art changes (kern owns it since #181; copy from the stuffcloud reference only for art that kern does not have yet):
 

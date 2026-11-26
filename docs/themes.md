@@ -234,7 +234,6 @@ is in the mapping tables of the [consumer guide](consumer-guide.md) and of [test
 
 | Need | Issue |
 | --- | --- |
-| Stuffy and the easter-egg cast in the `Mascot` runtime (art, grid and the rule "mascots never speak") | [#183](https://github.com/Mozra-the-great/kern/issues/183) |
 | Season and special-day sets (the 17 sets with decorations and the theme button behaviour), an optional feature | [#184](https://github.com/Mozra-the-great/kern/issues/184) |
 | ~~Theme texts as a DE/EN catalogue that consumers can override~~ **met**: `setThemeTexts`, `themeTexts()`, `deThemeTexts` (see the paragraph below) | [#185](https://github.com/Mozra-the-great/kern/issues/185) |
 
@@ -253,7 +252,7 @@ The theme button that reads them, and the set names, come with the season sets (
 The two catalogue files are in the scope of `neutrality:check`, and a unit test scans the texts for the product name and the
 same patterns.
 
-All three are parts of [#181](https://github.com/Mozra-the-great/kern/issues/181), the issue that made kern the
+Both are parts of [#181](https://github.com/Mozra-the-great/kern/issues/181), the issue that made kern the
 design source. A token that stuffcloud still defines locally and kern lacks is not on the list: stuffcloud#199 files
 each one as a kern issue first, and it gets a row here when it does. (The reference's `--violet` mascot panel and
 `--gray` status dot are in `unused` of `code.tokens.json`: no kern component draws them.)

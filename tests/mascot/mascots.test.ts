@@ -15,13 +15,16 @@ import {
 	BOB_PERIOD_MS,
 	COMPACT_MAX_WIDTH_PX,
 	integerScale,
+	isMascotAlias,
 	isMascotName,
 	isCodeArt,
 	isStuffcloudArt,
+	MASCOT_ALIASES,
 	MASCOT_NAMES,
 	MASCOT_SOURCES,
 	mascotSize,
 	normaliseScale,
+	resolveMascotName,
 	CODE_ART,
 	STUFFCLOUD_ART,
 	type CodeArt,
@@ -112,7 +115,8 @@ describe('mascot cast (stuffcloud names → kern files)', () => {
 	it('resolves names and paths, and rejects anything else', () => {
 		expect(artPath('stuffy')).toBe('mascots/axo');
 		expect(artPath('tool-stickers/sticker-qr')).toBe('tool-stickers/sticker-qr');
-		expect(artPath('axo')).toBeUndefined();
+		expect(artPath('axo')).toBe('mascots/axo');
+		expect(artPath('mascot-cat')).toBeUndefined();
 		expect(artPath('toString')).toBeUndefined();
 		expect(isMascotName('boo')).toBe(true);
 		expect(isMascotName('mascots/mascot-ghost')).toBe(false);
@@ -124,6 +128,66 @@ describe('mascot cast (stuffcloud names → kern files)', () => {
 		expect(artUrl('/art/code', 'stuffy')).toBe('/art/code/mascots/axo.svg');
 		expect(artUrl('/art/code/', 'seasonal/deco-sun')).toBe('/art/code/seasonal/deco-sun.svg');
 		expect(() => artUrl('/art', 'nope' as CodeArt)).toThrow('unknown Code art "nope"');
+	});
+});
+
+describe('mascot roles and files', () => {
+	it('has exactly one main mascot, Stuffy, and eight easter-egg animals', () => {
+		const roles = MASCOT_NAMES.map((name) => [name, MASCOT_SOURCES[name].role] as const);
+		expect(roles.filter(([, role]) => role === 'main')).toEqual([['stuffy', 'main']]);
+		expect(roles.filter(([, role]) => role === 'easter-egg')).toHaveLength(8);
+	});
+
+	it('gives every file in assets/code/mascots a name, and every name a file', () => {
+		const files = artKeys.filter((key) => key.startsWith('mascots/')).sort();
+		expect(MASCOT_NAMES.map((name) => MASCOT_SOURCES[name].art).sort()).toEqual(files);
+	});
+
+	it('lists the animals in the order of the cast', () => {
+		expect(MASCOT_NAMES.map((name) => MASCOT_SOURCES[name].animal)).toEqual([
+			'axolotl',
+			'cat',
+			'frog',
+			'bunny',
+			'jellyfish',
+			'penguin',
+			'fox',
+			'ghost',
+			'cloud'
+		]);
+	});
+});
+
+describe('mascot aliases (#183)', () => {
+	const aliases = Object.keys(MASCOT_ALIASES) as (keyof typeof MASCOT_ALIASES)[];
+
+	it('keeps axo working next to stuffy, and gives every animal and file stem a way in', () => {
+		expect(resolveMascotName('axo')).toBe('stuffy');
+		for (const name of MASCOT_NAMES) {
+			const { animal, file } = MASCOT_SOURCES[name];
+			expect(resolveMascotName(animal)).toBe(name);
+			expect(resolveMascotName(file.replace(/^mascot-/, ''))).toBe(name);
+		}
+	});
+
+	it.each(aliases)('%s resolves to a canonical name and to its file', (alias) => {
+		const name = MASCOT_ALIASES[alias];
+		expect(resolveMascotName(alias)).toBe(name);
+		expect(isMascotAlias(alias)).toBe(true);
+		expect(isMascotName(alias)).toBe(false);
+		expect(artPath(alias)).toBe(MASCOT_SOURCES[name].art);
+		expect(artUrl('/a', alias)).toBe(`/a/${MASCOT_SOURCES[name].art}.svg`);
+	});
+
+	it('every canonical name resolves to itself', () => {
+		for (const name of MASCOT_NAMES) expect(resolveMascotName(name)).toBe(name);
+	});
+
+	it('does not resolve paths, inherited keys or unknown words', () => {
+		for (const bad of ['mascots/axo', 'constructor', 'toString', '__proto__', 'Stuffy', '']) {
+			expect(resolveMascotName(bad)).toBeUndefined();
+			expect(isMascotAlias(bad)).toBe(false);
+		}
 	});
 });
 

@@ -3,7 +3,14 @@
 	 * (`?url`; vite.config.ts never inlines them as data: URIs, as a strict CSP needs). */
 	import Mascot from '../../lib/components/Mascot.svelte';
 	import Switch from '../../lib/components/Switch.svelte';
-	import { MASCOT_NAMES, MASCOT_SOURCES, artPath, type MascotName } from '../../lib/components/mascots.js';
+	import {
+		MASCOT_ALIASES,
+		MASCOT_NAMES,
+		MASCOT_SOURCES,
+		artPath,
+		type MascotAlias,
+		type MascotName
+	} from '../../lib/components/mascots.js';
 	import type { MascotArt } from '../../lib/components/Mascot.svelte';
 
 	const files = import.meta.glob<string>('../../../assets/code/*/*.svg', { eager: true, query: '?url', import: 'default' });
@@ -23,6 +30,11 @@
 		boo: 'Geist',
 		cumulo: 'Wolke'
 	};
+	const aliasesOf = (name: MascotName): string =>
+		(Object.entries(MASCOT_ALIASES) as [MascotAlias, MascotName][])
+			.filter(([, target]) => target === name)
+			.map(([alias]) => alias)
+			.join(', ');
 	const stickers: MascotArt[] = [
 		'tool-stickers/sticker-qr',
 		'tool-stickers/sticker-shield',
@@ -38,7 +50,8 @@
 	<p class="lead">
 		<code>&lt;Mascot&gt;</code> zeigt jede Code-Pixel-Art als <code>&lt;img&gt;</code> in ganzzahligen Skalen. Das Wippen ist nur
 		<code>transform</code>
-		mit <code>steps(1)</code>, pausiert außerhalb des Bildes und in Hintergrund-Tabs und steht bei reduzierter Bewegung still.
+		mit <code>steps(1)</code>, pausiert außerhalb des Bildes und in Hintergrund-Tabs und steht bei reduzierter Bewegung still. Maskottchen
+		sprechen nie: keine Sprechblasen, kein Füllertext; ohne <code>label</code> sind sie dekorativ.
 	</p>
 	<Switch label="Bewegung" bind:checked={animated} />
 	<ul class="cast">
@@ -47,7 +60,8 @@
 				<span class="tile"><Mascot {name} src={urlOf(name)} scale={5} compactScale={4} {animated} /></span>
 				<span class="name">{name}</span>
 				<span class="file">{MASCOT_SOURCES[name].file}.svg</span>
-				<span class="animal">{animals[name]}</span>
+				<span class="animal">{animals[name]}{MASCOT_SOURCES[name].role === 'main' ? ' · Hauptfigur' : ''}</span>
+				<span class="file">auch: {aliasesOf(name)}</span>
 			</li>
 		{/each}
 	</ul>

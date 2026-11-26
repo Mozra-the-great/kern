@@ -33,6 +33,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `ThemeTextsStore`). Ported from the reference `THEME-TEXTS.md` without product names and without claims about the app that shows them; the
   custom elements do not load them yet. `createStringsStore` and `StringsStore` take an optional type parameter for the input (default
   `KernStringsInput`, no change for existing code). `neutrality:check` also scans the two catalogue files.
+- Stuffy and the easter-egg cast are complete in the `Mascot` runtime (#183). The nine pixel-art files in `assets/code/mascots/` were
+  compared with stuffcloud's current reference and are identical byte for byte, so no art changed; what was missing is the typed
+  addressing and the rule. Every mascot has a typed name (`stuffy`, `mochi`, `hop`, `bun`, `bloop`, `waddle`, `ember`, `boo`, `cumulo`)
+  and now also aliases that resolve to it: `axo`, `axolotl`, `cat`, `frog`, `bunny`, `jelly`, `jellyfish`, `penguin`, `fox`, `ghost`,
+  `cloudy`, `cloud`. `Mascot` and `<k-mascot>` take them as `name`, `data-mascot` reports the canonical name, and the old names and
+  paths (`mascots/axo`) work as before. New exports: `MASCOT_ALIASES`, `isMascotAlias`, `resolveMascotName` and the types
+  `MascotAlias`, `MascotRole`; `MascotArt` and `artUrl` accept aliases; `MASCOT_SOURCES` entries get a `role` (`main` for Stuffy,
+  `easter-egg` for the rest).
+- `npm run assets:check` also fails when a file in `assets/code/mascots/` has no name in `MASCOT_SOURCES` (or a name has no file, or
+  two names share one).
+- Docs: the rule "mascots never speak, no filler copy", the accessibility contract (decorative by default, `label` when the image
+  means something) and reduced motion are stated in README, "Mascot", and in `assets/README.md`; the cast table lists name, aliases,
+  file, animal and the occasion stuffcloud uses each for. `NOTICE` and `assets/README.md` record the licence of the Code art
+  (GPL-3.0-or-later, like the code).
+- Tests: every name and alias renders in the DOM suite and loads its SVG in the built `<k-mascot>` (Playwright); aliases, roles and
+  the file-to-name mapping in `tests/mascot/mascots.test.ts`.
 - `Sticker` and `<k-sticker>`: draws one of the 42 tool stickers of `assets/code/tool-stickers/` by name (`StickerName`), through
   `<img>` at a whole-number scale (`scale`, default 4, `compactScale` under 760 px) with `image-rendering: pixelated`. The art keeps
   its own colours in every theme and never moves. Decorative by default (`alt=""`, `aria-hidden`, never focusable); `label` makes it a
