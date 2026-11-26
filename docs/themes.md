@@ -40,6 +40,7 @@ list with the source of every value is `src/lib/themes/code.tokens.json` (next s
 | shadow-pixel | `8px 8px 0 rgba(16,16,18,.6)` | `--k-shadow-overlay` | same | dialogs, popovers |
 | delete-site dialog scrim | `rgba(16,16,18,.55)` | `--k-backdrop` | same | was `rgba(0,0,0,.6)`, no design source (#37) |
 | `--sans` / `--mono` / `--pix` | `'Inter',system-ui,sans-serif` / `'JetBrains Mono',ui-monospace,monospace` / `'Silkscreen',monospace` | `--k-font-sans` / `--k-font-mono` / `--k-font-display` | same | the artifact's longer fallback stacks gave way to docs/design (#37) |
+| `body` (no `line-height`) | `normal` | `--k-leading-body` | `normal` | text without a line height of its own; the other themes keep `1.5` (#145, section "Line height") |
 | shadow-pixel-sm / toast `--shadow` | `4px 4px 0 rgba(0,0,0,.4)` | `--k-shadow-sm` | same | Toast |
 | target-min | 44px | `--k-tap-min`, `--k-tap-target`, `--k-control-h-sm` | 44px | every pointer |
 | target-icon | 48px | `--k-tap-icon` | 48px | IconButton, CopyButton, dialog close |
@@ -299,6 +300,27 @@ default font size (browser setting, 16px unless changed). A px size there replac
   [docs/consumer-guide.md](consumer-guide.md#schriftgröße).
 - `tests/elements/root-font-size.spec.ts` sets the browser's default font size with the CDP command `Page.setFontSizes`
   (the value of Chrome's Settings > Appearance > Font size) to 16 and 20px and checks every variant.
+
+## Line height (#145)
+
+`[data-theme]` sets `line-height: var(--k-leading-body)`, on `<html data-theme>` and on a theme box alike, and all text
+without a line height of its own inherits it. The token is `1.5` in `base.css` (Flower, Pop and Line draw exactly what they
+did) and `normal` in Code, all its variants and the `stuffcloud*` aliases: stuffcloud's `stuff.css` sets no `line-height` on
+`body` (source `design:stuff.css|body{line-height}`, recorded as `null` in the snapshot), so the browser's `normal` applies.
+The design sets its own where it wants one (titles 1.05 to 1.1, textarea 1.6, the toast 1.5, the offline banner 1.5).
+
+- The token is declared on `:root` and on `[data-theme]`: a theme box nested in another theme takes its own theme's value
+  (a Flower box in a Code page is 1.5, a Code box in a Flower page is `normal`), not the one it inherits.
+- To keep the old look in Code, set `--k-leading-body: 1.5` on the themed element (`html[data-theme] { --k-leading-body: 1.5 }`).
+- Components that set their own line height (Prose `--k-prose-leading`, Code, Terminal, Button, Modal title, Badge, Label, Textarea,
+  Timeline, ...) do not follow the token. Three take a fixed `1.5` of their own so Code does not move them: Alert (the icon's
+  offset is set against a 1.5 line), Toast (the dot and `--k-toast-text-offset` are; stuffcloud's toast sets 1.5 as well) and the
+  sort buttons of Table's header (the row is 12px padding plus the button, so a shorter button leaves less than the 44px
+  target `tests/targets` demands inside the table box; DataTable has a `min-height` for it). The line that connects the steps of
+  a Stepper no longer takes clicks (`pointer-events: none`): a shorter link had moved it into the middle of the link.
+  Everything else follows the design: its text now has `normal` leading in Code, as stuffcloud's does.
+- `tests/elements/leading-body.spec.ts` checks the computed `line-height` of the root, a theme box and plain text in every
+  variant (Code `normal`, the others 1.5), nesting in both directions, the migration override, Alert and Toast.
 
 ## Contract
 

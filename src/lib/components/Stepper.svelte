@@ -216,6 +216,8 @@
 		content: '';
 		position: absolute;
 		background: var(--k-line);
+		/* the line runs over the step's link: it must not take the clicks (a taller or shorter link moves it into the middle of the link) */
+		pointer-events: none;
 	}
 	.step[data-state='complete']:not(:last-child)::after {
 		background: var(--k-primary);

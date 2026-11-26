@@ -183,6 +183,9 @@
 		font: inherit;
 		text-transform: inherit;
 		letter-spacing: inherit;
+		/* the hit area (::after) is as tall as the row lets it be: 12px of th padding above and below plus this line. Own value
+		 * so --k-leading-body (Code: normal) does not shrink the button below 44px of reachable target (#145) */
+		line-height: 1.5;
 		cursor: pointer;
 	}
 	th button::after {

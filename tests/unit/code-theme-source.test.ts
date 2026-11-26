@@ -230,6 +230,8 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 		'--k-filedrop-split-gap': 'var(--k-space-3) var(--k-space-4)',
 		'--k-filedrop-prompt-basis': '10em'
 	};
+	/** Not a component token: what the themed element read before (its line height was a fixed 1.5). */
+	const BEFORE_ELEMENT: Record<string, string> = { '--k-leading-body': '1.5' };
 	const others = themeVariants(rules).filter((t) => !/^(code|stuffcloud)/.test(t));
 
 	it('covers every component token of base.css', () => {
@@ -242,10 +244,22 @@ describe('component tokens (#38) leave the other themes as they were', () => {
 
 	it.each(others)('%s resolves each one to what the component read before', (theme) => {
 		const t = resolveTokens(rules, theme);
-		for (const [name, was] of Object.entries(BEFORE)) {
+		for (const [name, was] of Object.entries({ ...BEFORE, ...BEFORE_ELEMENT })) {
 			const want = was.startsWith('--') ? t.get(was) : was.replace(/var\((--[\w-]+)\)/g, (m, n: string) => t.get(n) ?? m);
 			expect(t.get(name), `${name} in ${theme}`).toBe(want);
 		}
+	});
+
+	it('--k-leading-body (#145): 1.5 for every theme but Code, `normal` for Code, its variants and the aliases', () => {
+		const code = themeVariants(rules).filter((t) => /^(code|stuffcloud)/.test(t));
+		expect(code).toEqual(
+			expect.arrayContaining(['code-dark', 'code-light', 'code-paper', 'code-contrast', 'stuffcloud', 'stuffcloud-light'])
+		);
+		for (const theme of code) expect(resolveTokens(rules, theme).get('--k-leading-body'), theme).toBe('normal');
+		expect(others).toEqual(expect.arrayContaining(['flower', 'pop', 'line']));
+		for (const theme of others) expect(resolveTokens(rules, theme).get('--k-leading-body'), theme).toBe('1.5');
+		// the unthemed root keeps the base value
+		expect(resolveTokens(rules, 'none').get('--k-leading-body')).toBe('1.5');
 	});
 });
 
