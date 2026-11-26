@@ -43,6 +43,9 @@
 			<k-copy-button id="copy-long" text="abc" label="Copy" accessible-label="Copy SHA-256" show-label></k-copy-button>
 			<k-copy-button id="copy-icon" text="abc" label="Copy" accessible-label="Copy netmask"></k-copy-button>
 			<k-download-button id="dl-long" text="a,b" name="r.csv" label="Download" accessible-label="Download r.csv" show-label></k-download-button>
+			<k-code-block id="codeblock-long" label="Install" copy-label="Copy" copy-accessible-label="Copy install command">npm ci</k-code-block>
+			<k-code-block id="codeblock-icon" label="Build" copy-label="Copy" copy-accessible-label="Copy build command" copy-icon>npm run build</k-code-block>
+			<k-code id="code-icon" block label="Test" copy copy-label="Copy" copy-accessible-label="Copy test command">npm test</k-code>
 			<k-status-message id="status"></k-status-message>
 			<k-status-message id="problem" kind="alert"></k-status-message>
 			<p id="target">Target</p>

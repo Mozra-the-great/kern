@@ -783,7 +783,13 @@ ohne sichtbare Scrollleiste (`hideScrollbar={false}` bzw. `show-scrollbar` zeigt
 seitlich scrollt, ist er eine benannte, fokussierbare Region (`label`, axe
 `scrollable-region-focusable`); passt der Code, ist er weder Region noch Tab-Stopp. `copyLabel`
 schaltet wie in stuffcloud den Kopieren-Button ein (Text-Button; `showCopyLabel={false}` bzw.
-`copy-icon` nur Symbol), `copy` erzwingt oder unterdrückt ihn. Das Ergebnis wird höflich angesagt
+`copy-icon` nur Symbol), `copy` erzwingt oder unterdrückt ihn. Soll der Name des Knopfs mehr sagen
+als der sichtbare Text (mehrere Blöcke auf einer Seite), setzt `copyAccessibleLabel` (Element:
+`copy-accessible-label`) ihn („Installationsbefehl kopieren“), `copyLabel` bleibt der sichtbare Text.
+Der Wert geht an `accessibleLabel` von `CopyButton` (siehe dort): er gilt mit und ohne sichtbaren
+Text (ohne: auch als Tooltip), muss mit sichtbarem Text diesen enthalten (WCAG 2.5.3), und leer oder
+nur Leerzeichen zählt als nicht gesetzt. `Code` (`block`, `copy`) hat dasselbe als
+`copyAccessibleLabel`, `<k-code>` als `copy-accessible-label`. Das Ergebnis wird höflich angesagt
 (`copiedLabel`, `copyErrorLabel`); ohne Clipboard-API oder bei verweigerter Berechtigung greift der
 Rückfall von CopyButton, scheitert auch der, kommt die Fehlermeldung. `oncopy(copied, text)` läuft
 bei jedem Versuch (Element: `copy` mit dem Text, `copy-error`). Unterschied zu stuffcloud: die Ansage
@@ -793,6 +799,7 @@ zurück. `language`, `lineNumbers` und `startLine` wie bei `Code`. Das Element n
 
 ```svelte
 <CodeBlock code="stuffcloud deploy ./dist" label="Befehl" copyLabel="Kopieren" copiedLabel="Kopiert" />
+<CodeBlock code="npm ci" copyLabel="Kopieren" copyAccessibleLabel="Installationsbefehl kopieren" />
 ```
 
 **TabLinks:** Seiten-Navigation als Links, die wie Tabs aussehen: `<nav aria-label={label}>`, der

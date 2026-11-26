@@ -8,6 +8,7 @@
 			startLine: { type: 'Number', attribute: 'start-line' },
 			copy: { type: 'Boolean' },
 			copyLabel: { type: 'String', attribute: 'copy-label' },
+			copyAccessibleLabel: { type: 'String', attribute: 'copy-accessible-label' },
 			copiedLabel: { type: 'String', attribute: 'copied-label' },
 			copyErrorLabel: { type: 'String', attribute: 'copy-error-label' },
 			label: { type: 'String' }
@@ -17,6 +18,7 @@
 
 <script lang="ts">
 	/**
+	 * Block only: `copy-accessible-label` is the copy button's accessible name when it should say more than `copy-label`.
 	 * @event copy {string} The copied text.
 	 */
 	import Code from '../lib/components/Code.svelte';
@@ -34,6 +36,7 @@
 		startLine,
 		copy = false,
 		copyLabel,
+		copyAccessibleLabel,
 		copiedLabel,
 		copyErrorLabel,
 		label
@@ -54,6 +57,7 @@
 	{startLine}
 	{copy}
 	{copyLabel}
+	{copyAccessibleLabel}
 	{copiedLabel}
 	{copyErrorLabel}
 	{label}

@@ -8,6 +8,7 @@
 			startLine: { type: 'Number', attribute: 'start-line' },
 			copy: { type: 'Boolean' },
 			copyLabel: { type: 'String', attribute: 'copy-label' },
+			copyAccessibleLabel: { type: 'String', attribute: 'copy-accessible-label' },
 			copiedLabel: { type: 'String', attribute: 'copied-label' },
 			copyErrorLabel: { type: 'String', attribute: 'copy-error-label' },
 			copyIcon: { type: 'Boolean', attribute: 'copy-icon' },
@@ -23,6 +24,7 @@
 	 * scrolls. A copy button with visible text appears with `copy-label` or `copy`; the result is
 	 * announced in a polite live region.
 	 * @prop copy {boolean} Shows the copy button. Default: on when `copy-label` is set.
+	 * @prop copyAccessibleLabel {string} Accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3).
 	 * @prop copyIcon {boolean} Icon-only copy button (`copy-label` becomes its accessible name).
 	 * @prop showScrollbar {boolean} Keeps the scrollbar visible.
 	 * @event copy {string} The copied text.
@@ -39,6 +41,7 @@
 		startLine,
 		copy,
 		copyLabel,
+		copyAccessibleLabel,
 		copiedLabel,
 		copyErrorLabel,
 		copyIcon = false,
@@ -57,6 +60,7 @@
 	{startLine}
 	{copy}
 	{copyLabel}
+	{copyAccessibleLabel}
 	{copiedLabel}
 	{copyErrorLabel}
 	showCopyLabel={!copyIcon}

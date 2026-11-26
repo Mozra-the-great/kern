@@ -39,6 +39,7 @@
 <TabLinks links={[]} label="Empty" />
 
 <CodeBlock code="npm ci" />
+<CodeBlock code="npm ci" copyLabel="Copy" copyAccessibleLabel="Copy install command" />
 <CodeBlock
 	code={maybeString ?? ''}
 	label={maybeString}
@@ -47,6 +48,7 @@
 	startLine={maybeNumber}
 	copy={maybeBoolean}
 	copyLabel={maybeString}
+	copyAccessibleLabel={maybeString}
 	copiedLabel={maybeString}
 	copyErrorLabel={maybeString}
 	showCopyLabel={maybeBoolean}
@@ -58,6 +60,7 @@
 	code={maybeString}
 	block
 	copy
+	copyAccessibleLabel={maybeString}
 	copyShowLabel={maybeBoolean}
 	hideScrollbar={maybeBoolean}
 	oncopyerror={(error: unknown) => console.warn(error)}

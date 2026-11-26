@@ -6,6 +6,8 @@
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import Code from '../../src/lib/components/Code.svelte';
+import CodeBlock from '../../src/lib/components/CodeBlock.svelte';
 import CopyButton from '../../src/lib/components/CopyButton.svelte';
 import DownloadButton from '../../src/lib/components/DownloadButton.svelte';
 
@@ -123,5 +125,119 @@ describe('accessibleLabel leaves the status texts alone', () => {
 		await vi.advanceTimersByTimeAsync(100);
 		expect(document.querySelector('.k-download-button .k-status-message[role="status"]')?.textContent.trim()).toBe('Started');
 		expect(screen.getByRole('button', { name: 'Download a.txt' })).toBeTruthy();
+	});
+});
+
+/**
+ * `copyAccessibleLabel` of Code and CodeBlock (#168): forwarded to the inner CopyButton's `accessibleLabel`, with the same
+ * rules as #166 (name with and without the visible copy label, empty/whitespace/`null` counts as not set).
+ */
+interface CodeCase {
+	name: string;
+	component: typeof Code | typeof CodeBlock;
+	/** Props for a copy button with a visible text. */
+	visible: Record<string, unknown>;
+	/** Props for an icon-only copy button. */
+	iconOnly: Record<string, unknown>;
+	/** Props without a copy button. */
+	off: Record<string, unknown>;
+}
+
+const code = 'npm ci';
+const codeCases: CodeCase[] = [
+	{
+		name: 'Code',
+		component: Code,
+		visible: { block: true, code, copy: true, copyLabel: 'Copy', copyShowLabel: true },
+		iconOnly: { block: true, code, copy: true, copyLabel: 'Copy' },
+		off: { block: true, code }
+	},
+	{
+		name: 'CodeBlock',
+		component: CodeBlock,
+		visible: { code, copyLabel: 'Copy' },
+		iconOnly: { code, copyLabel: 'Copy', showCopyLabel: false },
+		off: { code, copy: false }
+	}
+];
+
+describe.each(codeCases)('$name copyAccessibleLabel', ({ component, visible, iconOnly, off }) => {
+	const long = 'Copy command';
+	const button = (): HTMLButtonElement => document.querySelector<HTMLButtonElement>('.k-copy-button button') as HTMLButtonElement;
+
+	it('with the visible copy label: the name is copyAccessibleLabel, the visible text stays copyLabel', () => {
+		render(component, { ...visible, copyAccessibleLabel: long });
+		expect(screen.getByRole('button', { name: long })).toBe(button());
+		expect(screen.queryByRole('button', { name: 'Copy' })).toBeNull();
+		expect(button().getAttribute('aria-label')).toBe(long);
+		expect(button().querySelector('.text')?.textContent).toBe('Copy');
+		expect(button().hasAttribute('title')).toBe(false);
+	});
+
+	it('with the visible copy label and without the prop: the visible label is the name, no aria-label', () => {
+		render(component, visible);
+		expect(screen.getByRole('button', { name: 'Copy' })).toBe(button());
+		expect(button().hasAttribute('aria-label')).toBe(false);
+	});
+
+	it('icon-only: copyAccessibleLabel is the name and the tooltip, there is no visible text', () => {
+		render(component, { ...iconOnly, copyAccessibleLabel: long });
+		expect(screen.getByRole('button', { name: long })).toBe(button());
+		expect(button().getAttribute('title')).toBe(long);
+		expect(button().querySelector('.text')).toBeNull();
+	});
+
+	it('icon-only and without the prop: copyLabel is the name and the tooltip', () => {
+		render(component, iconOnly);
+		expect(screen.getByRole('button', { name: 'Copy' })).toBe(button());
+		expect(button().getAttribute('title')).toBe('Copy');
+	});
+
+	it.each([undefined, null, '', '   '])('%j counts as not set', (value) => {
+		const { unmount } = render(component, { ...visible, copyAccessibleLabel: value });
+		expect(button().hasAttribute('aria-label')).toBe(false);
+		expect(screen.getByRole('button', { name: 'Copy' })).toBe(button());
+		unmount();
+		render(component, { ...iconOnly, copyAccessibleLabel: value });
+		expect(button().getAttribute('aria-label')).toBe('Copy');
+		expect(button().getAttribute('title')).toBe('Copy');
+	});
+
+	it('follows a change of the prop', async () => {
+		const { rerender } = render(component, { ...visible, copyAccessibleLabel: long });
+		expect(button().getAttribute('aria-label')).toBe(long);
+		await rerender({ copyAccessibleLabel: undefined });
+		expect(button().hasAttribute('aria-label')).toBe(false);
+		await rerender({ copyAccessibleLabel: 'Other' });
+		expect(button().getAttribute('aria-label')).toBe('Other');
+	});
+
+	it('has no effect without a copy button', () => {
+		render(component, { ...off, copyAccessibleLabel: long });
+		expect(screen.queryByRole('button')).toBeNull();
+	});
+});
+
+describe('copyAccessibleLabel leaves the copy result alone', () => {
+	beforeEach(() => {
+		vi.useFakeTimers({ shouldAdvanceTime: true });
+	});
+	afterEach(() => {
+		vi.useRealTimers();
+		vi.restoreAllMocks();
+	});
+
+	it('CodeBlock copies the code and announces copiedLabel, the name does not change', async () => {
+		const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime.bind(vi) });
+		const writeText = vi.fn<(text: string) => Promise<void>>().mockResolvedValue(undefined);
+		Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+		const oncopy = vi.fn();
+		render(CodeBlock, { code, copyLabel: 'Copy', copyAccessibleLabel: 'Copy command', copiedLabel: 'Copied', oncopy });
+		await user.click(screen.getByRole('button', { name: 'Copy command' }));
+		await vi.advanceTimersByTimeAsync(100);
+		expect(writeText).toHaveBeenCalledWith(code);
+		expect(oncopy).toHaveBeenCalledWith(true, code);
+		expect(document.querySelector('.k-copy-button [role="status"]')?.textContent).toBe('Copied');
+		expect(screen.getByRole('button', { name: 'Copy command' })).toBeTruthy();
 	});
 });
