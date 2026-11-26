@@ -66,8 +66,9 @@ ansieht. Details und wie man eine Spec lokal startet: [`docs/testing.md`](testin
   wesentlich (WCAG 2.3.3). Es ist die einzige Ausnahme, und der Bewegungstest lässt genau diese beiden durch.
   Der Zustand hängt nicht an der Bewegung: `Spinner` ist ein `role="status"` mit unsichtbarem Text, und `Button loading`
   sagt „Loading“ (`loadingLabel`, Katalog `button.loadingLabel`) höflich an, ohne den Namen des Buttons zu ändern (#109).
-- **Nur Chromium automatisch.** Alle Browser-Prüfungen laufen in Chromium (Playwright). Firefox und Safari sind nicht
-  automatisch geprüft, der Kontrastmodus nur über Chromiums Emulation von `forced-colors`.
+- **Fast nur Chromium automatisch.** Die Browser-Prüfungen laufen in Chromium (Playwright); nur
+  `tests/elements/a11y-tab-strip.spec.ts` läuft zusätzlich in Firefox (#153). Safari ist nicht automatisch geprüft, der
+  Kontrastmodus nur über Chromiums Emulation von `forced-colors`.
 - **Kein Test mit Hilfsmitteln.** Nicht automatisiert, weil es Menschen braucht: Ausgabe von NVDA, JAWS und VoiceOver,
   200 % Textgröße und Text-Abstände (WCAG 1.4.4, 1.4.12), Bildschirmlupe, Spracheingabe.
 - **Theme-Varianten:** `code-paper` und `code-contrast` laufen nicht durch die Browser-Matrix, nur durch den

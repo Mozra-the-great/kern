@@ -42,7 +42,8 @@
 
 <!-- Links styled like Tabs: plain links in Tab order, no tablist roles and no arrow keys. -->
 <nav class="k-tab-links {cls}" data-look={look} aria-label={label}>
-	<div class="list" bind:this={strip} data-fade-start={fade.start ? '' : undefined} data-fade-end={fade.end ? '' : undefined}>
+	<!-- tabindex -1: a strip that scrolls sideways (many links on a phone) is no Tab stop of its own; Firefox would add it (#153). -->
+	<div class="list" bind:this={strip} tabindex="-1" data-fade-start={fade.start ? '' : undefined} data-fade-end={fade.end ? '' : undefined}>
 		{#each links as link, i (`${i}:${link.href}`)}
 			<a
 				href={link.href}
@@ -67,7 +68,11 @@
 		display: flex;
 		gap: var(--k-tabs-gap);
 		overflow-x: auto;
+		/* Only the sideways overflow scrolls. A strip that also scrolls vertically becomes a keyboard stop of its own
+		 * in Firefox (#153); the tabs fit by arithmetic (see the line look below), this keeps it so under rounding. */
+		overflow-y: hidden;
 		scrollbar-width: var(--k-tabs-scrollbar);
+		outline: none;
 	}
 	.list[data-fade-end] {
 		mask-image: linear-gradient(90deg, #000 calc(100% - var(--k-tabs-fade-end)), transparent);
@@ -125,16 +130,20 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: calc(var(--k-focus-w) * -1);
 	}
+	/* The strip's border-bottom is part of --k-tab-h: a tab ends above it. The padding keeps the label centred in
+	 * the full height, and the selected bar stays 2px minus the border it used to overlap (the strip clipped that
+	 * part). A tab taller than the strip (negative margin) overflowed it by the border and made it scroll (#153). */
 	[data-look='line'] a {
-		margin-bottom: calc(var(--k-border-w) * -1);
+		min-height: calc(var(--k-tab-h) - var(--k-border-w));
+		padding-top: var(--k-border-w);
 		border-inline-end: var(--k-tab-divider-w) solid var(--k-line);
-		box-shadow: inset 0 -2px 0 transparent;
+		box-shadow: inset 0 calc(max(0px, 2px - var(--k-border-w)) * -1) 0 transparent;
 	}
 	[data-look='line'] a[aria-current='page'] {
 		color: var(--k-fg);
 		background: var(--k-tab-selected-bg);
 		font-weight: var(--k-tab-selected-weight);
-		box-shadow: inset 0 -2px 0 var(--k-accent-mark);
+		box-shadow: inset 0 calc(max(0px, 2px - var(--k-border-w)) * -1) 0 var(--k-accent-mark);
 	}
 	[data-look='pill'] .list {
 		padding: var(--k-space-1);
@@ -164,10 +173,10 @@
 		background: var(--k-on-primary);
 	}
 	@media (forced-colors: active) {
-		/* Current tab: a Highlight bar instead of the inset shadow (dropped); see Tabs.svelte for the 4px. */
+		/* Current tab: a Highlight bar instead of the inset shadow (dropped); same bar as in Tabs.svelte. */
 		[data-look='line'] a[aria-current='page'] {
 			box-shadow: none;
-			border-bottom: 4px solid Highlight;
+			border-bottom: calc(4px - var(--k-border-w)) solid Highlight;
 		}
 		[data-look='pill'] a[aria-current='page'] {
 			margin: -2px;

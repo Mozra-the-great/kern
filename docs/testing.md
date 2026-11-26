@@ -134,6 +134,7 @@ holds nothing the keyboard can focus, [#132](https://github.com/Mozra-the-great/
 | `a11y-keys.spec.ts`               | each interactive element with the keys of its WAI-ARIA pattern, no mouse                                                                                                       | one test per element (Code)                   |
 | `a11y-overlays.spec.ts`           | modal dialogs (focus in, Tab trapped, Escape closes, focus back on the opener) and every other overlay (Escape closes, focus back, Tab leaves); a drawer and a modal whose scrolling body holds only text, and a popover whose scrolling panel does: Tab reaches it, it has a ring, PageDown and the arrows scroll it, no extra stop otherwise | one test per overlay (Code), 8 themes x 2 (scrolling body) |
 | `a11y-scroll-regions.spec.ts`     | a `k-resizable` panel or a `k-table` / `k-data-table` wrapper that scrolls and holds only text ([#137](https://github.com/Mozra-the-great/kern/issues/137)): Tab reaches it, it has a name and a ring in `--k-focus`, the arrows and PageDown scroll it, Tab goes on to the next control; no stop with a sortable header, a checkbox or a button, nor for the stacked cards of a phone | 8 themes x 3 boxes (1280 px), 3 single tests (Code) |
+| `a11y-tab-strip.spec.ts`          | the strip of `k-tabs` / `k-tab-links` ([#153](https://github.com/Mozra-the-great/kern/issues/153)), both looks, short and sideways scrolling, 1280 / 375 / 320 px: `scrollHeight <= clientHeight` (also for every other sideways scroller of the page), Tab from a button before it lands on the first tab / each link with no stop for the strip itself, Shift+Tab walks back, the focus ring lies inside the strip. **The only spec that also runs in Firefox** (project `firefox` of the elements config, `npx playwright install firefox`): Firefox makes a scroll container a Tab stop, Chromium does not |
 | `a11y-motion.spec.ts`             | reduced motion: no running animation or transition longer than a frame (`getAnimations()` on the document and every shadow root), no smooth scrolling, effects at their end state | 8 themes x 12 pages, 2 themes x 21 states, 8 themes x an interaction run |
 | `a11y-reflow.spec.ts`             | 320 x 640: no horizontal page scroll, no control cut off by a container or the screen; a long or unbreakable `<k-button>` label wraps inside a 200 px box ([#121](https://github.com/Mozra-the-great/kern/issues/121)) | 8 themes x (12 pages + 21 states + 1 label)   |
 | `hit-target.spec.ts`              | `<k-checkbox>`, `<k-switch>` and `<k-radio-group>` ([#150](https://github.com/Mozra-the-great/kern/issues/150)): the row-wide `label::after` must not cover the box. `shadowRoot.elementFromPoint` at the centre and inside the edges is the `<input>`, `check()` / `uncheck()` work without `force`, the focused control is not obscured (WCAG 2.4.11), a click on the label text or at the far end of the row still toggles; a canary without the stacking fails. The same probes run on the Svelte demo in `tests/targets/hit-target.spec.ts` (`tests/shared/hit-target.ts`) | 8 themes x 2 (normal, forced colors) x 4 + 1 canary |
@@ -173,9 +174,11 @@ Rules the checks encode:
 Not automated, because it needs people and assistive technology: screen reader output (NVDA, JAWS, VoiceOver), 200 %
 text size and text spacing, magnifier use, voice control, and the quality of the texts an app passes in.
 
-Firefox: CI runs Chromium only. The hit-target specs also pass in Firefox, run by hand: `npx playwright install firefox`, then
+Firefox: CI also runs `a11y-tab-strip.spec.ts` in Firefox (the `firefox` project of the elements config, #153; CI installs
+Firefox). The hit-target specs also pass in Firefox, run by hand: `npx playwright install firefox`, then
 `KERN_FIREFOX=1 npx playwright test -c tests/elements/playwright.config.ts --project=firefox` (and
-`-c tests/targets` for the demo); the `firefox` project exists only with `KERN_FIREFOX` and runs `hit-target.spec.ts` only.
+`-c tests/targets` for the demo). In the elements config the `firefox` project always exists and `KERN_FIREFOX` adds
+`hit-target.spec.ts` to it; in `tests/targets` the project exists only with `KERN_FIREFOX`.
 
 Run one spec while working: `npm run build`, then
 `npx playwright test -c tests/elements/playwright.config.ts a11y-keys` (add `-g "k-tabs"` for one test, `KERN_TEST_PORT`

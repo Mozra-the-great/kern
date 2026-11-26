@@ -19,11 +19,17 @@ export default defineConfig({
 	updateSnapshots: 'missing',
 	expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: 'disabled', caret: 'hide', scale: 'css' } },
 	use: { baseURL: `http://127.0.0.1:${port}` },
-	// CI runs Chromium only. `KERN_FIREFOX=1 npx playwright install firefox` and `--project=firefox` runs the
-	// hit-target spec (#150) in Firefox as well, by hand.
 	projects: [
 		{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-		...(process.env.KERN_FIREFOX ? [{ name: 'firefox', testMatch: 'hit-target.spec.ts', use: { ...devices['Desktop Firefox'] } }] : [])
+		// Firefox makes a scroll container a keyboard stop of its own (a tab strip that overflowed by 1px, #153), Chromium
+		// does not: a11y-tab-strip.spec.ts, which checks the strips' Tab order and scroll metrics, also runs there, in CI too
+		// (`npm run test:elements` needs `npx playwright install firefox`). It has no screenshots, so no Firefox baselines.
+		// `KERN_FIREFOX=1` adds the hit-target spec (#150), which is run in Firefox by hand only.
+		{
+			name: 'firefox',
+			testMatch: process.env.KERN_FIREFOX ? ['a11y-tab-strip.spec.ts', 'hit-target.spec.ts'] : 'a11y-tab-strip.spec.ts',
+			use: { ...devices['Desktop Firefox'] }
+		}
 	],
 	webServer: {
 		command: 'node server.mjs',

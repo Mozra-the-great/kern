@@ -34,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `Textarea` sets `overflow-wrap: anywhere` in every theme, as stuffcloud's `.area` does, so a long unbroken word (a JWT, a Base64
   blob, a hash) breaks at the edge of the box and never has to widen it or the page at 320 px. Covered by a reflow case in the eight
   theme variants (`tests/elements/a11y-reflow.spec.ts`, block, flex and shrink-to-fit boxes, `autosize` too).
+- `Tabs` and `TabLinks`: the tab strip no longer overflows by one pixel vertically, so Firefox no longer makes it an unnamed Tab stop
+  before the first tab or link (#153, from stuffcloud#121). In the line look a tab was `--k-tab-h` tall but overlapped the strip's
+  `border-bottom` through a negative margin, so `.list` had `scrollHeight` > `clientHeight`; with `overflow-x: auto` that is a scroll
+  container, and Firefox adds one to the Tab order (Chromium does not). The tab is now `--k-tab-h` minus the border (with the label
+  centred as before and the selected bar unchanged, 2px minus the border), and the strip has `overflow-y: hidden`, so only the
+  sideways overflow scrolls. A `TabLinks` strip that really scrolls sideways (many links on a phone) got the same extra stop in
+  Firefox and now has `tabindex="-1"` like the `Tabs` strip; the links stay the stops. No visual change in any theme.
+  Tested in Chromium and Firefox (`tests/elements/a11y-tab-strip.spec.ts`; CI installs Firefox for it).
 - The box of `Checkbox`, the switch of `Switch` and the radio of `RadioGroup` are their own hit target again (#150, from
   stuffcloud#121): the row-wide `label::after` (the tap target, the whole row toggles the control) covered the `<input>`, so
   `elementFromPoint` at the centre of the box returned the label, Playwright's `check()` / `uncheck()` hung waiting for the
