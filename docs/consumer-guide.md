@@ -193,7 +193,7 @@ sieht sie auch mit kern. Früher setzte `base.css` auf jedes Element mit `data-t
 | --- | --- |
 | `<html data-theme>`: Schriftgröße des Wurzelelements und damit alles, was darauf aufbaut: `rem`, `em`, `%` und Text ohne eigene Größe (Fließtext, eigene Überschriften der Seite) | **ja**. Bei 16 px unverändert `--k-text-md` (Code, Flower, Pop 16 px; Line 17 px), bei 20 px 20 px (Line 21,25 px = 20 × 17 ⁄ 16) |
 | Längen in `rem` (in kern die Vorgabehöhe von `Resizable` und `Marquee`, Mindestbreiten in `TagInput` und `SortableList`) | **ja** |
-| Text und Maße der Komponenten: Schriftgrößen aus `--k-text-*` und den Komponenten-Tokens (`--k-button-size` …), Steuerhöhen, Abstände, Radien | **nein**. Das sind px-Werte des Designs (die von Code stammen aus stuffclouds Design und bleiben unverändert); Komponenten lesen sie als px |
+| Text und Maße der Komponenten: Schriftgrößen aus `--k-text-*` und den Komponenten-Tokens (`--k-button-size` …), Steuerhöhen, Abstände, Radien | **nein**. Das sind px-Werte des Designs (die von Code orientieren sich an stuffclouds Design, sind aber kerns eigene Werte); Komponenten lesen sie als px |
 | `<div data-theme>` (Teilbaum) und `<body data-theme>` | **nein**. Sie setzen weiter `--k-text-md` als px-Grundgröße, auch innerhalb einer Seite mit Wurzel-Theme. Für die Seite selbst `data-theme` auf `<html>` setzen, nicht auf `<body>` |
 
 Eine eigene Regel der Seite (`html { font-size: 62.5% }`) hat Vorrang vor dem Theme, weil dessen Regel auf `<html>` die
@@ -203,7 +203,7 @@ Test: `tests/elements/root-font-size.spec.ts` (Browser-Standardschrift 16 und 20
 
 **Zeilenhöhe.** Jedes Element mit `data-theme` setzt `line-height: var(--k-leading-body)`, und Text ohne eigene Zeilenhöhe erbt
 sie (#145). Das Token ist in Flower, Pop und Line `1.5` wie bisher; in Code (alle Varianten, auch die `stuffcloud*`-Namen) ist es
-`normal`, wie in stuffclouds Design, das auf `body` keine Zeilenhöhe setzt. Wer in Code die alte Zeilenhöhe behalten will, setzt
+`normal`, wie in stuffclouds Referenz-Design, das auf `body` keine Zeilenhöhe setzt. Wer in Code die alte Zeilenhöhe behalten will, setzt
 `--k-leading-body: 1.5` auf das Element mit `data-theme`. Komponenten mit eigener Zeilenhöhe (Prose, Code, Terminal, Button,
 Textarea …) folgen dem Token nicht; Alert, Toast und die Sortier-Buttons im Kopf von Table haben dafür eine feste `1.5`, weil Icon, Punkt und Trefferfläche darauf abgestimmt sind.
 
@@ -382,5 +382,8 @@ Abschnitten zum Abgleich; welche Tests stuffclouds Tests ersetzen, steht in
 | `button.css`, Design-Tokens | Theme `code` | Token-Zuordnung in [`docs/themes.md`](themes.md#stuffcloud-variables-and-their-kern-tokens-theme-code) |
 
 Was in stuffcloud bleibt: App-Layout, Routen, eigene Seiten und alles, was nur stuffcloud kennt. kern besitzt das
-Theme `code`; stuffclouds `docs/design` bleibt die Design-Quelle, ein Drift-Check hält beide zusammen
-([Code-Theme-Quelle](themes.md#code-theme-source-37)).
+Theme `code` und ist dessen Designquelle (#181); stuffclouds `docs/design` ist eine eingefrorene Referenz, an der sich das
+Theme orientiert, keine Vorgabe. `tokens:check` schützt vor versehentlicher Abweichung von dieser Referenz, eine bewusste
+Änderung steht mit Grund in `code.tokens.json` ([Code-Theme-Quelle](themes.md#code-theme-source-37)). Was stuffcloud von
+kern noch braucht und nicht hat (Sticker, Maskottchen-Besetzung, Saison-Sets, Theme-Texte), steht mit Issue-Nummern in
+[„Remaining differences“](themes.md#remaining-differences-to-stuffclouds-components-111-181).

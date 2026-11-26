@@ -21,7 +21,7 @@ export type MascotName = (typeof MASCOT_NAMES)[number];
 
 /** Where a mascot's art lives: `file` as in stuffcloud's `MASCOT_SOURCES`, `art` as in kern's assets. */
 export interface MascotSource extends PixelGrid {
-	/** File name without `.svg` (stuffcloud `docs/design/prototypes`, kern `assets/code/mascots`). */
+	/** File name without `.svg` (kern `assets/code/mascots`; stuffcloud `docs/design/prototypes` is the frozen reference it was copied from). */
 	readonly file: string;
 	/** Path under `assets/code/`, without `.svg`. */
 	readonly art: CodeArt;

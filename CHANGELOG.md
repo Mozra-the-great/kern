@@ -23,6 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Docs and process, no visual change: kern is the design source of the `code` theme. stuffcloud's `docs/design` (mockups,
+  `stuff.css`, the design PDF) is a frozen reference to orient on, no longer binding. `docs/themes.md` splits "Remaining
+  differences" into the intentional design decisions of `code` and the stuffcloud needs not yet in kern (with issue links);
+  README, consumer guide, testing notes and CLAUDE.md say the same. `npm run tokens:check` keeps guarding against accidental drift
+  from the frozen snapshot; an intentional change is recorded in `code.tokens.json` as `"from": "kern:#NNN"` (no counterpart in the
+  reference) or `"diverges": "kern:#NNN"` with the reference value in `design` and a `note`, and the check fails on a malformed or
+  stale entry. The snapshot is not refreshed for a kern change. Theme CSS values, tokens and baselines are unchanged (#181).
+
 ## [0.14.0] - 2026-11-26
 
 ### Added

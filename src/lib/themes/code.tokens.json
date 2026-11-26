@@ -1,15 +1,16 @@
 {
-	"$comment": "Source of the Code theme (#37). brands/code.css is generated from this file by `npm run tokens:code` (scripts/ci/code-theme.mjs --write); do not edit the CSS by hand. `from` names where a value comes from in stuffcloud's design (design:<file>|<selector>{<property>} in docs/design/prototypes, design:<file>#<text> for a literal in a mockup, app:<file>|... for stuffcloud's web/apps/web/src, ds:<token>@<theme> for the 'Stuffcloud - Designsystem' artifact); `design` is the source value when the kern value is derived from it (a font shorthand split into family and size, a length mapped onto the kern scale); `deviation` says why the kern value differs on purpose. The drift check compares every `from` with the snapshot in scripts/ci/code-theme-snapshot.json (docs/themes.md, 'Code theme source').",
+	"$comment": "Source of the Code theme (#37). brands/code.css is generated from this file by `npm run tokens:code` (scripts/ci/code-theme.mjs --write); do not edit the CSS by hand. `from` names where a value comes from in stuffcloud's design (design:<file>|<selector>{<property>} in docs/design/prototypes, design:<file>#<text> for a literal in a mockup, app:<file>|... for stuffcloud's web/apps/web/src, ds:<token>@<theme> for the 'Stuffcloud - Designsystem' artifact); `design` is the source value when the kern value is derived from it (a font shorthand split into family and size, a length mapped onto the kern scale). kern owns the theme since #181 and stuffcloud's design is a frozen reference to orient on: a kern decision without a counterpart there is `\"from\": \"kern:#<issue>\"` plus a `note`; a deliberate deviation from the reference keeps its `from`, records the reference value as `design` and adds `\"diverges\": \"kern:#<issue>\"` plus a `note` with the reason. The drift check compares every design `from` with the frozen snapshot in scripts/ci/code-theme-snapshot.json, so an accidental change fails (docs/themes.md, 'Code theme source').",
 	"theme": "code",
 	"aliases": ["stuffcloud"],
 	"header": [
-		"Code — from the stuffcloud design (the app that first used it). Grid look: square corners,",
+		"Code — oriented on the stuffcloud design (the app that first used it); kern owns it (#181). Grid look: square corners,",
 		"hard offset shadows, ink-filled buttons that turn accent on hover.",
 		"Fonts: Inter, JetBrains Mono, Silkscreen (load them yourself).",
 		"",
 		"GENERATED from src/lib/themes/code.tokens.json by `npm run tokens:code`: change that file,",
-		"never this one (docs/themes.md, 'Code theme source'). Every value there names its source in",
-		"stuffcloud's docs/design (or the app, or the design-system artifact for light, paper and contrast).",
+		"never this one (docs/themes.md, 'Code theme source'). A value there names the place it was oriented on",
+		"in stuffcloud's frozen reference (docs/design, the app, or the design-system artifact for light, paper and contrast)",
+		"or says in a note why kern decides it itself.",
 		"",
 		"Sizes: target-min 44px for every target (mouse too), 48px for icon-only buttons, 52px for",
 		"fields and buttons, 56px below the 760px breakpoint. The component tokens (--k-button-*,",
@@ -428,7 +429,7 @@
 				"--k-border": {
 					"value": "#6c6c76",
 					"from": "design:stuff.css|:root{--field-border}",
-					"note": "the design-system artifact says #6e6e78; docs/design wins (#37)"
+					"note": "the design-system artifact says #6e6e78; kern keeps the #6c6c76 of docs/design, the reference it was oriented on (#37)"
 				},
 				"--k-primary": { "value": "#f4f4f0", "from": "design:stuff.css|.btn{background}", "design": "var(--fg)" },
 				"--k-on-primary": { "value": "#101012", "from": "design:stuff.css|.btn{color}", "design": "var(--bg)" },

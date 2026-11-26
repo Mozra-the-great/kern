@@ -74,7 +74,15 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
   `[data-theme^='name']`, an entry `themes/<name>.css`, an `@import` in `themes/index.css`
   and an `exports` entry; it must pass `npm test` (contrast). Interactive parts use
   `--k-tap-target` (min size or invisible `::after` hit area). Themes: code,
-  flower, pop, line (each from its design-system artifact; line is the Kagi-based one). `code` was called
+  flower, pop, line. Flower, Pop and Line come only from their design-system artifacts (line is the Kagi-based
+  one); do not invent their values. `code` is different since #181: **kern owns it** and is its design source.
+  stuffcloud's `docs/design` (mockups, `stuff.css`, the design PDF) is a frozen reference to orient on, not
+  binding. Its source is `src/lib/themes/code.tokens.json` (`brands/code.css` is generated: `npm run tokens:code`),
+  and `scripts/ci/code-theme-snapshot.json` is the frozen reference snapshot. `npm run tokens:check` guards against
+  *accidental* drift from it; never weaken it and never refresh the snapshot for a kern change. An intentional change
+  edits the token and records why: `"from": "kern:#NNN"` + `note` (no counterpart in the reference) or
+  `"diverges": "kern:#NNN"` + `design` (the reference value) + `note` (deviation). What stuffcloud still needs
+  from kern is a list of open issues in docs/themes.md ("Remaining differences"), not a spec to match. `code` was called
   `stuffcloud` until #85: the old `data-theme` values, `themes/stuffcloud.css`, `assets/stuffcloud/*` and the
   `*StuffcloudArt` / `STUFFCLOUD_ART` exports are deprecated aliases until 1.0 (no new code uses them; the
   stuffcloud app itself stays "stuffcloud").
