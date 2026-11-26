@@ -21,3 +21,13 @@
 </script>
 
 <Table {columns} {rows} {caption} {captionHidden} {stack} {empty} />
+
+<style>
+	/* A table that cannot stack (`stack` off) is as wide as its columns. As the only item of a grid, its scrolling box may be
+	   narrower than that (what a data table does by being a grid): otherwise the host takes the width of the table and widens
+	   the page instead of scrolling inside its box (#137). */
+	:host {
+		display: grid;
+		min-width: 0;
+	}
+</style>

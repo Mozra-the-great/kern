@@ -32,7 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   border); otherwise there is no extra stop. Names: a table by its caption (`aria-labelledby`, also a visually hidden one), the
   catalogue text `table.scrollLabel` / `dataTable.scrollLabel` ("Scrollable table", German "Scrollbare Tabelle") without one; a panel by its
   `label` (`data-label` of the element), else `resizable.panelLabel` ("Panel 1 of 2", German "Bereich 1 von 2"). No new props. A box
-  whose overflow is `visible` or `hidden` (the stacked rows of a table on a phone) is no scroller and gets no stop.
+  whose overflow is `visible` or `hidden` (the stacked rows of a table on a phone) is no scroller and gets no stop. `<k-table>` with `stack` off and columns wider than its container no longer widens the
+  page: the host is a grid (as the data table already was), so the table scrolls inside its box.
 
 ## [0.12.3] - 2026-11-26
 
