@@ -25,7 +25,7 @@
 	 * announced in a polite live region.
 	 * @prop copy {boolean} Shows the copy button. Default: on when `copy-label` is set.
 	 * @prop copyAccessibleLabel {string} Accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3).
-	 * @prop copyIcon {boolean} Icon-only copy button (`copy-label` becomes its accessible name).
+	 * @prop copyIcon {boolean} Icon-only copy button (`copy-label` becomes its accessible name, unless `copy-accessible-label` is set).
 	 * @prop showScrollbar {boolean} Keeps the scrollbar visible.
 	 * @event copy {string} The copied text.
 	 * @event copy-error Copying failed (no clipboard, permission denied).

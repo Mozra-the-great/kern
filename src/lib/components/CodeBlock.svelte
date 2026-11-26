@@ -26,7 +26,7 @@
 		copiedLabel?: string | undefined;
 		/** Announced when copying failed. Default "Copy failed". */
 		copyErrorLabel?: string | undefined;
-		/** `false`: an icon-only copy button with `copyLabel` as its name. Default true. */
+		/** `false`: an icon-only copy button with `copyLabel` as its name (or `copyAccessibleLabel`, if set). Default true. */
 		showCopyLabel?: boolean | undefined;
 		/** `false` keeps the scrollbar visible. Default true (stuffcloud: no visible scrollbar). */
 		hideScrollbar?: boolean | undefined;

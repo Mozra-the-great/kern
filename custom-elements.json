@@ -1871,7 +1871,7 @@
 							},
 							"default": "false",
 							"attribute": "copy-icon",
-							"description": "Icon-only copy button (`copy-label` becomes its accessible name)."
+							"description": "Icon-only copy button (`copy-label` becomes its accessible name, unless `copy-accessible-label` is set)."
 						},
 						{
 							"kind": "field",

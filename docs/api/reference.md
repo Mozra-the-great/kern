@@ -629,7 +629,7 @@ Code block (stuffcloud's CodeBlock): the `code` attribute or the element's text 
 | `copyAccessibleLabel` | `string` |  | Accessible name of the copy button when it should say more than `copyLabel`, e.g. `copyLabel` "Copy" and `copyAccessibleLabel` "Copy command" on a page with several blocks. It is the button's `aria-label`, with and without `showCopyLabel` (icon-only: also the tooltip), and wins over `copyLabel` as the name; `copyLabel` stays the visible text. WCAG 2.5.3 (Label in Name): with `showCopyLabel` (the default) it must contain the visible `copyLabel`. Empty, whitespace-only or `null` counts as not set. The spoken results (`copiedLabel`, `copyErrorLabel`) are not affected. |
 | `copiedLabel` | `string` |  | Announced after a successful copy. Default "Copied". |
 | `copyErrorLabel` | `string` |  | Announced when copying failed. Default "Copy failed". |
-| `showCopyLabel` | `boolean` | `true` | `false`: an icon-only copy button with `copyLabel` as its name. Default true. |
+| `showCopyLabel` | `boolean` | `true` | `false`: an icon-only copy button with `copyLabel` as its name (or `copyAccessibleLabel`, if set). Default true. |
 | `hideScrollbar` | `boolean` | `true` | `false` keeps the scrollbar visible. Default true (stuffcloud: no visible scrollbar). |
 | `class` | `string` |  |  |
 
@@ -653,7 +653,7 @@ Code block (stuffcloud's CodeBlock): the `code` attribute or the element's text 
 | `copy-accessible-label` | `copyAccessibleLabel` | `string` |  | Accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3). |
 | `copied-label` | `copiedLabel` | `string` |  | Announced after a successful copy. Default "Copied". |
 | `copy-error-label` | `copyErrorLabel` | `string` |  | Announced when copying failed. Default "Copy failed". |
-| `copy-icon` | `copyIcon` | `boolean` | `false` | Icon-only copy button (`copy-label` becomes its accessible name). |
+| `copy-icon` | `copyIcon` | `boolean` | `false` | Icon-only copy button (`copy-label` becomes its accessible name, unless `copy-accessible-label` is set). |
 | `show-scrollbar` | `showScrollbar` | `boolean` | `false` | Keeps the scrollbar visible. |
 
 ### Element: Ereignisse
