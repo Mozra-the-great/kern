@@ -107,6 +107,22 @@ export {
 } from './components/strings.js';
 export type { KernBundle, KernStrings, KernStringsInput, StringsStore } from './components/strings.js';
 export { de } from './components/strings-de.js';
+export {
+	setThemeTexts,
+	resetThemeTexts,
+	getThemeTexts,
+	getThemeTextsLang,
+	registerThemeTexts,
+	setThemeTextsLocale,
+	fillThemeText,
+	createThemeTextsStore,
+	sharedThemeTextsStore,
+	themeTextsEn,
+	THEME_TEXT_SETS
+} from './components/theme-texts.js';
+export type { ThemeTexts, ThemeTextSet, ThemeTextsBundle, ThemeTextsInput, ThemeTextsStore } from './components/theme-texts.js';
+export { deThemeTexts } from './components/theme-texts-de.js';
+export { themeTexts, themeTextsLang } from './components/theme-texts.svelte.js';
 export { toast, toasts, dismissToast, createToastQueue, sharedToastQueue, TOAST_DURATIONS, TOAST_MAX } from './components/toast.svelte.js';
 export type { ToastItem, ToastInput, ToastTone, ToastCloseReason, ToastQueue } from './components/toast.svelte.js';
 export type { SelectOption } from './components/Select.svelte';

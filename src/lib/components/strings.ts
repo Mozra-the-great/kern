@@ -280,7 +280,7 @@ function mergeInto(into: Plain, source: Record<string, unknown>): void {
 }
 
 /** `base` with the strings of `overrides` where `base` has the same key; other keys of `overrides` are ignored. */
-function resolveInto<T extends object>(base: T, overrides: unknown): T {
+export function resolveInto<T extends object>(base: T, overrides: unknown): T {
 	const out: Record<string, unknown> = {};
 	const over = isPlain(overrides) ? overrides : {};
 	for (const key of Object.keys(base)) {
@@ -292,7 +292,7 @@ function resolveInto<T extends object>(base: T, overrides: unknown): T {
 }
 
 /** The part of the store a kern copy relies on. Another shape (an older copy) stays untouched. */
-export interface StringsStore {
+export interface StringsStore<TInput extends object = KernStringsInput> {
 	/** Shape version of the shared store (see `sharedStringsStore`). */
 	readonly version: 1;
 	/** Texts the consumer chose, merged; keys the copy does not know are ignored when resolving. */
@@ -302,23 +302,26 @@ export interface StringsStore {
 	/** Counts every change. */
 	readonly revision: number;
 	/** Replaces the choice by the merge of `inputs`. */
-	set(inputs: readonly KernStringsInput[]): void;
+	set(inputs: readonly TInput[]): void;
 	/** Back to the built-in English texts. */
 	reset(): void;
 	/** Makes `bundle` available to `setLocale(lang)`. */
-	register(lang: string, bundle: KernStringsInput): void;
+	register(lang: string, bundle: TInput): void;
 	/** The bundle registered for `lang` (exact tag, else its primary language). */
-	bundle(lang: string): KernStringsInput | undefined;
+	bundle(lang: string): TInput | undefined;
 	/** Calls `fn` after every change. Returns the unsubscribe function. */
 	subscribe(fn: () => void): () => void;
 }
 
-/** A new, independent store, e.g. for tests. */
-export function createStringsStore(): StringsStore {
+/**
+ * A new, independent store, e.g. for tests. `TInput` is what `set` and `register` accept: the catalogue of the
+ * texts the store holds (`KernStringsInput` for the component texts; the theme texts reuse the store).
+ */
+export function createStringsStore<TInput extends object = KernStringsInput>(): StringsStore<TInput> {
 	let overrides: Plain = plainObject();
 	let lang: string | undefined;
 	let revision = 0;
-	const locales = new Map<string, KernStringsInput>();
+	const locales = new Map<string, TInput>();
 	const listeners = new Set<() => void>();
 
 	function notify(): void {
@@ -381,7 +384,8 @@ export function createStringsStore(): StringsStore {
 const KEY = Symbol.for('kern.strings');
 let own: StringsStore | undefined;
 
-function isStore(value: unknown): value is StringsStore {
+/** Whether `value` has the shape of the shared store a kern copy relies on (internal; the theme texts use it too). */
+export function isStringsStore(value: unknown): value is StringsStore<object> {
 	return isPlain(value) && value.version === 1 && typeof value.set === 'function' && typeof value.subscribe === 'function';
 }
 
@@ -394,7 +398,7 @@ export function sharedStringsStore(): StringsStore {
 	if (own) return own;
 	const g = globalThis as typeof globalThis & { [KEY]?: unknown };
 	const existing = g[KEY];
-	if (isStore(existing)) return (own = existing);
+	if (isStringsStore(existing)) return (own = existing as StringsStore);
 	own = createStringsStore();
 	if (existing === undefined) g[KEY] = own;
 	return own;

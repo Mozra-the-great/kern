@@ -15,7 +15,8 @@ No runtime dependencies besides Svelte, no Tailwind.
 ## Structure
 ```
 src/lib/components/   Svelte components (one file each) + anchor.ts, toast.svelte.ts, announcer.ts (shared live-region
-                      store), strings.ts / strings.svelte.ts / strings-de.ts (default-text catalogue), prose.ts,
+                      store), strings.ts / strings.svelte.ts / strings-de.ts (default-text catalogue), theme-texts.ts /
+                      theme-texts.svelte.ts / theme-texts-de.ts (theme and season texts, #185), prose.ts,
                       accent.ts + accent-themes.ts (accent API; ACCENT_GROUNDS mirrors the theme surfaces,
                       tests/tokens/accent-themes.test.ts fails when a theme changes and the table does not)
 src/lib/themes/       base.css (all --k-* tokens), brands/<brand>.css (theme rules),
@@ -105,6 +106,13 @@ CI builds on Node 22 + 24 and on the lowest/newest Svelte inside the `build` job
   format numbers or dates use `formatLocale(locale)`. The state is shared with the other build via
   `globalThis[Symbol.for('kern.strings')]` (like the toast queue and `kern.announcer`). Never use
   `{@html}`, `innerHTML` & co. (`check:html`); text from props is always a text node (`Prose`, `parseProse`).
+- The theme texts (#185: two short facts per season or special-day set, `THEME_TEXT_SETS`) are not component defaults, so
+  they are a second catalogue with the same rules, not part of `strings.ts`: `theme-texts.ts` (typed, English), `theme-texts-de.ts`
+  (complete `deThemeTexts`, a missing text does not compile), `theme-texts.svelte.ts` (reactive `themeTexts()`), `setThemeTexts`
+  & co., state on `globalThis[Symbol.for('kern.themeTexts')]`; the store is `createStringsStore<ThemeTextsInput>()`. The texts carry
+  no product, operator or domain and no claim about the app that shows them (an app sets those with `setThemeTexts`), and no
+  mascot speaks them. Both files are in the scope of `neutrality:check`; `tests/unit/theme-texts.test.ts` guards the rest. The
+  custom elements do not load them yet (no element reads them); the season sets (#184) decide how the elements get them.
 - Input-only list props and the array fields of exported item types are `readonly X[]` (like SortableList/SelectGrid),
   so a consumer's `readonly` or `as const` data is accepted (#142); copy before `sort`/`splice`/`reverse`. Only bindable
   outputs (`FileDrop.files`, `TagInput.value`, `DataTable.selected`, `TreeView.expanded`, `Resizable.sizes`) and callback

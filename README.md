@@ -117,7 +117,7 @@ fehl, wenn CSS, Quelle und Schnappschuss **versehentlich** auseinanderlaufen. Ei
 Referenzwert in `design` für eine Abweichung, jeweils mit `note`); den Schnappschuss ändert man dafür nie. Die
 Varianten `code-light`, `-paper` und `-contrast` gehören **nicht** zu stuffclouds Design (das ist nur dunkel); kern
 behält sie für andere Nutzer, mit den Werten des Designsystem-Artefakts.
-`npm run neutrality:check` stellt sicher, dass Themes und Marken-Grafiken keine betreiberspezifischen Werte
+`npm run neutrality:check` stellt sicher, dass Themes, Marken-Grafiken und Theme-Texte keine betreiberspezifischen Werte
 enthalten (Domains, Namen, E-Mail, Hostnamen; eigene Liste über das Actions-Secret `KERN_FORBIDDEN_TERMS`).
 Ablauf für Änderungen und alle Details: [`docs/themes.md`](docs/themes.md#code-theme-source-37).
 
@@ -1097,6 +1097,66 @@ vollständig getypt, ein neuer englischer Text kompiliert erst, wenn er auch dor
 **Zahlen und Datum.** `CountUp`, `Odometer`, `NumberInput`, `DatePicker`, `RelativeTime`, `Stat`,
 `Sparkline`, `Heatmap`, `HistoryBar` und `Timeline` nehmen `locale`, sonst die Sprache des gewählten
 Bündels (`lang`), sonst die des Browsers. Wer nie ein Bündel wählt, merkt keine Änderung.
+
+### Theme-Texte
+
+Der Theme-Button (siehe die Saison- und Sondertag-Sets, [#184](https://github.com/Mozra-the-great/kern/issues/184))
+zeigt, solange ein Set aktiv ist, zwei kurze, positive Fakten. Diese Texte sind keine Standardtexte einer
+Komponente, deshalb stehen sie nicht im Katalog von `setStrings`, sondern in einem **eigenen Katalog** mit
+denselben Regeln: getippte Schlüssel, Englisch eingebaut, ein vollständiges deutsches Bündel
+(`deThemeTexts`; ein fehlender Text kompiliert nicht), Überschreiben zur Laufzeit, ein reaktives Lesen für
+Svelte und ein gemeinsamer Zustand auf `globalThis[Symbol.for('kern.themeTexts')]`.
+
+Es sind 17 Sets mit je zwei Texten (`first`, `second`), die Schlüssel in `THEME_TEXT_SETS`: `winter`, `newYear`,
+`valentine`, `carnival`, `womensDay`, `earthDay`, `easter`, `europeDay`, `pride`, `autumn`, `unityDay`,
+`harvest`, `halloween`, `stNicholas`, `humanRightsDay`, `advent`, `christmas`. Nur `advent.second` ist eine
+Vorlage (`Today: {lit} of {total} candles.`); `fillThemeText` setzt die Platzhalter ein. Die Texte sind
+Klartext, nie Markup (`{@html}` gibt es nicht): Sie landen immer als Textknoten im DOM. Sie sind sachlich und
+positiv, enthalten keinen Produkt- und keinen Betreibernamen und keine Behauptung über die App, die sie zeigt
+(was eine App über sich zusagt, gehört in ihre eigene Überschreibung), und kein Maskottchen spricht sie.
+
+```svelte
+<script lang="ts">
+	import { setThemeTexts, deThemeTexts, themeTexts, fillThemeText } from '@mozra-the-great/kern';
+
+	// Einmal beim Start, oder jederzeit zum Umschalten: gilt für alles, was schon gerendert ist.
+	setThemeTexts(deThemeTexts, {
+		// Eigene Zeile auf dem deutschen Bündel; spätere Eingaben gewinnen.
+		christmas: { second: 'Der Schnee ist nur Dekoration: kein Tracking, keine Werbung.' }
+	});
+
+	const facts = $derived(themeTexts().advent); // reaktiv: folgt jedem setThemeTexts
+</script>
+
+<p>{facts.first}</p>
+<p>{fillThemeText(facts.second, { lit: 3, total: 4 })}</p>
+```
+
+```js
+setThemeTexts(); // zurück zu Englisch
+
+// Mehrere Sprachen: einmal registrieren, dann per Tag wählen (de-AT findet de).
+registerThemeTexts('de', deThemeTexts);
+setThemeTextsLocale(document.documentElement.lang);
+```
+
+| Funktion | Wirkung |
+| --- | --- |
+| `setThemeTexts(...bündel)` | Setzt die Texte: ein Bündel (`deThemeTexts`), ein Teil des Katalogs oder mehrere (spätere gewinnen). Ersetzt die frühere Wahl; ohne Argumente: Englisch. Unbekannte Schlüssel und Werte, die kein Text sind, werden ignoriert. |
+| `resetThemeTexts()` | Englisch. |
+| `getThemeTexts()` / `themeTexts()` | Die Texte, die gerade gelten. `themeTexts()` ist reaktiv (in `$derived` lesen), `getThemeTexts()` nicht. |
+| `getThemeTextsLang()` / `themeTextsLang()` | Das Sprach-Tag des gewählten Bündels oder `undefined` (die zweite Form ist reaktiv). |
+| `registerThemeTexts(lang, bündel)`, `setThemeTextsLocale(lang)` | Bündel für ein Tag registrieren und wählen; ohne Bündel bleibt es Englisch (Ergebnis `false`). |
+| `fillThemeText(text, werte)` | Ersetzt `{name}`-Platzhalter; unbekannte bleiben stehen. |
+| `themeTextsEn`, `deThemeTexts`, `THEME_TEXT_SETS` | Die eingebauten Bündel und die Liste der Set-Schlüssel. |
+| `createThemeTextsStore()`, `sharedThemeTextsStore()` | Der Speicher selbst (für Tests oder eigene Anbindung). |
+
+Die Sprache der Theme-Texte ist unabhängig von `setStrings`: Wer die Sprache wechselt, ruft beide auf. Das
+deutsche Bündel ist eine eigene Datei; wer es nicht importiert, liefert es nicht aus. Die Custom Elements
+laden die Theme-Texte noch nicht (kein Element liest sie; der Zustand liegt auf der gemeinsamen Global, sodass
+die Season-Sets aus [#184](https://github.com/Mozra-the-great/kern/issues/184) beide Builds bedienen können).
+Neue Sprache im Repo: `theme-texts-de.ts` ist vollständig getypt, ein neuer englischer Text kompiliert erst,
+wenn er auch dort steht.
 
 ### Nur für Screenreader
 

@@ -24,6 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Theme texts catalogue (#185): the two short facts of each of the 17 season and special-day sets (`winter` to `christmas`, `THEME_TEXT_SETS`) in
+  English and, complete and typed, in German (`themeTextsEn`, `deThemeTexts`; a missing German text does not compile). They are not component
+  defaults, so they are a catalogue of their own with the rules of the strings: `setThemeTexts(...)`, `resetThemeTexts()`, `getThemeTexts()`,
+  `registerThemeTexts()`, `setThemeTextsLocale()`, `fillThemeText()` (the Advent line `Today: {lit} of {total} candles.`), the reactive
+  `themeTexts()` / `themeTextsLang()` for Svelte, and the shared store on `globalThis[Symbol.for('kern.themeTexts')]`
+  (`createThemeTextsStore`, `sharedThemeTextsStore`; types `ThemeTexts`, `ThemeTextSet`, `ThemeTextsBundle`, `ThemeTextsInput`,
+  `ThemeTextsStore`). Ported from the reference `THEME-TEXTS.md` without product names and without claims about the app that shows them; the
+  custom elements do not load them yet. `createStringsStore` and `StringsStore` take an optional type parameter for the input (default
+  `KernStringsInput`, no change for existing code). `neutrality:check` also scans the two catalogue files.
 - `Sticker` and `<k-sticker>`: draws one of the 42 tool stickers of `assets/code/tool-stickers/` by name (`StickerName`), through
   `<img>` at a whole-number scale (`scale`, default 4, `compactScale` under 760 px) with `image-rendering: pixelated`. The art keeps
   its own colours in every theme and never moves. Decorative by default (`alt=""`, `aria-hidden`, never focusable); `label` makes it a
