@@ -76,6 +76,7 @@
 		StatusDot,
 		StatusMessage,
 		Stepper,
+		Sticker,
 		Switch,
 		TabLinks,
 		Table,
@@ -99,6 +100,7 @@
 	} from '@mozra-the-great/kern';
 	import type { Command, DataColumn, MenuEntry, TreeNode } from '@mozra-the-great/kern';
 	import axolotl from '@mozra-the-great/kern/assets/code/mascots/axo.svg?url';
+	import qrSticker from '@mozra-the-great/kern/assets/code/tool-stickers/sticker-qr.svg?url';
 	import { THEME_KEY } from '../../../csp/policy.mjs';
 
 	interface Person extends Record<string, unknown> {
@@ -373,6 +375,7 @@
 			current={1}
 		/>
 	</section>
+	<section data-csp-case="Sticker"><Sticker name="qr" src={qrSticker} scale={4} label="QR code" /></section>
 	<section data-csp-case="Switch"><Switch label="Notifications" bind:checked={switchOn} /></section>
 	<section data-csp-case="TabLinks">
 		<TabLinks

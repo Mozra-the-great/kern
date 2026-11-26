@@ -165,6 +165,7 @@ const SMOKE: Record<string, Smoke> = {
 	StatusDot: { props: { status: 'ok' }, root: '.k-status-dot' },
 	StatusMessage: { props: { children: textSnippet('Saved') }, root: '.k-status-message' },
 	Stepper: { props: { steps: items, current: 0 }, root: '.k-stepper', role: { role: 'navigation', name: /.+/ } },
+	Sticker: { props: { name: 'qr', base: '/assets/code', label: 'QR code' }, root: '.k-sticker', role: { role: 'img', name: 'QR code' } },
 	Switch: { props: { label: 'Notifications' }, root: '.k-switch', role: { role: 'switch', name: 'Notifications' } },
 	TabLinks: {
 		props: {
