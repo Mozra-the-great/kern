@@ -174,9 +174,11 @@ Rules the checks encode:
 Not automated, because it needs people and assistive technology: screen reader output (NVDA, JAWS, VoiceOver), 200 %
 text size and text spacing, magnifier use, voice control, and the quality of the texts an app passes in.
 
-Firefox: CI runs Chromium only. The hit-target specs also pass in Firefox, run by hand: `npx playwright install firefox`, then
+Firefox: CI also runs `a11y-tab-strip.spec.ts` in Firefox (the `firefox` project of the elements config, #153; CI installs
+Firefox). The hit-target specs also pass in Firefox, run by hand: `npx playwright install firefox`, then
 `KERN_FIREFOX=1 npx playwright test -c tests/elements/playwright.config.ts --project=firefox` (and
-`-c tests/targets` for the demo); the `firefox` project exists only with `KERN_FIREFOX` and runs `hit-target.spec.ts` only.
+`-c tests/targets` for the demo). In the elements config the `firefox` project always exists and `KERN_FIREFOX` adds
+`hit-target.spec.ts` to it; in `tests/targets` the project exists only with `KERN_FIREFOX`.
 
 Run one spec while working: `npm run build`, then
 `npx playwright test -c tests/elements/playwright.config.ts a11y-keys` (add `-g "k-tabs"` for one test, `KERN_TEST_PORT`
