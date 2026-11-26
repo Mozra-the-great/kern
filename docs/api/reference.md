@@ -4145,6 +4145,10 @@ Formular-assoziiert (`ElementInternals`), wie ein natives Feld: `form`, `validit
 
 Keine Slots.
 
+### Eigene CSS-Variablen
+
+`--k-textarea-disabled-opacity`
+
 ## ThemeToggle
 
 Svelte: `import { ThemeToggle } from '@mozra-the-great/kern'` · Element: `<k-theme-toggle>` aus `@mozra-the-great/kern/elements/theme-toggle`
