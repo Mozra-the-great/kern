@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-11-26
+
 ### Fixed
 - `Textarea` reads the field tokens of `Input` and `Select` (#149, from stuffcloud#121): `--k-field-bg`, `--k-field-font`,
   `--k-field-size`, `--k-field-pad-x`, `--k-field-hover-border`, `--k-field-focus-border` and, new, `--k-textarea-disabled-opacity`.
