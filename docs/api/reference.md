@@ -2220,7 +2220,7 @@ Svelte: `import { Navbar } from '@mozra-the-great/kern'` · Element: `<k-navbar>
 
 Quelle: [`Navbar.svelte`](../../src/lib/components/Navbar.svelte), [`KNavbar.svelte`](../../src/elements/KNavbar.svelte)
 
-items: JSON list of { label, href, current? }. Slots: brand, actions.
+items: JSON list of { label, href, current? }, optional: without items (missing or []) only the brand and actions render, no menu button and no nav. Slots: brand, actions.
 
 ### Svelte: Props
 
