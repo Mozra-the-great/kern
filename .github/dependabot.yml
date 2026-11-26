@@ -45,3 +45,7 @@ updates:
       # compiler) cannot install until svelte-check supports it. Drop this entry then.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
+      # @types/node follows the lowest supported Node (engines: node >=22, CI on 22 + 24), so the
+      # typings never offer APIs that Node 22 lacks. Raise its major together with `engines`.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
