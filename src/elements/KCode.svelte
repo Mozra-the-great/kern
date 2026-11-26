@@ -18,7 +18,7 @@
 
 <script lang="ts">
 	/**
-	 * Block only: `copy-accessible-label` is the copy button's accessible name when it should say more than `copy-label`.
+	 * @prop copyAccessibleLabel {string} Block only: accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3).
 	 * @event copy {string} The copied text.
 	 */
 	import Code from '../lib/components/Code.svelte';

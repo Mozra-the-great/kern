@@ -1,7 +1,8 @@
 /**
  * `accessibleLabel` of CopyButton and DownloadButton (#166): a short visible `label` and a longer accessible name that
  * contains it (WCAG 2.5.3 Label in Name). Checked in both modes (with and without `showLabel`), with and without the
- * prop, for empty values, and that the visible text and the spoken status texts do not change.
+ * prop, for empty values, and that the visible text and the spoken status texts do not change. The same for the
+ * `copyAccessibleLabel` pass-through of Code and CodeBlock (#168), further down.
  */
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';

@@ -590,6 +590,7 @@ Inline: the slot is the code. Block (or a `code` attribute): the text of the ele
 | `start-line` | `startLine` | `number` | `1` (wie Code) | Number of the first line. |
 | `copy` | `copy` | `boolean` | `false` | Block only: shows a button that copies the code. |
 | `copy-label` | `copyLabel` | `string` | Katalog `code.copyLabel` (wie Code) |  |
+| `copy-accessible-label` | `copyAccessibleLabel` | `string` |  | Block only: accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3). |
 | `copied-label` | `copiedLabel` | `string` | Katalog `code.copiedLabel` (wie Code) |  |
 | `copy-error-label` | `copyErrorLabel` | `string` | Katalog `code.copyErrorLabel` (wie Code) |  |
 | `label` | `label` | `string` |  | Accessible name of the block when it can scroll. Defaults to "&lt;language> code" or "Code". |
@@ -649,6 +650,7 @@ Code block (stuffcloud's CodeBlock): the `code` attribute or the element's text 
 | `start-line` | `startLine` | `number` |  |  |
 | `copy` | `copy` | `boolean` |  | Shows the copy button. Default: on when `copy-label` is set. |
 | `copy-label` | `copyLabel` | `string` |  | Visible text of the copy button. Default "Copy". |
+| `copy-accessible-label` | `copyAccessibleLabel` | `string` |  | Accessible name of the copy button when it should say more than `copy-label` (it must contain the visible `copy-label`, WCAG 2.5.3). |
 | `copied-label` | `copiedLabel` | `string` |  | Announced after a successful copy. Default "Copied". |
 | `copy-error-label` | `copyErrorLabel` | `string` |  | Announced when copying failed. Default "Copy failed". |
 | `copy-icon` | `copyIcon` | `boolean` | `false` | Icon-only copy button (`copy-label` becomes its accessible name). |
