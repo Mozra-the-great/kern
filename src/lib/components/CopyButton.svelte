@@ -51,12 +51,20 @@
 		/** Reads the text at click time. Wins over `text` and `value`; may be async. */
 		getValue?: (() => string | Promise<string>) | undefined;
 		/**
-		 * Accessible name of the button, e.g. "Copy HEX". Icon-only by default (the label is the
-		 * `aria-label` and tooltip); with `showLabel` it is visible text and the name comes from it.
+		 * Name of the button, e.g. "Copy HEX". Icon-only by default (the label is the `aria-label` and tooltip);
+		 * with `showLabel` it is the visible text and, without `accessibleLabel`, also the accessible name.
 		 */
 		label?: string | undefined;
 		/** Show `label` as text next to the icon instead of an icon-only button. */
 		showLabel?: boolean | undefined;
+		/**
+		 * Accessible name when it should say more than `label`, e.g. `label` "Copy" and `accessibleLabel` "Copy SHA-256" in a
+		 * list of values. It is the button's `aria-label`, with and without `showLabel` (icon-only: also the tooltip), and
+		 * wins over `label` as the name; `label` stays the visible text. WCAG 2.5.3 (Label in Name): with `showLabel` it must
+		 * contain the visible `label`, ideally at the start, so voice control ("click Copy") still finds the button.
+		 * Empty, whitespace-only or `null` (an untyped caller, a removed element attribute) counts as not set. The spoken results (`copiedLabel`, `errorLabel`) are not affected.
+		 */
+		accessibleLabel?: string | undefined;
 		/**
 		 * Spoken after a successful copy, in a polite live region. It is set fresh on every click (so a
 		 * repeated result is announced again) and stays until the next click.
@@ -81,6 +89,7 @@
 		getValue,
 		label: labelProp,
 		showLabel = false,
+		accessibleLabel,
 		copiedLabel: copiedLabelProp,
 		errorLabel: errorLabelProp,
 		variant = 'ghost',
@@ -92,6 +101,10 @@
 		class: cls = ''
 	}: Props = $props();
 	const label = $derived(labelProp ?? strings().copyButton.label);
+	/** `accessibleLabel` when it has text; whitespace only counts as not set. */
+	const customName = $derived(typeof accessibleLabel === 'string' && accessibleLabel.trim() !== '' ? accessibleLabel : undefined);
+	/** The accessible name: `accessibleLabel`, else `label`. */
+	const accessibleName = $derived(customName ?? label);
 	const copiedLabel = $derived(copiedLabelProp ?? strings().copyButton.copiedLabel);
 	const errorLabel = $derived(errorLabelProp ?? strings().copyButton.errorLabel);
 
@@ -157,8 +170,8 @@
 		data-variant={variant}
 		data-size={size}
 		data-status={status}
-		aria-label={showLabel ? undefined : label}
-		title={showLabel ? undefined : label}
+		aria-label={showLabel && customName === undefined ? undefined : accessibleName}
+		title={showLabel ? undefined : accessibleName}
 		{disabled}
 		onclick={copy}
 	>

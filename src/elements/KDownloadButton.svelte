@@ -8,6 +8,7 @@
 			type: { type: 'String' },
 			label: { type: 'String' },
 			showLabel: { type: 'Boolean', attribute: 'show-label' },
+			accessibleLabel: { type: 'String', attribute: 'accessible-label' },
 			startedLabel: { type: 'String', attribute: 'started-label' },
 			errorLabel: { type: 'String', attribute: 'error-label' },
 			showStatus: { type: 'Boolean', attribute: 'show-status' },
@@ -25,7 +26,8 @@
 	 * message stays until the next click. The content is the `text` attribute, or the JS property `blob` (a `Blob` or
 	 * `File`) or `getContent` (a function that returns a string or a Blob, also as a promise, called at click time);
 	 * `getContent` wins over `blob`, `blob` over `text`. `name` is the file name (cleaned), `type` the MIME type.
-	 * `show-label` shows `label` as visible text; an error is always shown as text under the button. Nothing is sent
+	 * `show-label` shows `label` as visible text; `accessible-label` is the longer accessible name (it must contain the
+	 * visible `label`, WCAG 2.5.3) and wins over `label` as the name; an error is always shown as text under the button. Nothing is sent
 	 * anywhere.
 	 * @prop blob {Blob} A `Blob` or `File` to save. Set as a property; not an attribute.
 	 * @prop getContent {(() => string | Blob | Promise<string | Blob>)} Makes the content at click time. Set as a property; not an attribute.
@@ -44,6 +46,7 @@
 		type,
 		label,
 		showLabel = false,
+		accessibleLabel,
 		startedLabel,
 		errorLabel,
 		showStatus = false,
@@ -68,6 +71,7 @@
 	{type}
 	{label}
 	{showLabel}
+	{accessibleLabel}
 	{startedLabel}
 	{errorLabel}
 	{showStatus}

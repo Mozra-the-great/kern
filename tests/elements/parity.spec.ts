@@ -282,6 +282,30 @@ test('CopyButton: visible label is the name; message set fresh per click and kep
 		.toEqual(['live:Copied', 'live:', 'live:Copied']);
 });
 
+test('CopyButton and DownloadButton: accessible-label is the name, the visible label stays (#166)', async ({ page }) => {
+	// With show-label: the visible text is `label`, the accessible name is `accessible-label`.
+	const long = page.locator('#copy-long button');
+	await expect(long).toHaveText('Copy');
+	await expect(long).toHaveAttribute('aria-label', 'Copy SHA-256');
+	await expect(page.getByRole('button', { name: 'Copy SHA-256' })).toBeVisible();
+	await expect(long).not.toHaveAttribute('title');
+	// Icon-only: it replaces `label` as the name and the tooltip.
+	const icon = page.locator('#copy-icon button');
+	await expect(icon).toHaveAttribute('aria-label', 'Copy netmask');
+	await expect(icon).toHaveAttribute('title', 'Copy netmask');
+	// The same for the download button.
+	const download = page.locator('#dl-long button');
+	await expect(download).toContainText('Download');
+	await expect(download).toHaveAttribute('aria-label', 'Download r.csv');
+	await expect(page.getByRole('button', { name: 'Download r.csv' })).toBeVisible();
+	// The attribute is reactive and removing it falls back to `label`.
+	await page.evaluate(() => document.getElementById('copy-long')?.removeAttribute('accessible-label'));
+	await expect(long).not.toHaveAttribute('aria-label');
+	await expect(page.getByRole('button', { name: 'Copy', exact: true })).toBeVisible();
+	await page.evaluate(() => document.getElementById('copy-long')?.setAttribute('accessible-label', 'Copy digest'));
+	await expect(long).toHaveAttribute('aria-label', 'Copy digest');
+});
+
 test('StatusMessage: present and empty from the first paint, filled later (#72)', async ({ page }) => {
 	const status = page.locator('#status p');
 	await expect(status).toHaveAttribute('role', 'status');

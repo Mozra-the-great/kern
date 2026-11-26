@@ -34,6 +34,7 @@
 	type={maybeString}
 	label={maybeString}
 	showLabel={maybeBoolean}
+	accessibleLabel={maybeString}
 	startedLabel={maybeString}
 	errorLabel={maybeString}
 	showStatus={maybeBoolean}
@@ -46,5 +47,6 @@
 	class={maybeString}
 />
 <DownloadButton getContent={produceLater} name="report.csv" type="text/csv" label="Download report" showLabel variant="primary" size="lg" />
+<DownloadButton text="a,b" name="report.csv" label="Download" accessibleLabel="Download report.csv" showLabel />
 <DownloadButton getContent={undefined} blob={undefined} ondownload={undefined} onerror={undefined} variant="danger" size="sm" />
 <p>{last} {status}</p>
