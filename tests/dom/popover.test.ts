@@ -37,6 +37,7 @@ afterEach(() => {
 
 describe('Popover: a scrolling panel without tabbable content (#132)', () => {
 	function layout(el: Element, scrollHeight: number, clientHeight: number): void {
+		(el as HTMLElement).style.overflow = 'auto'; // jsdom has no UA stylesheet: the box is a scroller
 		Object.defineProperty(el, 'scrollHeight', { configurable: true, value: scrollHeight });
 		Object.defineProperty(el, 'clientHeight', { configurable: true, value: clientHeight });
 	}

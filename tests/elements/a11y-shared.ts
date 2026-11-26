@@ -157,6 +157,72 @@ export async function openLongPopover(page: Page): Promise<void> {
 	await expect(page.locator('#popover .panel[tabindex="0"]')).toHaveCount(1);
 }
 
+/** What `openScrolling` puts on the page. */
+export type Scrolling = 'table' | 'data-table' | 'resizable';
+
+/** The scroll boxes `openScrolling` makes: one tab stop each (a resizable has two panels). */
+export const SCROLL_STOPS: Record<Scrolling, number> = { table: 1, 'data-table': 1, resizable: 2 };
+
+/**
+ * Puts a box on the page whose scrolling part holds text only, so it overflows and offers the keyboard nothing to focus
+ * (#137): a `k-table` with a caption and a `k-data-table` without one (no stacking, eight columns in a 420 px box), or a
+ * `k-resizable` of two panels with long text (the first named by `data-label`, the second not). Between two buttons, so
+ * a test can Tab in and out. Resolves once the browser has measured it and the scrolling parts became tab stops.
+ */
+export async function openScrolling(page: Page, kind: Scrolling, direction: 'horizontal' | 'vertical' = 'vertical'): Promise<void> {
+	await page.evaluate(
+		({ kind: k, direction: dir }) => {
+			const box = document.createElement('div');
+			box.id = 'scrolling';
+			// a horizontal group stacks below 520 px, so it gets the width of the page
+			box.style.maxWidth = k === 'resizable' && dir === 'horizontal' ? 'none' : '420px';
+			const columns = JSON.stringify(Array.from({ length: 8 }, (_, i) => ({ key: `c${i}`, label: `Column number ${i + 1}` })));
+			const rows = JSON.stringify(
+				Array.from({ length: 3 }, (_, r) =>
+					Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`c${i}`, `Row ${r + 1} value ${i + 1}`]))
+				)
+			);
+			if (k === 'resizable') {
+				const group = document.createElement('k-resizable');
+				group.id = 'scrolling-element';
+				group.setAttribute('height', '160');
+				group.setAttribute('direction', dir);
+				for (const label of ['Notes', undefined]) {
+					const part = document.createElement('div');
+					part.dataset['panel'] = label ?? 'second';
+					if (label) part.dataset['label'] = label;
+					for (let i = 1; i <= 12; i++) part.insertAdjacentHTML('beforeend', `<p>Line ${i} of a text without a link or a button.</p>`);
+					group.append(part);
+				}
+				box.append(group);
+			} else {
+				const table = document.createElement(k === 'table' ? 'k-table' : 'k-data-table');
+				table.id = 'scrolling-element';
+				if (k === 'table') {
+					table.setAttribute('caption', 'Inventory');
+					(table as HTMLElement & { stack: boolean }).stack = false;
+				} else {
+					table.setAttribute('no-stack', '');
+					table.setAttribute('no-search', '');
+				}
+				table.setAttribute('columns', columns);
+				table.setAttribute('rows', rows);
+				box.append(table);
+			}
+			const before = document.createElement('button');
+			before.id = 'before-scrolling';
+			before.textContent = 'Before';
+			const after = document.createElement('button');
+			after.id = 'after-scrolling';
+			after.textContent = 'After';
+			document.querySelector('main')?.append(before, box, after);
+		},
+		{ kind, direction }
+	);
+	await elementsReady(page);
+	await expect(page.locator('#scrolling [role=region][tabindex="0"]')).toHaveCount(SCROLL_STOPS[kind]);
+}
+
 /** The open states of tests/elements/pages/forced-colors.html. */
 export const STATES: Record<string, State> = {
 	modal: {
@@ -184,6 +250,18 @@ export const STATES: Record<string, State> = {
 	'popover-long-text': {
 		tags: ['k-popover'],
 		prepare: openLongPopover
+	},
+	'resizable-long-text': {
+		tags: ['k-resizable'],
+		prepare: (page) => openScrolling(page, 'resizable')
+	},
+	'table-wide': {
+		tags: ['k-table'],
+		prepare: (page) => openScrolling(page, 'table')
+	},
+	'data-table-wide': {
+		tags: ['k-data-table'],
+		prepare: (page) => openScrolling(page, 'data-table')
 	},
 	'command-palette': {
 		tags: ['k-command-palette'],

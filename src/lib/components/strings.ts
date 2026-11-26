@@ -80,7 +80,9 @@ const catalogue = {
 		selectAllLabel: 'Select all rows on this page',
 		/** `{row}` is replaced. */
 		selectRowLabel: 'Select {row}',
-		paginationLabel: 'Table pagination'
+		paginationLabel: 'Table pagination',
+		/** Name of the table's scrolling wrapper when it is a tab stop and there is no caption. */
+		scrollLabel: 'Scrollable table'
 	},
 	datePicker: {
 		calendarLabel: 'Choose date',
@@ -159,7 +161,11 @@ const catalogue = {
 	pinInput: { digitLabel: 'Digit {index} of {length}' },
 	progressRing: { loadingText: 'Loading' },
 	rating: { starLabel: '{value} of {max} stars' },
-	resizable: { handleLabel: 'Resize {panel}' },
+	resizable: {
+		handleLabel: 'Resize {panel}',
+		/** Name of a scrolling panel that is a tab stop and has no `label`; `{n}` and `{total}` are replaced. */
+		panelLabel: 'Panel {n} of {total}'
+	},
 	scrollArea: { label: 'Scrollable content' },
 	selectGrid: {
 		/** Accessible name of the grid when `label` is not set. */
@@ -191,7 +197,11 @@ const catalogue = {
 		doneLabel: 'All {total} steps completed',
 		backLabel: 'Back to {label}'
 	},
-	table: { empty: 'No entries' },
+	table: {
+		empty: 'No entries',
+		/** Name of the scrolling wrapper when it is a tab stop and there is no caption. */
+		scrollLabel: 'Scrollable table'
+	},
 	tag: { removeLabel: 'Remove' },
 	tagInput: {
 		removeLabel: 'Remove {tag}',

@@ -4790,7 +4790,7 @@ Aus [`Resizable.svelte`](../../src/lib/components/Resizable.svelte).
 | Feld | Typ | Beschreibung |
 | --- | --- | --- |
 | `id` (Pflicht) | `string` | Unique within the group. |
-| `label` | `string` | Name of the panel, used in the label of its handle. Default: the id. |
+| `label` | `string` | Name of the panel: used in the label of its handle (default: the id) and as the name of the panel while it scrolls and is a tab stop (default: the text `resizable.panelLabel`, "Panel 1 of 2"). |
 | `min` | `number` | Smallest size in % of the group. Default 10. |
 | `max` | `number` | Largest size in %. Default 100. |
 
@@ -5119,7 +5119,7 @@ Aus [`types.ts`](../../src/elements/types.ts).
 | Feld | Typ | Beschreibung |
 | --- | --- | --- |
 | `id` (Pflicht) | `string` | Unique within the group. |
-| `label` | `string` | Name of the panel, used in the label of its handle. Default: the id. |
+| `label` | `string` | Name of the panel: used in the label of its handle (default: the id) and as the name of the panel while it scrolls and is a tab stop (default: the text `resizable.panelLabel`, "Panel 1 of 2"). |
 | `min` | `number` | Smallest size in % of the group. Default 10. |
 | `max` | `number` | Largest size in %. Default 100. |
 

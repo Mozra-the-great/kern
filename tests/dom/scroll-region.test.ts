@@ -22,8 +22,9 @@ afterEach(() => {
 	document.body.replaceChildren();
 });
 
-/** Gives an element the box sizes jsdom does not compute. */
+/** Gives an element the box sizes jsdom does not compute (and makes it a scroller: overflow `visible` spills instead of scrolling). */
 function layout(el: Element, scrollHeight: number, clientHeight: number): void {
+	(el as HTMLElement).style.overflow = 'auto'; // jsdom has no UA stylesheet: the box is a scroller
 	Object.defineProperty(el, 'scrollHeight', { configurable: true, value: scrollHeight });
 	Object.defineProperty(el, 'clientHeight', { configurable: true, value: clientHeight });
 }

@@ -59,7 +59,8 @@ export const de: KernBundle = {
 		loadingLabel: 'Lädt…',
 		selectAllLabel: 'Alle Zeilen dieser Seite auswählen',
 		selectRowLabel: '{row} auswählen',
-		paginationLabel: 'Tabellenseiten'
+		paginationLabel: 'Tabellenseiten',
+		scrollLabel: 'Scrollbare Tabelle'
 	},
 	datePicker: {
 		calendarLabel: 'Datum wählen',
@@ -123,7 +124,7 @@ export const de: KernBundle = {
 	pinInput: { digitLabel: 'Ziffer {index} von {length}' },
 	progressRing: { loadingText: 'Lädt' },
 	rating: { starLabel: '{value} von {max} Sternen' },
-	resizable: { handleLabel: 'Größe von {panel} ändern' },
+	resizable: { handleLabel: 'Größe von {panel} ändern', panelLabel: 'Bereich {n} von {total}' },
 	scrollArea: { label: 'Scrollbarer Inhalt' },
 	selectGrid: {
 		label: 'Auswählbare Einträge',
@@ -150,7 +151,7 @@ export const de: KernBundle = {
 		doneLabel: 'Alle {total} Schritte abgeschlossen',
 		backLabel: 'Zurück zu {label}'
 	},
-	table: { empty: 'Keine Einträge' },
+	table: { empty: 'Keine Einträge', scrollLabel: 'Scrollbare Tabelle' },
 	tag: { removeLabel: 'Entfernen' },
 	tagInput: {
 		removeLabel: '{tag} entfernen',

@@ -5,9 +5,20 @@
  */
 import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { createRawSnippet } from 'svelte';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import Table, { type Column } from '../../src/lib/components/Table.svelte';
-import { mapSnippet } from './helpers.js';
+import { de } from '../../src/lib/components/strings-de.js';
+import { resetStrings, setStrings } from '../../src/lib/components/strings.js';
+import { triggerResize } from './env.js';
+import { flush, mapSnippet, scrollBox } from './helpers.js';
+
+/** The element a selector finds, or a failure that names the selector. */
+function find(root: ParentNode, selector: string): HTMLElement {
+	const el = root.querySelector<HTMLElement>(selector);
+	if (el === null) throw new Error(`nothing matches ${selector}`);
+	return el;
+}
 
 interface Row extends Record<string, unknown> {
 	name: string | undefined;
@@ -138,5 +149,115 @@ describe('Table', () => {
 		unmount();
 		render(Table<Row>, { columns, rows: [], empty: 'Nothing here' });
 		expect(screen.getByRole('cell').textContent.trim()).toBe('Nothing here');
+	});
+});
+
+describe('Table: a wrapper that scrolls without tabbable content (#137)', () => {
+	const plain: Column<Row>[] = [
+		{ key: 'name', label: 'Name' },
+		{ key: 'size', label: 'Size', align: 'end' }
+	];
+	const wrapper = (): HTMLElement => find(document, '.k-table');
+	/** The wrapper is 400px wide and its table 900px. */
+	async function overflow(): Promise<void> {
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 900 });
+		triggerResize(wrapper());
+		await flush();
+	}
+
+	afterEach(() => {
+		resetStrings();
+	});
+
+	it('is a tab stop with role region, named by the caption, while it scrolls sideways', async () => {
+		render(Table<Row>, { columns: plain, rows, caption: 'Files', stack: false });
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		expect(wrapper().hasAttribute('role')).toBe(false);
+		await overflow();
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+		const region = screen.getByRole('region', { name: 'Files' });
+		expect(region).toBe(wrapper());
+		expect(region.getAttribute('aria-labelledby')).toBe(find(document, 'caption').id);
+		expect(region.hasAttribute('aria-label')).toBe(false);
+		region.focus();
+		expect(document.activeElement).toBe(region);
+	});
+
+	it('is named by a visually hidden caption too', async () => {
+		render(Table<Row>, { columns: plain, rows, caption: 'Files', captionHidden: true });
+		await overflow();
+		await vi.waitFor(() => expect(screen.getByRole('region', { name: 'Files' })).toBe(wrapper()));
+	});
+
+	it('is named by the catalogue text without a caption, in English and German', async () => {
+		const { unmount } = render(Table<Row>, { columns: plain, rows });
+		await overflow();
+		await vi.waitFor(() => expect(screen.getByRole('region', { name: 'Scrollable table' })).toBe(wrapper()));
+		expect(wrapper().hasAttribute('aria-labelledby')).toBe(false);
+		unmount();
+		setStrings(de);
+		render(Table<Row>, { columns: plain, rows, caption: '' });
+		await overflow();
+		await vi.waitFor(() => expect(screen.getByRole('region', { name: 'Scrollbare Tabelle' })).toBe(wrapper()));
+	});
+
+	it('is no tab stop and no region while the table fits', async () => {
+		render(Table<Row>, { columns: plain, rows, caption: 'Files', stack: false });
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 400 });
+		triggerResize(wrapper());
+		await flush();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('is no scroller where the content spills (stacked rows): no stop', async () => {
+		render(Table<Row>, { columns: plain, rows, caption: 'Files' });
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 900 });
+		wrapper().style.overflow = 'visible';
+		triggerResize(wrapper());
+		await flush();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('adds no stop next to a sortable header or a link in a cell', async () => {
+		const { unmount } = render(Table<Row>, { columns, rows, caption: 'Files', stack: false });
+		await overflow();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		unmount();
+		render(Table<Row>, {
+			columns: plain,
+			rows,
+			caption: 'Files',
+			stack: false,
+			cell: createRawSnippet(() => ({ render: () => '<a href="#x">open</a>' }))
+		});
+		await overflow();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('follows the content: sortable headers remove the stop, plain ones bring it back', async () => {
+		const { rerender } = render(Table<Row>, { columns: plain, rows, caption: 'Files', stack: false });
+		await overflow();
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+		await rerender({ columns });
+		await vi.waitFor(() => expect(wrapper().hasAttribute('tabindex')).toBe(false));
+		await rerender({ columns: plain });
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+	});
+
+	it('keeps the focus when the table starts to fit while the stop has it: focusable, but not a stop', async () => {
+		render(Table<Row>, { columns: plain, rows, caption: 'Files', stack: false });
+		await overflow();
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+		wrapper().focus();
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 400 });
+		triggerResize(wrapper());
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('-1'));
+		expect(document.activeElement).toBe(wrapper());
+		expect(wrapper().hasAttribute('role')).toBe(false);
+		wrapper().blur();
+		await vi.waitFor(() => expect(wrapper().hasAttribute('tabindex')).toBe(false));
 	});
 });

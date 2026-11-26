@@ -8,9 +8,12 @@
  */
 import { render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import DataTable, { type DataColumn, type DataRowKey, type DataSortDir } from '../../src/lib/components/DataTable.svelte';
-import { mapSnippet } from './helpers.js';
+import { de } from '../../src/lib/components/strings-de.js';
+import { resetStrings, setStrings } from '../../src/lib/components/strings.js';
+import { triggerResize } from './env.js';
+import { flush, mapSnippet, scrollBox } from './helpers.js';
 import { reactive } from './reactive.svelte.js';
 
 interface Row extends Record<string, unknown> {
@@ -391,5 +394,102 @@ describe('DataTable', () => {
 		});
 		expect(column(0)).toEqual(['name:alpha report']);
 		expect(column(1)).toEqual(['size:30']);
+	});
+});
+
+describe('DataTable: a wrapper that scrolls without tabbable content (#137)', () => {
+	const plain: DataColumn<Row>[] = [
+		{ key: 'name', label: 'Name' },
+		{ key: 'size', label: 'Size', align: 'end' }
+	];
+	const wrapper = (): HTMLElement => {
+		const el = document.querySelector<HTMLElement>('.k-table');
+		if (el === null) throw new Error('no table wrapper');
+		return el;
+	};
+	/** The wrapper is 400px wide and its table 900px. */
+	async function overflow(): Promise<void> {
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 900 });
+		triggerResize(wrapper());
+		await flush();
+	}
+
+	afterEach(() => {
+		resetStrings();
+	});
+
+	it('is a tab stop with role region, named by the caption (also a hidden one), while it scrolls sideways', async () => {
+		const { unmount } = render(DataTable<Row>, { columns: plain, rows, caption: 'Files', stack: false });
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		await overflow();
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+		const region = screen.getByRole('region', { name: 'Files' });
+		expect(region).toBe(wrapper());
+		expect(region.getAttribute('aria-labelledby')).toBe(document.querySelector('caption')?.id);
+		expect(region.hasAttribute('aria-label')).toBe(false);
+		unmount();
+		render(DataTable<Row>, { columns: plain, rows, caption: 'Hidden files', captionHidden: true });
+		await overflow();
+		await vi.waitFor(() => expect(screen.getByRole('region', { name: 'Hidden files' })).toBe(wrapper()));
+	});
+
+	it('is named by the catalogue text when the caption is empty, in English and German', async () => {
+		const { unmount } = render(DataTable<Row>, { columns: plain, rows, caption: '' });
+		await overflow();
+		await vi.waitFor(() => expect(screen.getByRole('region', { name: 'Scrollable table' })).toBe(wrapper()));
+		unmount();
+		setStrings(de);
+		render(DataTable<Row>, { columns: plain, rows, caption: '' });
+		await overflow();
+		await vi.waitFor(() => expect(screen.getByRole('region', { name: 'Scrollbare Tabelle' })).toBe(wrapper()));
+	});
+
+	it('is no stop while the table fits, and none where the content spills (stacked rows)', async () => {
+		render(DataTable<Row>, { columns: plain, rows, caption: 'Files' });
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 400 });
+		triggerResize(wrapper());
+		await flush();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 900 });
+		wrapper().style.overflow = 'visible';
+		triggerResize(wrapper());
+		await flush();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('adds no stop next to a sortable header or the checkboxes of a selectable table', async () => {
+		const { unmount } = render(DataTable<Row>, { columns, rows, caption: 'Files', stack: false });
+		await overflow();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		unmount();
+		render(DataTable<Row>, { columns: plain, rows, caption: 'Files', selectable: true, stack: false });
+		await overflow();
+		expect(wrapper().hasAttribute('tabindex')).toBe(false);
+		expect(screen.queryByRole('region')).toBeNull();
+	});
+
+	it('follows the content: selection boxes remove the stop, hiding them brings it back', async () => {
+		const props = reactive<State>({ columns: plain, rows, caption: 'Files', selectable: false });
+		render(DataTable<Row>, { props });
+		await overflow();
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+		props.selectable = true;
+		await vi.waitFor(() => expect(wrapper().hasAttribute('tabindex')).toBe(false));
+		props.selectable = false;
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+	});
+
+	it('keeps the focus when the table starts to fit while the stop has it: focusable, but not a stop', async () => {
+		render(DataTable<Row>, { columns: plain, rows, caption: 'Files', stack: false });
+		await overflow();
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('0'));
+		wrapper().focus();
+		scrollBox(wrapper(), { clientWidth: 400, scrollWidth: 400 });
+		triggerResize(wrapper());
+		await vi.waitFor(() => expect(wrapper().getAttribute('tabindex')).toBe('-1'));
+		expect(document.activeElement).toBe(wrapper());
+		wrapper().blur();
+		await vi.waitFor(() => expect(wrapper().hasAttribute('tabindex')).toBe(false));
 	});
 });
