@@ -216,8 +216,7 @@ for (const theme of THEMES) {
  * shrink-to-fit box (where the text, not the width, sizes the box). One area per box, so a sibling cannot squeeze it
  * below its own padding. The area stays inside its box and the page does not scroll.
  */
-const TOKEN =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+const LONG_WORD = '0123456789abcdef'.repeat(9);
 
 interface AreaFit {
 	box: { left: number; right: number };
@@ -248,9 +247,9 @@ function measureAreas(): AreaFit[] {
 for (const theme of THEMES) {
 	test(`320 px: a long unbroken word in a Textarea wraps inside its box in ${theme}`, async ({ page }) => {
 		await openPage(page, ALL, { theme, width: 320, height: 640 });
-		await page.evaluate((token) => {
+		await page.evaluate((word) => {
 			const area = (name: string, extra = ''): string =>
-				`<k-textarea data-area="${name}" label="${name}" value="${token}" ${extra}></k-textarea>`;
+				`<k-textarea data-area="${name}" label="${name}" value="${word}" ${extra}></k-textarea>`;
 			document.querySelector('main')?.insertAdjacentHTML(
 				'beforeend',
 				`<div class="area-box" style="width:240px">${area('block')}</div>
@@ -259,7 +258,7 @@ for (const theme of THEMES) {
 				<div class="area-box" style="width:240px;display:flex">${area('flex autosize', 'autosize')}</div>
 				<div class="area-box" style="width:240px"><div style="display:inline-block;max-width:100%">${area('shrink', 'autosize')}</div></div>`
 			);
-		}, TOKEN);
+		}, LONG_WORD);
 		await elementsReady(page);
 		await settle(page);
 		const fits = await page.evaluate(measureAreas);

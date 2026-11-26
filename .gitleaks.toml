@@ -17,13 +17,3 @@ useDefault = true
 # paths = [
 #   '''^tests/fixtures/fake-credentials\.txt$''',
 # ]
-
-# The sample token of jwt.io (header {"alg":"HS256","typ":"JWT"}, payload {"sub":"1234567890","name":"John Doe",
-# "iat":1516239022}, signed with the published secret "your-256-bit-secret"): the long unbroken string of the
-# Textarea visual and reflow tests (#149). Public documentation data, not a credential; this one value only.
-[[allowlists]]
-description = "jwt.io sample token (Textarea tests)"
-regexTarget = "match"
-regexes = [
-  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ\.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c''',
-]
