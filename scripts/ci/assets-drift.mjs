@@ -230,6 +230,18 @@ if (write && problems.length > 0) {
 	}
 	const keys = new Set(svgs.map(([rel]) => rel.replace(/\.svg$/, '')));
 	for (const key of listed.keys()) if (!keys.has(key)) problems.push(`catalogue: ${key} has no SVG`);
+	// 2b. The mascot cast (#183): every mascots/* file has exactly one name in MASCOT_SOURCES
+	// (src/lib/components/mascots.ts), and every name points at a file. A new animal without a name,
+	// or a name without art, fails here instead of surfacing at runtime.
+	const castFile = join(root, 'src', 'lib', 'components', 'mascots.ts');
+	const cast = existsSync(castFile) ? readFileSync(castFile, 'utf8') : '';
+	const named = [...cast.matchAll(/source\(\s*['"](mascots\/[\w-]+)['"]/g)].map((m) => m[1]);
+	for (const key of keys)
+		if (key.startsWith('mascots/') && !named.includes(key)) problems.push(`mascot cast: ${key} has no name in MASCOT_SOURCES`);
+	for (const key of named) {
+		if (!keys.has(key)) problems.push(`mascot cast: MASCOT_SOURCES names ${key}, which has no SVG`);
+		if (named.indexOf(key) !== named.lastIndexOf(key)) problems.push(`mascot cast: ${key} is named twice in MASCOT_SOURCES`);
+	}
 }
 
 // 3. Optional: Code art names and bytes against a stuffcloud prototypes folder (flat, *.svg).

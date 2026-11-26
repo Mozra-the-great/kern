@@ -1,18 +1,18 @@
 <script lang="ts" module>
-	import type { CodeArt, MascotName } from './mascots.js';
+	import type { CodeArt, MascotAlias, MascotName } from './mascots.js';
 
 	/** Motion state on `data-motion`: `running`, `paused` (off-screen or hidden tab) or `still`. */
 	export type MascotMotion = 'running' | 'paused' | 'still';
-	/** A mascot name (`stuffy`) or the path of any shipped SVG (`tool-stickers/sticker-qr`). */
-	export type MascotArt = MascotName | CodeArt;
+	/** A mascot name (`stuffy`), an alias (`axo`, `axolotl`) or the path of any shipped SVG (`tool-stickers/sticker-qr`). */
+	export type MascotArt = MascotName | MascotAlias | CodeArt;
 </script>
 
 <script lang="ts">
-	import { artPath, artUrl, mascotSize, normaliseScale, CODE_ART } from './mascots.js';
+	import { artPath, artUrl, mascotSize, normaliseScale, resolveMascotName, CODE_ART } from './mascots.js';
 	import { observeInView } from './motion.svelte.js';
 
 	interface Props {
-		/** Shipped art: a mascot name (`stuffy`) or a path under `assets/code/` (`mascots/axo`). Gives the pixel grid, and the URL together with `base`. */
+		/** Shipped art: a mascot name (`stuffy`), an alias (`axo`) or a path under `assets/code/` (`mascots/axo`). Gives the pixel grid, and the URL together with `base`. */
 		name?: MascotArt | undefined;
 		/** URL of the SVG file (same origin, a file, not a `data:` URI). Wins over `base`. */
 		src?: string | undefined;
@@ -36,6 +36,8 @@
 	let { name, src, base, cols, rows, scale = 8, compactScale, animated = true, label, class: cls = '' }: Props = $props();
 
 	const path = $derived(name === undefined ? undefined : artPath(name));
+	/** `data-mascot`: the canonical name for a mascot or an alias, the given path otherwise. */
+	const mark = $derived(name === undefined ? undefined : (resolveMascotName(name) ?? name));
 	const grid = $derived(path === undefined ? undefined : CODE_ART[path]);
 	const width = $derived(normaliseScale(cols ?? grid?.cols ?? 0));
 	const height = $derived(normaliseScale(rows ?? grid?.rows ?? 0));
@@ -81,7 +83,7 @@
 <span
 	bind:this={host}
 	class="k-mascot {cls}"
-	data-mascot={name}
+	data-mascot={mark}
 	data-motion={motion}
 	style:--cols={width}
 	style:--rows={height}

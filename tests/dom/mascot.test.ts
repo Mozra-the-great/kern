@@ -4,10 +4,10 @@
  * real CSS in tests/mascot/mascot.spec.ts). jsdom has no layout and no animation clock: the motion state is
  * driven through the observer stand-in of env.ts and the Page Visibility API.
  */
-import { render } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Mascot from '../../src/lib/components/Mascot.svelte';
-import { MASCOT_NAMES, MASCOT_SOURCES } from '../../src/lib/components/mascots.js';
+import { MASCOT_ALIASES, MASCOT_NAMES, MASCOT_SOURCES, type MascotAlias } from '../../src/lib/components/mascots.js';
 import { triggerIntersection } from './env.js';
 import { reactive } from './reactive.svelte.js';
 
@@ -51,6 +51,25 @@ describe('Mascot markup', () => {
 		expect(mascot(container).dataset['mascot']).toBe(name);
 		// Mascots never speak and carry no filler text.
 		expect(container.textContent.trim()).toBe('');
+	});
+
+	it.each(MASCOT_NAMES)('%s is a named image with a label, and nothing else changes', (name) => {
+		const { container } = render(Mascot, { name, base: BASE, label: `Mascot ${name}` });
+		expect(screen.getByRole('img', { name: `Mascot ${name}` }).getAttribute('src')).toBe(`${BASE}/${MASCOT_SOURCES[name].art}.svg`);
+		expect(container.textContent.trim()).toBe('');
+	});
+
+	it.each(Object.entries(MASCOT_ALIASES))('the alias %s draws %s and reports the canonical name', (alias, name) => {
+		const { container } = render(Mascot, { name: alias as MascotAlias, base: BASE });
+		expect(image(container).getAttribute('src')).toBe(`${BASE}/${MASCOT_SOURCES[name].art}.svg`);
+		expect(mascot(container).dataset['mascot']).toBe(name);
+		expect(mascot(container).style.getPropertyValue('--cols')).toBe(String(MASCOT_SOURCES[name].cols));
+		expect(image(container).getAttribute('aria-hidden')).toBe('true');
+	});
+
+	it('keeps the path as data-mascot for art that is not a mascot name', () => {
+		const { container } = render(Mascot, { name: 'mascots/axo', base: BASE });
+		expect(mascot(container).dataset['mascot']).toBe('mascots/axo');
 	});
 
 	it('gives the image a text alternative (and exposes it) when a label is set', () => {

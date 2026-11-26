@@ -106,6 +106,47 @@ test.describe('markup', () => {
 		await expect(page.getByRole('img', { name: 'Page expired' })).toBeVisible();
 	});
 
+	test('every name and alias of the cast loads its svg and stays decorative and wordless', async ({ page }) => {
+		await open(page);
+		const cast: [string, string, string][] = [
+			['stuffy', 'stuffy', 'axo'],
+			['mochi', 'mochi', 'mascot-cat'],
+			['hop', 'hop', 'mascot-frog'],
+			['bun', 'bun', 'mascot-bunny'],
+			['bloop', 'bloop', 'mascot-jelly'],
+			['waddle', 'waddle', 'mascot-penguin'],
+			['ember', 'ember', 'mascot-fox'],
+			['boo', 'boo', 'mascot-ghost'],
+			['cumulo', 'cumulo', 'mascot-cloudy'],
+			['axo', 'stuffy', 'axo'],
+			['axolotl', 'stuffy', 'axo'],
+			['cat', 'mochi', 'mascot-cat'],
+			['frog', 'hop', 'mascot-frog'],
+			['bunny', 'bun', 'mascot-bunny'],
+			['jelly', 'bloop', 'mascot-jelly'],
+			['jellyfish', 'bloop', 'mascot-jelly'],
+			['penguin', 'waddle', 'mascot-penguin'],
+			['fox', 'ember', 'mascot-fox'],
+			['ghost', 'boo', 'mascot-ghost'],
+			['cloudy', 'cumulo', 'mascot-cloudy'],
+			['cloud', 'cumulo', 'mascot-cloudy']
+		];
+		for (const [name, canonical, file] of cast) {
+			const id = await add(page, { name, base: '/assets/code', scale: '2' });
+			const s = await snap(page, id);
+			expect(s, name).toMatchObject({ mascot: canonical, src: `/assets/code/mascots/${file}.svg`, alt: '', hidden: 'true', text: '' });
+			await page.waitForFunction(
+				(elementId) => document.getElementById(elementId)?.shadowRoot?.querySelector('img')?.complete === true,
+				id
+			);
+			const natural = await page.evaluate(
+				(elementId) => document.getElementById(elementId)?.shadowRoot?.querySelector('img')?.naturalWidth ?? 0,
+				id
+			);
+			expect(natural, `${name} svg did not load`).toBeGreaterThan(0);
+		}
+	});
+
 	test('takes any shipped file by path, and src wins over base', async ({ page }) => {
 		await open(page);
 		const sticker = await snap(page, await add(page, { name: 'tool-stickers/sticker-qr', base: '/assets/code', scale: '3' }));

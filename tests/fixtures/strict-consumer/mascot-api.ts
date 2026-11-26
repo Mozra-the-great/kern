@@ -8,7 +8,10 @@ import {
 	integerScale,
 	isMascotName,
 	isCodeArt,
+	isMascotAlias,
+	resolveMascotName,
 	isStuffcloudArt,
+	MASCOT_ALIASES,
 	MASCOT_NAMES,
 	MASCOT_SOURCES,
 	mascotSize,
@@ -16,7 +19,17 @@ import {
 	CODE_ART,
 	STUFFCLOUD_ART
 } from '@mozra-the-great/kern';
-import type { MascotArt, MascotMotion, MascotName, MascotSource, PixelGrid, CodeArt, StuffcloudArt } from '@mozra-the-great/kern';
+import type {
+	MascotAlias,
+	MascotArt,
+	MascotMotion,
+	MascotName,
+	MascotRole,
+	MascotSource,
+	PixelGrid,
+	CodeArt,
+	StuffcloudArt
+} from '@mozra-the-great/kern';
 
 export function mascotUrl(name: string, base: string | undefined): string | undefined {
 	const path: CodeArt | undefined = artPath(name);
@@ -38,3 +51,11 @@ export const known: boolean = isCodeArt('mascots/axo');
 export const knownOld: boolean = isStuffcloudArt('mascots/axo');
 export const oldPath: StuffcloudArt = 'mascots/axo';
 export const oldGrid: PixelGrid = STUFFCLOUD_ART[oldPath];
+
+// Aliases and roles (#183) under the same flags.
+export const alias: MascotAlias = 'axo';
+export const aliasName: MascotName | undefined = resolveMascotName(alias);
+export const aliasKnown: boolean = isMascotAlias('axolotl');
+export const aliasTarget: MascotName = MASCOT_ALIASES.cat;
+export const role: MascotRole = MASCOT_SOURCES.stuffy.role;
+export const aliasArt: MascotArt = 'frog';

@@ -377,7 +377,7 @@ Abschnitten zum Abgleich; welche Tests stuffclouds Tests ersetzen, steht in
 | `Tabs`, `tabs.css`, `tabs-nav.ts` | `Tabs` (`panel` optional) | Tastatur intern; [Navigation](../README.md#navigation-und-inhalt-abgleich-mit-stuffcloud-und-nagellacke) |
 | `TabLinks` | `TabLinks` | `onnavigate` für Routing im Client |
 | `Tile`, `TileGrid` | `Tile`, `TileGrid` | |
-| `Mascot`, `mascots.ts`, `motion.ts` | `Mascot`, `MASCOT_SOURCES`, `BOB_PERIOD_MS`, `BOB_OFFSET_PX`, `COMPACT_MAX_WIDTH_PX` | [Mascot](../README.md#mascot-pixel-art) |
+| `Mascot`, `mascots.ts`, `motion.ts` | `Mascot`, `MASCOT_NAMES`, `MASCOT_ALIASES`, `MASCOT_SOURCES`, `BOB_PERIOD_MS`, `BOB_OFFSET_PX`, `COMPACT_MAX_WIDTH_PX` | [Mascot](../README.md#mascot-pixel-art) |
 | `ReorderList`, `PageGrid` | `SortableList`, `SelectGrid` | [Sortieren und Auswählen](../README.md#sortieren-und-auswählen-abgleich-mit-stuffcloud) |
 | `button.css`, Design-Tokens | Theme `code` | Token-Zuordnung in [`docs/themes.md`](themes.md#stuffcloud-variables-and-their-kern-tokens-theme-code) |
 

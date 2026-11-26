@@ -188,6 +188,7 @@ export { default as Mascot } from './components/Mascot.svelte';
 export type { MascotArt, MascotMotion } from './components/Mascot.svelte';
 /* eslint-disable @typescript-eslint/no-deprecated -- the old stuffcloud names are re-exported on purpose until 1.0 (#85) */
 export {
+	MASCOT_ALIASES,
 	MASCOT_NAMES,
 	MASCOT_SOURCES,
 	CODE_ART,
@@ -196,6 +197,8 @@ export {
 	BOB_OFFSET_PX,
 	COMPACT_MAX_WIDTH_PX,
 	isMascotName,
+	isMascotAlias,
+	resolveMascotName,
 	isCodeArt,
 	isStuffcloudArt,
 	artPath,
@@ -204,5 +207,5 @@ export {
 	integerScale,
 	mascotSize
 } from './components/mascots.js';
-export type { CodeArt, MascotName, MascotSource, PixelGrid, StuffcloudArt } from './components/mascots.js';
+export type { CodeArt, MascotAlias, MascotName, MascotRole, MascotSource, PixelGrid, StuffcloudArt } from './components/mascots.js';
 /* eslint-enable @typescript-eslint/no-deprecated */

@@ -18,7 +18,7 @@
 	/**
 	 * Code pixel art (a mascot or any shipped SVG) through <img>, at whole-number scales,
 	 * with a transform-only idle bob that pauses off-screen, in hidden tabs and under reduced motion.
-	 * @prop name A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo) or a path under assets/code/ without .svg (tool-stickers/sticker-qr).
+	 * @prop name A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo), an alias (axo, axolotl, cat, frog, bunny, jelly, jellyfish, penguin, fox, ghost, cloudy, cloud) or a path under assets/code/ without .svg (tool-stickers/sticker-qr).
 	 * @prop src URL of the SVG file (same origin); wins over base.
 	 * @prop base URL where the assets/code/ folder is served; with name it gives the file URL.
 	 * @prop cols Art pixels across (viewBox width); needed for art outside the catalogue.
