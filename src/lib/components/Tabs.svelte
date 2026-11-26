@@ -129,6 +129,9 @@
 		display: flex;
 		gap: var(--k-tabs-gap);
 		overflow-x: auto;
+		/* Only the sideways overflow scrolls. A strip that also scrolls vertically becomes a keyboard stop of its own
+		 * in Firefox (#153); the tabs fit by arithmetic (see the line look below), this keeps it so under rounding. */
+		overflow-y: hidden;
 		scrollbar-width: var(--k-tabs-scrollbar);
 		outline: none;
 	}
@@ -190,16 +193,20 @@
 		outline: var(--k-focus-w) solid var(--k-focus);
 		outline-offset: calc(var(--k-focus-w) * -1);
 	}
+	/* The strip's border-bottom is part of --k-tab-h: a tab ends above it. The padding keeps the label centred in
+	 * the full height, and the selected bar stays 2px minus the border it used to overlap (the strip clipped that
+	 * part). A tab taller than the strip (negative margin) overflowed it by the border and made it scroll (#153). */
 	[data-look='line'] button {
-		margin-bottom: calc(var(--k-border-w) * -1);
+		min-height: calc(var(--k-tab-h) - var(--k-border-w));
+		padding-top: var(--k-border-w);
 		border-inline-end: var(--k-tab-divider-w) solid var(--k-line);
-		box-shadow: inset 0 -2px 0 transparent;
+		box-shadow: inset 0 calc(max(0px, 2px - var(--k-border-w)) * -1) 0 transparent;
 	}
 	[data-look='line'] button[aria-selected='true'] {
 		color: var(--k-fg);
 		background: var(--k-tab-selected-bg);
 		font-weight: var(--k-tab-selected-weight);
-		box-shadow: inset 0 -2px 0 var(--k-accent-mark);
+		box-shadow: inset 0 calc(max(0px, 2px - var(--k-border-w)) * -1) 0 var(--k-accent-mark);
 	}
 	[data-look='pill'] .list {
 		padding: var(--k-space-1);
@@ -235,11 +242,11 @@
 		outline-offset: var(--k-focus-offset);
 	}
 	@media (forced-colors: active) {
-		/* Selected tab: a Highlight bar instead of the inset shadow (dropped). In the line look the strip
-		 * clips the 1px the tab overlaps the baseline by, so the bar is 4px to show 3px. */
+		/* Selected tab: a Highlight bar instead of the inset shadow (dropped). In the line look the bar is 4px minus
+		 * the border of the strip (3px with a 1px border), as the shadow is 2px minus it. */
 		[data-look='line'] button[aria-selected='true'] {
 			box-shadow: none;
-			border-bottom: 4px solid Highlight;
+			border-bottom: calc(4px - var(--k-border-w)) solid Highlight;
 		}
 		/* the pill is round: a bar under it would curl, so it gets a full edge (the margin keeps its size) */
 		[data-look='pill'] button[aria-selected='true'] {
