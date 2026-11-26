@@ -47,7 +47,8 @@
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- plain-JS callers may pass null, which keeps the motion
 	const moving = $derived(animated !== false);
 
-	let host: HTMLSpanElement | undefined = $state();
+	/** `bind:this` sets this to `null` on unmount: guard with `== null`. */
+	let host: HTMLSpanElement | null | undefined = $state();
 	let inView = $state(true);
 	let pageVisible = $state(true);
 
@@ -66,7 +67,7 @@
 	// IntersectionObserver the art simply keeps running.
 	$effect(() => {
 		const el = host;
-		if (!moving || el === undefined) return;
+		if (!moving || el == null) return;
 		const stop = observeInView(el, (visible) => (inView = visible));
 		return () => {
 			stop();

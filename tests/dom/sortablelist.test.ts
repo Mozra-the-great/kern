@@ -11,6 +11,7 @@ import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import SortableList, { type SortableItem } from '../../src/lib/components/SortableList.svelte';
 import { moveItem } from '../../src/lib/components/reorder.js';
+import SortableListBoundary from './harness/SortableListBoundary.svelte';
 import { mapSnippet2 } from './helpers.js';
 import { reactive } from './reactive.svelte.js';
 
@@ -275,5 +276,60 @@ describe('SortableList', () => {
 	it('renders an empty list for items that are not an array', () => {
 		render(SortableList, { items: undefined as unknown as readonly SortableItem[] });
 		expect(rows()).toEqual([]);
+	});
+
+	describe('emptied and refilled (#175)', () => {
+		it('does not throw when the last item is removed with the focus on its button, and works again after a refill', async () => {
+			const user = userEvent.setup();
+			const errors: unknown[] = [];
+			const props = reactive<{ items: SortableItem[]; onremove: (index: number) => void; onerror: (error: unknown) => void }>({
+				items: fruit.slice(0, 2),
+				onremove: (index) => {
+					props.items = props.items.filter((_, i) => i !== index);
+				},
+				onerror: (error) => errors.push(error)
+			});
+			render(SortableListBoundary, { props });
+			await user.click(screen.getByRole('button', { name: 'Remove Banana' }));
+			await tick();
+			expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Remove Apple' }));
+			await user.click(screen.getByRole('button', { name: 'Remove Apple' }));
+			await tick();
+			expect(errors).toEqual([]);
+			expect(screen.queryByRole('alert')).toBeNull();
+			expect(rows()).toEqual([]);
+			expect(screen.getByRole('list', { name: 'Fruit' })).toBeTruthy();
+
+			props.items = fruit;
+			await tick();
+			expect(errors).toEqual([]);
+			expect(names()).toEqual(['Apple', 'Banana', 'Cherry']);
+			// The first removal after the refill moves the focus on as before the list was empty.
+			await user.click(screen.getByRole('button', { name: 'Remove Cherry' }));
+			await tick();
+			expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Remove Banana' }));
+			expect(errors).toEqual([]);
+		});
+
+		it('survives several rounds of n -> 0 -> n with the focus inside before emptying', async () => {
+			const errors: unknown[] = [];
+			const props = reactive<{ items: SortableItem[]; onremove: (index: number) => void; onerror: (error: unknown) => void }>({
+				items: fruit,
+				onremove: () => undefined,
+				onerror: (error) => errors.push(error)
+			});
+			render(SortableListBoundary, { props });
+			for (let round = 0; round < 3; round++) {
+				screen.getByRole('button', { name: 'Move Banana up' }).focus();
+				props.items = [];
+				await tick();
+				expect(rows()).toEqual([]);
+				props.items = fruit;
+				await tick();
+				expect(rows()).toHaveLength(3);
+			}
+			expect(errors).toEqual([]);
+			expect(screen.queryByRole('alert')).toBeNull();
+		});
 	});
 });

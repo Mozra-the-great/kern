@@ -79,7 +79,8 @@
 	const keyOf = (entry: T, index: number): ItemKey => key?.(entry, index) ?? defaultKey(entry, index);
 	const nameOf = (entry: T, index: number): string => itemLabel?.(entry, index) ?? defaultItemLabel(entry);
 
-	let root: HTMLUListElement | undefined = $state();
+	/** `bind:this` sets this to `null` when the list unmounts, not to `undefined`: guard with `== null`. */
+	let root: HTMLUListElement | null | undefined = $state();
 	let dragFrom: number | undefined = $state();
 	let dropAt: number | undefined = $state();
 
@@ -97,7 +98,7 @@
 	$effect(() => {
 		void snapshot;
 		const wish = pending;
-		if (wish === undefined || root === undefined) return;
+		if (wish === undefined || root == null) return;
 		if (performance.now() - wish.at > FOCUS_WINDOW_MS) {
 			pending = undefined;
 			return;
