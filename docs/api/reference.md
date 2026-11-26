@@ -4257,7 +4257,7 @@ Svelte: `import { TileGrid } from '@mozra-the-great/kern'` · Element: `<k-tile-
 
 Quelle: [`TileGrid.svelte`](../../src/lib/components/TileGrid.svelte), [`KTileGrid.svelte`](../../src/elements/KTileGrid.svelte)
 
-Ruled grid of `<k-tile>` children (stuffcloud's TileGrid): as many columns of at least `min` (default 280px) as fit, one hairline between all cells; narrow grids switch the tiles to rows. `as="ul"` / `as="ol"` give the element the role `list` (use `<k-tile as="li">` inside); name the grid with `aria-label` on the element.
+Ruled grid of `<k-tile>` children (stuffcloud's TileGrid): as many columns of at least `min` (default 280px) as fit, one hairline between all cells; narrow grids switch the tiles to rows. The sheet is closed on all four sides (top and left on the grid, right and bottom on the tiles); set `--k-tile-grid-left-w: 0` on the element when it sits against a bordered container that already draws the left line. `as="ul"` / `as="ol"` give the element the role `list` (use `<k-tile as="li">` inside); name the grid with `aria-label` on the element.
 
 ### Svelte: Props
 
@@ -4291,6 +4291,10 @@ Keine eigenen Ereignisse.
 | Slot | Beschreibung |
 | --- | --- |
 | (Standard) |  |
+
+### Eigene CSS-Variablen
+
+`--k-tile-grid-left-w`
 
 ## Timeline
 
