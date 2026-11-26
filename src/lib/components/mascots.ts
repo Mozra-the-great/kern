@@ -19,6 +19,31 @@ export const MASCOT_NAMES = ['stuffy', 'mochi', 'hop', 'bun', 'bloop', 'waddle',
 
 export type MascotName = (typeof MASCOT_NAMES)[number];
 
+/**
+ * Alternative names that resolve to a mascot (#183): the animal and the file stem of the art
+ * (`axo`, `cat`, `jelly`, `cloudy`). `stuffy` stays the one canonical name; an alias never shows up in
+ * `MASCOT_NAMES` or `data-mascot`.
+ */
+export const MASCOT_ALIASES = {
+	axo: 'stuffy',
+	axolotl: 'stuffy',
+	cat: 'mochi',
+	frog: 'hop',
+	bunny: 'bun',
+	jelly: 'bloop',
+	jellyfish: 'bloop',
+	penguin: 'waddle',
+	fox: 'ember',
+	ghost: 'boo',
+	cloudy: 'cumulo',
+	cloud: 'cumulo'
+} as const satisfies Record<string, MascotName>;
+
+export type MascotAlias = keyof typeof MASCOT_ALIASES;
+
+/** `main` is Stuffy, who stands on pages; `easter-egg` is the rest of the cast, which shows up rarely and never blocks content. */
+export type MascotRole = 'main' | 'easter-egg';
+
 /** Where a mascot's art lives: `file` as in stuffcloud's `MASCOT_SOURCES`, `art` as in kern's assets. */
 export interface MascotSource extends PixelGrid {
 	/** File name without `.svg` (kern `assets/code/mascots`; stuffcloud `docs/design/prototypes` is the frozen reference it was copied from). */
@@ -26,15 +51,16 @@ export interface MascotSource extends PixelGrid {
 	/** Path under `assets/code/`, without `.svg`. */
 	readonly art: CodeArt;
 	readonly animal: string;
+	readonly role: MascotRole;
 }
 
-function source(art: CodeArt & `mascots/${string}`, animal: string): MascotSource {
-	return { file: art.slice('mascots/'.length), art, animal, ...CODE_ART[art] };
+function source(art: CodeArt & `mascots/${string}`, animal: string, role: MascotRole = 'easter-egg'): MascotSource {
+	return { file: art.slice('mascots/'.length), art, animal, role, ...CODE_ART[art] };
 }
 
 /** Mascot name → kern asset (the same mapping as stuffcloud's `MASCOT_SOURCES`). */
 export const MASCOT_SOURCES: Readonly<Record<MascotName, MascotSource>> = {
-	stuffy: source('mascots/axo', 'axolotl'),
+	stuffy: source('mascots/axo', 'axolotl', 'main'),
 	mochi: source('mascots/mascot-cat', 'cat'),
 	hop: source('mascots/mascot-frog', 'frog'),
 	bun: source('mascots/mascot-bunny', 'bunny'),
@@ -56,6 +82,16 @@ export function isMascotName(name: string): name is MascotName {
 	return (MASCOT_NAMES as readonly string[]).includes(name);
 }
 
+export function isMascotAlias(name: string): name is MascotAlias {
+	return Object.hasOwn(MASCOT_ALIASES, name);
+}
+
+/** The canonical mascot name of a name or an alias (`axo` → `stuffy`); undefined for anything else, paths included. */
+export function resolveMascotName(name: string): MascotName | undefined {
+	if (isMascotName(name)) return name;
+	return isMascotAlias(name) ? MASCOT_ALIASES[name] : undefined;
+}
+
 export function isCodeArt(name: string): name is CodeArt {
 	return Object.hasOwn(CODE_ART, name);
 }
@@ -65,9 +101,10 @@ export function isStuffcloudArt(name: string): name is CodeArt {
 	return isCodeArt(name);
 }
 
-/** Asset path (`mascots/axo`) of a mascot name or of a path; undefined for anything unknown. */
+/** Asset path (`mascots/axo`) of a mascot name, an alias or a path; undefined for anything unknown. */
 export function artPath(name: string): CodeArt | undefined {
-	if (isMascotName(name)) return MASCOT_SOURCES[name].art;
+	const mascot = resolveMascotName(name);
+	if (mascot !== undefined) return MASCOT_SOURCES[mascot].art;
 	return isCodeArt(name) ? name : undefined;
 }
 
@@ -75,7 +112,7 @@ export function artPath(name: string): CodeArt | undefined {
  * URL of a shipped SVG inside `base`, the URL where the consumer serves the
  * `assets/code/` folder: `artUrl('/art/code', 'stuffy')` → `/art/code/mascots/axo.svg`.
  */
-export function artUrl(base: string, name: MascotName | CodeArt): string {
+export function artUrl(base: string, name: MascotName | MascotAlias | CodeArt): string {
 	const path = artPath(name);
 	if (path === undefined) throw new Error(`kern: unknown Code art "${name}"`);
 	return `${base.endsWith('/') ? base : `${base}/`}${path}.svg`;

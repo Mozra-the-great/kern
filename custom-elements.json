@@ -7302,7 +7302,7 @@
 								"text": "string | undefined"
 							},
 							"attribute": "name",
-							"description": "A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo) or a path under assets/code/ without .svg (tool-stickers/sticker-qr)."
+							"description": "A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo), an alias (axo, axolotl, cat, frog, bunny, jelly, jellyfish, penguin, fox, ghost, cloudy, cloud) or a path under assets/code/ without .svg (tool-stickers/sticker-qr)."
 						},
 						{
 							"kind": "field",

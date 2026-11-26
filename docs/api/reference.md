@@ -2129,7 +2129,7 @@ Code pixel art (a mascot or any shipped SVG) through &lt;img>, at whole-number s
 
 | Prop | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- |
-| `name` | `MascotArt` |  | Shipped art: a mascot name (`stuffy`) or a path under `assets/code/` (`mascots/axo`). Gives the pixel grid, and the URL together with `base`. |
+| `name` | `MascotArt` |  | Shipped art: a mascot name (`stuffy`), an alias (`axo`) or a path under `assets/code/` (`mascots/axo`). Gives the pixel grid, and the URL together with `base`. |
 | `src` | `string` |  | URL of the SVG file (same origin, a file, not a `data:` URI). Wins over `base`. |
 | `base` | `string` |  | URL where the `assets/code/` folder is served; with `name` it gives the file URL. |
 | `cols` | `number` |  | Art pixels across (the SVG `viewBox` width). Needed for art outside the catalogue. |
@@ -2144,7 +2144,7 @@ Code pixel art (a mascot or any shipped SVG) through &lt;img>, at whole-number s
 
 | Attribut | Property | Typ | Vorgabe | Beschreibung |
 | --- | --- | --- | --- | --- |
-| `name` | `name` | `string` |  | A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo) or a path under assets/code/ without .svg (tool-stickers/sticker-qr). |
+| `name` | `name` | `string` |  | A mascot name (stuffy, mochi, hop, bun, bloop, waddle, ember, boo, cumulo), an alias (axo, axolotl, cat, frog, bunny, jelly, jellyfish, penguin, fox, ghost, cloudy, cloud) or a path under assets/code/ without .svg (tool-stickers/sticker-qr). |
 | `src` | `src` | `string` |  | URL of the SVG file (same origin); wins over base. |
 | `base` | `base` | `string` |  | URL where the assets/code/ folder is served; with name it gives the file URL. |
 | `cols` | `cols` | `number` |  | Art pixels across (viewBox width); needed for art outside the catalogue. |
@@ -4787,10 +4787,10 @@ Aus [`Kbd.svelte`](../../src/lib/components/Kbd.svelte): A key as drawn (`glyph`
 
 ### MascotArt
 
-Aus [`Mascot.svelte`](../../src/lib/components/Mascot.svelte): A mascot name (`stuffy`) or the path of any shipped SVG (`tool-stickers/sticker-qr`).
+Aus [`Mascot.svelte`](../../src/lib/components/Mascot.svelte): A mascot name (`stuffy`), an alias (`axo`, `axolotl`) or the path of any shipped SVG (`tool-stickers/sticker-qr`).
 
 ```ts
-type MascotArt = MascotName | CodeArt;
+type MascotArt = MascotName | MascotAlias | CodeArt;
 ```
 
 ### MascotMotion

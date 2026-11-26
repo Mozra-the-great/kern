@@ -607,6 +607,12 @@ stuffclouds ADR 0008). `Mascot` (Custom Element `<k-mascot>`) zeigt **jede** mit
   `animated={false}` ebenso;
 - dekorativ (`alt=""`, `aria-hidden`), mit `label` ein benanntes Bild; kein Text, kein Canvas.
 
+**Regel: Maskottchen sprechen nie, und es gibt keinen Füllertext.** Keine Sprechblasen, keine Begrüßungen, kein
+Marketingtext neben der Figur: Seiten tragen Beschriftungen, Zustand und Daten. Eine Figur ist Beiwerk, nie der
+einzige Träger einer Aussage. Das gilt für Stuffy und für die ganze Besetzung; `Mascot` zeichnet deshalb nur das Bild
+und kennt keinen Text-Slot. Wenn ein Bild etwas bedeutet (die Seite ist abgelaufen), sag es in `label` oder im
+umgebenden Text; sonst bleibt es dekorativ. Easter Eggs nehmen nie den Fokus und verdecken keinen Inhalt.
+
 ```svelte
 <script>
   import { Mascot } from '@mozra-the-great/kern';
@@ -634,23 +640,30 @@ export default { build: { assetsInlineLimit: (file) => (file.endsWith('.svg') ? 
 oder den Ordner `node_modules/@mozra-the-great/kern/assets/code/` beim Build nach `public/`
 kopieren und `base` setzen. Ohne Bundler: `<k-mascot name="stuffy" base="/art/code"></k-mascot>`.
 
-Namen für den 1:1-Umstieg aus stuffcloud (`MASCOT_SOURCES`, gleiche Felder `file`/`animal`/`cols`/`rows`,
-dazu `art`). Der alte Pfad `@mozra-the-great/kern/assets/stuffcloud/*` löst bis 1.0 weiter auf `assets/code/*` auf (Alias in `exports`); `base` ist deine
+Die Besetzung (Stuffy und acht Easter-Egg-Tiere) und ihre Namen für den 1:1-Umstieg aus stuffcloud
+(`MASCOT_SOURCES`, gleiche Felder `file`/`animal`/`cols`/`rows`, dazu `art` und `role`: `main` für Stuffy, sonst
+`easter-egg`). Der alte Pfad `@mozra-the-great/kern/assets/stuffcloud/*` löst bis 1.0 weiter auf `assets/code/*` auf (Alias in `exports`); `base` ist deine
 eigene URL und bleibt, wie sie ist:
 
-| Name | Datei | Tier |
-| --- | --- | --- |
-| `stuffy` | `mascots/axo.svg` | Axolotl |
-| `mochi` | `mascots/mascot-cat.svg` | Katze |
-| `hop` | `mascots/mascot-frog.svg` | Frosch |
-| `bun` | `mascots/mascot-bunny.svg` | Hase |
-| `bloop` | `mascots/mascot-jelly.svg` | Qualle |
-| `waddle` | `mascots/mascot-penguin.svg` | Pinguin |
-| `ember` | `mascots/mascot-fox.svg` | Fuchs |
-| `boo` | `mascots/mascot-ghost.svg` | Geist |
-| `cumulo` | `mascots/mascot-cloudy.svg` | Wolke |
+| Name | Aliase | Datei | Tier | Rolle und Auftritt in stuffcloud |
+| --- | --- | --- | --- | --- |
+| `stuffy` | `axo`, `axolotl` | `mascots/axo.svg` | Axolotl | Hauptfigur: Startseite, Werkzeuge, Formulare |
+| `mochi` | `cat` | `mascots/mascot-cat.svg` | Katze | Konami-Code: läuft am unteren Rand entlang |
+| `hop` | `frog` | `mascots/mascot-frog.svg` | Frosch | ein Werkzeug ist fertig: hüpft über das Ergebnis |
+| `bun` | `bunny` | `mascots/mascot-bunny.svg` | Hase | selten (jeder 20. Seitenaufruf): schaut vom Rand herein |
+| `bloop` | `jelly`, `jellyfish` | `mascots/mascot-jelly.svg` | Qualle | lange Aufträge: schwebt im Fortschrittsbalken |
+| `waddle` | `penguin` | `mascots/mascot-penguin.svg` | Pinguin | Dezember bis Februar: rutscht über die Startseite |
+| `ember` | `fox` | `mascots/mascot-fox.svg` | Fuchs | "Nach dem Lesen verbrennen": erscheint, wenn die Seite verbraucht ist |
+| `boo` | `ghost` | `mascots/mascot-ghost.svg` | Geist | abgelaufene Seiten und 404 |
+| `cumulo` | `cloudy`, `cloud` | `mascots/mascot-cloudy.svg` | Wolke | Seite veröffentlicht; fünf Klicks aufs Logo: zieht vorbei |
 
-Weitere Exporte: `MASCOT_NAMES`, `artPath`, `artUrl(base, name)`, `normaliseScale`, `integerScale`
+Die letzte Spalte ist die Verwendung in stuffcloud (aus dessen Referenz), kein Verhalten von kern: `Mascot` zeichnet
+und wippt, wann und wo eine Figur auftaucht, entscheidet die Seite. Aliase sind nur andere Schreibweisen
+(`<Mascot name="axo" />` zeichnet Stuffy); `data-mascot` und `MASCOT_NAMES` kennen nur den Hauptnamen,
+`MASCOT_ALIASES` listet die Aliase, `resolveMascotName(name)` löst Namen und Aliase auf (Pfade und
+Unbekanntes ergeben `undefined`). Die Kleider der Figuren je Saison (Hüte, Ohren) sind Saison-Art (#184), keine Besetzung.
+
+Weitere Exporte: `MASCOT_NAMES`, `MASCOT_ALIASES`, `isMascotAlias`, `resolveMascotName`, `artPath`, `artUrl(base, name)`, `normaliseScale`, `integerScale`
 (größte ganze Skala für eine Zielbreite), `mascotSize`, `BOB_PERIOD_MS`, `BOB_OFFSET_PX`,
 `COMPACT_MAX_WIDTH_PX`. Stuffclouds Benchmark (`bench/`) bleibt in stuffcloud; kern prüft dasselbe
 Verhalten mit Playwright (`tests/mascot/`).
