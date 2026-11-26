@@ -175,6 +175,14 @@ Run one spec while working: `npm run build`, then
 `npx playwright test -c tests/elements/playwright.config.ts a11y-keys` (add `-g "k-tabs"` for one test, `KERN_TEST_PORT`
 if the default port 4791 is busy). A new spec must pass `--repeat-each=3 --retries=0 --workers=2` before it is merged.
 
+A test that waits for a Playwright event which the page only triggers once must not start the wait right before the
+action. `page.waitForEvent('filechooser')` (and `page.on('filechooser')`) enable the file chooser interception in the
+browser with a fire-and-forget message, so a chooser opened by a key press right after it is sometimes a real one that
+nobody sees and the wait times out ([#138](https://github.com/Mozra-the-great/kern/issues/138), up to every second run of
+the k-file-drop test). `watchFileChoosers` in `a11y-keys.spec.ts` registers the listener first and opens a throwaway
+file input until a chooser arrives, so the key press that follows cannot be missed. Check such a test with
+`--repeat-each=100 --workers=4`; never "fix" it with a longer timeout or a retry.
+
 ## stuffcloud mapping
 
 stuffcloud (`web/apps/web/tests/`) may remove a local copy of a component only when the kit covers the same
