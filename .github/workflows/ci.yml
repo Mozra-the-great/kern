@@ -29,7 +29,9 @@ jobs:
     # (decision D1) before you rely on this - hosted minutes may be exhausted, and
     # a required check that cannot start blocks every PR (convention C4).
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # The job takes 13-15 min since the Firefox keyboard project (#153) and the a11y suites
+    # grew; 15 cancelled main four times in a row. Raise again only with a measured reason.
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
