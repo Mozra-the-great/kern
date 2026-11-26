@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-11-26
+
 ### Added
 - `StatusMessage` (`tone`) and `<k-status-message>` (attribute `tone`): `tone="ok"` draws a result line ("Copied", "3 matches")
   in the success colour `--k-ok`; `default` (or unset) is unchanged. Only `kind="status"` takes it, an alert keeps its danger
