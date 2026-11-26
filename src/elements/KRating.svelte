@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'Number', reflect: true },
 			max: { type: 'Number' },
 			readonly: { type: 'Boolean' },
@@ -20,6 +21,7 @@
 	/**
 	 * Star rating (radio buttons). `required` needs at least one star; `readonly` shows without submitting.
 	 * @event change {number} The picked number of stars.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import Rating from '../lib/components/Rating.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -28,6 +30,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		value = $bindable(0),
 		max = 5,
 		readonly = false,
@@ -56,6 +59,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{max}
 	{readonly}

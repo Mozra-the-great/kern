@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'Number', reflect: true },
 			min: { type: 'Number' },
 			max: { type: 'Number' },
@@ -22,12 +23,26 @@
 	 * Range slider. `unit`: text appended to the shown value, e.g. unit=" %".
 	 * @event input {number} The value while dragging.
 	 * @event change {number} The value when the user lets go.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import Slider from '../lib/components/Slider.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
 	import { forwardAttributes, formControl, inShadow } from './control.svelte.js';
 	import { SLIDER_ATTRS } from './native.js';
-	let { label, hint, error, value = $bindable(), min = 0, max = 100, step = 1, showValue = false, unit, name, disabled = false } = $props();
+	let {
+		label,
+		hint,
+		error,
+		noAnnounce = false,
+		value = $bindable(),
+		min = 0,
+		max = 100,
+		step = 1,
+		showValue = false,
+		unit,
+		name,
+		disabled = false
+	} = $props();
 	const host = $host();
 	const initial = value;
 	const native = forwardAttributes(host, SLIDER_ATTRS);
@@ -46,6 +61,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{min}
 	{max}

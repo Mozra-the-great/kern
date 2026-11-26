@@ -115,7 +115,7 @@ Beide Builds teilen sich auf einer Seite Toast-Warteschlange, Ansagen und Textka
   `<Toaster />`. Zwei Toaster zeigen jeden Toast doppelt. Dasselbe gilt für LiveAnnouncer (der erste füllt seine
   Regionen, weitere bleiben still).
 - Props heißen in beiden Builds meist gleich (camelCase); Ausnahmen sind abschaltende Attribute der Elemente wie
-  `noRejectMessages` (Svelte: `rejectMessages={false}`). Aus `onchange={(e) => set(e.detail)}` wird in Svelte
+  `noRejectMessages` (Svelte: `rejectMessages={false}`) und `noAnnounce` (Svelte: `announce={false}`). Aus `onchange={(e) => set(e.detail)}` wird in Svelte
   `bind:value` oder eine Callback-Prop, die den Wert direkt bekommt (Tabs: `onchange={(id) => …}`). Die
   [Referenz](api/reference.md) zeigt für jede Komponente beide Seiten untereinander.
 - Elemente-Slots (`slot="footer"`) werden in Svelte zu Snippets (`{#snippet footer()}`).

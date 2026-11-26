@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			value: { type: 'String', reflect: true },
 			min: { type: 'String' },
 			max: { type: 'String' },
@@ -27,6 +28,7 @@
 	 * Date field with a calendar popup. `value`, `min` and `max` are ISO dates (yyyy-mm-dd);
 	 * `min`/`max`/`required` are validated.
 	 * @event change {string} The chosen ISO date, or "" when cleared.
+	 * @prop noAnnounce The error is not announced (no `role="alert"`); use it when the page announces the message itself. The error stays visible and keeps describing the control.
 	 */
 	import DatePicker from '../lib/components/DatePicker.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -35,6 +37,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		value = $bindable(''),
 		min,
 		max,
@@ -68,6 +71,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	bind:value
 	{min}
 	{max}

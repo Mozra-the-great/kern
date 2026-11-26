@@ -187,8 +187,8 @@
 <Checkbox bind:checked bind:indeterminate={open} label={maybeString} hint={maybeString} />
 <Code code={maybeString} language={maybeString} block={maybeBoolean} startLine={maybeNumber} />
 <Collapsible bind:open label={maybeString} look={undefined} ontoggle={undefined}>Content</Collapsible>
-<ColorPicker bind:value={text} label={maybeString} alpha={maybeBoolean} name={maybeString} />
-<Combobox options={comboOptions} bind:value={text} label={maybeString} placeholder={maybeString} />
+<ColorPicker bind:value={text} label={maybeString} alpha={maybeBoolean} name={maybeString} announce={maybeBoolean} />
+<Combobox options={comboOptions} bind:value={text} label={maybeString} placeholder={maybeString} announce={maybeBoolean} />
 <CommandPalette {commands} bind:open hotkey={maybeString} onselect={undefined} />
 <ContextMenu items={menu} label={maybeString} longPress={maybeNumber}>Area</ContextMenu>
 <CopyButton value={maybeString} label={maybeString} resetAfter={maybeNumber} />
@@ -206,7 +206,7 @@
 	bind:page={num}
 	pageSize={maybeNumber}
 />
-<DatePicker bind:value={text} min={maybeString} max={maybeString} locale={maybeString} weekStart={maybeNumber} />
+<DatePicker bind:value={text} min={maybeString} max={maybeString} locale={maybeString} weekStart={maybeNumber} announce={maybeBoolean} />
 <Divider label={maybeString} vertical={maybeBoolean} />
 <Drawer bind:open title="Drawer" side={undefined} closeLabel={maybeString}>Drawer</Drawer>
 <DropdownMenu label="Menu" items={menu} align={undefined} triggerVariant={undefined} />
@@ -214,13 +214,13 @@
 <Field label={maybeString} hint={maybeString} error={maybeString} for={maybeString}>
 	{#snippet children({ describedby, invalid })}<input aria-describedby={describedby} aria-invalid={invalid} />{/snippet}
 </Field>
-<FileDrop bind:files accept={maybeString} maxSize={maybeNumber} multiple={maybeBoolean} />
+<FileDrop bind:files accept={maybeString} maxSize={maybeNumber} multiple={maybeBoolean} announce={maybeBoolean} />
 <GridBackground variant={undefined} size={maybeNumber} fade={maybeBoolean}>Grid</GridBackground>
 <Heatmap data={heat} label="Activity" start={maybeString} end={maybeString} weekStart={maybeNumber} />
 <Highlight inView={maybeBoolean} delay={maybeNumber}>Highlight</Highlight>
 <HistoryBar items={history} label="Uptime" statusLabels={{ ok: maybeString, down: 'Down' }} />
 <IconButton label="Close" variant={undefined} size={undefined}>x</IconButton>
-<Input bind:value={text} label={maybeString} hint={maybeString} error={maybeString} />
+<Input bind:value={text} label={maybeString} hint={maybeString} error={maybeString} announce={maybeBoolean} />
 <Input bind:value={nullableNum} type="number" label="Number" />
 <VisuallyHidden as={undefined} focusable={undefined} class={undefined}>Nur für Screenreader</VisuallyHidden>
 <VisuallyHidden as="h2" focusable id="vh">Abschnitt</VisuallyHidden>
@@ -263,10 +263,10 @@
 	{#snippet brand()}kern{/snippet}
 	{#snippet actions()}<button type="button">Sign in</button>{/snippet}
 </Navbar>
-<NumberInput bind:value={nullableNum} min={maybeNumber} max={maybeNumber} step={maybeNumber} format={undefined} />
+<NumberInput bind:value={nullableNum} min={maybeNumber} max={maybeNumber} step={maybeNumber} format={undefined} announce={maybeBoolean} />
 <Odometer value={1} duration={maybeNumber} locale={maybeString} />
 <Pagination bind:page={num} pageCount={5} siblings={maybeNumber} onchange={undefined} />
-<PinInput bind:value={text} length={maybeNumber} type={undefined} mask={maybeBoolean} />
+<PinInput bind:value={text} length={maybeNumber} type={undefined} mask={maybeBoolean} announce={maybeBoolean} />
 <Popover bind:open label="Popover" placement={undefined} triggerVariant={undefined}>Popover</Popover>
 <Progress
 	label="Progress"
@@ -281,7 +281,7 @@
 <Progress label="Indeterminate" value={null} tone="warn" />
 <ProgressRing label="Ring" value={maybeNumber} size={maybeNumber} format={undefined} />
 <RadioGroup label="Radio" options={radios} bind:value={text} inline={maybeBoolean} error={maybeString} />
-<Rating bind:value={num} max={maybeNumber} readonly={maybeBoolean} />
+<Rating bind:value={num} max={maybeNumber} readonly={maybeBoolean} announce={maybeBoolean} />
 <RelativeTime value={0} locale={maybeString} now={undefined} />
 <Resizable {panels} bind:sizes direction={undefined} height={maybeString}>
 	{#snippet panel(p, i)}{p.id}{i}{/snippet}
@@ -289,10 +289,18 @@
 <Reveal direction={undefined} delay={maybeNumber} once={maybeBoolean}>Reveal</Reveal>
 <Scramble text="Scramble" duration={maybeNumber} glyphs={maybeString} hover={maybeBoolean} />
 <ScrollArea maxHeight={maybeString} direction={undefined} label={maybeString}>Scroll</ScrollArea>
-<SegmentedControl options={segments} bind:value={text} label={maybeString} block={maybeBoolean} />
-<Select options={selectOptions} bind:value={text} label={maybeString} placeholder={maybeString} />
+<SegmentedControl options={segments} bind:value={text} label={maybeString} block={maybeBoolean} announce={maybeBoolean} />
+<Select options={selectOptions} bind:value={text} label={maybeString} placeholder={maybeString} announce={maybeBoolean} />
 <Skeleton variant={undefined} width={maybeString} height={maybeNumber} lines={maybeNumber} />
-<Slider bind:value={num} min={maybeNumber} max={maybeNumber} step={maybeNumber} label={maybeString} format={undefined} />
+<Slider
+	bind:value={num}
+	min={maybeNumber}
+	max={maybeNumber}
+	step={maybeNumber}
+	label={maybeString}
+	format={undefined}
+	announce={maybeBoolean}
+/>
 <Sparkline values={[1, 2, 3]} variant={undefined} label={maybeString} min={maybeNumber} />
 <Spinner label={maybeString} size={maybeNumber} />
 <Stat label="Stat" value={1} unit={maybeString} delta={maybeNumber} description={maybeString} />
@@ -304,9 +312,9 @@
 	{#snippet panel(id)}{id}{/snippet}
 </Tabs>
 <Tag selected={maybeBoolean} removeLabel={maybeString} onremove={undefined}>Tag</Tag>
-<TagInput bind:value={list} max={maybeNumber} suggestions={undefined} placeholder={maybeString} />
+<TagInput bind:value={list} max={maybeNumber} suggestions={undefined} placeholder={maybeString} announce={maybeBoolean} />
 <Terminal {lines} title={maybeString} prompt={maybeString} typewriter={maybeBoolean} speed={maybeNumber} />
-<Textarea bind:value={text} label={maybeString} autosize={maybeBoolean} />
+<Textarea bind:value={text} label={maybeString} autosize={maybeBoolean} announce={maybeBoolean} />
 <ThemeToggle {themes} bind:value={text} target={undefined} persist={maybeString} followSystem={maybeBoolean} />
 <Timeline items={timeline} label={maybeString} statusLabels={{ done: maybeString }} locale={maybeString} />
 <Toaster

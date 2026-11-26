@@ -8,6 +8,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** Selected date as ISO `yyyy-mm-dd`, or ''. */
 		value?: string | undefined;
 		/** Earliest selectable date, ISO. */
@@ -39,6 +41,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		value = $bindable(),
 		min,
 		max,
@@ -374,7 +377,7 @@
 
 <svelte:window onpointerdown={onWindowPointer} />
 
-<Field {label} {hint} error={error ?? (invalidInput ? invalidText : undefined)} {required} for={inputId} class={cls}>
+<Field {label} {hint} error={error ?? (invalidInput ? invalidText : undefined)} {announce} {required} for={inputId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<div class="k-date" class:invalid class:disabled bind:this={box}>
 			<input

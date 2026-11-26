@@ -7,6 +7,8 @@
 		label?: string | undefined;
 		hint?: string | undefined;
 		error?: string | undefined;
+		/** Announce the error as `role="alert"` (the default); turn off when the page announces it itself. */
+		announce?: boolean | undefined;
 		/** Show the hint under the error instead of hiding it (both are referenced, the error first). */
 		keepHint?: boolean | undefined;
 		value?: string | null | undefined;
@@ -17,6 +19,7 @@
 		label,
 		hint,
 		error,
+		announce,
 		keepHint,
 		value = $bindable(),
 		id,
@@ -31,7 +34,7 @@
 	const areaId = $derived(id ?? `${uid}-area`);
 </script>
 
-<Field {label} {hint} {error} {keepHint} {required} for={areaId} class={cls}>
+<Field {label} {hint} {error} {announce} {keepHint} {required} for={areaId} class={cls}>
 	{#snippet children({ describedby, invalid })}
 		<textarea
 			class="k-textarea"

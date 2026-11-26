@@ -4,6 +4,7 @@
 			label: { type: 'String' },
 			hint: { type: 'String' },
 			error: { type: 'String' },
+			noAnnounce: { type: 'Boolean', attribute: 'no-announce' },
 			accept: { type: 'String' },
 			multiple: { type: 'Boolean' },
 			maxSize: { type: 'Number', attribute: 'max-size' },
@@ -36,6 +37,7 @@
 	 * @event files {File[]} All chosen files after every change (`dispatch`: the files of this pick or drop).
 	 * @event reject {File[]} Refused files of a pick or drop: wrong type, too large, or more than one without `multiple`.
 	 * @method reset {(): void} Clears the files, the messages and the native input; fires no event.
+	 * @prop noAnnounce The error given as `error` is not announced (no `role="alert"`); the page announces it itself. Messages for refused files are never announced.
 	 */
 	import FileDrop from '../lib/components/FileDrop.svelte';
 	import { formAssociated, setFormValue, emit } from './form.js';
@@ -44,6 +46,7 @@
 		label,
 		hint,
 		error,
+		noAnnounce = false,
 		accept,
 		multiple = false,
 		maxSize,
@@ -106,6 +109,7 @@
 	{label}
 	{hint}
 	{error}
+	announce={!noAnnounce}
 	{accept}
 	{multiple}
 	{maxSize}

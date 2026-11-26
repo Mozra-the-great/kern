@@ -60,9 +60,9 @@
 	onreject={(refused: File[]) => (result = refused.map((f) => f.name).join())}
 />
 <FileDrop mode={undefined} onreject={undefined} />
-<Input bind:value={text} keepHint={maybeBoolean} aria-describedby={maybeString} />
-<Textarea bind:value={text} keepHint={maybeBoolean} aria-describedby={maybeString} />
-<Select {options} keepHint={maybeBoolean} aria-describedby={maybeString} />
+<Input bind:value={text} keepHint={maybeBoolean} announce={false} aria-describedby={maybeString} />
+<Textarea bind:value={text} keepHint={maybeBoolean} announce={false} aria-describedby={maybeString} />
+<Select {options} keepHint={maybeBoolean} announce={false} aria-describedby={maybeString} />
 <CopyButton text={maybeString} showLabel={maybeBoolean} label="Copy HEX" />
 <StatusMessage message={result} kind={undefined} reserve={maybeBoolean} />
 <StatusMessage message={null} kind="alert" class="x" id={maybeString} />
