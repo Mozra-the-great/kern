@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.3] - 2026-11-26
+
 ### Added
 - `Code` (`copyAccessibleLabel`), `CodeBlock` (`copyAccessibleLabel`) and their elements `<k-code>`, `<k-code-block>` (attribute
   `copy-accessible-label`): the accessible name of the copy button when it should say more than `copyLabel`, e.g. "Copy" on screen and
