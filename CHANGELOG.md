@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.3] - 2026-11-26
+
 ### Added
 - `CopyButton` and `DownloadButton` (and `<k-copy-button>`, `<k-download-button>`): optional `accessibleLabel` (attribute `accessible-label`)
   for a short visible `label` with a longer accessible name, e.g. "Copy" for sighted users and "Copy SHA-256" for a screen reader in a list
