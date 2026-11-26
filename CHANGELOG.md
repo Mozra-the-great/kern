@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-11-26
+
 ### Added
 - `announce` (default `true`, so nothing changes unless it is set) on every component that wraps `Field` and shows its error (#148,
   from stuffcloud#121): `Input`, `Select`, `Textarea`, `Combobox`, `NumberInput`, `DatePicker`, `ColorPicker`, `TagInput`,
@@ -50,9 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `npm run check:dts` also fails when a published `.d.ts` has a mutable array property that is not a bindable output
   (`scripts/ci/readonly-arrays-dts.mjs`), and the strict consumer and React fixtures pass `readonly` arrays and `as const`
   literals, nested `children` and `keywords` included, to every one of these props.
-
-### Fixed
-- `Code` theme (all variants and the deprecated `stuffcloud*` names): the themed element now has `line-height: normal`, like stuffcloud's design
+- **BREAKING:** `Code` theme (all variants and the deprecated `stuffcloud*` names): the themed element now has `line-height: normal`, like stuffcloud's design
   (#145, from stuffcloud#121). `[data-theme]` set a fixed `1.5`; stuffcloud's `stuff.css` sets no line height on `body`, so Code text was
   taller than the design. The line height is the new token `--k-leading-body` (`1.5` in `base.css`, `normal` in Code, source
   `design:stuff.css|body{line-height}` in the drift check): Flower, Pop and Line stay exactly as they were. Visible in Code only: text
@@ -63,6 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `--k-leading-body: 1.5` on the themed element (`html[data-theme] { --k-leading-body: 1.5 }`). A theme box nested in another theme
   takes its own theme's value. Documented in docs/themes.md ("Line height") and docs/consumer-guide.md; tested in
   `tests/elements/leading-body.spec.ts` and the token-default test.
+
+### Fixed
 - `data-theme` on `<html>` no longer overrides the reader's default font size (#144, from stuffcloud#121): `base.css` set a px
   `font-size` (`--k-text-md`) on every `[data-theme]` element, so a themed root ignored the browser setting and froze every `rem`
   at 16px (17px in Line). The root now takes `calc(var(--k-root-scale) * 1rem)`, i.e. the reader's default size times a new token
