@@ -22,7 +22,7 @@
 	const link = $derived(href !== undefined && href !== '');
 </script>
 
-<!-- A cell of a TileGrid: lines on the right and bottom, so the grid reads as one ruled sheet. -->
+<!-- A cell of a TileGrid: lines on the right and bottom; the grid adds the top and left line, so the sheet is closed. -->
 {#if link && tag === 'div'}
 	<a {...rest} {href} {target} {rel} class="k-tile cell link {cls}">{@render children?.()}</a>
 {:else if link}

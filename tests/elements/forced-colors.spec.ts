@@ -635,7 +635,13 @@ const CASES: Record<string, Case> = {
 		states: [{ name: 'active vs inactive mode', a: '#theme-toggle .seg.on', b: '#theme-toggle .seg:not(.on)' }]
 	},
 	'k-tile': { edge: ['#tile a.k-tile'], focus: ['#tile a.k-tile'] },
-	'k-tile-grid': { edge: ['#tile a.k-tile'] },
+	'k-tile-grid': {
+		edge: ['#tilegrid .k-tile-grid', '#tile a.k-tile'],
+		uses: [
+			['#tilegrid .k-tile-grid', 'border-top-color', 'CanvasText'],
+			['#tilegrid .k-tile-grid', 'border-left-color', 'CanvasText']
+		]
+	},
 	'k-timeline': {
 		edge: ['#timeline .marker'],
 		states: [

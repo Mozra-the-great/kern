@@ -839,10 +839,12 @@ bei Nutzereingaben.
 ```
 
 **Tile und TileGrid:** ein liniertes Raster wie stuffclouds Werkzeugübersicht. `TileGrid` legt so viele
-Spalten von mindestens `min` (Vorgabe 280px) an, wie passen, und zieht die obere Linie; jede `Tile`
-zieht ihre rechte und untere. Mit `href` ist die ganze Zelle ein Link (Hover-Fläche, Fokusring
-innen). Ist das Raster schmaler als 760 px (Container-Query), stehen Symbol und Text nebeneinander.
-`as` wählt das Element (`TileGrid as="ul"` mit `Tile as="li"`; das Element setzt dafür `role="list"`
+Spalten von mindestens `min` (Vorgabe 280px) an, wie passen, und zieht die obere und die linke Linie; jede `Tile`
+zieht ihre rechte und untere, das Raster ist also auf allen vier Seiten geschlossen. Sitzt es bündig in einem
+Container, der den linken Rand schon zeichnet, entsteht dort eine doppelte Linie: `--k-tile-grid-left-w: 0` am
+Raster (am Element `<k-tile-grid>` genauso) lässt die linke Linie weg. Mit `href` ist die ganze Zelle ein Link
+(Hover-Fläche, Fokusring innen). Ist das Raster schmaler als 760 px (Container-Query), stehen Symbol und Text
+nebeneinander. `as` wählt das Element (`TileGrid as="ul"` mit `Tile as="li"`; das Element setzt dafür `role="list"`
 bzw. `role="listitem"` auf sich); weitere Attribute gehen an das Wurzelelement.
 
 ```svelte
