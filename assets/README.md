@@ -187,7 +187,12 @@ Same as the project: GPL-3.0-or-later, see `NOTICE` (copyright holder: the autho
   duty for it (its register of third-party assets holds only fonts, models and WASM builds, none of them
   shipped here). Nothing in `assets/code/` needs an attribution notice; keep this licence note when you
   redistribute the files.
-- **pop, line, flower:** art from the design-system artifacts named in their sections; same licence as the project.
+- **pop, line, flower:** art from the design-system artifacts named in their sections. The copyright holder confirmed
+  (2026-11-27) that it is original work of the same author, released under the same licence as the project
+  (GPL-3.0-or-later); no attribution notice is needed.
+
+The art deliberately has no separate, more permissive asset licence (decision of 2026-11-27): it is GPL-3.0-or-later
+like the code.
 
 Where a file carries third-party material, it gets its own entry here and its licence in `NOTICE` in the PR that
 adds it.
